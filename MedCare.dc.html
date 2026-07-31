@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+  :root{
+    --mc-primary:#0d9488;
+    --mc-primary-600:#0f766e;
+    --mc-primary-50:#f0fdfa;
+    --mc-bg:#f8fafc;
+    --mc-text:#1e293b;
+    --mc-muted:#64748b;
+    --mc-border:#e2e8f0;
+    --mc-danger:#dc2626;
+    --mc-danger-600:#b91c1c;
+    --mc-card:#ffffff;
+    --mc-shadow:0 1px 2px rgba(15,23,42,.04), 0 8px 24px -12px rgba(15,23,42,.12);
+    --mc-shadow-lg:0 4px 8px rgba(15,23,42,.04), 0 24px 48px -20px rgba(15,23,42,.18);
+  }
+  html,body{background:var(--mc-bg);color:var(--mc-text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4,h5,.mc-display{font-family:'Poppins',system-ui,sans-serif;letter-spacing:-.01em;color:var(--mc-text)}
+  h1,.mc-display{font-weight:700;letter-spacing:-.025em}
+  a{color:var(--mc-primary-600);text-decoration:none}
+  a:hover{color:var(--mc-primary);text-decoration:underline}
+  ::selection{background:rgba(13,148,136,.2)}
+
+  /* Navbar */
+  .mc-nav{background:#fff;border-bottom:1px solid var(--mc-border);position:sticky;top:0;z-index:1030}
+  .mc-nav .navbar-brand{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);display:flex;align-items:center;gap:.55rem}
+  .mc-nav .navbar-brand .mc-logo{width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 4px 12px -4px rgba(13,148,136,.55)}
+  .mc-nav .nav-link{color:var(--mc-text);font-weight:500;padding:.5rem .9rem !important;border-radius:8px;font-size:.95rem}
+  .mc-nav .nav-link:hover{color:var(--mc-primary-600);background:var(--mc-primary-50)}
+  .mc-nav .nav-link.active{color:var(--mc-primary-600)}
+
+  /* Buttons */
+  .btn-mc-primary{background:var(--mc-primary);border-color:var(--mc-primary);color:#fff;font-weight:600;border-radius:10px;padding:.6rem 1.25rem}
+  .btn-mc-primary:hover{background:var(--mc-primary-600);border-color:var(--mc-primary-600);color:#fff}
+  .btn-mc-outline{background:#fff;border:1px solid var(--mc-border);color:var(--mc-text);font-weight:500;border-radius:10px;padding:.6rem 1.25rem}
+  .btn-mc-outline:hover{border-color:var(--mc-primary);color:var(--mc-primary-600);background:var(--mc-primary-50)}
+  .btn-emergency{background:var(--mc-danger);border:none;color:#fff;font-weight:600;border-radius:10px;padding:.55rem 1.1rem;display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px -4px rgba(220,38,38,.5);transition:all .15s ease}
+  .btn-emergency:hover{background:var(--mc-danger-600);color:#fff;transform:translateY(-1px);box-shadow:0 6px 18px -4px rgba(220,38,38,.6)}
+  .btn-emergency:focus-visible{outline:2px solid var(--mc-danger);outline-offset:2px}
+
+  /* Hospital search in navbar */
+  .mc-hospital-search{display:flex;align-items:stretch;background:#fff;border:1px solid var(--mc-border);border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(15,23,42,.04);height:42px}
+  .mc-hospital-search:focus-within{border-color:var(--mc-primary);box-shadow:0 0 0 3px rgba(13,148,136,.15)}
+  .mc-town-btn{display:inline-flex;align-items:center;gap:.4rem;background:var(--mc-primary-50);color:var(--mc-primary-600);border:none;border-right:1px solid var(--mc-border);padding:0 .85rem;font-weight:600;font-size:.88rem;white-space:nowrap;height:100%}
+  .mc-town-btn:hover{background:#ccfbf1;color:var(--mc-primary-600)}
+  .mc-town-btn::after{margin-left:.15rem;border-top-color:currentColor;opacity:.7}
+  .mc-town-menu{border:1px solid var(--mc-border);border-radius:12px;box-shadow:var(--mc-shadow-lg);padding:.5rem;margin-top:.35rem;min-width:200px}
+  .mc-town-menu .dropdown-header{font-family:'Poppins',sans-serif;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mc-muted);padding:.35rem .6rem .5rem}
+  .mc-town-menu .dropdown-item{border-radius:8px;padding:.5rem .6rem;font-size:.9rem;color:var(--mc-text);display:flex;align-items:center}
+  .mc-town-menu .dropdown-item:hover{background:var(--mc-primary-50);color:var(--mc-primary-600)}
+  .mc-town-menu .dropdown-item .bi{color:var(--mc-primary-600)}
+  .mc-hospital-input{position:relative;display:flex;align-items:center;flex:1;min-width:220px}
+  .mc-hospital-input .bi{position:absolute;left:.85rem;color:var(--mc-muted);font-size:1rem;pointer-events:none}
+  .mc-hospital-input input{border:none;outline:none;background:transparent;padding:.55rem .9rem .55rem 2.35rem;font-size:.9rem;color:var(--mc-text);width:100%;height:100%;font-family:inherit}
+  .mc-hospital-input input::placeholder{color:var(--mc-muted)}
+
+  /* Sub-header hospital search bar (below navbar) */
+  .mc-subheader{background:#fff;border-bottom:1px solid var(--mc-border);padding:1rem 0;position:sticky;top:73px;z-index:1020}
+  .mc-subheader-inner{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
+  .mc-subheader-label{display:inline-flex;align-items:center;gap:.55rem;color:var(--mc-text);font-family:'Poppins',sans-serif;font-weight:600;font-size:.95rem;flex-shrink:0}
+  .mc-subheader-label .bi{color:var(--mc-primary-600);font-size:1.15rem}
+  .mc-hospital-search--wide{flex:1;height:48px;min-width:280px}
+  .mc-hospital-search--wide .mc-town-btn{font-size:.92rem;padding:0 1rem}
+  .mc-hospital-search--wide .mc-hospital-input input{font-size:.95rem}
+  .mc-subheader-go{border:none;background:var(--mc-primary);color:#fff;width:44px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;border-left:1px solid var(--mc-border);transition:background .15s}
+  .mc-subheader-go:hover{background:var(--mc-primary-600)}
+  .mc-subheader-go:focus-visible{outline:2px solid var(--mc-primary);outline-offset:-2px}
+  @media (max-width: 767.98px){
+    .mc-subheader{position:static;top:auto}
+    .mc-hospital-search--wide{width:100%;flex:1 1 100%}
+  }
+
+  /* Search */
+  .mc-search{position:relative;max-width:560px}
+  .mc-search .form-control{padding:.9rem 1.1rem .9rem 3rem;border-radius:14px;border:1px solid var(--mc-border);font-size:1rem;box-shadow:var(--mc-shadow)}
+  .mc-search .form-control:focus{border-color:var(--mc-primary);box-shadow:0 0 0 4px rgba(13,148,136,.15)}
+  .mc-search .bi-search{position:absolute;left:1.1rem;top:50%;transform:translateY(-50%);color:var(--mc-muted);font-size:1.1rem}
+  .mc-search--hero{max-width:640px;display:flex;align-items:center;background:#fff;border:1px solid var(--mc-border);border-radius:16px;padding:.35rem .35rem .35rem 3rem;box-shadow:var(--mc-shadow-lg);position:relative}
+  .mc-search--hero:focus-within{border-color:var(--mc-primary);box-shadow:0 0 0 4px rgba(13,148,136,.15),var(--mc-shadow-lg)}
+  .mc-search--hero .form-control{border:none;box-shadow:none;padding:.85rem .5rem;font-size:1rem;background:transparent}
+  .mc-search--hero .form-control:focus{box-shadow:none;border:none}
+  .mc-search-btn{background:var(--mc-primary);color:#fff;border:none;font-weight:600;padding:.7rem 1.5rem;border-radius:12px;font-size:.95rem;flex-shrink:0;transition:background .15s}
+  .mc-search-btn:hover{background:var(--mc-primary-600)}
+
+  /* Hero centered variant */
+  .mc-hero--center .mc-hero-inner{max-width:44rem}
+  .mc-hero--center h1{font-size:clamp(2.25rem,4.4vw,3.5rem)}
+  .mc-hero--center .lead{max-width:36rem}
+
+  /* Large feature cards (4-up) */
+  .mc-feature{display:flex;align-items:center;gap:1.25rem;background:#fff;border:1px solid var(--mc-border);border-radius:20px;padding:1.6rem 1.75rem;box-shadow:var(--mc-shadow);text-decoration:none;color:var(--mc-text);transition:transform .2s,box-shadow .2s,border-color .2s;height:100%}
+  .mc-feature:hover{transform:translateY(-3px);box-shadow:var(--mc-shadow-lg);border-color:var(--mc-primary);color:var(--mc-text);text-decoration:none}
+  .mc-feature-icon{width:60px;height:60px;border-radius:16px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.65rem;flex-shrink:0}
+  .mc-feature-body{flex:1;min-width:0}
+  .mc-feature-body h3{font-size:1.2rem;font-weight:600;margin:0 0 .3rem;line-height:1.25}
+  .mc-feature-body p{color:var(--mc-muted);font-size:.93rem;margin:0;line-height:1.5}
+  .mc-feature-arr{color:var(--mc-muted);font-size:1.2rem;flex-shrink:0;transition:transform .15s,color .15s}
+  .mc-feature:hover .mc-feature-arr{color:var(--mc-primary-600);transform:translateX(3px)}
+  .mc-feature--danger:hover{border-color:var(--mc-danger)}
+  .mc-feature--danger:hover .mc-feature-arr{color:var(--mc-danger)}
+  .mc-feature-icon--danger{background:#fef2f2;color:var(--mc-danger)}
+
+  /* Hero */
+  .mc-hero{padding:5rem 0 4rem;background:linear-gradient(180deg,#fff 0%,var(--mc-bg) 100%);border-bottom:1px solid var(--mc-border)}
+  .mc-hero h1{font-size:clamp(2.25rem,4.2vw,3.5rem);line-height:1.08;margin-bottom:1.25rem}
+  .mc-hero .lead{font-size:1.15rem;color:var(--mc-muted);max-width:38rem;margin-bottom:2rem;line-height:1.6}
+  .mc-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:var(--mc-primary-50);color:var(--mc-primary-600);font-weight:600;font-size:.85rem;padding:.4rem .8rem;border-radius:999px;margin-bottom:1.25rem}
+  .mc-eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--mc-primary)}
+
+  .mc-hero-visual{background:#fff;border:1px solid var(--mc-border);border-radius:24px;padding:1.75rem;box-shadow:var(--mc-shadow-lg);position:relative}
+  .mc-hero-visual .mc-visit-card{border:1px solid var(--mc-border);border-radius:16px;padding:1.1rem;display:flex;align-items:center;gap:.9rem;background:#fff;transition:transform .2s}
+  .mc-hero-visual .mc-visit-card + .mc-visit-card{margin-top:.75rem}
+  .mc-hero-visual .mc-visit-card:hover{transform:translateY(-2px);border-color:var(--mc-primary)}
+  .mc-visit-icon{width:44px;height:44px;border-radius:12px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+  .mc-vital-pill{position:absolute;background:#fff;border:1px solid var(--mc-border);border-radius:14px;padding:.75rem 1rem;box-shadow:var(--mc-shadow);display:flex;align-items:center;gap:.65rem;font-size:.85rem}
+  .mc-vital-pill.a{top:-22px;right:-16px}
+  .mc-vital-pill.b{bottom:-22px;left:-16px}
+  .mc-vital-pill .ico{width:32px;height:32px;border-radius:9px;background:var(--mc-primary);color:#fff;display:flex;align-items:center;justify-content:center}
+
+  /* Section */
+  .mc-section{padding:4.5rem 0}
+  .mc-section-header{margin-bottom:2.75rem}
+  .mc-section-kicker{color:var(--mc-primary-600);font-weight:600;font-size:.9rem;letter-spacing:.02em;text-transform:uppercase;margin-bottom:.5rem}
+  .mc-section-header h2{font-size:clamp(1.75rem,2.6vw,2.25rem);margin-bottom:.65rem}
+  .mc-section-header p{color:var(--mc-muted);font-size:1.05rem;max-width:36rem;margin:0}
+
+  /* Cards */
+  .mc-card{background:var(--mc-card);border:1px solid var(--mc-border);border-radius:18px;padding:1.6rem;box-shadow:var(--mc-shadow);height:100%;transition:transform .2s,box-shadow .2s,border-color .2s}
+  .mc-card:hover{transform:translateY(-3px);box-shadow:var(--mc-shadow-lg);border-color:#cbd5e1}
+  .mc-card .mc-card-icon{width:48px;height:48px;border-radius:12px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem}
+  .mc-card h3{font-size:1.15rem;font-weight:600;margin-bottom:.4rem}
+  .mc-card p{color:var(--mc-muted);font-size:.95rem;margin:0 0 1rem;line-height:1.55}
+  .mc-card .mc-link{color:var(--mc-primary-600);font-weight:600;font-size:.9rem;display:inline-flex;align-items:center;gap:.35rem}
+  .mc-card .mc-link:hover{gap:.55rem}
+
+  /* Topic list */
+  .mc-topic{background:#fff;border:1px solid var(--mc-border);border-radius:14px;padding:1.1rem 1.25rem;display:flex;align-items:center;gap:.85rem;transition:all .15s;text-decoration:none;color:var(--mc-text)}
+  .mc-topic:hover{border-color:var(--mc-primary);background:var(--mc-primary-50);color:var(--mc-text);text-decoration:none;transform:translateX(2px)}
+  .mc-topic .mc-topic-ico{width:36px;height:36px;border-radius:10px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+  .mc-topic:hover .mc-topic-ico{background:#fff}
+  .mc-topic .name{font-weight:600;font-size:.95rem;line-height:1.2}
+  .mc-topic .count{color:var(--mc-muted);font-size:.8rem}
+  .mc-topic .arr{margin-left:auto;color:var(--mc-muted)}
+
+  /* Article */
+  .mc-article{background:#fff;border:1px solid var(--mc-border);border-radius:18px;overflow:hidden;box-shadow:var(--mc-shadow);height:100%;transition:transform .2s,box-shadow .2s}
+  .mc-article:hover{transform:translateY(-3px);box-shadow:var(--mc-shadow-lg)}
+  .mc-article-thumb{aspect-ratio:16/10;background:linear-gradient(135deg,#0d9488 0%,#14b8a6 100%);position:relative;display:flex;align-items:flex-end;padding:1.1rem}
+  .mc-article-thumb.b{background:linear-gradient(135deg,#0f766e 0%,#0d9488 100%)}
+  .mc-article-thumb.c{background:linear-gradient(135deg,#134e4a 0%,#0f766e 100%)}
+  .mc-article-thumb .badge-cat{background:rgba(255,255,255,.95);color:var(--mc-primary-600);font-weight:600;font-size:.75rem;padding:.35rem .7rem;border-radius:8px}
+  .mc-article-body{padding:1.35rem 1.4rem 1.5rem}
+  .mc-article-body h3{font-size:1.1rem;font-weight:600;margin-bottom:.55rem;line-height:1.35}
+  .mc-article-body p{color:var(--mc-muted);font-size:.9rem;margin:0 0 1rem;line-height:1.55}
+  .mc-article-meta{display:flex;align-items:center;gap:.85rem;color:var(--mc-muted);font-size:.82rem}
+  .mc-article-meta .sep{width:3px;height:3px;border-radius:50%;background:var(--mc-muted)}
+
+  /* Emergency banner */
+  .mc-emergency-banner{background:#fff;border:1px solid #fecaca;border-left:4px solid var(--mc-danger);border-radius:14px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.1rem;box-shadow:var(--mc-shadow)}
+  .mc-emergency-banner .ico{width:44px;height:44px;border-radius:12px;background:#fef2f2;color:var(--mc-danger);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+  .mc-emergency-banner .msg strong{color:var(--mc-danger);display:block;font-weight:700;font-size:1rem}
+  .mc-emergency-banner .msg span{color:var(--mc-muted);font-size:.9rem}
+
+  /* Footer */
+  .mc-footer{background:#fff;border-top:1px solid var(--mc-border);padding:3.5rem 0 1.75rem;margin-top:2rem}
+  .mc-footer h5{font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--mc-text);margin-bottom:1rem}
+  .mc-footer ul{list-style:none;padding:0;margin:0}
+  .mc-footer ul li{margin-bottom:.55rem}
+  .mc-footer ul a{color:var(--mc-muted);font-size:.9rem;text-decoration:none}
+  .mc-footer ul a:hover{color:var(--mc-primary-600)}
+  .mc-footer .brand-block p{color:var(--mc-muted);font-size:.9rem;line-height:1.55;max-width:22rem}
+  .mc-disclaimer{margin-top:2.75rem;padding-top:1.5rem;border-top:1px solid var(--mc-border);display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;font-size:.83rem;color:var(--mc-muted)}
+  .mc-disclaimer .note{display:inline-flex;align-items:center;gap:.5rem}
+  .mc-disclaimer .note .bi{color:var(--mc-primary-600)}
+
+  @media (max-width: 991.98px){
+    .mc-hero{padding:3rem 0}
+    .mc-hero-visual{margin-top:2.5rem}
+    .mc-section{padding:3rem 0}
+  }
+</style>
+</helmet>
+
+<nav class="navbar navbar-expand-lg mc-nav">
+  <div class="container">
+    <a class="navbar-brand" href="#"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mcNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="mcNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link active" href="#">Health topics</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Symptoms</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Medications</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Find care</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Wellness</a></li>
+      </ul>
+      <div class="d-flex align-items-center gap-2">
+        <sc-if value="{{ showInNavbar }}" hint-placeholder-val="{{ false }}">
+          <div class="mc-hospital-search d-none d-lg-flex">
+            <sc-if value="{{ showTownFilter }}" hint-placeholder-val="{{ true }}">
+              <div class="dropdown">
+                <button class="mc-town-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-geo-alt-fill"></i>
+                  <span>Towns</span>
+                </button>
+                <ul class="dropdown-menu mc-town-menu">
+                  <li><h6 class="dropdown-header">Filter by town</h6></li>
+                  <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>All towns</a></li>
+                  <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>Springfield</a></li>
+                  <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>Riverside</a></li>
+                  <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>Fairview</a></li>
+                  <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>Ashwood</a></li>
+                  <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>Millbrook</a></li>
+                </ul>
+              </div>
+            </sc-if>
+            <div class="mc-hospital-input">
+              <i class="bi bi-hospital"></i>
+              <input type="text" placeholder="Search hospitals…" aria-label="Search hospitals">
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </div><a href="#" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
+  </div>
+</nav>
+
+<sc-if value="{{ showBelowHeader }}" hint-placeholder-val="{{ true }}">
+  <div class="mc-subheader">
+    <div class="container">
+      <div class="mc-subheader-inner">
+        <div class="mc-subheader-label">
+          <i class="bi bi-hospital"></i>
+          <span>Find a hospital</span>
+        </div>
+        <div class="mc-hospital-search mc-hospital-search--wide">
+          <sc-if value="{{ showTownFilter }}" hint-placeholder-val="{{ true }}">
+            <div class="dropdown">
+              <button class="mc-town-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-geo-alt-fill"></i>
+                <span>Towns</span>
+              </button>
+              <ul class="dropdown-menu mc-town-menu">
+                <li><h6 class="dropdown-header">Filter by town</h6></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>All towns</a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>Springfield</a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>Riverside</a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>Fairview</a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>Ashwood</a></li>
+                <li><a class="dropdown-item" href="#"><i class="bi bi-pin-map me-2"></i>Millbrook</a></li>
+              </ul>
+            </div>
+          </sc-if>
+          <div class="mc-hospital-input">
+            <i class="bi bi-hospital"></i>
+            <input type="text" placeholder="Search hospitals by name…" aria-label="Search hospitals">
+          </div>
+          <button class="mc-subheader-go" type="button"><i class="bi bi-arrow-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<section class="mc-hero mc-hero--center">
+  <div class="container">
+    <div class="mc-hero-inner text-center mx-auto">
+      <span class="mc-eyebrow"><span class="dot"></span>Health information for Myanmar</span>
+      <h1>Accessible, trusted health information — for every family in Myanmar.</h1>
+      <p class="lead mx-auto">Plain-language guides on common conditions, emergency contacts, and hospitals near you — written for Myanmar communities.</p>
+      <div class="mc-search mc-search--hero mx-auto">
+        <i class="bi bi-search"></i>
+        <input type="text" class="form-control" placeholder="Search symptoms, conditions, or hospitals…">
+        <button class="mc-search-btn" type="button">Search</button>
+      </div>
+      <div class="d-flex flex-wrap gap-2 align-items-center justify-content-center mt-4">
+        <span class="text-muted small me-1">Popular:</span>
+        <a href="#" class="btn btn-mc-outline btn-sm">Dengue fever</a>
+        <a href="#" class="btn btn-mc-outline btn-sm">High blood pressure</a>
+        <a href="#" class="btn btn-mc-outline btn-sm">Diabetes</a>
+        <a href="#" class="btn btn-mc-outline btn-sm">Maternal care</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mc-section">
+  <div class="container">
+    <div class="mc-section-header text-center mx-auto" style="max-width:42rem">
+      <div class="mc-section-kicker">Explore MedCare</div>
+      <h2>Where would you like to start?</h2>
+      <p>Four quick ways to find the health information and care you need.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <a href="#" class="mc-feature">
+          <div class="mc-feature-icon"><i class="bi bi-journal-medical"></i></div>
+          <div class="mc-feature-body">
+            <h3>Health Articles</h3>
+            <p>Read plain-language guides on wellness, prevention, and daily health topics.</p>
+          </div>
+          <i class="bi bi-arrow-right mc-feature-arr"></i>
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a href="CommonDiseases.dc.html" class="mc-feature">
+          <div class="mc-feature-icon"><i class="bi bi-virus"></i></div>
+          <div class="mc-feature-body">
+            <h3>Common Diseases</h3>
+            <p>Learn symptoms, causes, and treatments for conditions common in Myanmar.</p>
+          </div>
+          <i class="bi bi-arrow-right mc-feature-arr"></i>
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a href="EmergencyContacts.dc.html" class="mc-feature mc-feature--danger">
+          <div class="mc-feature-icon mc-feature-icon--danger"><i class="bi bi-telephone-fill"></i></div>
+          <div class="mc-feature-body">
+            <h3>Emergency Contacts</h3>
+            <p>Ambulance, poison control, and 24/7 hotlines you can call right now.</p>
+          </div>
+          <i class="bi bi-arrow-right mc-feature-arr"></i>
+        </a>
+      </div>
+      <div class="col-md-6">
+        <a href="FindHospitals.dc.html" class="mc-feature">
+          <div class="mc-feature-icon"><i class="bi bi-hospital"></i></div>
+          <div class="mc-feature-body">
+            <h3>Find Hospitals in Yangon</h3>
+            <p>Browse hospitals and clinics across Yangon townships by name or location.</p>
+          </div>
+          <i class="bi bi-arrow-right mc-feature-arr"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mc-section pt-0">
+  <div class="container">
+    <div class="mc-emergency-banner mb-5">
+      <span class="ico"><i class="bi bi-exclamation-triangle-fill"></i></span>
+      <div class="msg flex-grow-1">
+        <strong>In a medical emergency, call 192 (ambulance) immediately.</strong>
+        <span>Do not use this site for urgent or life-threatening conditions.</span>
+      </div>
+      <a href="#" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency help</a>
+    </div>
+
+    <div class="mc-section-header d-flex flex-wrap align-items-end justify-content-between gap-3">
+      <div>
+        <div class="mc-section-kicker">Editor's picks</div>
+        <h2>Featured Articles</h2>
+      </div>
+      <a href="#" class="btn btn-mc-outline">All articles <i class="bi bi-arrow-right ms-1"></i></a>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <a href="#" class="mc-article d-block text-decoration-none text-reset">
+          <div class="mc-article-thumb"><span class="badge-cat">Monsoon health</span></div>
+          <div class="mc-article-body">
+            <h3>Protecting your family from dengue during the rainy season</h3>
+            <p>Simple steps every household in Yangon can take to prevent mosquito breeding at home.</p>
+            <div class="mc-article-meta"><span>Dr. Thiri Aung</span><span class="sep"></span><span>5 min read</span><span class="sep"></span><span>Jul 22</span></div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="#" class="mc-article d-block text-decoration-none text-reset">
+          <div class="mc-article-thumb b"><span class="badge-cat">Nutrition</span></div>
+          <div class="mc-article-body">
+            <h3>Eating well on a Myanmar family budget</h3>
+            <p>Everyday foods from the market that support blood pressure, heart, and blood-sugar health.</p>
+            <div class="mc-article-meta"><span>Ma Nilar, RD</span><span class="sep"></span><span>7 min read</span><span class="sep"></span><span>Jul 19</span></div>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="#" class="mc-article d-block text-decoration-none text-reset">
+          <div class="mc-article-thumb c"><span class="badge-cat">Maternal care</span></div>
+          <div class="mc-article-body">
+            <h3>What to expect at your first antenatal visit</h3>
+            <p>A step-by-step guide for expecting mothers — what to bring, what to ask, and why it matters.</p>
+            <div class="mc-article-meta"><span>Dr. Khin Sandar</span><span class="sep"></span><span>6 min read</span><span class="sep"></span><span>Jul 15</span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="mc-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4 brand-block">
+        <a class="navbar-brand mb-3 d-inline-flex" href="#" style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);gap:.55rem;align-items:center">
+          <span style="width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center"><i class="bi bi-heart-pulse-fill"></i></span>MedCare
+        </a>
+        <p>Trusted, plain-language health information reviewed by licensed medical professionals. Free for everyone, everywhere.</p>
+
+      </div>
+
+      <div class="col-6 col-md-3 col-lg-2">
+        <h5>About</h5>
+        <ul>
+          <li><a href="#">Our editorial team</a></li>
+          <li><a href="#">Review process</a></li>
+          <li><a href="#">Contact us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+        </ul>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Terms of use</a></li>
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Cookie settings</a></li>
+          <li><a href="#">Accessibility</a></li>
+          <li><a href="#">HIPAA notice</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mc-disclaimer">
+      <span class="note"><i class="bi bi-info-circle"></i> Information only — not a substitute for professional medical advice, diagnosis, or treatment.</span>
+      <span>© 2026 MedCare. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: {&quot;width&quot;: 1280, &quot;height&quot;: 900},
+  &quot;searchPlacement&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;options&quot;: [&quot;below-header&quot;, &quot;navbar&quot;],
+    &quot;default&quot;: &quot;below-header&quot;,
+    &quot;tsType&quot;: &quot;'below-header'|'navbar'&quot;,
+    &quot;section&quot;: &quot;Hospital search&quot;
+  },
+  &quot;showTownFilter&quot;: {
+    &quot;editor&quot;: &quot;boolean&quot;,
+    &quot;default&quot;: true,
+    &quot;tsType&quot;: &quot;boolean&quot;,
+    &quot;section&quot;: &quot;Hospital search&quot;
+  }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const placement = this.props.searchPlacement ?? 'below-header';
+    return {
+      showInNavbar: placement === 'navbar',
+      showBelowHeader: placement === 'below-header',
+      showTownFilter: this.props.showTownFilter ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

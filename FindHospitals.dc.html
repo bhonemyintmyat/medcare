@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+  :root{
+    --mc-primary:#0d9488;--mc-primary-600:#0f766e;--mc-primary-50:#f0fdfa;
+    --mc-bg:#f8fafc;--mc-text:#1e293b;--mc-muted:#64748b;--mc-border:#e2e8f0;
+    --mc-danger:#dc2626;--mc-danger-600:#b91c1c;--mc-danger-50:#fef2f2;--mc-card:#ffffff;
+    --mc-shadow:0 1px 2px rgba(15,23,42,.04), 0 8px 24px -12px rgba(15,23,42,.12);
+    --mc-shadow-lg:0 4px 8px rgba(15,23,42,.04), 0 24px 48px -20px rgba(15,23,42,.18);
+  }
+  html,body{background:var(--mc-bg);color:var(--mc-text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4,h5{font-family:'Poppins',system-ui,sans-serif;letter-spacing:-.015em;color:var(--mc-text)}
+  h1{font-weight:700;letter-spacing:-.025em}
+  a{color:var(--mc-primary-600);text-decoration:none}
+  a:hover{color:var(--mc-primary);text-decoration:underline}
+  ::selection{background:rgba(13,148,136,.2)}
+
+  /* Navbar */
+  .mc-nav{background:#fff;border-bottom:1px solid var(--mc-border);position:sticky;top:0;z-index:1030}
+  .mc-nav .navbar-brand{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);display:flex;align-items:center;gap:.55rem}
+  .mc-nav .navbar-brand .mc-logo{width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.1rem}
+  .mc-nav .nav-link{color:var(--mc-text);font-weight:500;padding:.5rem .9rem !important;border-radius:8px;font-size:.95rem}
+  .mc-nav .nav-link:hover{color:var(--mc-primary-600);background:var(--mc-primary-50)}
+  .mc-nav .nav-link.active{color:var(--mc-primary-600)}
+  .btn-emergency{background:var(--mc-danger);border:none;color:#fff;font-weight:600;border-radius:10px;padding:.55rem 1.1rem;display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px -4px rgba(220,38,38,.5)}
+  .btn-emergency:hover{background:var(--mc-danger-600);color:#fff}
+
+  /* Page header */
+  .mc-page-head{background:linear-gradient(180deg,#fff 0%,var(--mc-bg) 100%);border-bottom:1px solid var(--mc-border);padding:2.5rem 0 2rem}
+  .mc-breadcrumb{font-size:.85rem;color:var(--mc-muted);margin-bottom:.85rem;display:flex;align-items:center;gap:.4rem}
+  .mc-breadcrumb a{color:var(--mc-muted)}
+  .mc-breadcrumb a:hover{color:var(--mc-primary-600)}
+  .mc-page-head h1{font-size:clamp(1.8rem,3vw,2.4rem);margin-bottom:.5rem}
+  .mc-page-head .intro{color:var(--mc-muted);font-size:1.02rem;max-width:42rem;line-height:1.6;margin:0}
+
+  /* Layout */
+  .mc-layout{padding:2rem 0 4.5rem}
+
+  /* Sidebar filters */
+  .mc-filters{background:#fff;border:1px solid var(--mc-border);border-radius:18px;padding:1.5rem;box-shadow:var(--mc-shadow);position:sticky;top:90px}
+  .mc-filters-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+  .mc-filters-head h2{font-size:1.05rem;font-weight:600;margin:0;display:flex;align-items:center;gap:.5rem}
+  .mc-filters-head .bi{color:var(--mc-primary-600)}
+  .mc-clear{background:none;border:none;color:var(--mc-primary-600);font-size:.85rem;font-weight:500;padding:0;cursor:pointer}
+  .mc-clear:hover{text-decoration:underline}
+  .mc-filter-group{margin-bottom:1.5rem}
+  .mc-filter-group:last-child{margin-bottom:0}
+  .mc-filter-group > .lbl{font-size:.8rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--mc-muted);margin-bottom:.65rem}
+  .mc-select{width:100%;border:1px solid var(--mc-border);border-radius:10px;padding:.65rem .85rem;font-size:.95rem;color:var(--mc-text);background:#fff;font-family:inherit;cursor:pointer}
+  .mc-select:focus{outline:none;border-color:var(--mc-primary);box-shadow:0 0 0 4px rgba(13,148,136,.15)}
+  .mc-check{display:flex;align-items:center;gap:.65rem;padding:.45rem 0;cursor:pointer;font-size:.95rem;color:var(--mc-text)}
+  .mc-check input{width:18px;height:18px;accent-color:var(--mc-primary);cursor:pointer;flex-shrink:0}
+  .mc-check .cnt{margin-left:auto;color:var(--mc-muted);font-size:.82rem}
+
+  /* Search */
+  .mc-search{position:relative;margin-bottom:1.25rem}
+  .mc-search .bi-search{position:absolute;left:1.1rem;top:50%;transform:translateY(-50%);color:var(--mc-muted);font-size:1.05rem;pointer-events:none}
+  .mc-search input{width:100%;border:1px solid var(--mc-border);border-radius:14px;padding:.85rem 1rem .85rem 2.9rem;font-size:1rem;background:#fff;color:var(--mc-text);font-family:inherit;box-shadow:var(--mc-shadow)}
+  .mc-search input:focus{outline:none;border-color:var(--mc-primary);box-shadow:0 0 0 4px rgba(13,148,136,.15)}
+  .mc-search input::placeholder{color:var(--mc-muted)}
+  .mc-result-count{color:var(--mc-muted);font-size:.92rem;margin:0 0 1.1rem}
+  .mc-result-count strong{color:var(--mc-text);font-weight:600}
+
+  /* Hospital card */
+  .mc-hosp{background:#fff;border:1px solid var(--mc-border);border-radius:18px;padding:1.5rem 1.6rem;box-shadow:var(--mc-shadow);margin-bottom:1.1rem;transition:transform .18s,box-shadow .18s,border-color .18s}
+  .mc-hosp:hover{transform:translateY(-2px);box-shadow:var(--mc-shadow-lg);border-color:#cbd5e1}
+  .mc-hosp-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.35rem}
+  .mc-hosp h3{font-size:1.2rem;font-weight:600;margin:0}
+  .mc-hosp-type{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--mc-primary-600);background:var(--mc-primary-50);padding:.28rem .65rem;border-radius:999px;margin-top:.45rem}
+  .mc-badge-er{display:inline-flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;letter-spacing:.02em;color:#fff;background:var(--mc-danger);padding:.35rem .7rem;border-radius:999px;flex-shrink:0;box-shadow:0 2px 8px -2px rgba(220,38,38,.5)}
+  .mc-hosp-meta{margin-top:1rem;display:grid;gap:.6rem}
+  .mc-hosp-row{display:flex;align-items:flex-start;gap:.7rem;font-size:.94rem;color:#334155;line-height:1.4}
+  .mc-hosp-row .bi{color:var(--mc-muted);font-size:1.05rem;margin-top:.1rem;flex-shrink:0;width:1.1rem;text-align:center}
+  .mc-hosp-row.hours .open{color:var(--mc-primary-600);font-weight:600}
+  .mc-hosp-actions{margin-top:1.2rem;display:flex;gap:.65rem;flex-wrap:wrap}
+  .mc-call{display:inline-flex;align-items:center;gap:.5rem;background:var(--mc-primary);color:#fff;font-weight:600;font-size:.9rem;padding:.6rem 1.1rem;border-radius:10px;text-decoration:none;transition:background .15s}
+  .mc-call:hover{background:var(--mc-primary-600);color:#fff;text-decoration:none}
+  .mc-directions{display:inline-flex;align-items:center;gap:.5rem;background:#fff;border:1px solid var(--mc-border);color:var(--mc-text);font-weight:500;font-size:.9rem;padding:.6rem 1.1rem;border-radius:10px;text-decoration:none;transition:all .15s}
+  .mc-directions:hover{border-color:var(--mc-primary);color:var(--mc-primary-600);background:var(--mc-primary-50);text-decoration:none}
+
+  /* Empty state */
+  .mc-empty{background:#fff;border:1px dashed var(--mc-border);border-radius:18px;text-align:center;padding:3.5rem 1.5rem}
+  .mc-empty-art{width:110px;height:110px;margin:0 auto 1.5rem;position:relative}
+  .mc-empty-art .ring{position:absolute;inset:0;border-radius:50%;background:var(--mc-primary-50)}
+  .mc-empty-art .bi-hospital{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--mc-primary-600);opacity:.5}
+  .mc-empty-art .bi-search{position:absolute;right:2px;bottom:2px;font-size:1.5rem;color:var(--mc-muted);background:#fff;border-radius:50%;padding:.35rem;box-shadow:var(--mc-shadow)}
+  .mc-empty h3{font-size:1.25rem;font-weight:600;margin-bottom:.5rem}
+  .mc-empty p{color:var(--mc-muted);font-size:.98rem;max-width:24rem;margin:0 auto 1.35rem;line-height:1.6}
+  .mc-empty .btn-reset{background:var(--mc-primary);color:#fff;border:none;font-weight:600;padding:.65rem 1.4rem;border-radius:10px;font-size:.92rem;cursor:pointer}
+  .mc-empty .btn-reset:hover{background:var(--mc-primary-600)}
+
+  /* Mobile filter toggle */
+  .mc-mobile-filter-btn{display:none}
+
+  /* Footer */
+  .mc-footer{background:#fff;border-top:1px solid var(--mc-border);padding:2rem 0}
+  .mc-disclaimer{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;font-size:.83rem;color:var(--mc-muted)}
+  .mc-disclaimer .note{display:inline-flex;align-items:center;gap:.5rem}
+  .mc-disclaimer .note .bi{color:var(--mc-primary-600)}
+
+  @media (max-width:991.98px){
+    .mc-filters{position:static;top:auto;margin-bottom:1.5rem}
+  }
+</style>
+</helmet>
+
+<nav class="navbar navbar-expand-lg mc-nav">
+  <div class="container">
+    <a class="navbar-brand" href="MedCare.dc.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mcNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="mcNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="MedCare.dc.html">Health topics</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Symptoms</a></li>
+        <li class="nav-item"><a class="nav-link" href="CommonDiseases.dc.html">Common diseases</a></li>
+        <li class="nav-item"><a class="nav-link active" href="#">Find care</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Wellness</a></li>
+      </ul>
+      <a href="#" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
+    </div>
+  </div>
+</nav>
+
+<section class="mc-page-head">
+  <div class="container">
+    <div class="mc-breadcrumb">
+      <a href="MedCare.dc.html"><i class="bi bi-house"></i> Home</a>
+      <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+      <span>Find hospitals</span>
+    </div>
+    <h1>Find Hospitals in Yangon</h1>
+    <p class="intro">Search hospitals and clinics across Yangon townships. Filter by type or find one with a 24-hour emergency room near you.</p>
+  </div>
+</section>
+
+<section class="mc-layout">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-3">
+        <aside class="mc-filters">
+          <div class="mc-filters-head">
+            <h2><i class="bi bi-sliders"></i> Filters</h2>
+            <button class="mc-clear" type="button" onClick="{{ onClear }}">Clear all</button>
+          </div>
+          <div class="mc-filter-group">
+            <div class="lbl">Township</div>
+            <select class="mc-select" value="{{ township }}" onChange="{{ onTownship }}">
+              <sc-for list="{{ townships }}" as="t" hint-placeholder-count="6">
+                <option value="{{ t.value }}">{{ t.label }}</option>
+              </sc-for>
+            </select>
+          </div>
+          <div class="mc-filter-group">
+            <div class="lbl">Hospital type</div>
+            <sc-for list="{{ typeOptions }}" as="ty" hint-placeholder-count="3">
+              <label class="mc-check">
+                <input type="checkbox" checked="{{ ty.checked }}" onChange="{{ ty.onToggle }}">
+                <span>{{ ty.label }}</span>
+                <span class="cnt">{{ ty.count }}</span>
+              </label>
+            </sc-for>
+          </div>
+        </aside>
+      </div>
+
+      <div class="col-lg-9">
+        <div class="mc-search">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Search by hospital name or area…" value="{{ query }}" onInput="{{ onSearch }}">
+        </div>
+        <p class="mc-result-count"><strong>{{ visibleCount }}</strong> {{ hospitalWord }} found</p>
+
+        <sc-for list="{{ hospitals }}" as="h" hint-placeholder-count="4">
+          <article class="mc-hosp">
+            <div class="mc-hosp-top">
+              <div>
+                <h3>{{ h.name }}</h3>
+                <span class="mc-hosp-type">{{ h.typeLabel }}</span>
+              </div>
+              <sc-if value="{{ h.er }}" hint-placeholder-val="{{ true }}">
+                <span class="mc-badge-er"><i class="bi bi-plus-circle-fill"></i> ER available</span>
+              </sc-if>
+            </div>
+            <div class="mc-hosp-meta">
+              <div class="mc-hosp-row"><i class="bi bi-geo-alt"></i><span>{{ h.township }} Township</span></div>
+              <div class="mc-hosp-row"><i class="bi bi-signpost-2"></i><span>{{ h.address }}</span></div>
+              <div class="mc-hosp-row hours"><i class="bi bi-clock"></i><span class="open">{{ h.hours }}</span></div>
+            </div>
+            <div class="mc-hosp-actions">
+              <a href="{{ h.telHref }}" class="mc-call"><i class="bi bi-telephone-fill"></i> {{ h.phone }}</a>
+              <a href="#" class="mc-directions"><i class="bi bi-map"></i> Directions</a>
+            </div>
+          </article>
+        </sc-for>
+
+        <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+          <div class="mc-empty">
+            <div class="mc-empty-art">
+              <div class="ring"></div>
+              <i class="bi bi-hospital"></i>
+              <i class="bi bi-search"></i>
+            </div>
+            <h3>No hospitals match your filters</h3>
+            <p>Try a different township, remove a hospital-type filter, or clear your search to see all hospitals in Yangon.</p>
+            <button class="btn-reset" type="button" onClick="{{ onClear }}">Clear all filters</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="mc-footer">
+  <div class="container">
+    <div class="mc-disclaimer">
+      <span class="note"><i class="bi bi-info-circle"></i> Information only — not a substitute for professional medical advice, diagnosis, or treatment.</span>
+      <span>© 2026 MedCare. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { query: '', township: 'all', types: { general: true, specialist: true, emergency: true } };
+
+  hospitals = [
+    {name:'Yangon General Hospital', type:'general', township:'Latha', address:'Bogyoke Aung San Rd, Latha', phone:'01-256112', hours:'Open 24 hours', er:true},
+    {name:'North Okkalapa General Hospital', type:'general', township:'North Okkalapa', address:'Thudhamma Rd, North Okkalapa', phone:'01-9699277', hours:'Open 24 hours', er:true},
+    {name:'Yangon Children’s Hospital', type:'specialist', township:'Sanchaung', address:'Halpin Rd, Sanchaung', phone:'01-222807', hours:'Open 24 hours', er:true},
+    {name:'Central Women’s Hospital', type:'specialist', township:'Dagon', address:'Min Ye Kyaw Swa Rd, Dagon', phone:'01-221015', hours:'Open 24 hours', er:false},
+    {name:'Grand Hantha International Hospital', type:'general', township:'Kamayut', address:'Pyay Rd, Kamayut', phone:'01-9666141', hours:'Open 24 hours', er:true},
+    {name:'Pun Hlaing Siloam Hospital', type:'general', township:'Hlaing Tharyar', address:'Pun Hlaing Estate Ave, Hlaing Tharyar', phone:'01-3684323', hours:'Open 24 hours', er:true},
+    {name:'Yangon Eye, Ear, Nose & Throat Hospital', type:'specialist', township:'Lanmadaw', address:'Lanmadaw St, Lanmadaw', phone:'01-224647', hours:'Mon–Fri, 8:00–16:00', er:false},
+    {name:'Victoria Hospital', type:'general', township:'Kamayut', address:'Kanbe Rd, Kamayut', phone:'01-9666141', hours:'Open 24 hours', er:true},
+    {name:'Yankin Children Hospital', type:'specialist', township:'Yankin', address:'Sayarsan Rd, Yankin', phone:'01-578140', hours:'Open 24 hours', er:true},
+    {name:'Workers’ Hospital (Yangon)', type:'general', township:'Yankin', address:'New University Ave Rd, Yankin', phone:'01-550149', hours:'Open 24 hours', er:false},
+  ];
+
+  typeMeta = [
+    {id:'general', label:'General'},
+    {id:'specialist', label:'Specialist'},
+    {id:'emergency', label:'Emergency / ER'},
+  ];
+
+  matchesType(h){
+    const t = this.state.types;
+    // Emergency filter is an OR-add: a hospital shows if its base type is checked OR (ER checked and it has an ER)
+    const baseOK = (h.type === 'general' && t.general) || (h.type === 'specialist' && t.specialist);
+    const erOK = t.emergency && h.er;
+    // If nothing checked, show none; otherwise union of the checked conditions
+    return baseOK || erOK;
+  }
+
+  renderVals(){
+    const q = (this.state.query || '').trim().toLowerCase();
+    const filtered = this.hospitals.filter(h => {
+      const townOK = this.state.township === 'all' || h.township === this.state.township;
+      const typeOK = this.matchesType(h);
+      const hay = (h.name + ' ' + h.township + ' ' + h.address).toLowerCase();
+      const searchOK = !q || hay.includes(q);
+      return townOK && typeOK && searchOK;
+    });
+
+    const townValues = Array.from(new Set(this.hospitals.map(h => h.township))).sort();
+    const townships = [{value:'all', label:'All townships'}].concat(townValues.map(t => ({value:t, label:t})));
+
+    const typeLabelMap = { general:'General', specialist:'Specialist' };
+    const typeOptions = this.typeMeta.map(tm => ({
+      label: tm.label,
+      checked: !!this.state.types[tm.id],
+      count: tm.id === 'emergency'
+        ? this.hospitals.filter(h => h.er).length
+        : this.hospitals.filter(h => h.type === tm.id).length,
+      onToggle: () => this.setState(s => ({ types: { ...s.types, [tm.id]: !s.types[tm.id] } })),
+    }));
+
+    return {
+      query: this.state.query,
+      township: this.state.township,
+      townships,
+      typeOptions,
+      onSearch: (e) => this.setState({ query: e.target.value }),
+      onTownship: (e) => this.setState({ township: e.target.value }),
+      onClear: () => this.setState({ query: '', township: 'all', types: { general: true, specialist: true, emergency: true } }),
+      hospitals: filtered.map(h => ({
+        ...h,
+        typeLabel: typeLabelMap[h.type] || 'Hospital',
+        telHref: 'tel:' + h.phone.replace(/[^0-9+]/g, ''),
+      })),
+      visibleCount: filtered.length,
+      hospitalWord: filtered.length === 1 ? 'hospital' : 'hospitals',
+      showEmpty: filtered.length === 0,
+    };
+  }
+}
+</script>
+</body>
+</html>

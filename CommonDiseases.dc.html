@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+  :root{
+    --mc-primary:#0d9488;--mc-primary-600:#0f766e;--mc-primary-50:#f0fdfa;
+    --mc-bg:#f8fafc;--mc-text:#1e293b;--mc-muted:#64748b;--mc-border:#e2e8f0;
+    --mc-danger:#dc2626;--mc-danger-600:#b91c1c;--mc-card:#ffffff;
+    --mc-shadow:0 1px 2px rgba(15,23,42,.04), 0 8px 24px -12px rgba(15,23,42,.12);
+    --mc-shadow-lg:0 4px 8px rgba(15,23,42,.04), 0 24px 48px -20px rgba(15,23,42,.18);
+  }
+  html,body{background:var(--mc-bg);color:var(--mc-text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4,h5{font-family:'Poppins',system-ui,sans-serif;letter-spacing:-.015em;color:var(--mc-text)}
+  h1{font-weight:700;letter-spacing:-.025em}
+  a{color:var(--mc-primary-600);text-decoration:none}
+  a:hover{color:var(--mc-primary);text-decoration:underline}
+  ::selection{background:rgba(13,148,136,.2)}
+
+  /* Navbar */
+  .mc-nav{background:#fff;border-bottom:1px solid var(--mc-border);position:sticky;top:0;z-index:1030}
+  .mc-nav .navbar-brand{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);display:flex;align-items:center;gap:.55rem}
+  .mc-nav .navbar-brand .mc-logo{width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.1rem}
+  .mc-nav .nav-link{color:var(--mc-text);font-weight:500;padding:.5rem .9rem !important;border-radius:8px;font-size:.95rem}
+  .mc-nav .nav-link:hover{color:var(--mc-primary-600);background:var(--mc-primary-50)}
+  .mc-nav .nav-link.active{color:var(--mc-primary-600)}
+  .btn-emergency{background:var(--mc-danger);border:none;color:#fff;font-weight:600;border-radius:10px;padding:.55rem 1.1rem;display:inline-flex;align-items:center;gap:.45rem;box-shadow:0 4px 14px -4px rgba(220,38,38,.5)}
+  .btn-emergency:hover{background:var(--mc-danger-600);color:#fff}
+  .btn-mc-outline{background:#fff;border:1px solid var(--mc-border);color:var(--mc-text);font-weight:500;border-radius:10px;padding:.55rem 1rem;font-size:.9rem}
+  .btn-mc-outline:hover{border-color:var(--mc-primary);color:var(--mc-primary-600);background:var(--mc-primary-50)}
+
+  /* Page header */
+  .mc-page-head{background:linear-gradient(180deg,#fff 0%,var(--mc-bg) 100%);border-bottom:1px solid var(--mc-border);padding:3.5rem 0 2.5rem}
+  .mc-breadcrumb{font-size:.85rem;color:var(--mc-muted);margin-bottom:.85rem;display:flex;align-items:center;gap:.4rem}
+  .mc-breadcrumb a{color:var(--mc-muted)}
+  .mc-breadcrumb a:hover{color:var(--mc-primary-600)}
+  .mc-page-head h1{font-size:clamp(1.9rem,3.2vw,2.5rem);margin-bottom:.75rem}
+  .mc-page-head .intro{color:var(--mc-muted);font-size:1.05rem;max-width:42rem;line-height:1.6;margin:0}
+
+  /* Toolbar */
+  .mc-toolbar{padding:2rem 0 .5rem}
+  .mc-filter-bar{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap}
+  .mc-filter-search{position:relative;flex:1;min-width:280px;max-width:520px}
+  .mc-filter-search .bi-search{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--mc-muted);font-size:1rem;pointer-events:none}
+  .mc-filter-search input{width:100%;border:1px solid var(--mc-border);border-radius:12px;padding:.75rem 1rem .75rem 2.6rem;font-size:.95rem;background:#fff;color:var(--mc-text);font-family:inherit;box-shadow:var(--mc-shadow)}
+  .mc-filter-search input:focus{outline:none;border-color:var(--mc-primary);box-shadow:0 0 0 4px rgba(13,148,136,.15)}
+  .mc-filter-search input::placeholder{color:var(--mc-muted)}
+  .mc-filter-chips{display:flex;gap:.5rem;flex-wrap:wrap}
+  .mc-chip{background:#fff;border:1px solid var(--mc-border);color:var(--mc-text);font-size:.85rem;font-weight:500;padding:.5rem .95rem;border-radius:999px;cursor:pointer;transition:all .15s}
+  .mc-chip:hover{border-color:var(--mc-primary);color:var(--mc-primary-600);background:var(--mc-primary-50)}
+  .mc-chip.active{background:var(--mc-primary);border-color:var(--mc-primary);color:#fff}
+  .mc-result-count{color:var(--mc-muted);font-size:.9rem;margin:1.25rem 0 0}
+  .mc-result-count strong{color:var(--mc-text);font-weight:600}
+
+  /* Grid */
+  .mc-diseases{padding:1.25rem 0 5rem}
+
+  /* Disease card */
+  .mc-disease{display:block;background:#fff;border:1px solid var(--mc-border);border-radius:18px;padding:1.5rem 1.5rem 1.4rem;box-shadow:var(--mc-shadow);text-decoration:none;color:var(--mc-text);height:100%;transition:transform .2s,box-shadow .2s,border-color .2s;position:relative}
+  .mc-disease:hover{transform:translateY(-3px);box-shadow:var(--mc-shadow-lg);border-color:var(--mc-primary);color:var(--mc-text);text-decoration:none}
+  .mc-disease-icon{width:52px;height:52px;border-radius:14px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:1rem}
+  .mc-disease h3{font-size:1.1rem;font-weight:600;margin-bottom:.4rem}
+  .mc-disease-tag{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--mc-muted);margin-bottom:.5rem}
+  .mc-disease p{color:var(--mc-muted);font-size:.9rem;line-height:1.55;margin:0 0 1.1rem}
+  .mc-disease-more{color:var(--mc-primary-600);font-weight:600;font-size:.88rem;display:inline-flex;align-items:center;gap:.35rem}
+  .mc-disease:hover .mc-disease-more{gap:.55rem}
+
+  /* Empty state */
+  .mc-empty{text-align:center;padding:3rem 1rem;color:var(--mc-muted)}
+  .mc-empty .bi{font-size:2.5rem;color:var(--mc-border);margin-bottom:.75rem;display:block}
+
+  /* Footer */
+  .mc-footer{background:#fff;border-top:1px solid var(--mc-border);padding:2rem 0}
+  .mc-disclaimer{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;font-size:.83rem;color:var(--mc-muted)}
+  .mc-disclaimer .note{display:inline-flex;align-items:center;gap:.5rem}
+  .mc-disclaimer .note .bi{color:var(--mc-primary-600)}
+
+  @media (max-width:767.98px){
+    .mc-page-head{padding:2.25rem 0 1.75rem}
+    .mc-toolbar{padding:1.25rem 0 0}
+  }
+</style>
+</helmet>
+
+<nav class="navbar navbar-expand-lg mc-nav">
+  <div class="container">
+    <a class="navbar-brand" href="MedCare.dc.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mcNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="mcNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="MedCare.dc.html">Health topics</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Symptoms</a></li>
+        <li class="nav-item"><a class="nav-link active" href="#">Common diseases</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Find care</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Wellness</a></li>
+      </ul>
+      <a href="#" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
+    </div>
+  </div>
+</nav>
+
+<section class="mc-page-head">
+  <div class="container">
+    <div class="mc-breadcrumb">
+      <a href="MedCare.dc.html"><i class="bi bi-house"></i> Home</a>
+      <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+      <span>Common diseases</span>
+    </div>
+    <h1>Common Diseases</h1>
+    <p class="intro">Learn about conditions that are frequently seen in Myanmar communities — their signs, causes, and when to seek care.</p>
+  </div>
+</section>
+
+<section class="mc-toolbar">
+  <div class="container">
+    <div class="mc-filter-bar">
+      <label class="mc-filter-search">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Filter diseases by name…" value="{{ query }}" onInput="{{ onSearch }}">
+      </label>
+      <div class="mc-filter-chips" role="tablist">
+        <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="5">
+          <button class="mc-chip {{ cat.activeClass }}" type="button" onClick="{{ cat.onClick }}">{{ cat.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <p class="mc-result-count"><strong>{{ visibleCount }}</strong> {{ conditionsWord }}</p>
+  </div>
+</section>
+
+<section class="mc-diseases">
+  <div class="container">
+    <div class="row g-4">
+      <sc-for list="{{ diseases }}" as="d" hint-placeholder-count="6">
+        <div class="col-md-6 col-lg-4">
+          <a href="{{ d.href }}" class="mc-disease">
+            <div class="mc-disease-icon"><i class="bi {{ d.icon }}"></i></div>
+            <span class="mc-disease-tag">{{ d.tag }}</span>
+            <h3>{{ d.name }}</h3>
+            <p>{{ d.desc }}</p>
+            <span class="mc-disease-more">Learn more <i class="bi bi-arrow-right"></i></span>
+          </a>
+        </div>
+      </sc-for>
+    </div>
+    <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+      <div class="mc-empty">
+        <i class="bi bi-search"></i>
+        <div class="fw-semibold" style="color:var(--mc-text);font-size:1rem;margin-bottom:.25rem">No conditions match your search</div>
+        <div>Try a different name or clear the filters.</div>
+      </div>
+    </sc-if>
+  </div>
+</section>
+
+<footer class="mc-footer">
+  <div class="container">
+    <div class="mc-disclaimer">
+      <span class="note"><i class="bi bi-info-circle"></i> Information only — not a substitute for professional medical advice, diagnosis, or treatment.</span>
+      <span>© 2026 MedCare. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { query: '', category: 'all' };
+
+  diseases = [
+    {name:'Hypertension', icon:'bi-heart-pulse', tag:'Chronic', cat:'chronic', href:'HypertensionDetail.dc.html', desc:'High blood pressure often has no symptoms but raises the risk of stroke and heart disease over time.'},
+    {name:'Diabetes', icon:'bi-droplet-half', tag:'Chronic', cat:'chronic', desc:'A long-term condition where blood sugar levels are too high, manageable with diet, exercise, and medication.'},
+    {name:'Asthma', icon:'bi-lungs', tag:'Respiratory', cat:'respiratory', desc:'Airways narrow and swell, causing wheezing and shortness of breath — usually controlled with inhalers.'},
+    {name:'Dengue fever', icon:'bi-bug', tag:'Infectious', cat:'infectious', desc:'A mosquito-borne viral illness common in the rainy season, causing high fever, body aches, and rash.'},
+    {name:'Tuberculosis (TB)', icon:'bi-clipboard2-pulse', tag:'Infectious', cat:'infectious respiratory', desc:'A bacterial infection mainly affecting the lungs, treatable with a full course of antibiotics.'},
+    {name:'Malaria', icon:'bi-thermometer-half', tag:'Infectious', cat:'infectious', desc:'A mosquito-borne parasitic disease that causes cyclic fever and chills; preventable with nets and repellents.'},
+    {name:'Hepatitis B', icon:'bi-shield-plus', tag:'Infectious', cat:'infectious', desc:'A liver infection that can become long-term; a safe vaccine prevents it and testing catches it early.'},
+    {name:'Coronary heart disease', icon:'bi-heart', tag:'Chronic', cat:'chronic', desc:'Narrowed arteries reduce blood flow to the heart and can cause chest pain or a heart attack.'},
+    {name:'Stroke', icon:'bi-brain', tag:'Chronic', cat:'chronic', desc:'A sudden interruption of blood to the brain — act fast; call an ambulance if you notice F.A.S.T. signs.'},
+    {name:'Anemia', icon:'bi-droplet', tag:'Chronic', cat:'chronic maternal', desc:'Low red blood cell counts cause fatigue and weakness; iron-rich foods and supplements often help.'},
+    {name:'Typhoid fever', icon:'bi-cup-hot', tag:'Infectious', cat:'infectious', desc:'A bacterial infection spread through contaminated food or water — safe hygiene and vaccination help prevent it.'},
+    {name:'Pre-eclampsia', icon:'bi-person-heart', tag:'Maternal', cat:'maternal', desc:'A pregnancy complication with high blood pressure — regular antenatal check-ups are essential.'},
+  ];
+
+  cats = [
+    {id:'all', label:'All'},
+    {id:'chronic', label:'Chronic'},
+    {id:'infectious', label:'Infectious'},
+    {id:'respiratory', label:'Respiratory'},
+    {id:'maternal', label:'Maternal & child'},
+  ];
+
+  renderVals() {
+    const q = (this.state.query || '').trim().toLowerCase();
+    const cat = this.state.category;
+    const filtered = this.diseases.filter(d => {
+      const hay = (d.name + ' ' + d.desc).toLowerCase();
+      const nameMatch = !q || hay.includes(q);
+      const catMatch = cat === 'all' || d.cat.split(' ').includes(cat);
+      return nameMatch && catMatch;
+    });
+    return {
+      query: this.state.query,
+      onSearch: (e) => this.setState({ query: e.target.value }),
+      categories: this.cats.map(c => ({
+        label: c.label,
+        activeClass: this.state.category === c.id ? 'active' : '',
+        onClick: () => this.setState({ category: c.id }),
+      })),
+      diseases: filtered.map(d => ({ ...d, href: d.href || '#' })),
+      visibleCount: filtered.length,
+      conditionsWord: filtered.length === 1 ? 'condition' : 'conditions',
+      showEmpty: filtered.length === 0,
+    };
+  }
+}
+</script>
+</body>
+</html>

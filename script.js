@@ -3,7 +3,7 @@
 
   /* ---------- Data ---------- */
   var diseases = [
-    { name: 'Hypertension', icon: 'bi-heart-pulse', tag: 'Chronic', cat: 'chronic', href: '#/disease/hypertension', desc: 'High blood pressure often has no symptoms but raises the risk of stroke and heart disease over time.' },
+    { name: 'Hypertension', icon: 'bi-heart-pulse', tag: 'Chronic', cat: 'chronic', href: 'hypertension.html', desc: 'High blood pressure often has no symptoms but raises the risk of stroke and heart disease over time.' },
     { name: 'Diabetes', icon: 'bi-droplet-half', tag: 'Chronic', cat: 'chronic', desc: 'A long-term condition where blood sugar levels are too high, manageable with diet, exercise, and medication.' },
     { name: 'Asthma', icon: 'bi-lungs', tag: 'Respiratory', cat: 'respiratory', desc: 'Airways narrow and swell, causing wheezing and shortness of breath — usually controlled with inhalers.' },
     { name: 'Dengue fever', icon: 'bi-bug', tag: 'Infectious', cat: 'infectious', desc: 'A mosquito-borne viral illness common in the rainy season, causing high fever, body aches, and rash.' },
@@ -47,220 +47,219 @@
     });
   }
   function byId(id) { return document.getElementById(id); }
-
-  /* ---------- Router ---------- */
-  var pages = document.querySelectorAll('.page');
-  var navLinks = document.querySelectorAll('[data-nav]');
-  function showPage(id) {
-    var found = false;
-    pages.forEach(function (p) {
-      var on = p.id === id;
-      p.classList.toggle('is-active', on);
-      if (on) { found = true; }
-    });
-    if (!found) { byId('page-home').classList.add('is-active'); id = 'page-home'; }
-    var top = id === 'page-disease-hypertension' ? 'page-diseases' : id;
-    navLinks.forEach(function (a) { a.classList.toggle('active', a.dataset.nav === top); });
-    window.scrollTo(0, 0);
+  function param(name) {
+    return new URLSearchParams(window.location.search).get(name) || '';
   }
-  function route() {
-    var raw = location.hash.replace(/^#\/?/, '') || 'home';
-    showPage('page-' + raw.replace(/\//g, '-'));
-  }
-  window.addEventListener('hashchange', route);
 
-
-  /* ---------- Home Images ---------- */
-
-  const slider = document.querySelector('.slider');
-const slides = slider.querySelectorAll('li');
-
-// Store the total number of images
-const slideCount = slides.length;
-let activeSlide = 0;
-
-// To change the images dynamically every
-// 5 Secs, use SetInterval() method
-setInterval(() => {
-  slides[activeSlide].classList.remove('active');
-  activeSlide++;
-  if (activeSlide === slideCount) {
-    activeSlide = 0;
-  }
-  slides[activeSlide].classList.add('active');
-}, 3500);
-
-  /* ---------- Common Diseases ---------- */
-  var dState = { query: '', category: 'all' };
-  var dSearch = byId('diseaseSearch');
-  var dChips = byId('diseaseChips');
-  var dGrid = byId('diseaseGrid');
-  var dCount = byId('diseaseCount');
-  var dWord = byId('diseaseWord');
-  var dEmpty = byId('diseaseEmpty');
-
-  cats.forEach(function (c) {
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'mc-chip';
-    b.textContent = c.label;
-    b.setAttribute('data-cat', c.id);
-    b.addEventListener('click', function () { dState.category = c.id; renderDiseases(); });
-    dChips.appendChild(b);
-  });
-
-  function renderDiseases() {
-    var q = dState.query.trim().toLowerCase();
-    var cat = dState.category;
-    var filtered = diseases.filter(function (d) {
-      var hay = (d.name + ' ' + d.desc).toLowerCase();
-      var nameMatch = !q || hay.indexOf(q) !== -1;
-      var catMatch = cat === 'all' || d.cat.split(' ').indexOf(cat) !== -1;
-      return nameMatch && catMatch;
-    });
-    dGrid.innerHTML = filtered.map(function (d) {
-      return '<div class="col-md-6 col-lg-4">' +
-        '<a href="' + (d.href || '#') + '" class="mc-disease">' +
-        '<div class="mc-disease-icon"><i class="bi ' + d.icon + '"></i></div>' +
-        '<span class="mc-disease-tag">' + esc(d.tag) + '</span>' +
-        '<h3>' + esc(d.name) + '</h3>' +
-        '<p>' + esc(d.desc) + '</p>' +
-        '<span class="mc-disease-more">Learn more <i class="bi bi-arrow-right"></i></span>' +
-        '</a></div>';
-    }).join('');
-    dCount.textContent = filtered.length;
-    dWord.textContent = filtered.length === 1 ? 'condition' : 'conditions';
-    dEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
-    Array.prototype.forEach.call(dChips.children, function (b) {
-      b.classList.toggle('active', b.getAttribute('data-cat') === cat);
-    });
-  }
-  dSearch.addEventListener('input', function (e) { dState.query = e.target.value; renderDiseases(); });
-
-  /* ---------- Find Hospitals ---------- */
-  var hState = { query: '', township: 'all', types: { general: true, specialist: true, emergency: true } };
-  var hSearch = byId('hospSearch');
-  var hTownship = byId('hospTownship');
-  var hTypes = byId('hospTypes');
-  var hList = byId('hospList');
-  var hCount = byId('hospCount');
-  var hWord = byId('hospWord');
-  var hEmpty = byId('hospEmpty');
-
+  // Townships are needed on the home page (menu) and the hospitals page (select).
   var townValues = hospitals.map(function (h) { return h.township; })
     .filter(function (v, i, a) { return a.indexOf(v) === i; }).sort();
-  hTownship.innerHTML = '<option value="all">All townships</option>' +
-    townValues.map(function (t) { return '<option value="' + esc(t) + '">' + esc(t) + '</option>'; }).join('');
-  hTownship.addEventListener('change', function (e) { hState.township = e.target.value; renderHospitals(); });
 
-  typeMeta.forEach(function (tm) {
-    var count = tm.id === 'emergency'
-      ? hospitals.filter(function (h) { return h.er; }).length
-      : hospitals.filter(function (h) { return h.type === tm.id; }).length;
-    var label = document.createElement('label');
-    label.className = 'mc-check';
-    label.innerHTML = '<input type="checkbox" checked><span>' + esc(tm.label) + '</span><span class="cnt">' + count + '</span>';
-    var input = label.querySelector('input');
-    input.setAttribute('data-type', tm.id);
-    input.addEventListener('change', function () { hState.types[tm.id] = input.checked; renderHospitals(); });
-    hTypes.appendChild(label);
-  });
-
-  function matchesType(h) {
-    var t = hState.types;
-    var baseOK = (h.type === 'general' && t.general) || (h.type === 'specialist' && t.specialist);
-    var erOK = t.emergency && h.er;
-    return baseOK || erOK;
+  /* ---------- Home: image slider ---------- */
+  var slider = document.querySelector('.slider');
+  if (slider) {
+    var slides = slider.querySelectorAll('li');
+    if (slides.length) {
+      var activeSlide = 0;
+      slides[activeSlide].classList.add('active');
+      setInterval(function () {
+        slides[activeSlide].classList.remove('active');
+        activeSlide = (activeSlide + 1) % slides.length;
+        slides[activeSlide].classList.add('active');
+      }, 3500);
+    }
   }
 
-  function renderHospitals() {
-    var q = hState.query.trim().toLowerCase();
-    var filtered = hospitals.filter(function (h) {
-      var townOK = hState.township === 'all' || h.township === hState.township;
-      var typeOK = matchesType(h);
-      var hay = (h.name + ' ' + h.township + ' ' + h.address).toLowerCase();
-      var searchOK = !q || hay.indexOf(q) !== -1;
-      return townOK && typeOK && searchOK;
+  /* ---------- Common Diseases page ---------- */
+  var dGrid = byId('diseaseGrid');
+  if (dGrid) {
+    var dState = { query: param('q'), category: param('cat') || 'all' };
+    var dSearch = byId('diseaseSearch');
+    var dChips = byId('diseaseChips');
+    var dCount = byId('diseaseCount');
+    var dWord = byId('diseaseWord');
+    var dEmpty = byId('diseaseEmpty');
+
+    if (dSearch) { dSearch.value = dState.query; }
+
+    cats.forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'mc-chip';
+      b.textContent = c.label;
+      b.setAttribute('data-cat', c.id);
+      b.addEventListener('click', function () { dState.category = c.id; renderDiseases(); });
+      dChips.appendChild(b);
     });
-    var typeLabelMap = { general: 'General', specialist: 'Specialist' };
-    hList.innerHTML = filtered.map(function (h) {
-      var tel = 'tel:' + h.phone.replace(/[^0-9+]/g, '');
-      return '<article class="mc-hosp">' +
-        '<div class="mc-hosp-top"><div><h3>' + esc(h.name) + '</h3>' +
-        '<span class="mc-hosp-type">' + esc(typeLabelMap[h.type] || 'Hospital') + '</span></div>' +
-        (h.er ? '<span class="mc-badge-er"><i class="bi bi-plus-circle-fill"></i> ER available</span>' : '') +
-        '</div>' +
-        '<div class="mc-hosp-meta">' +
-        '<div class="mc-hosp-row"><i class="bi bi-geo-alt"></i><span>' + esc(h.township) + ' Township</span></div>' +
-        '<div class="mc-hosp-row"><i class="bi bi-signpost-2"></i><span>' + esc(h.address) + '</span></div>' +
-        '<div class="mc-hosp-row hours"><i class="bi bi-clock"></i><span class="open">' + esc(h.hours) + '</span></div>' +
-        '</div>' +
-        '<div class="mc-hosp-actions">' +
-        '<a href="' + tel + '" class="mc-call"><i class="bi bi-telephone-fill"></i> ' + esc(h.phone) + '</a>' +
-        '<a href="#" class="mc-directions"><i class="bi bi-map"></i> Directions</a>' +
-        '</div></article>';
-    }).join('');
-    hCount.textContent = filtered.length;
-    hWord.textContent = filtered.length === 1 ? 'hospital' : 'hospitals';
-    hEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
-  }
-  hSearch.addEventListener('input', function (e) { hState.query = e.target.value; renderHospitals(); });
 
-  function clearHospitals() {
-    hState = { query: '', township: 'all', types: { general: true, specialist: true, emergency: true } };
-    hSearch.value = '';
-    hTownship.value = 'all';
-    Array.prototype.forEach.call(hTypes.querySelectorAll('input'), function (i) { i.checked = true; });
+    var renderDiseases = function () {
+      var q = dState.query.trim().toLowerCase();
+      var cat = dState.category;
+      var filtered = diseases.filter(function (d) {
+        var hay = (d.name + ' ' + d.desc).toLowerCase();
+        var nameMatch = !q || hay.indexOf(q) !== -1;
+        var catMatch = cat === 'all' || d.cat.split(' ').indexOf(cat) !== -1;
+        return nameMatch && catMatch;
+      });
+      dGrid.innerHTML = filtered.map(function (d) {
+        return '<div class="col-md-6 col-lg-4">' +
+          '<a href="' + (d.href || 'common-diseases.html') + '" class="mc-disease">' +
+          '<div class="mc-disease-icon"><i class="bi ' + d.icon + '"></i></div>' +
+          '<span class="mc-disease-tag">' + esc(d.tag) + '</span>' +
+          '<h3>' + esc(d.name) + '</h3>' +
+          '<p>' + esc(d.desc) + '</p>' +
+          '<span class="mc-disease-more">Learn more <i class="bi bi-arrow-right"></i></span>' +
+          '</a></div>';
+      }).join('');
+      dCount.textContent = filtered.length;
+      dWord.textContent = filtered.length === 1 ? 'condition' : 'conditions';
+      dEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
+      Array.prototype.forEach.call(dChips.children, function (b) {
+        b.classList.toggle('active', b.getAttribute('data-cat') === cat);
+      });
+    };
+
+    if (dSearch) {
+      dSearch.addEventListener('input', function (e) { dState.query = e.target.value; renderDiseases(); });
+    }
+    renderDiseases();
+  }
+
+  /* ---------- Find Hospitals page ---------- */
+  var hList = byId('hospList');
+  if (hList) {
+    var hState = {
+      query: param('q'),
+      township: param('town') || 'all',
+      types: { general: true, specialist: true, emergency: true }
+    };
+    var hSearch = byId('hospSearch');
+    var hTownship = byId('hospTownship');
+    var hTypes = byId('hospTypes');
+    var hCount = byId('hospCount');
+    var hWord = byId('hospWord');
+    var hEmpty = byId('hospEmpty');
+
+    hTownship.innerHTML = '<option value="all">All townships</option>' +
+      townValues.map(function (t) { return '<option value="' + esc(t) + '">' + esc(t) + '</option>'; }).join('');
+    // Only honor ?town= if it matches a real township.
+    if (townValues.indexOf(hState.township) === -1) { hState.township = 'all'; }
+    hTownship.value = hState.township;
+    if (hSearch) { hSearch.value = hState.query; }
+
+    hTownship.addEventListener('change', function (e) { hState.township = e.target.value; renderHospitals(); });
+
+    typeMeta.forEach(function (tm) {
+      var count = tm.id === 'emergency'
+        ? hospitals.filter(function (h) { return h.er; }).length
+        : hospitals.filter(function (h) { return h.type === tm.id; }).length;
+      var label = document.createElement('label');
+      label.className = 'mc-check';
+      label.innerHTML = '<input type="checkbox" checked><span>' + esc(tm.label) + '</span><span class="cnt">' + count + '</span>';
+      var input = label.querySelector('input');
+      input.setAttribute('data-type', tm.id);
+      input.addEventListener('change', function () { hState.types[tm.id] = input.checked; renderHospitals(); });
+      hTypes.appendChild(label);
+    });
+
+    var matchesType = function (h) {
+      var t = hState.types;
+      var baseOK = (h.type === 'general' && t.general) || (h.type === 'specialist' && t.specialist);
+      var erOK = t.emergency && h.er;
+      return baseOK || erOK;
+    };
+
+    var renderHospitals = function () {
+      var q = hState.query.trim().toLowerCase();
+      var filtered = hospitals.filter(function (h) {
+        var townOK = hState.township === 'all' || h.township === hState.township;
+        var typeOK = matchesType(h);
+        var hay = (h.name + ' ' + h.township + ' ' + h.address).toLowerCase();
+        var searchOK = !q || hay.indexOf(q) !== -1;
+        return townOK && typeOK && searchOK;
+      });
+      var typeLabelMap = { general: 'General', specialist: 'Specialist' };
+      hList.innerHTML = filtered.map(function (h) {
+        var tel = 'tel:' + h.phone.replace(/[^0-9+]/g, '');
+        var maps = 'https://www.google.com/maps/search/?api=1&query=' +
+          encodeURIComponent(h.name + ', ' + h.address + ', Yangon');
+        return '<article class="mc-hosp">' +
+          '<div class="mc-hosp-top"><div><h3>' + esc(h.name) + '</h3>' +
+          '<span class="mc-hosp-type">' + esc(typeLabelMap[h.type] || 'Hospital') + '</span></div>' +
+          (h.er ? '<span class="mc-badge-er"><i class="bi bi-plus-circle-fill"></i> ER available</span>' : '') +
+          '</div>' +
+          '<div class="mc-hosp-meta">' +
+          '<div class="mc-hosp-row"><i class="bi bi-geo-alt"></i><span>' + esc(h.township) + ' Township</span></div>' +
+          '<div class="mc-hosp-row"><i class="bi bi-signpost-2"></i><span>' + esc(h.address) + '</span></div>' +
+          '<div class="mc-hosp-row hours"><i class="bi bi-clock"></i><span class="open">' + esc(h.hours) + '</span></div>' +
+          '</div>' +
+          '<div class="mc-hosp-actions">' +
+          '<a href="' + tel + '" class="mc-call"><i class="bi bi-telephone-fill"></i> ' + esc(h.phone) + '</a>' +
+          '<a href="' + maps + '" class="mc-directions" target="_blank" rel="noopener"><i class="bi bi-map"></i> Directions</a>' +
+          '</div></article>';
+      }).join('');
+      hCount.textContent = filtered.length;
+      hWord.textContent = filtered.length === 1 ? 'hospital' : 'hospitals';
+      hEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
+    };
+
+    if (hSearch) {
+      hSearch.addEventListener('input', function (e) { hState.query = e.target.value; renderHospitals(); });
+    }
+
+    var clearHospitals = function () {
+      hState.query = '';
+      hState.township = 'all';
+      hState.types = { general: true, specialist: true, emergency: true };
+      if (hSearch) { hSearch.value = ''; }
+      hTownship.value = 'all';
+      Array.prototype.forEach.call(hTypes.querySelectorAll('input'), function (i) { i.checked = true; });
+      renderHospitals();
+    };
+    byId('hospClear').addEventListener('click', clearHospitals);
+    byId('hospResetBtn').addEventListener('click', clearHospitals);
+
     renderHospitals();
   }
-  byId('hospClear').addEventListener('click', clearHospitals);
-  byId('hospResetBtn').addEventListener('click', clearHospitals);
 
-  /* ---------- Home search shortcuts ---------- */
-  byId('heroSearchBtn').addEventListener('click', function () {
-    var v = byId('heroSearch').value.trim();
-    dState.query = v; dSearch.value = v; renderDiseases();
-    location.hash = '#/diseases';
-  });
-  byId('heroSearch').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { byId('heroSearchBtn').click(); }
-  });
-  function goHospitalsFromSubheader() {
-    var v = byId('subheaderSearch').value.trim();
-    hState.query = v; hSearch.value = v; renderHospitals();
-    location.hash = '#/hospitals';
+  /* ---------- Home: search shortcuts (navigate to the real pages) ---------- */
+  var heroBtn = byId('heroSearchBtn');
+  var heroInput = byId('heroSearch');
+  if (heroBtn && heroInput) {
+    var goDiseases = function () {
+      var v = heroInput.value.trim();
+      window.location.href = 'common-diseases.html' + (v ? '?q=' + encodeURIComponent(v) : '');
+    };
+    heroBtn.addEventListener('click', goDiseases);
+    heroInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { goDiseases(); }
+    });
   }
-  byId('subheaderGo').addEventListener('click', goHospitalsFromSubheader);
-  byId('subheaderSearch').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { goHospitalsFromSubheader(); }
-  });
 
-  /* ---------- Home town dropdown ---------- */
-  // Populate the homepage "Towns" menu from the real hospital townships so a
-  // selection actually filters, and route to Find Hospitals pre-filtered.
+  var subGo = byId('subheaderGo');
+  var subInput = byId('subheaderSearch');
+  if (subGo && subInput) {
+    var goHospitals = function () {
+      var v = subInput.value.trim();
+      window.location.href = 'hospitals.html' + (v ? '?q=' + encodeURIComponent(v) : '');
+    };
+    subGo.addEventListener('click', goHospitals);
+    subInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { goHospitals(); }
+    });
+  }
+
+  /* ---------- Home: town dropdown ---------- */
+  // Build the menu from the real townships so each entry links to the
+  // hospitals page pre-filtered for that town.
   var townMenu = document.querySelector('.mc-town-menu');
-  var townBtnLabel = document.querySelector('#mc-town-btn span');
   if (townMenu) {
     townMenu.innerHTML = '<li><h6 class="dropdown-header">Filter by town</h6></li>' +
-      '<li><a class="dropdown-item" data-town="all" href="#/hospitals"><i class="bi bi-pin-map me-2"></i>All towns</a></li>' +
+      '<li><a class="dropdown-item" data-town="all" href="hospitals.html"><i class="bi bi-pin-map me-2"></i>All towns</a></li>' +
       townValues.map(function (t) {
-        return '<li><a class="dropdown-item" data-town="' + esc(t) + '" href="#/hospitals">' +
+        return '<li><a class="dropdown-item" data-town="' + esc(t) + '" href="hospitals.html?town=' + encodeURIComponent(t) + '">' +
           '<i class="bi bi-pin-map me-2"></i>' + esc(t) + '</a></li>';
       }).join('');
-    townMenu.addEventListener('click', function (e) {
-      var item = e.target.closest('.dropdown-item');
-      if (!item) { return; }
-      e.preventDefault();
-      var town = item.getAttribute('data-town');
-      hState.township = town;
-      hTownship.value = town;
-      if (townBtnLabel) { townBtnLabel.textContent = town === 'all' ? 'Towns' : town; }
-      renderHospitals();
-      townMenu.classList.remove('show');
-      var townToggle = document.getElementById('mc-town-btn');
-      if (townToggle) { townToggle.setAttribute('aria-expanded', 'false'); }
-      location.hash = '#/hospitals';
-    });
   }
 
   /* ---------- Native dropdown / collapse / accordion (replaces the Bootstrap JS bundle) ---------- */
@@ -319,14 +318,4 @@ setInterval(() => {
       toggle.setAttribute('aria-expanded', willShow ? 'true' : 'false');
     });
   });
-
-  /* ---------- Init ---------- */
-  renderDiseases();
-  renderHospitals();
-  route();
 })();
-
-
-
-
-

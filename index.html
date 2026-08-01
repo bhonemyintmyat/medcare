@@ -17,22 +17,22 @@
 <!-- ===================== Navbar ===================== -->
 <nav class="navbar navbar-expand-lg mc-nav">
   <div class="container">
-    <a class="navbar-brand" href="#/home"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
+    <a class="navbar-brand" href="index.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mcNav"><span class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="mcNav">
       <ul class="navbar-nav mx-auto">
-        <li class="nav-item"><a class="nav-link" data-nav="page-home" href="#/home">Health topics</a></li>
-        <li class="nav-item"><a class="nav-link" data-nav="page-diseases" href="#/diseases">Common diseases</a></li>
-        <li class="nav-item"><a class="nav-link" data-nav="page-hospitals" href="#/hospitals">Find care</a></li>
-        <li class="nav-item"><a class="nav-link" data-nav="page-emergency" href="#/emergency">Emergency</a></li>
+        <li class="nav-item"><a class="nav-link active" href="index.html">Health topics</a></li>
+        <li class="nav-item"><a class="nav-link" href="common-diseases.html">Common diseases</a></li>
+        <li class="nav-item"><a class="nav-link" href="hospitals.html">Find care</a></li>
+        <li class="nav-item"><a class="nav-link" href="emergency-contacts.html">Emergency</a></li>
       </ul>
-      <a href="#/emergency" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
+      <a href="emergency-contacts.html" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
     </div>
   </div>
 </nav>
 
 <!-- ===================== Home ===================== -->
-<div class="page" id="page-home">
+<main>
   <div class="mc-subheader">
     <div class="container">
       <div class="mc-subheader-inner">
@@ -40,20 +40,14 @@
         <div class="mc-hospital-search mc-hospital-search--wide">
           <div class="dropdown">
             <div class="select">
-  <!-- FIX: Removed the spaces from the ID attribute -->
-            <button id="mc-town-btn" class="mc-town-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-geo-alt-fill"></i><span>Towns</span>
-            </button>
-            <ul class="dropdown-menu mc-town-menu">
-              <li><h6 class="dropdown-header">Filter by town</h6></li>
-              <!-- FIX: Changed duplicate 'id' attributes to unique 'data-town' attributes -->
-              <li><a class="dropdown-item" data-town="all" href="#/hospitals"><i class="bi bi-pin-map me-2"></i>All towns</a></li>
-              <li><a class="dropdown-item" data-town="springfield" href="#/hospitals"><i class="bi bi-pin-map me-2"></i>Springfield</a></li>
-              <li><a class="dropdown-item" data-town="riverside" href="#/hospitals"><i class="bi bi-pin-map me-2"></i>Riverside</a></li>
-              <li><a class="dropdown-item" data-town="fairview" href="#/hospitals"><i class="bi bi-pin-map me-2"></i>Fairview</a></li>
-              <li><a class="dropdown-item" data-town="ashwood" href="#/hospitals"><i class="bi bi-pin-map me-2"></i>Ashwood</a></li>
-              <li><a class="dropdown-item" data-town="millbrook" href="#/hospitals"><i class="bi bi-pin-map me-2"></i>Millbrook</a></li>
-            </ul>
+              <button id="mc-town-btn" class="mc-town-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-geo-alt-fill"></i><span>Towns</span>
+              </button>
+              <!-- Populated from the hospital data by script.js -->
+              <ul class="dropdown-menu mc-town-menu">
+                <li><h6 class="dropdown-header">Filter by town</h6></li>
+                <li><a class="dropdown-item" data-town="all" href="hospitals.html"><i class="bi bi-pin-map me-2"></i>All towns</a></li>
+              </ul>
             </div>
           </div>
 
@@ -75,7 +69,7 @@
                 <img src="doctors.jpg" alt="GFG Image 1">
             </li>
             <li>
-                <img src="earphone.jpg"alt="GFG Image 2" >
+                <img src="earphone.jpg" alt="GFG Image 2">
             </li>
         </ul>
       </div>
@@ -86,10 +80,10 @@
         </div>
         <div class="d-flex flex-wrap gap-2 align-items-center justify-content-center mt-4">
           <span class="text-muted small me-1">Popular:</span>
-          <a href="#/diseases" class="btn btn-mc-outline btn-sm">Dengue fever</a>
-          <a href="#/disease/hypertension" class="btn btn-mc-outline btn-sm">High blood pressure</a>
-          <a href="#/diseases" class="btn btn-mc-outline btn-sm">Diabetes</a>
-          <a href="#/diseases" class="btn btn-mc-outline btn-sm">Maternal care</a>
+          <a href="common-diseases.html?q=dengue" class="btn btn-mc-outline btn-sm">Dengue fever</a>
+          <a href="hypertension.html" class="btn btn-mc-outline btn-sm">High blood pressure</a>
+          <a href="common-diseases.html?q=diabetes" class="btn btn-mc-outline btn-sm">Diabetes</a>
+          <a href="common-diseases.html?cat=maternal" class="btn btn-mc-outline btn-sm">Maternal care</a>
         </div>
       </div>
     </div>
@@ -104,28 +98,28 @@
       </div>
       <div class="row g-4">
         <div class="col-md-6">
-          <a href="#/diseases" class="mc-feature">
+          <a href="common-diseases.html" class="mc-feature">
             <div class="mc-feature-icon"><i class="bi bi-journal-medical"></i></div>
             <div class="mc-feature-body"><h3>Health Articles</h3><p>Read plain-language guides on wellness, prevention, and daily health topics.</p></div>
             <i class="bi bi-arrow-right mc-feature-arr"></i>
           </a>
         </div>
         <div class="col-md-6">
-          <a href="#/diseases" class="mc-feature">
+          <a href="common-diseases.html" class="mc-feature">
             <div class="mc-feature-icon"><i class="bi bi-virus"></i></div>
             <div class="mc-feature-body"><h3>Common Diseases</h3><p>Learn symptoms, causes, and treatments for conditions common in Myanmar.</p></div>
             <i class="bi bi-arrow-right mc-feature-arr"></i>
           </a>
         </div>
         <div class="col-md-6">
-          <a href="#/emergency" class="mc-feature mc-feature--danger">
+          <a href="emergency-contacts.html" class="mc-feature mc-feature--danger">
             <div class="mc-feature-icon mc-feature-icon--danger"><i class="bi bi-telephone-fill"></i></div>
             <div class="mc-feature-body"><h3>Emergency Contacts</h3><p>Ambulance, poison control, and 24/7 hotlines you can call right now.</p></div>
             <i class="bi bi-arrow-right mc-feature-arr"></i>
           </a>
         </div>
         <div class="col-md-6">
-          <a href="#/hospitals" class="mc-feature">
+          <a href="hospitals.html" class="mc-feature">
             <div class="mc-feature-icon"><i class="bi bi-hospital"></i></div>
             <div class="mc-feature-body"><h3>Find Hospitals in Yangon</h3><p>Browse hospitals and clinics across Yangon townships by name or location.</p></div>
             <i class="bi bi-arrow-right mc-feature-arr"></i>
@@ -143,17 +137,17 @@
           <strong>In a medical emergency, call 192 (ambulance) immediately.</strong>
           <span>Do not use this site for urgent or life-threatening conditions.</span>
         </div>
-        <a href="#/emergency" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency help</a>
+        <a href="emergency-contacts.html" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency help</a>
       </div>
 
       <div class="mc-section-header d-flex flex-wrap align-items-end justify-content-between gap-3">
         <div><div class="mc-section-kicker">Editor's picks</div><h2>Featured Articles</h2></div>
-        <a href="#/diseases" class="btn btn-mc-outline">All articles <i class="bi bi-arrow-right ms-1"></i></a>
+        <a href="common-diseases.html" class="btn btn-mc-outline">All articles <i class="bi bi-arrow-right ms-1"></i></a>
       </div>
 
       <div class="row g-4">
         <div class="col-md-6 col-lg-4">
-          <a href="#/diseases" class="mc-article d-block text-decoration-none text-reset">
+          <a href="common-diseases.html?q=dengue" class="mc-article d-block text-decoration-none text-reset">
             <div class="mc-article-thumb"><span class="badge-cat">Monsoon health</span></div>
             <div class="mc-article-body">
               <h3>Protecting your family from dengue during the rainy season</h3>
@@ -163,7 +157,7 @@
           </a>
         </div>
         <div class="col-md-6 col-lg-4">
-          <a href="#/diseases" class="mc-article d-block text-decoration-none text-reset">
+          <a href="common-diseases.html" class="mc-article d-block text-decoration-none text-reset">
             <div class="mc-article-thumb b"><span class="badge-cat">Nutrition</span></div>
             <div class="mc-article-body">
               <h3>Eating well on a Myanmar family budget</h3>
@@ -173,7 +167,7 @@
           </a>
         </div>
         <div class="col-md-6 col-lg-4">
-          <a href="#/diseases" class="mc-article d-block text-decoration-none text-reset">
+          <a href="common-diseases.html?cat=maternal" class="mc-article d-block text-decoration-none text-reset">
             <div class="mc-article-thumb c"><span class="badge-cat">Maternal care</span></div>
             <div class="mc-article-body">
               <h3>What to expect at your first antenatal visit</h3>
@@ -185,344 +179,25 @@
       </div>
     </div>
   </section>
-</div>
-
-<!-- ===================== Common Diseases ===================== -->
-<div class="page" id="page-diseases">
-  <section class="mc-page-head">
-    <div class="container">
-      <div class="mc-breadcrumb">
-        <a href="#/home"><i class="bi bi-house"></i> Home</a>
-        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
-        <span>Common diseases</span>
-      </div>
-      <h1>Common Diseases</h1>
-      <p class="intro">Learn about conditions that are frequently seen in Myanmar communities — their signs, causes, and when to seek care.</p>
-    </div>
-  </section>
-
-  <section class="mc-toolbar">
-    <div class="container">
-      <div class="mc-filter-bar">
-        <label class="mc-filter-search">
-          <i class="bi bi-search"></i>
-          <input type="text" id="diseaseSearch" placeholder="Filter diseases by name…">
-        </label>
-        <div class="mc-filter-chips" id="diseaseChips" role="tablist"></div>
-      </div>
-      <p class="mc-result-count"><strong id="diseaseCount">0</strong> <span id="diseaseWord">conditions</span></p>
-    </div>
-  </section>
-
-  <section class="mc-diseases">
-    <div class="container">
-      <div class="row g-4" id="diseaseGrid"></div>
-      <div class="mc-empty-simple" id="diseaseEmpty" style="display:none">
-        <i class="bi bi-search"></i>
-        <div class="fw-semibold" style="color:var(--mc-text);font-size:1rem;margin-bottom:.25rem">No conditions match your search</div>
-        <div>Try a different name or clear the filters.</div>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- ===================== Disease detail: Hypertension ===================== -->
-<div class="page" id="page-disease-hypertension">
-  <section class="mc-detail-head">
-    <div class="container">
-      <div class="mc-breadcrumb">
-        <a href="#/home"><i class="bi bi-house"></i> Home</a>
-        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
-        <a href="#/diseases">Common diseases</a>
-        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
-        <span>Hypertension</span>
-      </div>
-      <div class="head-row">
-        <div class="mc-detail-icon"><i class="bi bi-heart-pulse"></i></div>
-        <div><span class="mc-detail-tag">Chronic condition</span><h1>Hypertension</h1></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="mc-detail-body">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <p class="mc-overview">
-            <span class="lead-line">Hypertension, or high blood pressure, is a common long-term condition where the force of blood against the artery walls stays higher than normal.</span>
-            It usually causes no symptoms, which is why it is often called a "silent" condition. The good news is that it can be well managed — with regular check-ups, a balanced diet, and, when needed, medication, most people live full and active lives.
-          </p>
-
-          <p class="mc-section-label">Learn more</p>
-          <div class="accordion mc-accordion" id="hyperAccordion">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accSymptoms" aria-expanded="true">
-                  <span class="head-ico sym"><i class="bi bi-clipboard2-pulse"></i></span>Symptoms
-                </button>
-              </h2>
-              <div id="accSymptoms" class="accordion-collapse collapse show" data-bs-parent="#hyperAccordion">
-                <div class="accordion-body">
-                  <p class="text-muted mb-3" style="font-size:.95rem;line-height:1.6">Most people have no symptoms. When blood pressure is very high, some may notice:</p>
-                  <ul class="mc-list sym">
-                    <li><i class="bi bi-dot"></i><span>Headaches, especially at the back of the head</span></li>
-                    <li><i class="bi bi-dot"></i><span>Dizziness or a feeling of light-headedness</span></li>
-                    <li><i class="bi bi-dot"></i><span>Blurred or double vision</span></li>
-                    <li><i class="bi bi-dot"></i><span>Shortness of breath or chest discomfort</span></li>
-                    <li><i class="bi bi-dot"></i><span>Nosebleeds (uncommon)</span></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accDos" aria-expanded="false">
-                  <span class="head-ico dos"><i class="bi bi-check2-circle"></i></span>Do's
-                </button>
-              </h2>
-              <div id="accDos" class="accordion-collapse collapse" data-bs-parent="#hyperAccordion">
-                <div class="accordion-body">
-                  <ul class="mc-list dos">
-                    <li><i class="bi bi-check-circle-fill"></i><span>Check your blood pressure regularly, at home or at a clinic.</span></li>
-                    <li><i class="bi bi-check-circle-fill"></i><span>Eat more vegetables, fruit, and whole grains; reduce salty foods.</span></li>
-                    <li><i class="bi bi-check-circle-fill"></i><span>Stay physically active — aim for about 30 minutes most days.</span></li>
-                    <li><i class="bi bi-check-circle-fill"></i><span>Take your prescribed medicines exactly as directed, every day.</span></li>
-                    <li><i class="bi bi-check-circle-fill"></i><span>Keep a healthy weight and manage stress with rest and support.</span></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accDonts" aria-expanded="false">
-                  <span class="head-ico donts"><i class="bi bi-x-circle"></i></span>Don'ts
-                </button>
-              </h2>
-              <div id="accDonts" class="accordion-collapse collapse" data-bs-parent="#hyperAccordion">
-                <div class="accordion-body">
-                  <ul class="mc-list donts">
-                    <li><i class="bi bi-x-circle-fill"></i><span>Don't stop your medication on your own, even if you feel well.</span></li>
-                    <li><i class="bi bi-x-circle-fill"></i><span>Don't add extra salt, fish sauce, or salty snacks to meals.</span></li>
-                    <li><i class="bi bi-x-circle-fill"></i><span>Don't smoke, and limit alcohol as much as possible.</span></li>
-                    <li><i class="bi bi-x-circle-fill"></i><span>Don't ignore regular check-ups, even when you have no symptoms.</span></li>
-                    <li><i class="bi bi-x-circle-fill"></i><span>Don't rely on unproven remedies in place of medical care.</span></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="mc-callout">
-            <span class="ico"><i class="bi bi-exclamation-triangle"></i></span>
-            <div>
-              <h3>When to see a doctor</h3>
-              <p>See a healthcare worker if your readings are often high, or seek care promptly if you notice any of these:</p>
-              <ul>
-                <li>A very high reading (for example, 180/120 or above)</li>
-                <li>Severe headache with blurred vision or confusion</li>
-                <li>Chest pain, difficulty breathing, or an irregular heartbeat</li>
-                <li>Weakness or numbness on one side of the body, or trouble speaking</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="mc-sources">
-            <h2>Sources</h2>
-            <div class="mc-source">
-              <i class="bi bi-globe2"></i>
-              <div>
-                <div class="src-name">World Health Organization (WHO)</div>
-                <div class="src-desc">Hypertension — key facts, prevention, and management guidance.</div>
-                <a href="#" class="src-link">who.int/health-topics/hypertension <i class="bi bi-box-arrow-up-right"></i></a>
-              </div>
-            </div>
-            <div class="mc-source">
-              <i class="bi bi-buildings"></i>
-              <div>
-                <div class="src-name">Ministry of Health, Myanmar</div>
-                <div class="src-desc">National guidelines on non-communicable disease care and blood pressure management.</div>
-                <a href="#" class="src-link">mohs.gov.mm <i class="bi bi-box-arrow-up-right"></i></a>
-              </div>
-            </div>
-            <div class="mc-source">
-              <i class="bi bi-journal-text"></i>
-              <div>
-                <div class="src-name">WHO Regional Office for South-East Asia</div>
-                <div class="src-desc">HEARTS technical package for cardiovascular disease management in primary care.</div>
-                <a href="#" class="src-link">who.int/southeastasia <i class="bi bi-box-arrow-up-right"></i></a>
-              </div>
-            </div>
-            <p class="text-muted mt-3" style="font-size:.83rem">Last reviewed: July 2026 · Reviewed by the MedCare medical editorial team.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- ===================== Emergency Contacts ===================== -->
-<div class="page" id="page-emergency">
-  <div class="mc-alert-band">
-    <div class="container">
-      <div class="inner">
-        <i class="bi bi-exclamation-triangle-fill"></i>
-        <span class="txt">In a life-threatening emergency, call immediately.</span>
-      </div>
-    </div>
-  </div>
-
-  <section class="mc-page-head" style="background:#fff;padding:2.5rem 0 2rem">
-    <div class="container">
-      <div class="mc-breadcrumb">
-        <a href="#/home"><i class="bi bi-house"></i> Home</a>
-        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
-        <span>Emergency contacts</span>
-      </div>
-      <h1 style="font-weight:800;letter-spacing:-.03em">Emergency Contacts</h1>
-      <p class="intro">Tap any number below to call. Keep this page saved on your phone so you can reach help fast.</p>
-    </div>
-  </section>
-
-  <section class="mc-cards">
-    <div class="container">
-      <div class="row g-4">
-        <div class="col-md-6">
-          <a href="tel:192" class="mc-ecard">
-            <div class="mc-ecard-icon"><i class="bi bi-truck-front-fill"></i></div>
-            <h2>Ambulance</h2>
-            <p class="sub">Medical emergencies, serious injuries, and urgent hospital transport.</p>
-            <div class="mc-ecard-number"><i class="bi bi-telephone-fill"></i>192</div>
-            <span class="mc-ecard-tap"><i class="bi bi-telephone-outbound-fill"></i> Call ambulance</span>
-          </a>
-        </div>
-        <div class="col-md-6">
-          <a href="tel:191" class="mc-ecard">
-            <div class="mc-ecard-icon"><i class="bi bi-fire"></i></div>
-            <h2>Fire Services</h2>
-            <p class="sub">Fires, gas leaks, building collapse, and rescue situations.</p>
-            <div class="mc-ecard-number"><i class="bi bi-telephone-fill"></i>191</div>
-            <span class="mc-ecard-tap"><i class="bi bi-telephone-outbound-fill"></i> Call fire services</span>
-          </a>
-        </div>
-        <div class="col-md-6">
-          <a href="tel:199" class="mc-ecard">
-            <div class="mc-ecard-icon"><i class="bi bi-shield-fill-check"></i></div>
-            <h2>Police</h2>
-            <p class="sub">Crime, violence, road accidents, and any situation needing police help.</p>
-            <div class="mc-ecard-number"><i class="bi bi-telephone-fill"></i>199</div>
-            <span class="mc-ecard-tap"><i class="bi bi-telephone-outbound-fill"></i> Call police</span>
-          </a>
-        </div>
-        <div class="col-md-6">
-          <a href="tel:01256112" class="mc-ecard">
-            <div class="mc-ecard-icon"><i class="bi bi-exclamation-diamond-fill"></i></div>
-            <h2>Poison Control</h2>
-            <p class="sub">Swallowed chemicals, medicine overdose, snake bites, or food poisoning.</p>
-            <div class="mc-ecard-number"><i class="bi bi-telephone-fill"></i>01-256112</div>
-            <span class="mc-ecard-tap"><i class="bi bi-telephone-outbound-fill"></i> Call poison control</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="mc-secondary">
-    <div class="container">
-      <div class="mc-sec-head">
-        <h2>Other helplines</h2>
-        <p>Support services available across Yangon and Myanmar.</p>
-      </div>
-      <div class="row g-3">
-        <div class="col-md-6 col-lg-4"><a href="tel:01230125" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-hospital-fill"></i></span><div class="body"><div class="name">Yangon General Hospital ER</div><div class="num">01-230125</div></div><i class="bi bi-arrow-right arr"></i></a></div>
-        <div class="col-md-6 col-lg-4"><a href="tel:067431222" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-heart-pulse-fill"></i></span><div class="body"><div class="name">Public Health Hotline</div><div class="num">067-431222</div></div><i class="bi bi-arrow-right arr"></i></a></div>
-        <div class="col-md-6 col-lg-4"><a href="tel:09979911911" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-chat-heart-fill"></i></span><div class="body"><div class="name">Mental Health Support</div><div class="num">09-979911911</div></div><i class="bi bi-arrow-right arr"></i></a></div>
-        <div class="col-md-6 col-lg-4"><a href="tel:106" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-person-arms-up"></i></span><div class="body"><div class="name">Disaster &amp; Rescue</div><div class="num">106</div></div><i class="bi bi-arrow-right arr"></i></a></div>
-        <div class="col-md-6 col-lg-4"><a href="tel:01371411" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-droplet-fill"></i></span><div class="body"><div class="name">Blood Bank (Yangon)</div><div class="num">01-371411</div></div><i class="bi bi-arrow-right arr"></i></a></div>
-        <div class="col-md-6 col-lg-4"><a href="tel:1876" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-people-fill"></i></span><div class="body"><div class="name">Women &amp; Child Helpline</div><div class="num">1876</div></div><i class="bi bi-arrow-right arr"></i></a></div>
-      </div>
-
-      <div class="mc-tips">
-        <h3><i class="bi bi-info-circle-fill"></i> What to say when you call</h3>
-        <ol>
-          <li>State your exact location first — street, township, and a nearby landmark.</li>
-          <li>Say what happened and how many people are hurt.</li>
-          <li>Describe whether the person is breathing and conscious.</li>
-          <li>Give your name and phone number, and stay on the line until told to hang up.</li>
-        </ol>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- ===================== Find Hospitals ===================== -->
-<div class="page" id="page-hospitals">
-  <section class="mc-page-head" style="padding:2.5rem 0 2rem">
-    <div class="container">
-      <div class="mc-breadcrumb">
-        <a href="#/home"><i class="bi bi-house"></i> Home</a>
-        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
-        <span>Find hospitals</span>
-      </div>
-      <h1>Find Hospitals in Yangon</h1>
-      <p class="intro">Search hospitals and clinics across Yangon townships. Filter by type or find one with a 24-hour emergency room near you.</p>
-    </div>
-  </section>
-
-  <section class="mc-layout">
-    <div class="container">
-      <div class="row g-4">
-        <div class="col-lg-3">
-          <aside class="mc-filters">
-            <div class="mc-filters-head">
-              <h2><i class="bi bi-sliders"></i> Filters</h2>
-              <button class="mc-clear" id="hospClear" type="button">Clear all</button>
-            </div>
-            <div class="mc-filter-group">
-              <div class="lbl">Township</div>
-              <select class="mc-select" id="hospTownship"></select>
-            </div>
-            <div class="mc-filter-group">
-              <div class="lbl">Hospital type</div>
-              <div id="hospTypes"></div>
-            </div>
-          </aside>
-        </div>
-        <div class="col-lg-9">
-          <div class="mc-search-wrap">
-            <i class="bi bi-search"></i>
-            <input type="text" id="hospSearch" placeholder="Search by hospital name or area…">
-          </div>
-          <p class="mc-result-count"><strong id="hospCount">0</strong> <span id="hospWord">hospitals</span> found</p>
-          <div id="hospList"></div>
-          <div class="mc-empty" id="hospEmpty" style="display:none">
-            <div class="mc-empty-art"><div class="ring"></div><i class="bi bi-hospital"></i><i class="bi bi-search"></i></div>
-            <h3>No hospitals match your filters</h3>
-            <p>Try a different township, remove a hospital-type filter, or clear your search to see all hospitals in Yangon.</p>
-            <button class="btn-reset" id="hospResetBtn" type="button">Clear all filters</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
+</main>
 
 <!-- ===================== Footer ===================== -->
 <footer class="mc-footer">
   <div class="container">
     <div class="row g-4">
       <div class="col-lg-4 brand-block">
-        <a class="navbar-brand mb-3 d-inline-flex" href="#/home" style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);gap:.55rem;align-items:center">
+        <a class="navbar-brand mb-3 d-inline-flex" href="index.html" style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);gap:.55rem;align-items:center">
           <span style="width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center"><i class="bi bi-heart-pulse-fill"></i></span>MedCare
         </a>
         <p>Trusted, plain-language health information reviewed by licensed medical professionals. Free for everyone, everywhere.</p>
       </div>
       <div class="col-6 col-md-3 col-lg-2">
         <h5>About</h5>
-        <ul><li><a href="#/home">Our editorial team</a></li><li><a href="#/home">Review process</a></li><li><a href="#/home">Contact us</a></li><li><a href="#/home">Careers</a></li><li><a href="#/home">Press</a></li></ul>
+        <ul><li><a href="index.html">Our editorial team</a></li><li><a href="index.html">Review process</a></li><li><a href="index.html">Contact us</a></li><li><a href="index.html">Careers</a></li><li><a href="index.html">Press</a></li></ul>
       </div>
       <div class="col-md-6 col-lg-3">
         <h5>Legal</h5>
-        <ul><li><a href="#/home">Terms of use</a></li><li><a href="#/home">Privacy policy</a></li><li><a href="#/home">Cookie settings</a></li><li><a href="#/home">Accessibility</a></li><li><a href="#/home">HIPAA notice</a></li></ul>
+        <ul><li><a href="index.html">Terms of use</a></li><li><a href="index.html">Privacy policy</a></li><li><a href="index.html">Cookie settings</a></li><li><a href="index.html">Accessibility</a></li><li><a href="index.html">HIPAA notice</a></li></ul>
       </div>
     </div>
     <div class="mc-disclaimer">
@@ -533,4 +208,3 @@
 </footer>
 </body>
 </html>
-

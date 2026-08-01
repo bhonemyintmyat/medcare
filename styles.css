@@ -14,9 +14,6 @@
   a:hover{color:var(--mc-primary);text-decoration:underline}
   ::selection{background:rgba(13,148,136,.2)}
 
-  /* Page switching */
-  .page{display:none}
-  .page.is-active{display:block}
 
 
   /* slider */

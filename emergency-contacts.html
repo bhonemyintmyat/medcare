@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emergency Contacts — MedCare</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+
+<!-- ===================== Navbar ===================== -->
+<nav class="navbar navbar-expand-lg mc-nav">
+  <div class="container">
+    <a class="navbar-brand" href="index.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mcNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="mcNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Health topics</a></li>
+        <li class="nav-item"><a class="nav-link" href="common-diseases.html">Common diseases</a></li>
+        <li class="nav-item"><a class="nav-link" href="hospitals.html">Find care</a></li>
+        <li class="nav-item"><a class="nav-link active" href="emergency-contacts.html">Emergency</a></li>
+      </ul>
+      <a href="tel:192" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== Emergency Contacts ===================== -->
+<main>
+  <div class="mc-alert-band">
+    <div class="container">
+      <div class="inner">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span class="txt">In a life-threatening emergency, call immediately.</span>
+      </div>
+    </div>
+  </div>
+
+  <section class="mc-page-head" style="background:#fff;padding:2.5rem 0 2rem">
+    <div class="container">
+      <div class="mc-breadcrumb">
+        <a href="index.html"><i class="bi bi-house"></i> Home</a>
+        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+        <span>Emergency contacts</span>
+      </div>
+      <h1 style="font-weight:800;letter-spacing:-.03em">Emergency Contacts</h1>
+      <p class="intro">Tap any number below to call. Keep this page saved on your phone so you can reach help fast.</p>
+    </div>
+  </section>
+
+  <section class="mc-cards">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-6">
+          <a href="tel:192" class="mc-ecard">
+            <div class="mc-ecard-icon"><i class="bi bi-truck-front-fill"></i></div>
+            <h2>Ambulance</h2>
+            <p class="sub">Medical emergencies, serious injuries, and urgent hospital transport.</p>
+            <div class="mc-ecard-number"><i class="bi bi-telephone-fill"></i>192</div>
+            <span class="mc-ecard-tap"><i class="bi bi-telephone-outbound-fill"></i> Call ambulance</span>
+          </a>
+        </div>
+        <div class="col-md-6">
+          <a href="tel:191" class="mc-ecard">
+            <div class="mc-ecard-icon"><i class="bi bi-fire"></i></div>
+            <h2>Fire Services</h2>
+            <p class="sub">Fires, gas leaks, building collapse, and rescue situations.</p>
+            <div class="mc-ecard-number"><i class="bi bi-telephone-fill"></i>191</div>
+            <span class="mc-ecard-tap"><i class="bi bi-telephone-outbound-fill"></i> Call fire services</span>
+          </a>
+        </div>
+        <div class="col-md-6">
+          <a href="tel:199" class="mc-ecard">
+            <div class="mc-ecard-icon"><i class="bi bi-shield-fill-check"></i></div>
+            <h2>Police</h2>
+            <p class="sub">Crime, violence, road accidents, and any situation needing police help.</p>
+            <div class="mc-ecard-number"><i class="bi bi-telephone-fill"></i>199</div>
+            <span class="mc-ecard-tap"><i class="bi bi-telephone-outbound-fill"></i> Call police</span>
+          </a>
+        </div>
+        <div class="col-md-6">
+          <a href="tel:01256112" class="mc-ecard">
+            <div class="mc-ecard-icon"><i class="bi bi-exclamation-diamond-fill"></i></div>
+            <h2>Poison Control</h2>
+            <p class="sub">Swallowed chemicals, medicine overdose, snake bites, or food poisoning.</p>
+            <div class="mc-ecard-number"><i class="bi bi-telephone-fill"></i>01-256112</div>
+            <span class="mc-ecard-tap"><i class="bi bi-telephone-outbound-fill"></i> Call poison control</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mc-secondary">
+    <div class="container">
+      <div class="mc-sec-head">
+        <h2>Other helplines</h2>
+        <p>Support services available across Yangon and Myanmar.</p>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-6 col-lg-4"><a href="tel:01230125" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-hospital-fill"></i></span><div class="body"><div class="name">Yangon General Hospital ER</div><div class="num">01-230125</div></div><i class="bi bi-arrow-right arr"></i></a></div>
+        <div class="col-md-6 col-lg-4"><a href="tel:067431222" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-heart-pulse-fill"></i></span><div class="body"><div class="name">Public Health Hotline</div><div class="num">067-431222</div></div><i class="bi bi-arrow-right arr"></i></a></div>
+        <div class="col-md-6 col-lg-4"><a href="tel:09979911911" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-chat-heart-fill"></i></span><div class="body"><div class="name">Mental Health Support</div><div class="num">09-979911911</div></div><i class="bi bi-arrow-right arr"></i></a></div>
+        <div class="col-md-6 col-lg-4"><a href="tel:106" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-person-arms-up"></i></span><div class="body"><div class="name">Disaster &amp; Rescue</div><div class="num">106</div></div><i class="bi bi-arrow-right arr"></i></a></div>
+        <div class="col-md-6 col-lg-4"><a href="tel:01371411" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-droplet-fill"></i></span><div class="body"><div class="name">Blood Bank (Yangon)</div><div class="num">01-371411</div></div><i class="bi bi-arrow-right arr"></i></a></div>
+        <div class="col-md-6 col-lg-4"><a href="tel:1876" class="mc-scard"><span class="mc-scard-icon"><i class="bi bi-people-fill"></i></span><div class="body"><div class="name">Women &amp; Child Helpline</div><div class="num">1876</div></div><i class="bi bi-arrow-right arr"></i></a></div>
+      </div>
+
+      <div class="mc-tips">
+        <h3><i class="bi bi-info-circle-fill"></i> What to say when you call</h3>
+        <ol>
+          <li>State your exact location first — street, township, and a nearby landmark.</li>
+          <li>Say what happened and how many people are hurt.</li>
+          <li>Describe whether the person is breathing and conscious.</li>
+          <li>Give your name and phone number, and stay on the line until told to hang up.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== Footer ===================== -->
+<footer class="mc-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4 brand-block">
+        <a class="navbar-brand mb-3 d-inline-flex" href="index.html" style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);gap:.55rem;align-items:center">
+          <span style="width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center"><i class="bi bi-heart-pulse-fill"></i></span>MedCare
+        </a>
+        <p>Trusted, plain-language health information reviewed by licensed medical professionals. Free for everyone, everywhere.</p>
+      </div>
+      <div class="col-6 col-md-3 col-lg-2">
+        <h5>About</h5>
+        <ul><li><a href="index.html">Our editorial team</a></li><li><a href="index.html">Review process</a></li><li><a href="index.html">Contact us</a></li><li><a href="index.html">Careers</a></li><li><a href="index.html">Press</a></li></ul>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <h5>Legal</h5>
+        <ul><li><a href="index.html">Terms of use</a></li><li><a href="index.html">Privacy policy</a></li><li><a href="index.html">Cookie settings</a></li><li><a href="index.html">Accessibility</a></li><li><a href="index.html">HIPAA notice</a></li></ul>
+      </div>
+    </div>
+    <div class="mc-disclaimer">
+      <span class="note"><i class="bi bi-info-circle"></i> Information only — not a substitute for professional medical advice, diagnosis, or treatment.</span>
+      <span>© 2026 MedCare. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

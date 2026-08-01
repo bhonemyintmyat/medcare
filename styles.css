@@ -117,7 +117,9 @@
   .mc-hospital-search--wide{flex:1;height:48px;min-width:280px}
   /* Let the dropdown wrappers stretch so the Towns button fills the bar height */
   .mc-hospital-search .dropdown,
-  .mc-hospital-search .selector{display:flex;align-items:stretch}
+  .mc-hospital-search .select{display:flex;align-items:stretch}
+  /* Position the menu without Popper (Bootstrap JS is not loaded) */
+  .mc-hospital-search .dropdown-menu{position:absolute;top:100%;left:0}
   .mc-town-btn{display:inline-flex;align-items:center;gap:.4rem;background:var(--mc-primary-50);color:var(--mc-primary-600);border:none;border-right:1px solid var(--mc-border);padding:0 1rem;font-weight:600;font-size:.92rem;white-space:nowrap;height:100%;border-radius:12px 0 0 12px}
   .mc-town-btn:hover{background:#ccfbf1;color:var(--mc-primary-600)}
   .mc-town-btn::after{margin-left:.15rem;border-top-color:currentColor;opacity:.7}

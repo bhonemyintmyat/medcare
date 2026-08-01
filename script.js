@@ -256,9 +256,69 @@ setInterval(() => {
       hTownship.value = town;
       if (townBtnLabel) { townBtnLabel.textContent = town === 'all' ? 'Towns' : town; }
       renderHospitals();
+      townMenu.classList.remove('show');
+      var townToggle = document.getElementById('mc-town-btn');
+      if (townToggle) { townToggle.setAttribute('aria-expanded', 'false'); }
       location.hash = '#/hospitals';
     });
   }
+
+  /* ---------- Native dropdown / collapse / accordion (replaces the Bootstrap JS bundle) ---------- */
+  // Dropdowns: toggle the Bootstrap `.show` class ourselves; close on outside
+  // click or Escape. Bootstrap's CSS still styles/positions the open menu.
+  function closeAllDropdowns(except) {
+    document.querySelectorAll('.dropdown-menu.show').forEach(function (menu) {
+      if (menu === except) { return; }
+      menu.classList.remove('show');
+      var dd = menu.closest('.dropdown');
+      var t = dd && dd.querySelector('[data-bs-toggle="dropdown"]');
+      if (t) { t.setAttribute('aria-expanded', 'false'); }
+    });
+  }
+  document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(function (toggle) {
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var dd = toggle.closest('.dropdown');
+      var menu = dd ? dd.querySelector('.dropdown-menu') : toggle.nextElementSibling;
+      if (!menu) { return; }
+      var willShow = !menu.classList.contains('show');
+      closeAllDropdowns(menu);
+      menu.classList.toggle('show', willShow);
+      toggle.setAttribute('aria-expanded', willShow ? 'true' : 'false');
+    });
+  });
+  document.addEventListener('click', function () { closeAllDropdowns(null); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeAllDropdowns(null); }
+  });
+
+  // Collapse (navbar toggler) + accordion. `data-bs-parent` gives the accordion
+  // its one-open-at-a-time behavior.
+  document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(function (toggle) {
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      var target = document.querySelector(toggle.getAttribute('data-bs-target') || '');
+      if (!target) { return; }
+      var willShow = !target.classList.contains('show');
+      // In Bootstrap markup data-bs-parent sits on the target collapse, not the toggle.
+      var parentSel = target.getAttribute('data-bs-parent') || toggle.getAttribute('data-bs-parent');
+      if (parentSel && willShow) {
+        var parent = document.querySelector(parentSel);
+        if (parent) {
+          parent.querySelectorAll('.collapse.show').forEach(function (c) {
+            if (c === target) { return; }
+            c.classList.remove('show');
+            var sib = parent.querySelector('[data-bs-target="#' + c.id + '"]');
+            if (sib) { sib.classList.add('collapsed'); sib.setAttribute('aria-expanded', 'false'); }
+          });
+        }
+      }
+      target.classList.toggle('show', willShow);
+      toggle.classList.toggle('collapsed', !willShow);
+      toggle.setAttribute('aria-expanded', willShow ? 'true' : 'false');
+    });
+  });
 
   /* ---------- Init ---------- */
   renderDiseases();

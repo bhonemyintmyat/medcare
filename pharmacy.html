@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Find Hospitals in Yangon — MedCare</title>
+<title>Find a Pharmacy — MedCare</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,26 +23,26 @@
       <ul class="navbar-nav mx-auto">
         <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="common-diseases.html">Common diseases</a></li>
-        <li class="nav-item"><a class="nav-link active" href="hospitals.html">Find Hospitals</a></li>
+        <li class="nav-item"><a class="nav-link" href="hospitals.html">Find Hospitals</a></li>
         <li class="nav-item"><a class="nav-link" href="emergency-contacts.html">Emergency</a></li>
-        <li class="nav-item"><a class="nav-link" href="pharmacy.html">Pharmacy</a></li>
+        <li class="nav-item"><a class="nav-link active" href="pharmacy.html">Pharmacy</a></li>
       </ul>
       <a href="emergency-contacts.html" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
     </div>
   </div>
 </nav>
 
-<!-- ===================== Find Hospitals ===================== -->
+<!-- ===================== Find a Pharmacy ===================== -->
 <main>
   <section class="mc-page-head" style="padding:2.5rem 0 2rem">
     <div class="container">
       <div class="mc-breadcrumb">
         <a href="index.html"><i class="bi bi-house"></i> Home</a>
         <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
-        <span>Find hospitals</span>
+        <span>Pharmacy</span>
       </div>
-      <h1>Find Hospitals in Yangon</h1>
-      <p class="intro">Search hospitals and clinics across Yangon townships. Filter by type or find one with a 24-hour emergency room near you.</p>
+      <h1>Find a Pharmacy</h1>
+      <p class="intro">Pharmacies and drug stores across Yangon townships. Filter for one that is open 24 hours or delivers to your home.</p>
     </div>
   </section>
 
@@ -53,30 +53,48 @@
           <aside class="mc-filters">
             <div class="mc-filters-head">
               <h2><i class="bi bi-sliders"></i> Filters</h2>
-              <button class="mc-clear" id="hospClear" type="button">Clear all</button>
+              <button class="mc-clear" id="pharmClear" type="button">Clear all</button>
             </div>
             <div class="mc-filter-group">
               <div class="lbl">Township</div>
-              <select class="mc-select" id="hospTownship"></select>
+              <select class="mc-select" id="pharmTownship"></select>
             </div>
             <div class="mc-filter-group">
-              <div class="lbl">Hospital type</div>
-              <div id="hospTypes"></div>
+              <div class="lbl">Pharmacy type</div>
+              <div id="pharmTypes"></div>
+            </div>
+            <div class="mc-filter-group">
+              <div class="lbl">Services</div>
+              <div id="pharmServices"></div>
             </div>
           </aside>
         </div>
         <div class="col-lg-9">
           <div class="mc-search-wrap">
             <i class="bi bi-search"></i>
-            <input type="text" id="hospSearch" placeholder="Search by hospital name or area…">
+            <input type="text" id="pharmSearch" placeholder="Search by pharmacy name or area…">
           </div>
-          <p class="mc-result-count"><strong id="hospCount">0</strong> <span id="hospWord">hospitals</span> found</p>
-          <div id="hospList"></div>
-          <div class="mc-empty" id="hospEmpty" style="display:none">
-            <div class="mc-empty-art"><div class="ring"></div><i class="bi bi-hospital"></i><i class="bi bi-search"></i></div>
-            <h3>No hospitals match your filters</h3>
-            <p>Try a different township, remove a hospital-type filter, or clear your search to see all hospitals in Yangon.</p>
-            <button class="btn-reset" id="hospResetBtn" type="button">Clear all filters</button>
+          <p class="mc-result-count"><strong id="pharmCount">0</strong> <span id="pharmWord">pharmacies</span> found</p>
+          <div id="pharmList"></div>
+          <div class="mc-empty" id="pharmEmpty" style="display:none">
+            <div class="mc-empty-art"><div class="ring"></div><i class="bi bi-capsule"></i><i class="bi bi-search"></i></div>
+            <h3>No pharmacies match your filters</h3>
+            <p>Try a different township, remove a service filter, or clear your search to see all pharmacies in Yangon.</p>
+            <button class="btn-reset" id="pharmResetBtn" type="button">Clear all filters</button>
+          </div>
+
+          <div class="mc-callout mt-4">
+            <span class="ico"><i class="bi bi-exclamation-triangle"></i></span>
+            <div>
+              <h3>Buying medicine safely</h3>
+              <p>A pharmacist can advise on everyday remedies, but some medicines need a doctor first.</p>
+              <ul>
+                <li>Antibiotics need a prescription. Taking them for colds and flu does not help, and it makes infections harder to treat later.</li>
+                <li>Check the expiry date and that the packaging is sealed before you pay.</li>
+                <li>Tell the pharmacist what else you take, including traditional medicines, so they can check for interactions.</li>
+                <li>Finish the full course your doctor prescribed, even once you feel better.</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&display=swap');
+
   :root{
     --mc-primary:#0d9488;--mc-primary-600:#0f766e;--mc-primary-50:#f0fdfa;
     --mc-bg:#f8fafc;--mc-text:#1e293b;--mc-muted:#64748b;--mc-border:#e2e8f0;
@@ -13,6 +15,29 @@
   a{color:var(--mc-primary-600);text-decoration:none}
   a:hover{color:var(--mc-primary);text-decoration:underline}
   ::selection{background:rgba(13,148,136,.2)}
+
+  /* Language bar (injected on every page by script.js) */
+  .mc-langbar{background:var(--mc-text);color:#fff;font-size:.85rem}
+  .mc-langbar .container{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;padding-top:.4rem;padding-bottom:.4rem}
+  .mc-langbar-label{display:inline-flex;align-items:center;gap:.4rem;opacity:.85;margin-right:auto}
+  .mc-lang{display:inline-flex;border:1px solid rgba(255,255,255,.28);border-radius:999px;overflow:hidden}
+  .mc-lang-btn{background:transparent;border:none;color:#fff;font:inherit;font-weight:600;padding:.28rem .95rem;cursor:pointer;line-height:1.7;font-family:'Noto Sans Myanmar','Inter',system-ui,sans-serif}
+  .mc-lang-btn:hover{background:rgba(255,255,255,.14)}
+  .mc-lang-btn[aria-pressed="true"]{background:var(--mc-primary);color:#fff}
+  .mc-lang-btn:focus-visible{outline:2px solid #fff;outline-offset:-3px}
+
+  /* Burmese typography — Latin faces have no Myanmar glyphs, so swap the stack */
+  html[lang="my"] body,
+  html[lang="my"] h1,html[lang="my"] h2,html[lang="my"] h3,html[lang="my"] h4,html[lang="my"] h5,h6,
+  html[lang="my"] .navbar-brand,html[lang="my"] .btn,html[lang="my"] .mc-card-title,
+  html[lang="my"] input,html[lang="my"] select,html[lang="my"] button,html[lang="my"] textarea{
+    font-family:'Noto Sans Myanmar','Inter',system-ui,sans-serif}
+  html[lang="my"] body{line-height:1.85}
+  html[lang="my"] h1,html[lang="my"] h2,html[lang="my"] h3{letter-spacing:0;line-height:1.5}
+  html[lang="my"] .mc-ecard-number{letter-spacing:0}
+  /* Shown only in Burmese, where the article body is still English */
+  .mc-lang-note{display:flex;align-items:center;gap:.5rem;background:var(--mc-primary-50);color:var(--mc-primary-600);border:1px solid #ccfbf1;border-radius:12px;padding:.7rem 1rem;font-size:.9rem;margin:0 0 1.5rem}
+  html[lang="en"] .mc-lang-note{display:none}
 
 
 

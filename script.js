@@ -940,6 +940,18 @@
         '<span>' + esc(article.read) + '</span><span class="sep"></span>' +
         '<span>' + esc(article.date) + '</span>';
 
+      // The article body is not translated yet. Say so in Burmese rather than
+      // silently showing English prose under a Burmese heading. Hidden in
+      // English mode by CSS.
+      if (!artBody.previousElementSibling ||
+          !artBody.previousElementSibling.classList.contains('mc-lang-note')) {
+        var note = document.createElement('p');
+        note.className = 'mc-lang-note';
+        note.innerHTML = '<i class="bi bi-translate"></i> ' +
+          'The full text of this article is currently available in English only.';
+        artBody.parentNode.insertBefore(note, artBody);
+      }
+
       artBody.innerHTML = article.body.map(function (block) {
         if (block.h) { return '<h2 class="mc-article-h2">' + esc(block.h) + '</h2>'; }
         if (block.ul) {
@@ -1270,4 +1282,470 @@
       toggle.setAttribute('aria-expanded', willShow ? 'true' : 'false');
     });
   });
+
+  /* ==================================================================
+     Language toggle — English / Burmese
+     ------------------------------------------------------------------
+     The dictionary is keyed by the exact English text that appears on
+     the page, so pages need no extra markup: we walk the DOM, look each
+     piece of text up, and swap it. The original English is remembered
+     per node so switching back is lossless. A MutationObserver re-runs
+     the swap over anything the render functions draw later (disease
+     cards, hospital results, and so on).
+     ================================================================== */
+  var MY = {
+    /* --- navigation & shared chrome --- */
+    'Home': 'ပင်မစာမျက်နှာ',
+    'Common diseases': 'အဖြစ်များသောရောဂါများ',
+    'Find Hospitals': 'ဆေးရုံရှာရန်',
+    'Emergency': 'အရေးပေါ်',
+    'Pharmacy': 'ဆေးဆိုင်',
+    'Health articles': 'ကျန်းမာရေးဆောင်းပါးများ',
+    'Emergency help': 'အရေးပေါ်အကူအညီ',
+    'Search': 'ရှာဖွေရန်',
+    'Learn more': 'ပိုမိုလေ့လာရန်',
+    'Directions': 'လမ်းညွှန်',
+    'Clear all': 'အားလုံးရှင်းရန်',
+    'Clear all filters': 'စစ်ထုတ်မှုအားလုံး ရှင်းရန်',
+    'Filters': 'စစ်ထုတ်မှုများ',
+    'Township': 'မြို့နယ်',
+    'All townships': 'မြို့နယ်အားလုံး',
+    'Sources': 'အကိုးအကား',
+
+    /* --- footer --- */
+    'About': 'အကြောင်း',
+    'Our editorial team': 'အယ်ဒီတာအဖွဲ့',
+    'Review process': 'စိစစ်မှုလုပ်ငန်းစဉ်',
+    'Contact us': 'ဆက်သွယ်ရန်',
+    'Careers': 'အလုပ်အကိုင်',
+    'Press': 'သတင်းမီဒီယာ',
+    'Legal': 'ဥပဒေဆိုင်ရာ',
+    'Terms of use': 'အသုံးပြုမှုစည်းကမ်းများ',
+    'Privacy policy': 'ကိုယ်ရေးအချက်အလက်မူဝါဒ',
+    'Cookie settings': 'Cookie ဆက်တင်များ',
+    'Accessibility': 'အသုံးပြုနိုင်စွမ်း',
+    'HIPAA notice': 'HIPAA အသိပေးချက်',
+    'Trusted, plain-language health information reviewed by licensed medical professionals. Free for everyone, everywhere.':
+      'လိုင်စင်ရ ဆေးပညာရှင်များ စိစစ်ထားသော ယုံကြည်စိတ်ချရပြီး နားလည်လွယ်သည့် ကျန်းမာရေးအချက်အလက်များ။ နေရာတိုင်း၊ လူတိုင်းအတွက် အခမဲ့။',
+    'Information only — not a substitute for professional medical advice, diagnosis, or treatment.':
+      'အချက်အလက်သာဖြစ်ပြီး ဆရာဝန်၏ အကြံဉာဏ်၊ ရောဂါရှာဖွေမှု သို့မဟုတ် ကုသမှုကို အစားထိုးနိုင်ခြင်း မရှိပါ။',
+    '© 2026 MedCare. All rights reserved.': '© ၂၀၂၆ MedCare။ မူပိုင်ခွင့်အားလုံး ရယူထားပါသည်။',
+
+    /* --- home --- */
+    'Find a hospital': 'ဆေးရုံရှာရန်',
+    'Towns': 'မြို့နယ်များ',
+    'Filter by town': 'မြို့နယ်အလိုက် စစ်ထုတ်ရန်',
+    'All towns': 'မြို့နယ်အားလုံး',
+    'Search hospitals by name…': 'ဆေးရုံအမည်ဖြင့် ရှာရန်…',
+    'Search hospitals': 'ဆေးရုံရှာဖွေရန်',
+    'Search symptoms, conditions, or hospitals…': 'ရောဂါလက္ခဏာ၊ ရောဂါ သို့မဟုတ် ဆေးရုံ ရှာရန်…',
+    'Popular:': 'ရေပန်းစားသည်များ −',
+    'Explore MedCare': 'MedCare ကို လေ့လာရန်',
+    'Where would you like to start?': 'ဘယ်ကနေ စတင်ချင်ပါသလဲ။',
+    'Four quick ways to find the health information and care you need.':
+      'လိုအပ်သော ကျန်းမာရေးအချက်အလက်နှင့် စောင့်ရှောက်မှုကို ရှာဖွေရန် လွယ်ကူသည့် နည်းလမ်းလေးမျိုး။',
+    'Health Articles': 'ကျန်းမာရေးဆောင်းပါးများ',
+    'Read plain-language guides on wellness, prevention, and daily health topics.':
+      'ကျန်းမာရေး၊ ကာကွယ်ရေးနှင့် နေ့စဉ်ကျန်းမာရေးအကြောင်း နားလည်လွယ်သော လမ်းညွှန်များကို ဖတ်ရှုပါ။',
+    'Common Diseases': 'အဖြစ်များသောရောဂါများ',
+    'Learn symptoms, causes, and treatments for conditions common in Myanmar.':
+      'မြန်မာနိုင်ငံတွင် အဖြစ်များသော ရောဂါများ၏ လက္ခဏာ၊ အကြောင်းရင်းနှင့် ကုသမှုများကို လေ့လာပါ။',
+    'Emergency Contacts': 'အရေးပေါ်ဆက်သွယ်ရန်',
+    'Ambulance, poison control, and 24/7 hotlines you can call right now.':
+      'လူနာတင်ယာဉ်၊ အဆိပ်ဖြေဌာနနှင့် ၂၄ နာရီ ဖုန်းလိုင်းများကို ယခုပင် ခေါ်ဆိုနိုင်ပါသည်။',
+    'Find Hospitals in Yangon': 'ရန်ကုန်ရှိ ဆေးရုံများ ရှာရန်',
+    'Browse hospitals and clinics across Yangon townships by name or location.':
+      'ရန်ကုန်မြို့နယ်များရှိ ဆေးရုံနှင့် ဆေးခန်းများကို အမည် သို့မဟုတ် တည်နေရာဖြင့် ရှာဖွေပါ။',
+    'In a medical emergency, call 192 (ambulance) immediately.':
+      'ဆေးဘက်ဆိုင်ရာ အရေးပေါ်အခြေအနေတွင် ၁၉၂ (လူနာတင်ယာဉ်) ကို ချက်ချင်း ခေါ်ပါ။',
+    'Do not use this site for urgent or life-threatening conditions.':
+      'အသက်အန္တရာယ်ရှိသော အရေးပေါ်အခြေအနေများအတွက် ဤဝဘ်ဆိုက်ကို အားမကိုးပါနှင့်။',
+    'Editor’s picks': 'အယ်ဒီတာ ရွေးချယ်မှု',
+    "Editor's picks": 'အယ်ဒီတာ ရွေးချယ်မှု',
+    'Featured Articles': 'အထူးဆောင်းပါးများ',
+    'All articles': 'ဆောင်းပါးအားလုံး',
+
+    /* --- article cards / listing --- */
+    'Plain-language guides on prevention, nutrition, and everyday health — written for Myanmar families and reviewed by our medical editorial team.':
+      'ကာကွယ်ရေး၊ အာဟာရနှင့် နေ့စဉ်ကျန်းမာရေးအတွက် နားလည်လွယ်သော လမ်းညွှန်များ — မြန်မာမိသားစုများအတွက် ရေးသားပြီး ဆေးပညာအယ်ဒီတာအဖွဲ့မှ စိစစ်ထားပါသည်။',
+    'Search articles by title or topic…': 'ခေါင်းစဉ် သို့မဟုတ် အကြောင်းအရာဖြင့် ဆောင်းပါးရှာရန်…',
+    'articles': 'ဆောင်းပါးများ',
+    'article': 'ဆောင်းပါး',
+    'No articles match your search': 'သင့်ရှာဖွေမှုနှင့် ကိုက်ညီသော ဆောင်းပါး မတွေ့ပါ',
+    'Try a different word or clear the filters.': 'အခြားစကားလုံးဖြင့် ရှာကြည့်ပါ သို့မဟုတ် စစ်ထုတ်မှုကို ရှင်းလင်းပါ။',
+    'Monsoon health': 'မိုးရာသီ ကျန်းမာရေး',
+    'Nutrition': 'အာဟာရ',
+    'Maternal care': 'မိခင်စောင့်ရှောက်မှု',
+    'Protecting your family from dengue during the rainy season':
+      'မိုးရာသီတွင် သွေးလွန်တုပ်ကွေးမှ မိသားစုကို ကာကွယ်ခြင်း',
+    'Simple steps every household in Yangon can take to prevent mosquito breeding at home.':
+      'အိမ်တွင်း ခြင်ပေါက်ပွားမှု တားဆီးရန် ရန်ကုန်ရှိ အိမ်ထောင်စုတိုင်း လုပ်ဆောင်နိုင်သည့် ရိုးရှင်းသောအဆင့်များ။',
+    'Eating well on a Myanmar family budget': 'မြန်မာမိသားစု ဘတ်ဂျက်ဖြင့် အာဟာရပြည့်ဝစွာ စားသုံးခြင်း',
+    'Everyday foods from the market that support blood pressure, heart, and blood-sugar health.':
+      'သွေးပေါင်ချိန်၊ နှလုံးနှင့် သွေးတွင်းသကြားဓာတ်အတွက် ကောင်းမွန်သည့် ဈေးမှ နေ့စဉ်အစားအစာများ။',
+    'What to expect at your first antenatal visit':
+      'ပထမဆုံး ကိုယ်ဝန်ဆောင် စစ်ဆေးမှုတွင် ဘာတွေ မျှော်လင့်ရမလဲ',
+    'A step-by-step guide for expecting mothers — what to bring, what to ask, and why it matters.':
+      'ကိုယ်ဝန်ဆောင်မိခင်များအတွက် အဆင့်ဆင့်လမ်းညွှန် — ဘာယူသွားရမလဲ၊ ဘာမေးရမလဲ၊ ဘာကြောင့် အရေးကြီးသလဲ။',
+    'Dr. Thiri Aung': 'ဒေါက်တာ သီရိအောင်',
+    'Ma Nilar, RD': 'မနီလာ (အာဟာရပညာရှင်)',
+    'Dr. Khin Sandar': 'ဒေါက်တာ ခင်စန္ဒာ',
+    '4 min read': '၄ မိနစ် ဖတ်ရန်',
+    '5 min read': '၅ မိနစ် ဖတ်ရန်',
+    '6 min read': '၆ မိနစ် ဖတ်ရန်',
+    '7 min read': '၇ မိနစ် ဖတ်ရန်',
+    'Jul 22': 'ဇူလိုင် ၂၂',
+    'Jul 19': 'ဇူလိုင် ၁၉',
+    'Jul 15': 'ဇူလိုင် ၁၅',
+    'Jul 22, 2026': 'ဇူလိုင် ၂၂၊ ၂၀၂၆',
+    'Jul 19, 2026': 'ဇူလိုင် ၁၉၊ ၂၀၂၆',
+    'Jul 15, 2026': 'ဇူလိုင် ၁၅၊ ၂၀၂၆',
+    'Jul 10, 2026': 'ဇူလိုင် ၁၀၊ ၂၀၂၆',
+    'Jul 5, 2026': 'ဇူလိုင် ၅၊ ၂၀၂၆',
+    'Jun 28, 2026': 'ဇွန် ၂၈၊ ၂၀၂၆',
+    'Prevention': 'ကာကွယ်ရေး',
+    'Chronic care': 'နာတာရှည် စောင့်ရှောက်မှု',
+    'Wellness': 'ကျန်းမာသုခ',
+    'How to measure your blood pressure at home': 'အိမ်တွင် သွေးပေါင်ချိန် တိုင်းနည်း',
+    'Home readings are more reliable than a single clinic check — if you take them the right way.':
+      'မှန်ကန်သောနည်းဖြင့် တိုင်းမည်ဆိုပါက အိမ်တွင်တိုင်းသော အတိုင်းအတာသည် ဆေးခန်းတွင် တစ်ကြိမ်တိုင်းခြင်းထက် ပိုမှန်ကန်သည်။',
+    'Safe water and handwashing at home': 'အိမ်တွင် သောက်သုံးရေ သန့်ရှင်းမှုနှင့် လက်ဆေးခြင်း',
+    'The two cheapest habits that prevent diarrhoea, typhoid and hepatitis A in the household.':
+      'အိမ်ထောင်စုအတွင်း ဝမ်းလျှောခြင်း၊ အူရောင်ငန်းဖျားနှင့် အသည်းရောင် အေ ကို ကာကွယ်ပေးသည့် အသက်သာဆုံး အလေ့အထ နှစ်ခု။',
+    'Staying safe through the hot season': 'နွေရာသီတွင် ဘေးကင်းစွာ နေထိုင်ခြင်း',
+    'Who is most at risk from heat, how to recognise heat exhaustion, and what to do first.':
+      'အပူဒဏ်ကြောင့် အန္တရာယ်အရှိဆုံးမှာ မည်သူများနည်း၊ အပူလျှံခြင်းကို မည်သို့သိနိုင်မည်နည်းနှင့် ဦးစွာ ဘာလုပ်ရမည်နည်း။',
+    'Dr. Aung Ko Latt': 'ဒေါက်တာ အောင်ကိုလတ်',
+    'Ma Thida Win': 'မသီတာဝင်း',
+    'Dr. Nyi Nyi Soe': 'ဒေါက်တာ ညီညီစိုး',
+    'Health article': 'ကျန်းမာရေးဆောင်းပါး',
+    'The full text of this article is currently available in English only.':
+      'ဤဆောင်းပါး၏ အပြည့်အစုံကို လက်ရှိတွင် အင်္ဂလိပ်ဘာသာဖြင့်သာ ဖတ်ရှုနိုင်ပါသည်။',
+    'When to seek care': 'ဘယ်အချိန် ဆေးကုသမှု ခံယူသင့်သလဲ',
+    'World Health Organization (WHO)': 'ကမ္ဘာ့ကျန်းမာရေးအဖွဲ့ (WHO)',
+    'Ministry of Health, Myanmar': 'ကျန်းမာရေးဝန်ကြီးဌာန၊ မြန်မာနိုင်ငံ',
+
+    /* --- common diseases --- */
+    'Learn about conditions that are frequently seen in Myanmar communities — their signs, causes, and when to seek care.':
+      'မြန်မာ့လူ့အဖွဲ့အစည်းတွင် မကြာခဏတွေ့ရသော ရောဂါများ၏ လက္ခဏာ၊ အကြောင်းရင်းနှင့် ဆေးကုသမှု ခံယူသင့်သည့်အချိန်ကို လေ့လာပါ။',
+    'Filter diseases by name…': 'ရောဂါအမည်ဖြင့် စစ်ထုတ်ရန်…',
+    'All': 'အားလုံး',
+    'Chronic': 'နာတာရှည်',
+    'Infectious': 'ကူးစက်ရောဂါ',
+    'Respiratory': 'အသက်ရှူလမ်းကြောင်း',
+    'Maternal & child': 'မိခင်နှင့်ကလေး',
+    'Maternal': 'မိခင်ကျန်းမာရေး',
+    'conditions': 'ရောဂါများ',
+    'condition': 'ရောဂါ',
+    'No conditions match your search': 'သင့်ရှာဖွေမှုနှင့် ကိုက်ညီသော ရောဂါ မတွေ့ပါ',
+    'Try a different name or clear the filters.': 'အခြားအမည်ဖြင့် ရှာကြည့်ပါ သို့မဟုတ် စစ်ထုတ်မှုကို ရှင်းလင်းပါ။',
+    'Hypertension': 'သွေးတိုးရောဂါ',
+    'Diabetes': 'ဆီးချိုရောဂါ',
+    'Asthma': 'ပန်းနာရင်ကြပ်',
+    'Dengue fever': 'သွေးလွန်တုပ်ကွေး',
+    'Tuberculosis (TB)': 'တီဘီရောဂါ (အဆုတ်နာ)',
+    'Malaria': 'ငှက်ဖျားရောဂါ',
+    'Hepatitis B': 'အသည်းရောင် အသားဝါ ဘီ',
+    'Coronary heart disease': 'နှလုံးသွေးကြောကျဉ်းရောဂါ',
+    'Stroke': 'လေဖြတ်ခြင်း',
+    'Anemia': 'သွေးအားနည်းရောဂါ',
+    'Typhoid fever': 'အူရောင်ငန်းဖျား',
+    'Pre-eclampsia': 'ကိုယ်ဝန်ဆောင် သွေးတိုးရောဂါ',
+    'High blood pressure': 'သွေးတိုးရောဂါ',
+    'High blood pressure often has no symptoms but raises the risk of stroke and heart disease over time.':
+      'သွေးတိုးရောဂါသည် လက္ခဏာမပြတတ်သော်လည်း ကာလကြာလာသည်နှင့်အမျှ လေဖြတ်ခြင်းနှင့် နှလုံးရောဂါ ဖြစ်နိုင်ခြေကို မြင့်တက်စေသည်။',
+    'A long-term condition where blood sugar levels are too high, manageable with diet, exercise, and medication.':
+      'သွေးတွင်းသကြားဓာတ် မြင့်မားသော နာတာရှည်ရောဂါဖြစ်ပြီး အစားအသောက်၊ လေ့ကျင့်ခန်းနှင့် ဆေးဖြင့် ထိန်းညှိနိုင်သည်။',
+    'Airways narrow and swell, causing wheezing and shortness of breath — usually controlled with inhalers.':
+      'အသက်ရှူလမ်းကြောင်း ကျဉ်းပြီး ရောင်ရမ်းကာ ရင်ကြပ်ခြင်းနှင့် အသက်ရှူရခက်ခြင်း ဖြစ်စေသည် — များသောအားဖြင့် အသက်ရှူဆေးဖြင့် ထိန်းနိုင်သည်။',
+    'A mosquito-borne viral illness common in the rainy season, causing high fever, body aches, and rash.':
+      'မိုးရာသီတွင် အဖြစ်များသော ခြင်မှတစ်ဆင့် ကူးစက်သည့် ဗိုင်းရပ်စ်ရောဂါဖြစ်ပြီး ဖျားခြင်း၊ ကိုယ်လက်ကိုက်ခဲခြင်းနှင့် အနီစက်များ ထွက်ခြင်း ဖြစ်စေသည်။',
+    'A bacterial infection mainly affecting the lungs, treatable with a full course of antibiotics.':
+      'အဓိကအားဖြင့် အဆုတ်ကို ထိခိုက်စေသော ဘက်တီးရီးယားပိုးကူးစက်မှုဖြစ်ပြီး ပဋိဇီဝဆေးအပြည့်အဝ သောက်ခြင်းဖြင့် ပျောက်ကင်းနိုင်သည်။',
+    'A mosquito-borne parasitic disease that causes cyclic fever and chills; preventable with nets and repellents.':
+      'ခြင်မှတစ်ဆင့် ကူးစက်သည့် ကပ်ပါးပိုးရောဂါဖြစ်ပြီး အဖျားနှင့် ချမ်းတုန်ခြင်း အလှည့်ကျဖြစ်စေသည်။ ခြင်ထောင်နှင့် ခြင်ဆေးဖြင့် ကာကွယ်နိုင်သည်။',
+    'A liver infection that can become long-term; a safe vaccine prevents it and testing catches it early.':
+      'နာတာရှည်ဖြစ်နိုင်သော အသည်းရောင်ရောဂါဖြစ်ပြီး ကာကွယ်ဆေးဖြင့် ကာကွယ်နိုင်ကာ စစ်ဆေးမှုဖြင့် စောစီးစွာ သိရှိနိုင်သည်။',
+    'Narrowed arteries reduce blood flow to the heart and can cause chest pain or a heart attack.':
+      'သွေးကြောများ ကျဉ်းလာခြင်းကြောင့် နှလုံးသို့ သွေးစီးဆင်းမှု လျော့နည်းပြီး ရင်ဘတ်အောင့်ခြင်း သို့မဟုတ် နှလုံးရောဂါ ဖြစ်စေနိုင်သည်။',
+    'A sudden interruption of blood to the brain — act fast; call an ambulance if you notice F.A.S.T. signs.':
+      'ဦးနှောက်သို့ သွေးစီးဆင်းမှု ရုတ်တရက် ရပ်တန့်ခြင်းဖြစ်သည် — အမြန်လုပ်ဆောင်ပါ။ F.A.S.T. လက္ခဏာများ တွေ့ပါက လူနာတင်ယာဉ် ခေါ်ပါ။',
+    'Low red blood cell counts cause fatigue and weakness; iron-rich foods and supplements often help.':
+      'သွေးနီဥ နည်းပါးခြင်းကြောင့် မောပန်းခြင်းနှင့် အားနည်းခြင်း ဖြစ်စေသည်။ သံဓာတ်ကြွယ်ဝသော အစားအစာနှင့် ဖြည့်စွက်ဆေးများ အထောက်အကူဖြစ်သည်။',
+    'A bacterial infection spread through contaminated food or water — safe hygiene and vaccination help prevent it.':
+      'ညစ်ညမ်းသော အစားအစာ သို့မဟုတ် ရေမှတစ်ဆင့် ကူးစက်သည့် ဘက်တီးရီးယားရောဂါဖြစ်ပြီး သန့်ရှင်းရေးနှင့် ကာကွယ်ဆေးဖြင့် ကာကွယ်နိုင်သည်။',
+    'A pregnancy complication with high blood pressure — regular antenatal check-ups are essential.':
+      'ကိုယ်ဝန်ဆောင်စဉ် သွေးတိုးခြင်းကြောင့် ဖြစ်ပေါ်သော နောက်ဆက်တွဲပြဿနာဖြစ်ပြီး ပုံမှန် ကိုယ်ဝန်ဆောင်စစ်ဆေးမှု မရှိမဖြစ် လိုအပ်သည်။',
+
+    /* --- hospitals --- */
+    'Find hospitals': 'ဆေးရုံရှာရန်',
+    'Search hospitals and clinics across Yangon townships. Filter by type or find one with a 24-hour emergency room near you.':
+      'ရန်ကုန်မြို့နယ်များရှိ ဆေးရုံနှင့် ဆေးခန်းများကို ရှာဖွေပါ။ အမျိုးအစားအလိုက် စစ်ထုတ်ပါ သို့မဟုတ် ၂၄ နာရီ အရေးပေါ်ဌာနရှိသည့် ဆေးရုံကို ရှာပါ။',
+    'Hospital type': 'ဆေးရုံအမျိုးအစား',
+    'General': 'အထွေထွေ',
+    'Specialist': 'အထူးကု',
+    'Emergency / ER': 'အရေးပေါ်ဌာန',
+    'Search by hospital name or area…': 'ဆေးရုံအမည် သို့မဟုတ် ဒေသဖြင့် ရှာရန်…',
+    'hospitals': 'ဆေးရုံများ',
+    'hospital': 'ဆေးရုံ',
+    'found': 'တွေ့ရှိသည်',
+    'ER available': 'အရေးပေါ်ဌာန ရှိသည်',
+    'Open 24 hours': '၂၄ နာရီ ဖွင့်',
+    'Mon–Fri, 8:00–16:00': 'တနင်္လာ–သောကြာ၊ ၈:၀၀–၁၆:၀၀',
+    'No hospitals match your filters': 'သင့်စစ်ထုတ်မှုနှင့် ကိုက်ညီသော ဆေးရုံ မတွေ့ပါ',
+    'Try a different township, remove a hospital-type filter, or clear your search to see all hospitals in Yangon.':
+      'အခြားမြို့နယ်ကို ရွေးပါ၊ ဆေးရုံအမျိုးအစား စစ်ထုတ်မှုကို ဖယ်ပါ သို့မဟုတ် ရန်ကုန်ရှိ ဆေးရုံအားလုံး ကြည့်ရန် ရှာဖွေမှုကို ရှင်းပါ။',
+
+    /* --- townships (select options and card rows) --- */
+    'Bahan': 'ဗဟန်း', 'Bahan Township': 'ဗဟန်းမြို့နယ်',
+    'Dagon': 'ဒဂုံ', 'Dagon Township': 'ဒဂုံမြို့နယ်',
+    'Hlaing': 'လှိုင်', 'Hlaing Township': 'လှိုင်မြို့နယ်',
+    'Hlaing Tharyar': 'လှိုင်သာယာ', 'Hlaing Tharyar Township': 'လှိုင်သာယာမြို့နယ်',
+    'Insein': 'အင်းစိန်', 'Insein Township': 'အင်းစိန်မြို့နယ်',
+    'Kamayut': 'ကမာရွတ်', 'Kamayut Township': 'ကမာရွတ်မြို့နယ်',
+    'Lanmadaw': 'လမ်းမတော်', 'Lanmadaw Township': 'လမ်းမတော်မြို့နယ်',
+    'Latha': 'လသာ', 'Latha Township': 'လသာမြို့နယ်',
+    'Mayangone': 'မရမ်းကုန်း', 'Mayangone Township': 'မရမ်းကုန်းမြို့နယ်',
+    'Mingaladon': 'မင်္ဂလာဒုံ', 'Mingaladon Township': 'မင်္ဂလာဒုံမြို့နယ်',
+    'North Dagon': 'မြောက်ဒဂုံ', 'North Dagon Township': 'မြောက်ဒဂုံမြို့နယ်',
+    'North Okkalapa': 'မြောက်ဥက္ကလာပ', 'North Okkalapa Township': 'မြောက်ဥက္ကလာပမြို့နယ်',
+    'Pabedan': 'ပန်းဘဲတန်း', 'Pabedan Township': 'ပန်းဘဲတန်းမြို့နယ်',
+    'Sanchaung': 'စမ်းချောင်း', 'Sanchaung Township': 'စမ်းချောင်းမြို့နယ်',
+    'Shwe Pyi Thar': 'ရွှေပြည်သာ', 'Shwe Pyi Thar Township': 'ရွှေပြည်သာမြို့နယ်',
+    'South Dagon': 'တောင်ဒဂုံ', 'South Dagon Township': 'တောင်ဒဂုံမြို့နယ်',
+    'South Okkalapa': 'တောင်ဥက္ကလာပ', 'South Okkalapa Township': 'တောင်ဥက္ကလာပမြို့နယ်',
+    'Tamwe': 'တာမွေ', 'Tamwe Township': 'တာမွေမြို့နယ်',
+    'Thaketa': 'သာကေတ', 'Thaketa Township': 'သာကေတမြို့နယ်',
+    'Thingangyun': 'သင်္ဃန်းကျွန်း', 'Thingangyun Township': 'သင်္ဃန်းကျွန်းမြို့နယ်',
+    'Yankin': 'ရန်ကင်း', 'Yankin Township': 'ရန်ကင်းမြို့နယ်',
+
+    /* --- pharmacy --- */
+    'Find a Pharmacy': 'ဆေးဆိုင်ရှာရန်',
+    'Pharmacies and drug stores across Yangon townships. Filter for one that is open 24 hours or delivers to your home.':
+      'ရန်ကုန်မြို့နယ်များရှိ ဆေးဆိုင်များ။ ၂၄ နာရီဖွင့်သော သို့မဟုတ် အိမ်အရောက်ပို့ဆောင်ပေးသော ဆိုင်များကို စစ်ထုတ်ရှာနိုင်ပါသည်။',
+    'Pharmacy type': 'ဆေးဆိုင်အမျိုးအစား',
+    'Chain pharmacy': 'ဆိုင်ခွဲများရှိ ဆေးဆိုင်',
+    'Independent': 'ကိုယ်ပိုင်ဆေးဆိုင်',
+    'Hospital pharmacy': 'ဆေးရုံဆေးဆိုင်',
+    'Services': 'ဝန်ဆောင်မှုများ',
+    'Home delivery': 'အိမ်အရောက် ပို့ဆောင်မှု',
+    'Fills prescriptions': 'ဆေးညွှန်းအတိုင်း ထုတ်ပေးသည်',
+    'Search by pharmacy name or area…': 'ဆေးဆိုင်အမည် သို့မဟုတ် ဒေသဖြင့် ရှာရန်…',
+    'pharmacies': 'ဆေးဆိုင်များ',
+    'pharmacy': 'ဆေးဆိုင်',
+    'No pharmacies match your filters': 'သင့်စစ်ထုတ်မှုနှင့် ကိုက်ညီသော ဆေးဆိုင် မတွေ့ပါ',
+    'Try a different township, remove a service filter, or clear your search to see all pharmacies in Yangon.':
+      'အခြားမြို့နယ်ကို ရွေးပါ၊ ဝန်ဆောင်မှုစစ်ထုတ်မှုကို ဖယ်ပါ သို့မဟုတ် ရန်ကုန်ရှိ ဆေးဆိုင်အားလုံး ကြည့်ရန် ရှာဖွေမှုကို ရှင်းပါ။',
+    'Buying medicine safely': 'ဆေးဝါး လုံခြုံစွာ ဝယ်ယူခြင်း',
+    'A pharmacist can advise on everyday remedies, but some medicines need a doctor first.':
+      'ဆေးဝါးကျွမ်းကျင်သူသည် နေ့စဉ်သုံးဆေးများအတွက် အကြံပေးနိုင်သော်လည်း အချို့ဆေးများမှာ ဆရာဝန်နှင့် ဦးစွာ တိုင်ပင်ရန် လိုအပ်သည်။',
+    'Antibiotics need a prescription. Taking them for colds and flu does not help, and it makes infections harder to treat later.':
+      'ပဋိဇီဝဆေးများသည် ဆေးညွှန်း လိုအပ်သည်။ အအေးမိခြင်းနှင့် တုပ်ကွေးအတွက် သောက်ခြင်းသည် အကျိုးမရှိဘဲ နောင်တွင် ပိုးကုသရန် ပိုခက်စေသည်။',
+    'Check the expiry date and that the packaging is sealed before you pay.':
+      'ငွေမပေးမီ သက်တမ်းကုန်ဆုံးရက်နှင့် ထုပ်ပိုးမှု ကောင်းမကောင်းကို စစ်ဆေးပါ။',
+    'Tell the pharmacist what else you take, including traditional medicines, so they can check for interactions.':
+      'တိုင်းရင်းဆေးအပါအဝင် အခြားသောက်နေသည့် ဆေးများကို ဆေးဆိုင်ရှင်အား ပြောပြပါ။ ဆေးချင်း ဓာတ်တိုက်မှု ရှိမရှိ စစ်ဆေးနိုင်ရန်ဖြစ်သည်။',
+    'Finish the full course your doctor prescribed, even once you feel better.':
+      'သက်သာလာသည့်တိုင် ဆရာဝန်ညွှန်ကြားထားသော ဆေးကို အပြည့်အဝ သောက်ပါ။',
+
+    /* --- emergency contacts --- */
+    'In a life-threatening emergency, call immediately.':
+      'အသက်အန္တရာယ်ရှိသော အရေးပေါ်အခြေအနေတွင် ချက်ချင်း ဖုန်းခေါ်ပါ။',
+    'Emergency contacts': 'အရေးပေါ်ဆက်သွယ်ရန်',
+    'Tap any number below to call. Keep this page saved on your phone so you can reach help fast.':
+      'ခေါ်ဆိုရန် အောက်ပါနံပါတ်တစ်ခုကို နှိပ်ပါ။ အကူအညီ မြန်မြန်ရရှိရန် ဤစာမျက်နှာကို ဖုန်းတွင် သိမ်းထားပါ။',
+    'Ambulance': 'လူနာတင်ယာဉ်',
+    'Medical emergencies, serious injuries, and urgent hospital transport.':
+      'ဆေးဘက်ဆိုင်ရာ အရေးပေါ်၊ ပြင်းထန်သော ဒဏ်ရာနှင့် အရေးပေါ် ဆေးရုံပို့ဆောင်မှု။',
+    'Call ambulance': 'လူနာတင်ယာဉ် ခေါ်ရန်',
+    'Fire Services': 'မီးသတ်ဌာန',
+    'Fires, gas leaks, building collapse, and rescue situations.':
+      'မီးလောင်မှု၊ ဓာတ်ငွေ့ယိုစိမ့်မှု၊ အဆောက်အအုံပြိုကျမှုနှင့် ကယ်ဆယ်ရေး အခြေအနေများ။',
+    'Call fire services': 'မီးသတ်ဌာန ခေါ်ရန်',
+    'Police': 'ရဲတပ်ဖွဲ့',
+    'Crime, violence, road accidents, and any situation needing police help.':
+      'ရာဇဝတ်မှု၊ အကြမ်းဖက်မှု၊ ယာဉ်မတော်တဆမှုနှင့် ရဲအကူအညီ လိုအပ်သည့် အခြေအနေများ။',
+    'Call police': 'ရဲ ခေါ်ရန်',
+    'Poison Control': 'အဆိပ်ဖြေဌာန',
+    'Swallowed chemicals, medicine overdose, snake bites, or food poisoning.':
+      'ဓာတုပစ္စည်း မျိုချမိခြင်း၊ ဆေးလွန်ကဲစွာ သောက်မိခြင်း၊ မြွေကိုက်ခြင်း သို့မဟုတ် အစားအစာ အဆိပ်သင့်ခြင်း။',
+    'Call poison control': 'အဆိပ်ဖြေဌာန ခေါ်ရန်',
+    'Other helplines': 'အခြား အကူအညီ ဖုန်းလိုင်းများ',
+    'Support services available across Yangon and Myanmar.':
+      'ရန်ကုန်နှင့် မြန်မာတစ်နိုင်ငံလုံးတွင် ရရှိနိုင်သော ဝန်ဆောင်မှုများ။',
+    'Yangon General Hospital ER': 'ရန်ကုန်ဆေးရုံကြီး အရေးပေါ်ဌာန',
+    'Public Health Hotline': 'ပြည်သူ့ကျန်းမာရေး ဖုန်းလိုင်း',
+    'Mental Health Support': 'စိတ်ကျန်းမာရေး အကူအညီ',
+    'Disaster & Rescue': 'သဘာဝဘေးနှင့် ကယ်ဆယ်ရေး',
+    'Blood Bank (Yangon)': 'သွေးဘဏ် (ရန်ကုန်)',
+    'Women & Child Helpline': 'အမျိုးသမီးနှင့် ကလေး အကူအညီလိုင်း',
+    'What to say when you call': 'ဖုန်းခေါ်သည့်အခါ ပြောရမည့် အချက်များ',
+    'State your exact location first — street, township, and a nearby landmark.':
+      'သင်ရှိသည့် တည်နေရာအတိအကျကို ဦးစွာပြောပါ — လမ်း၊ မြို့နယ်နှင့် အနီးအနားရှိ မှတ်သားဖွယ်နေရာ။',
+    'Say what happened and how many people are hurt.':
+      'ဘာဖြစ်ခဲ့သည်နှင့် လူဘယ်နှစ်ဦး ဒဏ်ရာရသည်ကို ပြောပါ။',
+    'Describe whether the person is breathing and conscious.':
+      'လူနာသည် အသက်ရှူနေသလား၊ သတိရှိနေသလား ဖော်ပြပါ။',
+    'Give your name and phone number, and stay on the line until told to hang up.':
+      'သင့်အမည်နှင့် ဖုန်းနံပါတ်ကို ပေးပါ။ ဖုန်းချရန် မပြောမချင်း လိုင်းပေါ်တွင် စောင့်ပါ။',
+
+    /* --- hypertension detail --- */
+    'Chronic condition': 'နာတာရှည်ရောဂါ',
+    'Symptoms': 'ရောဂါလက္ခဏာများ',
+    "Do's": 'လုပ်သင့်သည်များ',
+    'Do’s': 'လုပ်သင့်သည်များ',
+    "Don'ts": 'မလုပ်သင့်သည်များ',
+    'Don’ts': 'မလုပ်သင့်သည်များ',
+    'When to see a doctor': 'ဆရာဝန်နှင့် ဘယ်အချိန် ပြသင့်သလဲ',
+    'Hypertension, or high blood pressure, is a common long-term condition where the force of blood against the artery walls stays higher than normal.':
+      'သွေးတိုးရောဂါဆိုသည်မှာ သွေးကြောနံရံများပေါ်သို့ သွေးဖိအားက ပုံမှန်ထက် မြင့်နေသော အဖြစ်များသည့် နာတာရှည်ရောဂါဖြစ်သည်။',
+    'It usually causes no symptoms, which is why it is often called a "silent" condition. The good news is that it can be well managed — with regular check-ups, a balanced diet, and, when needed, medication, most people live full and active lives.':
+      'များသောအားဖြင့် လက္ခဏာမပြသဖြင့် “တိတ်တဆိတ်ရောဂါ” ဟု ခေါ်ကြသည်။ ဝမ်းသာစရာမှာ ကောင်းစွာ ထိန်းညှိနိုင်ခြင်းဖြစ်သည် — ပုံမှန်ဆေးစစ်ခြင်း၊ မျှတသော အစားအသောက်နှင့် လိုအပ်ပါက ဆေးဝါးဖြင့် အများစုသည် ကျန်းမာစွာ နေထိုင်နိုင်ပါသည်။',
+    'Hypertension — key facts, prevention, and management guidance.':
+      'သွေးတိုးရောဂါ — အဓိကအချက်များ၊ ကာကွယ်ရေးနှင့် ထိန်းညှိမှု လမ်းညွှန်။',
+    'National guidelines on non-communicable disease care and blood pressure management.':
+      'မကူးစက်တတ်သောရောဂါ စောင့်ရှောက်မှုနှင့် သွေးပေါင်ချိန် ထိန်းညှိမှုဆိုင်ရာ အမျိုးသားအဆင့် လမ်းညွှန်ချက်များ။',
+    'WHO Regional Office for South-East Asia': 'WHO အရှေ့တောင်အာရှ ဒေသဆိုင်ရာရုံး',
+    'HEARTS technical package for cardiovascular disease management in primary care.':
+      'အခြေခံကျန်းမာရေးစောင့်ရှောက်မှုတွင် နှလုံးသွေးကြောရောဂါ ထိန်းညှိရန် HEARTS နည်းပညာအစီအစဉ်။',
+    'Last reviewed: July 2026 · Reviewed by the MedCare medical editorial team.':
+      'နောက်ဆုံးစိစစ်သည့်ရက်− ၂၀၂၆ ဇူလိုင် · MedCare ဆေးပညာအယ်ဒီတာအဖွဲ့မှ စိစစ်ထားပါသည်။',
+    'Fact sheets on prevention, nutrition and maternal health.':
+      'ကာကွယ်ရေး၊ အာဟာရနှင့် မိခင်ကျန်းမာရေးဆိုင်ရာ အချက်အလက်စာရွက်များ။',
+    'This article is general information, not a diagnosis. If symptoms are severe, getting worse, or you are worried about a child, an older adult or someone who is pregnant, speak to a health worker. In an emergency call an ambulance on':
+      'ဤဆောင်းပါးသည် အထွေထွေအချက်အလက်သာဖြစ်ပြီး ရောဂါရှာဖွေချက် မဟုတ်ပါ။ လက္ခဏာများ ပြင်းထန်လာပါက၊ ပိုဆိုးလာပါက သို့မဟုတ် ကလေး၊ သက်ကြီးရွယ်အို သို့မဟုတ် ကိုယ်ဝန်ဆောင်အတွက် စိုးရိမ်ပါက ကျန်းမာရေးဝန်ထမ်းနှင့် တိုင်ပင်ပါ။ အရေးပေါ်ဖြစ်ပါက လူနာတင်ယာဉ်ကို ဤနံပါတ်သို့ ခေါ်ပါ −',
+    'Most people have no symptoms. When blood pressure is very high, some may notice:':
+      'အများစုမှာ လက္ခဏာမပြပါ။ သွေးပေါင်ချိန် အလွန်မြင့်သည့်အခါ အချို့တွင် အောက်ပါတို့ ခံစားရနိုင်သည်။',
+    'Headaches, especially at the back of the head': 'ခေါင်းကိုက်ခြင်း၊ အထူးသဖြင့် ခေါင်းနောက်ပိုင်း',
+    'Dizziness or a feeling of light-headedness': 'မူးဝေခြင်း သို့မဟုတ် ခေါင်းပေါ့သလို ခံစားရခြင်း',
+    'Blurred or double vision': 'အမြင်ဝါးခြင်း သို့မဟုတ် နှစ်ထပ်မြင်ခြင်း',
+    'Shortness of breath or chest discomfort': 'အသက်ရှူမဝခြင်း သို့မဟုတ် ရင်ဘတ်မသက်မသာဖြစ်ခြင်း',
+    'Nosebleeds (uncommon)': 'နှာခေါင်းသွေးထွက်ခြင်း (ရှားပါးသည်)',
+    'Check your blood pressure regularly, at home or at a clinic.':
+      'အိမ်တွင် သို့မဟုတ် ဆေးခန်းတွင် သွေးပေါင်ချိန်ကို ပုံမှန် တိုင်းပါ။',
+    'Eat more vegetables, fruit, and whole grains; reduce salty foods.':
+      'ဟင်းသီးဟင်းရွက်၊ သစ်သီးနှင့် အစေ့အဆန်များ ပိုစားပါ။ ဆားငန်သော အစားအစာ လျှော့ပါ။',
+    'Stay physically active — aim for about 30 minutes most days.':
+      'ကိုယ်လက်လှုပ်ရှားမှု ရှိပါစေ — နေ့စဉ်နီးပါး ၃၀ မိနစ်ခန့် ရည်မှန်းပါ။',
+    'Take your prescribed medicines exactly as directed, every day.':
+      'ညွှန်ကြားထားသည့်အတိုင်း ဆေးကို နေ့စဉ် မှန်မှန် သောက်ပါ။',
+    'Keep a healthy weight and manage stress with rest and support.':
+      'ကျန်းမာသော ကိုယ်အလေးချိန် ထိန်းပါ။ အနားယူခြင်းနှင့် အထောက်အပံ့ဖြင့် စိတ်ဖိစီးမှုကို ဖြေလျှော့ပါ။',
+    "Don't stop your medication on your own, even if you feel well.":
+      'နေကောင်းသည်ဟု ခံစားရသော်လည်း ဆေးကို ကိုယ်တိုင်သဘောနှင့် မရပ်ပါနှင့်။',
+    "Don't add extra salt, fish sauce, or salty snacks to meals.":
+      'အစားအစာတွင် ဆား၊ ငါးငံပြာရည် သို့မဟုတ် ဆားငန်မုန့်များ ထပ်မထည့်ပါနှင့်။',
+    "Don't smoke, and limit alcohol as much as possible.":
+      'ဆေးလိပ် မသောက်ပါနှင့်။ အရက်ကိုလည်း တတ်နိုင်သမျှ လျှော့ပါ။',
+    "Don't ignore regular check-ups, even when you have no symptoms.":
+      'လက္ခဏာမရှိသည့်တိုင် ပုံမှန်စစ်ဆေးမှုကို လျစ်လျူမရှုပါနှင့်။',
+    "Don't rely on unproven remedies in place of medical care.":
+      'ဆေးကုသမှုအစား အတည်မပြုရသေးသော နည်းလမ်းများကို အားမကိုးပါနှင့်။',
+    'See a healthcare worker if your readings are often high, or seek care promptly if you notice any of these:':
+      'သွေးပေါင်ချိန် မကြာခဏ မြင့်နေပါက ကျန်းမာရေးဝန်ထမ်းနှင့် ပြပါ။ အောက်ပါတို့ တွေ့ပါက ချက်ချင်း ဆေးကုသမှု ခံယူပါ။',
+    'A very high reading (for example, 180/120 or above)':
+      'အလွန်မြင့်သော အတိုင်းအတာ (ဥပမာ ၁၈၀/၁၂၀ သို့မဟုတ် အထက်)',
+    'Severe headache with blurred vision or confusion':
+      'ပြင်းထန်သော ခေါင်းကိုက်ခြင်းနှင့်အတူ အမြင်ဝါးခြင်း သို့မဟုတ် စိတ်ရှုပ်ထွေးခြင်း',
+    'Chest pain, difficulty breathing, or an irregular heartbeat':
+      'ရင်ဘတ်အောင့်ခြင်း၊ အသက်ရှူရခက်ခြင်း သို့မဟုတ် နှလုံးခုန်နှုန်း မမှန်ခြင်း',
+    'Weakness or numbness on one side of the body, or trouble speaking':
+      'ကိုယ်တစ်ခြမ်း အားနည်းခြင်း သို့မဟုတ် ထုံကျဉ်ခြင်း၊ စကားပြောရ ခက်ခဲခြင်း'
+  };
+
+  var LANGS = { en: null, my: MY };
+  var LANG_KEY = 'mc-lang';
+  var currentLang = 'en';
+  var busy = false;
+  var origText = new WeakMap();      // Text node -> its original English
+  var I18N_ATTRS = ['placeholder', 'aria-label', 'title'];
+
+  function lookup(text) {
+    var dict = LANGS[currentLang];
+    if (!dict) { return null; }
+    var key = text.trim();
+    return Object.prototype.hasOwnProperty.call(dict, key) ? dict[key] : null;
+  }
+
+  function swapText(node) {
+    var orig = origText.get(node);
+    if (orig === undefined) { orig = node.data; origText.set(node, orig); }
+    if (!orig.trim()) { return; }
+    var hit = lookup(orig);
+    // Replace only the trimmed word so surrounding spaces/newlines survive.
+    var next = hit === null ? orig : orig.replace(orig.trim(), hit);
+    if (node.data !== next) { node.data = next; }
+  }
+
+  function swapAttrs(el) {
+    I18N_ATTRS.forEach(function (attr) {
+      if (!el.hasAttribute(attr)) { return; }
+      var store = 'i18n-' + attr;
+      var orig = el.getAttribute('data-' + store);
+      if (orig === null) { orig = el.getAttribute(attr); el.setAttribute('data-' + store, orig); }
+      var hit = lookup(orig);
+      var next = hit === null ? orig : hit;
+      if (el.getAttribute(attr) !== next) { el.setAttribute(attr, next); }
+    });
+  }
+
+  function walk(node) {
+    if (node.nodeType === 3) { swapText(node); return; }
+    if (node.nodeType !== 1) { return; }
+    var tag = node.tagName;
+    if (tag === 'SCRIPT' || tag === 'STYLE') { return; }
+    // The switcher itself always shows both languages verbatim.
+    if (node.classList && node.classList.contains('mc-langbar')) { return; }
+    swapAttrs(node);
+    for (var child = node.firstChild; child; child = child.nextSibling) { walk(child); }
+  }
+
+  function applyLang(lang) {
+    currentLang = LANGS[lang] === undefined ? 'en' : lang;
+    busy = true;
+    document.documentElement.lang = currentLang;
+    walk(document.body);
+    busy = false;
+    var bar = document.querySelector('.mc-langbar');
+    if (bar) {
+      bar.querySelectorAll('.mc-lang-btn').forEach(function (b) {
+        b.setAttribute('aria-pressed', b.getAttribute('data-lang') === currentLang ? 'true' : 'false');
+      });
+    }
+    try { localStorage.setItem(LANG_KEY, currentLang); } catch (e) { /* file:// or private mode */ }
+  }
+
+  // Build the bar here so every page gets it without duplicating markup.
+  var langbar = document.createElement('div');
+  langbar.className = 'mc-langbar';
+  langbar.innerHTML =
+    '<div class="container">' +
+      '<span class="mc-langbar-label"><i class="bi bi-translate"></i> Language / ဘာသာစကား</span>' +
+      '<div class="mc-lang" role="group" aria-label="Choose language">' +
+        '<button class="mc-lang-btn" type="button" data-lang="en" aria-pressed="true">English</button>' +
+        '<button class="mc-lang-btn" type="button" data-lang="my" aria-pressed="false">မြန်မာ</button>' +
+      '</div>' +
+    '</div>';
+  document.body.insertBefore(langbar, document.body.firstChild);
+  langbar.addEventListener('click', function (e) {
+    var btn = e.target.closest('.mc-lang-btn');
+    if (btn) { applyLang(btn.getAttribute('data-lang')); }
+  });
+
+  // Re-translate anything drawn after load (filtered cards, search results…).
+  if (window.MutationObserver) {
+    new MutationObserver(function (records) {
+      if (busy || currentLang === 'en') { return; }
+      busy = true;
+      records.forEach(function (r) {
+        if (r.type === 'characterData') { swapText(r.target); }
+        Array.prototype.forEach.call(r.addedNodes, walk);
+      });
+      busy = false;
+    }).observe(document.body, { childList: true, subtree: true, characterData: true });
+  }
+
+  var saved = 'en';
+  try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) { /* ignore */ }
+  applyLang(saved);
 })();

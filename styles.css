@@ -110,6 +110,17 @@
   z-index: 1060;
 }
 
+/* Hospital Maps*/
+
+.hospital-map {
+  position: sticky;
+  /* Uses the dynamically calculated variable, defaults to 300px if JS fails */
+  top: var(--filters-height, 300px); 
+  z-index: 9;
+  margin-top: 20px; 
+  border: none;
+}
+
 
 
   /* Navbar */
@@ -262,7 +273,16 @@
 
   /* Hospitals */
   .mc-layout{padding:2rem 0 4.5rem}
-  .mc-filters{background:#fff;border:1px solid var(--mc-border);border-radius:18px;padding:1.5rem;box-shadow:var(--mc-shadow);position:sticky;top:90px}
+.mc-filters {
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: var(--mc-shadow);
+  position: sticky;
+  top: 0; 
+  z-index: 10;
+}
   .mc-filters-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
   .mc-filters-head h2{font-size:1.05rem;font-weight:600;margin:0;display:flex;align-items:center;gap:.5rem}
   .mc-filters-head .bi{color:var(--mc-primary-600)}

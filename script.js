@@ -28,7 +28,7 @@
     { name: 'North Okkalapa General Hospital', type: 'general', township: 'North Okkalapa', address: 'Thudhamma Rd, North Okkalapa', phone: '01-9699277', hours: 'Open 24 hours', er: true },
     { name: 'Yangon Children’s Hospital', type: 'specialist', township: 'Sanchaung', address: 'Halpin Rd, Sanchaung', phone: '01-222807', hours: 'Open 24 hours', er: true },
     { name: 'Central Women’s Hospital', type: 'specialist', township: 'Dagon', address: 'Min Ye Kyaw Swa Rd, Dagon', phone: '01-221015', hours: 'Open 24 hours', er: false },
-    { name: 'Grand Hantha International Hospital', type: 'general', township: 'Kamayut', address: 'Pyay Rd, Kamayut', phone: '01-9666141', hours: 'Open 24 hours', er: true },
+    { name: 'Grand Hantha International Hospital', type: 'general', township: 'Kamayut', address: 'Corner of Nar Nat Taw Street and Lower Kyimyindaing Road, Kamayut Township, Yangon', phone: '01-9666141', hours: 'Open 24 hours', er: true },
     { name: 'Pun Hlaing Siloam Hospital', type: 'general', township: 'Hlaing Tharyar', address: 'Pun Hlaing Estate Ave, Hlaing Tharyar', phone: '01-3684323', hours: 'Open 24 hours', er: true },
     { name: 'Yangon Eye, Ear, Nose & Throat Hospital', type: 'specialist', township: 'Lanmadaw', address: 'Lanmadaw St, Lanmadaw', phone: '01-224647', hours: 'Mon–Fri, 8:00–16:00', er: false },
     { name: 'Victoria Hospital', type: 'general', township: 'Kamayut', address: 'Kanbe Rd, Kamayut', phone: '01-9666141', hours: 'Open 24 hours', er: true },
@@ -39,15 +39,6 @@
     type: 'general',
     township: 'Hlaing Tharyar',
     address: 'Corner of Yangon-Pathein Road & Kyansittha Road, Ward       3, Hlaing Tharyar Township, Yangon',
-    phone: 'N/A',
-    hours: 'Open 24 hours',
-    er: true
-  },
-  {
-    name: 'Victoria Hospital - Hlaing Tharyar',
-    type: 'general',
-    township: 'Hlaing Tharyar',
-    address: 'Yangon-Pathein Road (Near FMI City), Hlaing Tharyar Township, Yangon',
     phone: 'N/A',
     hours: 'Open 24 hours',
     er: true
@@ -107,40 +98,13 @@
     er: false
   },
   {
-    name: 'Insein Maternal and Child Health Center',
-    type: 'specialist',
-    township: 'Insein',
-    address: 'Near Mingyi Road, Insein Township, Yangon',
-    phone: 'N/A',
-    hours: 'Regular Hours',
-    er: false
-  },
-	{
-    name: 'Grand Hantha International Hospital',
-    type: 'general',
-    township: 'Kamayut',
-    address: 'Corner of Nar Nat Taw Street and Lower Kyimyindaing Road, Kamayut Township, Yangon',
-    phone: 'N/A',
-    hours: 'Open 24 hours',
-    er: true
-  },
-  {
     name: 'University Hospital / Yangon University Medical Centre',
     type: 'general',
     township: 'Kamayut',
     address: 'Yangon University Campus (Near University Avenue Road), Kamayut Township, Yangon',
-    phone: 'N/A',
+    phone: '01513628',
     hours: 'Regular Hours',
     er: false
-  },
-	{
-    name: 'Yangon Central Women\'s Hospital',
-    type: 'specialist',
-    township: 'Lanmadaw',
-    address: 'Min Ye Kyaw Swa Road, Lanmadaw Township, Yangon',
-    phone: 'N/A',
-    hours: 'Open 24 hours',
-    er: true
   },
   {
     name: 'Shwe La Min Hospital - Lanmadaw Branch',
@@ -1749,3 +1713,31 @@
   try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) { /* ignore */ }
   applyLang(saved);
 })();
+
+document.addEventListener("DOMContentLoaded", () => {
+  const filters = document.querySelector(".mc-filters");
+  const map = document.querySelector(".hospital-map");
+
+  const adjustMapStickyOffset = () => {
+    if (!filters || !map) return;
+    
+    // Get the exact, real-time height of the filters box
+    const filtersHeight = filters.offsetHeight;
+    
+    // Add extra padding (e.g., 20px) so the map doesn't touch the filters directly
+    const spacing = 20; 
+    
+    // Set the CSS variable on the map element
+    map.style.setProperty("--filters-height", `${filtersHeight + spacing}px`);
+  };
+
+  // Run immediately on page load
+  adjustMapStickyOffset();
+
+  // Re-calculate if the window changes size (mobile to desktop layout switches)
+  window.addEventListener("resize", adjustMapStickyOffset);
+
+  // OPTIONAL: If your #hospTypes choices load via AJAX later, 
+  // call adjustMapStickyOffset() right after that data populates.
+});
+

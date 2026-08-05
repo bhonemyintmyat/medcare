@@ -1614,7 +1614,38 @@
     'Chest pain, difficulty breathing, or an irregular heartbeat':
       'ရင်ဘတ်အောင့်ခြင်း၊ အသက်ရှူရခက်ခြင်း သို့မဟုတ် နှလုံးခုန်နှုန်း မမှန်ခြင်း',
     'Weakness or numbness on one side of the body, or trouble speaking':
-      'ကိုယ်တစ်ခြမ်း အားနည်းခြင်း သို့မဟုတ် ထုံကျဉ်ခြင်း၊ စကားပြောရ ခက်ခဲခြင်း'
+      'ကိုယ်တစ်ခြမ်း အားနည်းခြင်း သို့မဟုတ် ထုံကျဉ်ခြင်း၊ စကားပြောရ ခက်ခဲခြင်း',
+    
+    /* --- hypertension detail --- */
+
+    'Five students who researched, designed, and built MedCare together.':
+      'အဖွဲ့ဝင်ငါးယောက်စုပေါင်းကာ အချက်အလက်များ ရှာဖွေ၊ ဒီဇိုင်းချကာ MedCare Website ကို တည်ဆောက်ထားပါသည်',
+    'Team Lead & Developer':
+      'အဖွဲ့ခေါင်းဆောင်နှင့် Developer',
+    
+    'Led the architecture and built the site\'s core — the page templates and the search and filtering.':
+      'စနစ်တည်ဆောက်ပုံကို ဦးဆောင်ခဲ့ပြီး အဓိက အစိတ်အပိုင်းများကို တည်ဆောက်ထားပါသည်',
+
+    'Disease Content': 'ရောဂါဆိုင်ရာ အချက်အလက်',
+"Researched symptoms, do's and don'ts, and sources, and built the disease pages":
+  'ရောဂါလက္ခဏာများ၊ လုပ်သင့်/မလုပ်သင့်သည့်အချက်များနှင့် ကိုးကားချက်များကို ရှာဖွေစုဆောင်းပြီး disease pages များကို တည်ဆောက်ခဲ့သည်။',
+
+'Hospitals & Emergency': 'ဆေးရုံများနှင့် အရေးပေါ်',
+'Compiled the Yangon hospital directory and verified the emergency contact numbers.':
+  'ရန်ကုန်ဆေးရုံလိပ်စာစာရင်းကို စုစည်းပြီး အရေးပေါ်ဆက်သွယ်ရန်ဖုန်းနံပါတ်များကို စိစစ်အတည်ပြုခဲ့သည်။',
+
+'Health Articles': 'ကျန်းမာရေးဆောင်းပါးများ',
+'Wrote and edited the health articles and led the Burmese-language content.':
+  'ကျန်းမာရေးဆောင်းပါးများကို ရေးသားတည်းဖြတ်ပြီး မြန်မာဘာသာ အကြောင်းအရာများကို ဦးဆောင်ဘာသာပြန်ခဲ့သည်။',
+
+'Design & Testing': 'ဒီဇိုင်းနှင့် စမ်းသပ်ခြင်း',
+'Owned visual consistency, ran usability testing, and checked the layout on mobile.':
+  'အမြင်ပိုင်းဆိုင်ရာ တစ်သမတ်တည်းဖြစ်မှုကို တာဝန်ယူပြီး အသုံးပြုရလွယ်ကူမှု စမ်းသပ်မှုများ ပြုလုပ်ကာ မိုဘိုင်းပေါ်တွင် အပြင်အဆင်ကို စစ်ဆေးခဲ့သည်။',
+
+
+
+
+
   };
 
   var LANGS = { en: null, my: MY };

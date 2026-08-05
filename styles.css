@@ -40,6 +40,16 @@
   html[lang="en"] .mc-lang-note{display:none}
 
 
+  /* members */
+
+  .mc-avatar img{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    object-fit:cover;
+  }
+
+
 
   /* slider */
 

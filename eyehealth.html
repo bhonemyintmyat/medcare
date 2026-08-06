@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ဆရာဝန်တစ်ဦး၏ မျက်စိကျန်းမာရေး မှတ်စု</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Pyidaungsu', 'Myanmar Text', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        /* Header Style */
+        .article-header {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            background-color: #0d233a;
+        }
+
+        .article-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5; /* ပုံကိုမှိန်၍ စာသားကို ပိုမိုပေါ်လွင်စေရန် */
+        }
+
+        .header-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            text-align: center;
+            width: 90%;
+        }
+
+        .header-title h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+            letter-spacing: 1px;
+        }
+
+        .header-title p {
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            color: #e2f1ff;
+        }
+
+        .doctor-badge {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1100px;
+            margin: -40px auto 40px; /* အပေါ်သို့ အနည်းငယ် တက်နေစေရန် */
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .intro-card {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 50px;
+            color: #444;
+            border-top: 5px solid #007bff;
+        }
+
+        .intro-card p {
+            text-align: justify;
+        }
+
+        /* Card Grid System */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        /* Card Style */
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-bottom: 4px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+            border-bottom: 4px solid #007bff;
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #0d233a;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-content h3::before {
+            content: "+";
+            color: #007bff;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .card-content p {
+            font-size: 0.95rem;
+            color: #555;
+            text-align: justify;
+        }
+
+        /* Footer Style */
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #0d233a;
+            color: #ffffff;
+            margin-top: 50px;
+        }
+        
+        .signature {
+            font-style: italic;
+            margin-top: 10px;
+            color: #a0c4ff;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-title h1 {
+                font-size: 1.8rem;
+            }
+            .article-header {
+                height: 350px;
+            }
+            .intro-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="article-header">
+        <img src="images/eye.jpg" alt="Doctor examining patient's eyes">
+        <div class="header-title">
+            <span class="doctor-badge">ဆေးခန်းမှတ်စုများ</span>
+           
+            
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        
+        <!-- Doctor's Intro Note -->
+        <div class="intro-card">
+            <p></p>မျက်စိအထူးကု ဆေးခန်းမှာ နေ့စဉ်လူနာများစွာကို စမ်းသပ်ကုသပေးရတဲ့အခါ အများစုဟာ မျက်စိပူစပ်ခြင်း၊ ညောင်းညာခြင်းနဲ့ အမြင်အာရုံမှုန်ဝါးခြင်း စတဲ့ လက္ခဏာတွေနဲ့ လာပြကြတာကို ဝမ်းနည်းဖွယ်ရာ တွေ့ရှိရပါတယ်။ တချို့သော မျက်စိထိခိုက်မှုတွေဟာ နေ့စဉ်နေထိုင်မှုပုံစံကို အနည်းငယ်ပြောင်းလဲလိုက်ရုံနဲ့ ကြိုတင်ကာကွယ်နိုင်ပါတယ်။ ဆရာဝန်တစ်ယောက်အနေနဲ့ သင့်ရဲ့ တန်ဖိုးမဖြတ်နိုင်တဲ့ အမြင်အာရုံကို ရေရှည်ထိန်းသိမ်းနိုင်ဖို့ အောက်ပါအချက်လေးတွေကို မဖြစ်မနေ လိုက်နာဖို့ စေတနာရှေ့ထား၍ တိုက်တွန်းအပ်ပါတယ်။</p>
+        </div>
+
+        <!-- Cards Section -->
+        <div class="card-grid">
+            
+            <!-- Card 1 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Screen Time Management">
+                <div class="card-content">
+                    <h3>ဆေးစာ: ၂၀-၂၀-၂၀ စည်းမျဉ်း</h3>
+                    <p>လူနာအများစုဟာ ဖုန်းနဲ့ ကွန်ပျူတာကို အနားမယူဘဲ ကြည့်တတ်ကြပါတယ်။ ကျွန်တော်တို့ ဆရာဝန်တွေ အမြဲညွှန်ကြားလေ့ရှိတဲ့ <strong>၂၀-၂၀-၂၀ စည်းမျဉ်း</strong> ကို ကျင့်သုံးပါ။ ဖန်သားပြင်ကို မိနစ် ၂၀ ကြည့်ပြီးတိုင်း၊ ပေ ၂၀ အကွာကို စက္ကန့် ၂၀ ကြာ အဝေးကြည့်ပေးခြင်းဖြင့် မျက်စိကြွက်သားများ တင်းမာမှုကို သိသာစွာ လျော့ကျစေပါတယ်။</p>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Vitamins for Eyes">
+                <div class="card-content">
+                    <h3>အာဟာရ ဖြည့်စွက်ခြင်း</h3>
+                    <p>မျက်စိအားကောင်းစေဖို့ အားဆေးတွေ သောက်တာထက် သဘာဝအာဟာရက ပိုထိရောက်ပါတယ်။ ဗီတာမင် A, C, E နဲ့ Omega-3 ကြွယ်ဝတဲ့ မုန်လာဥနီ、 ဟင်းနုနွယ်ရွက်နဲ့ ရေချိုရေငန်ငါးများကို နေ့စဉ်စားသောက်မှု ပုံစံမှာ ထည့်သွင်းစားသုံးဖို့ ဆေးခန်းလာပြတဲ့ လူနာတိုင်းကို အမြဲအကြံပြုလေ့ရှိပါတယ်။</p>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="UV Protection">
+                <div class="card-content">
+                    <h3>ခရမ်းလွန်ရောင်ခြည် (UV) ကာကွယ်ခြင်း</h3>
+                    <p>နေရောင်ခြည်ထဲက UV အလင်းတန်းများဟာ အတွင်းတိမ် (Cataract) ဖြစ်ပေါ်မှုကို သိသာစွာ မြန်ဆန်စေပါတယ်။ အပြင်ထွက်တဲ့အခါတိုင်း UV 400 ကာကွယ်နိုင်စွမ်းရှိတဲ့ အရည်အသွေးမီ နေကာမျက်မှန်ကို တပ်ဆင်ခြင်းဟာ အကောင်းဆုံး ကြိုတင်ကာကွယ်မှု တစ်ခုဖြစ်ပါတယ်။</p>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1581056771107-24ca5f033842?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Clinical Eye Examination">
+                <div class="card-content">
+                    <h3>မျက်စိ ပုံမှန်စစ်ဆေးခြင်း</h3>
+                    <p>ရောဂါတော်တော်များများ (ဥပမာ- ရေတိမ်ရောဂါ) ဟာ အစောပိုင်းမှာ လက္ခဏာ မပြတတ်ပါဘူး။ ဒါကြောင့် မျက်စိဝေဝါးလာမှ ဆေးခန်းလာပြတာမျိုး မလုပ်ဘဲ၊ အနည်းဆုံး တစ်နှစ်လျှင် တစ်ကြိမ် ဆရာဝန်နှင့် ပြသ၍ စမ်းသပ်စစ်ဆေးမှု ခံယူခြင်းဖြင့် ဆုံးရှုံးမှုများကို ကာကွယ်နိုင်ပါတယ်။</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2026 မျက်စိကျန်းမာရေးဆိုင်ရာ ဆေးခန်းမှတ်စုများ.</p>
+        <p class="signature">- သင့်ကျန်းမာရေးကို အစဉ်ဂရုစိုက်လျက် (မျက်စိအထူးကုဆရာဝန်)</p>
+    </footer>
+
+</body>
+</html>

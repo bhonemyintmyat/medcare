@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedCare - Health Articles</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #ffffff; 
+            font-family: 'Pyidaungsu', 'Myanmar Text', 'Segoe UI', sans-serif; 
+        }
+        
+        .section-title {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-left: #0056b3;
+            
+        }
+
+        .health-card {
+            background-color: #f4f5f7; 
+            border: none;
+            border-radius: 20px; 
+            padding: 10px;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .health-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+
+        .card-img-top {
+            border-radius: 15px; 
+            height: 220px; 
+            object-fit: cover;
+            background-color: #8cdbad; 
+        }
+
+        .card-body {
+            padding: 1.5rem 1rem 0.5rem 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .card-text {
+            color: #5c6873;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* အကျဉ်းချုပ်ကို ၃ ကြောင်းသာပြရန် */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .read-more {
+            text-decoration: none;
+            color: #0056b3;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s ease;
+        }
+
+        .read-more:hover {
+            color: #003d82;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <h2 class="section-title">Health Articles </h2>
+    
+    <!-- Row with gap (g-4). col-md-6 makes it 2 columns -->
+    <div class="row g-4">
+        
+        <!-- Article 1 -->
+        <div class="col-12 col-md-6">
+            <div class="card health-card">
+                <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Healthy Food">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">ကျန်းမာရေးနှင့် ညီညွတ်သော အစားအသောက်များ</h5>
+                    <p class="card-text">အာဟာရပြည့်ဝသော အစားအစာများကို မျှတစွာ စားသုံးခြင်းဖြင့် ကိုယ်ခံစွမ်းအားကို မြင့်တက်စေပြီး ရောဂါဘယများကို ကာကွယ်နိုင်ပါသည်။ မှန်ကန်သော စားသောက်မှုပုံစံက အလွန်အရေးကြီးပါသည်။</p>
+                    <div class="mt-auto">
+                        <a href="healthyfood.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article 2 -->
+        <div class="col-12 col-md-6">
+            <div class="card health-card">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Mental Health">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">စိတ်ဖိစီးမှု လျှော့ချခြင်းနှင့် စိတ်ကျန်းမာရေး</h5>
+                    <p class="card-text">နေ့စဉ်ဘဝတွင် ကြုံတွေ့နေရသော စိတ်ဖိစီးမှုများကို လျှော့ချရန်အတွက် တရားထိုင်ခြင်းနှင့် အပန်းဖြေခြင်းတို့က များစွာအထောက်အကူပြုပါသည်။ စိတ်ကျန်းမာရေးသည်လည်း အဓိကကျပါသည်။</p>
+                    <div class="mt-auto">
+                        <a href="mentalhealth.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article 3 -->
+        <div class="col-12 col-md-6">
+            <div class="card health-card">
+                <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Fitness">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">ကိုယ်လက်လှုပ်ရှားမှုနှင့် နှလုံးကျန်းမာရေး</h5>
+                    <p class="card-text">တစ်နေ့လျှင် မိနစ် ၃၀ ခန့် လမ်းလျှောက်ခြင်း၊ လေ့ကျင့်ခန်းလုပ်ခြင်းသည် နှလုံးကြွက်သားများကို သန်စွမ်းစေပြီး သွေးလှည့်ပတ်မှုကို ကောင်းမွန်စေကာ ရောဂါများကို ကာကွယ်ပေးနိုင်ပါသည်။</p>
+                    <div class="mt-auto">
+                        <a href="heartandex.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article 4 -->
+        <div class="col-12 col-md-6">
+            <div class="card health-card">
+                <img src="images/sleep copy.jpg" class="card-img-top" alt="Sleep">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">လုံလောက်သော အိပ်စက်ချိန်၏ အရေးပါပုံ</h5>
+                    <p class="card-text">လူတစ်ယောက်အတွက် နေ့စဉ် ၇ နာရီမှ ၈ နာရီအထိ အိပ်စက်ရန် လိုအပ်ပါသည်။ ကောင်းမွန်စွာ အိပ်စက်ခြင်းက မှတ်ဉာဏ်စွမ်းရည်ကို တိုးတက်စေပြီး ခန္ဓာကိုယ်အားအင်ကို ပြန်လည်ပြည့်ဖြိုးစေပါသည်။</p>
+                    <div class="mt-auto">
+                        <a href="sleep.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article 5 -->
+        <div class="col-12 col-md-6">
+            <div class="card health-card">
+                <img src="images/hydration.jpg" class="card-img-top" alt="Water">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">ရေလုံလောက်စွာ သောက်သုံးခြင်း၏ အကျိုးကျေးဇူးများ</h5>
+                    <p class="card-text">ရေသည် ခန္ဓာကိုယ်၏ အဓိက အစိတ်အပိုင်းဖြစ်ပြီး အဆိပ်အတောက်များကို ဖယ်ရှားပေးပါသည်။ ရေဓာတ်ခမ်းခြောက်မှု မဖြစ်စေရန် တစ်နေ့လျှင် ရေ ၈ ဖန်ခွက် အနည်းဆုံး သောက်သုံးသင့်ပါသည်။</p>
+                    <div class="mt-auto">
+                        <a href="hydration.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article 6 -->
+        <div class="col-12 col-md-6">
+            <div class="card health-card">
+                <img src="images/eyecare.jpg" class="card-img-top" alt="Eye Care">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">မျက်စိကျန်းမာရေးအတွက် ဂရုစိုက်သင့်သည့် အချက်များ</h5>
+                    <p class="card-text">ဖုန်းနှင့် ကွန်ပျူတာ အကြည့်များသည့် ယနေ့ခေတ်တွင် မျက်စိကျန်းမာရေးသည် အရေးကြီးလာသည်။ 20-20-20 rule ကို ကျင့်သုံးခြင်းဖြင့် မျက်စိညောင်းညာမှုကို လျှော့ချနိုင်ပါသည်။</p>
+                    <div class="mt-auto">
+                        <a href="eyehealth.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article 7 -->
+        <div class="col-12 col-md-6">
+            <div class="card health-card">
+                <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Dental Care">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">ခံတွင်းနှင့် သွားကျန်းမာရေး</h5>
+                    <p class="card-text">သွားတိုက်ခြင်းသာမက သွားကြားထိုးကြိုး (Floss) အသုံးပြုခြင်းသည်လည်း သွားကျန်းမာရေးအတွက် မရှိမဖြစ်လိုအပ်ပါသည်။ ခြောက်လတစ်ကြိမ် သွားဆရာဝန်နှင့် ပုံမှန်ပြသသင့်ပါသည်။</p>
+                    <div class="mt-auto">
+                        <a href="oralhealth.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article 8 -->
+        <div class="col-12 col-md-6">
+            <div class="card health-card">
+                <img src="images/hygene.jpg" class="card-img-top" alt="Hygiene">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">တစ်ကိုယ်ရည် သန့်ရှင်းရေးနှင့် ရောဂါကာကွယ်ခြင်း</h5>
+                    <p class="card-text">လက်ကို ဆပ်ပြာဖြင့် စနစ်တကျ မကြာခဏ ဆေးကြောခြင်းသည် ကူးစက်ရောဂါများကို ကာကွယ်ရန် အထိရောက်ဆုံးနှင့် အလွယ်ကူဆုံး နည်းလမ်းတစ်ခု ဖြစ်ပါသည်။</p>
+                    <div class="mt-auto">
+                        <a href="hygiene.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article 9 -->
+        <div class="col-12 col-md-6">
+            <div class="card health-card">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Posture">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">မှန်ကန်သော ကိုယ်နေဟန်ထားနှင့် ခါးနာခြင်း</h5>
+                    <p class="card-text">အထိုင်များသော အလုပ်လုပ်သူများအနေဖြင့် ခါးနှင့် ကျောရိုး အနေအထားမှန်ကန်ရန် ဂရုပြုသင့်ပါသည်။ အကြောဆန့် လေ့ကျင့်ခန်းများ လုပ်ပေးခြင်းဖြင့် ခါးနာခြင်းမှ ကင်းဝေးစေနိုင်ပါသည်။</p>
+                    <div class="mt-auto">
+                        <a href="posture.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Article 10 -->
+        <div class="col-12 col-md-6">
+            <div class="card health-card">
+                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Medical Checkup">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">ကျန်းမာရေး ပုံမှန်စစ်ဆေးခြင်း (Medical Checkup)</h5>
+                    <p class="card-text">ရောဂါလက္ခဏာ မပြသော်လည်း တစ်နှစ်လျှင် တစ်ကြိမ်ခန့် ကျန်းမာရေး ပုံမှန်စစ်ဆေးမှု ခံယူခြင်းဖြင့် ရောဂါများကို ကြိုတင်သိရှိနိုင်ပြီး ကုသမှုကို အချိန်မီ ပြုလုပ်နိုင်ပါသည်။</p>
+                    <div class="mt-auto">
+                        <a href="medicalcheckup.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

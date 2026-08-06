@@ -858,7 +858,7 @@
       });
       aGrid.innerHTML = filtered.map(function (a) {
         return '<div class="col-md-6 col-lg-4">' +
-          '<a href="article.html?id=' + encodeURIComponent(a.id) + '" class="mc-article d-block text-decoration-none text-reset">' +
+          '<a href="health article.html" class="mc-article d-block text-decoration-none text-reset">' +
           '<div class="mc-article-thumb ' + a.thumb + '"><span class="badge-cat">' + esc(a.catLabel) + '</span></div>' +
           '<div class="mc-article-body">' +
           '<h3>' + esc(a.title) + '</h3>' +
@@ -879,6 +879,142 @@
       aSearch.addEventListener('input', function (e) { aState.query = e.target.value; renderArticles(); });
     }
     renderArticles();
+  }
+
+  /* ---------- Health articles listing ("health article.html") ----------
+     Each article lives in its own page and carries both languages, so the cards
+     link straight to the file and render both titles behind .mc-en / .mc-my. */
+  var myArticleCats = [
+    { id: 'all', en: 'All', my: 'အားလုံး' },
+    { id: 'prevention', en: 'Prevention', my: 'ကြိုတင်ကာကွယ်ရေး' },
+    { id: 'nutrition', en: 'Nutrition', my: 'အာဟာရ' },
+    { id: 'wellness', en: 'Wellness', my: 'ကျန်းမာသုခ' }
+  ];
+  var myArticles = [
+    { href: 'healthyfood.html', cat: 'nutrition', by: 'MedCare editorial team', byMy: 'MedCare တည်းဖြတ်အဖွဲ့',
+      thumb: 'images/healthyfood.jpg',
+      title: 'Eating well for a healthier life',
+      titleMy: 'ကျန်းမာရေးနှင့် ညီညွတ်သော အစားအသောက်များ',
+      excerpt: 'Balanced, nourishing meals strengthen your immune system and help keep long-term illness away.',
+      excerptMy: 'အာဟာရပြည့်ဝသော အစားအစာများကို မျှတစွာ စားသုံးခြင်းဖြင့် ကိုယ်ခံစွမ်းအားကို မြင့်တက်စေပြီး ရောဂါဘယများကို ကာကွယ်နိုင်ပါသည်။' },
+    { href: 'mentalhealth.html', cat: 'wellness', by: 'MedCare editorial team', byMy: 'MedCare တည်းဖြတ်အဖွဲ့',
+      thumb: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80',
+      title: 'Managing stress and looking after your mental health',
+      titleMy: 'စိတ်ဖိစီးမှု လျှော့ချခြင်းနှင့် စိတ်ကျန်းမာရေး',
+      excerpt: 'Mindfulness and regular rest go a long way towards easing the pressures of everyday life.',
+      excerptMy: 'နေ့စဉ်ဘဝတွင် ကြုံတွေ့နေရသော စိတ်ဖိစီးမှုများကို လျှော့ချရန်အတွက် တရားထိုင်ခြင်းနှင့် အပန်းဖြေခြင်းတို့က များစွာအထောက်အကူပြုပါသည်။' },
+    { href: 'heartandex.html', cat: 'wellness', by: 'Dr. Aung Min', byMy: 'Dr. Aung Min',
+      thumb: 'images/hearthealth.jpg',
+      title: 'Physical activity and heart health',
+      titleMy: 'ကိုယ်လက်လှုပ်ရှားမှုနှင့် နှလုံးကျန်းမာရေး',
+      excerpt: 'About 30 minutes of walking or exercise a day strengthens the heart muscle and improves circulation.',
+      excerptMy: 'တစ်နေ့လျှင် မိနစ် ၃၀ ခန့် လမ်းလျှောက်ခြင်း၊ လေ့ကျင့်ခန်းလုပ်ခြင်းသည် နှလုံးကြွက်သားများကို သန်စွမ်းစေပြီး သွေးလှည့်ပတ်မှုကို ကောင်းမွန်စေပါသည်။' },
+    { href: 'sleep.html', cat: 'wellness', by: 'Dr. Aung Min', byMy: 'Dr. Aung Min',
+      thumb: 'images/sleep%20copy.jpg',
+      title: 'Why enough sleep matters',
+      titleMy: 'လုံလောက်သော အိပ်စက်ချိန်၏ အရေးပါပုံ',
+      excerpt: 'Sleeping well sharpens memory and restores the energy your body spends through the day.',
+      excerptMy: 'ကောင်းမွန်စွာ အိပ်စက်ခြင်းက မှတ်ဉာဏ်စွမ်းရည်ကို တိုးတက်စေပြီး ခန္ဓာကိုယ်အားအင်ကို ပြန်လည်ပြည့်ဖြိုးစေပါသည်။' },
+    { href: 'hydration.html', cat: 'wellness', by: 'Dr. May Thida', byMy: 'Dr. May Thida',
+      thumb: 'images/hydration.jpg',
+      title: 'The benefits of drinking enough water',
+      titleMy: 'ရေလုံလောက်စွာ သောက်သုံးခြင်း၏ အကျိုးကျေးဇူးများ',
+      excerpt: 'Water makes up most of the body and flushes out waste. Aim for at least eight glasses a day.',
+      excerptMy: 'ရေသည် ခန္ဓာကိုယ်၏ အဓိက အစိတ်အပိုင်းဖြစ်ပြီး အဆိပ်အတောက်များကို ဖယ်ရှားပေးပါသည်။ တစ်နေ့လျှင် ရေ ၈ ခွက် အနည်းဆုံး သောက်သုံးသင့်ပါသည်။' },
+    { href: 'eyehealth.html', cat: 'prevention', by: 'MedCare editorial team', byMy: 'MedCare တည်းဖြတ်အဖွဲ့',
+      thumb: 'images/eyecare.jpg',
+      title: 'Looking after your eyes in a screen-filled world',
+      titleMy: 'မျက်စိကျန်းမာရေးအတွက် ဂရုစိုက်သင့်သည့် အချက်များ',
+      excerpt: 'With so much time on phones and computers, the 20-20-20 rule is a simple way to ease eye strain.',
+      excerptMy: 'ဖုန်းနှင့် ကွန်ပျူတာ အကြည့်များသည့် ယနေ့ခေတ်တွင် 20-20-20 rule ကို ကျင့်သုံးခြင်းဖြင့် မျက်စိညောင်းညာမှုကို လျှော့ချနိုင်ပါသည်။' },
+    { href: 'oralhealth.html', cat: 'prevention', by: 'MedCare editorial team', byMy: 'MedCare တည်းဖြတ်အဖွဲ့',
+      thumb: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80',
+      title: 'Mouth and dental health',
+      titleMy: 'ခံတွင်းနှင့် သွားကျန်းမာရေး',
+      excerpt: 'Flossing matters as much as brushing, and a check-up every six months catches trouble early.',
+      excerptMy: 'သွားတိုက်ခြင်းသာမက သွားကြားထိုးကြိုး (Floss) အသုံးပြုခြင်းသည်လည်း မရှိမဖြစ်လိုအပ်ပါသည်။ ခြောက်လတစ်ကြိမ် ပုံမှန်ပြသသင့်ပါသည်။' },
+    { href: 'hygiene.html', cat: 'prevention', by: 'MedCare editorial team', byMy: 'MedCare တည်းဖြတ်အဖွဲ့',
+      thumb: 'images/hygene.jpg',
+      title: 'Personal hygiene and preventing infection',
+      titleMy: 'တစ်ကိုယ်ရည် သန့်ရှင်းရေးနှင့် ရောဂါကာကွယ်ခြင်း',
+      excerpt: 'Washing your hands properly and often is one of the cheapest, most effective ways to stop infection.',
+      excerptMy: 'လက်ကို ဆပ်ပြာဖြင့် စနစ်တကျ မကြာခဏ ဆေးကြောခြင်းသည် ကူးစက်ရောဂါများကို ကာကွယ်ရန် အထိရောက်ဆုံး နည်းလမ်းတစ်ခု ဖြစ်ပါသည်။' },
+    { href: 'posture.html', cat: 'wellness', by: 'MedCare editorial team', byMy: 'MedCare တည်းဖြတ်အဖွဲ့',
+      thumb: 'images/posture.jpg',
+      title: 'Good posture and back pain',
+      titleMy: 'မှန်ကန်သော ကိုယ်နေဟန်ထားနှင့် ခါးနာခြင်း',
+      excerpt: 'If you sit for work, how you hold your back and spine matters. Stretching keeps back pain away.',
+      excerptMy: 'အထိုင်များသော အလုပ်လုပ်သူများအနေဖြင့် ခါးနှင့် ကျောရိုး အနေအထားမှန်ကန်ရန် ဂရုပြုသင့်ပါသည်။ အကြောဆန့် လေ့ကျင့်ခန်းများက ခါးနာခြင်းမှ ကင်းဝေးစေပါသည်။' },
+    { href: 'medicalcheckup.html', cat: 'prevention', by: 'MedCare editorial team', byMy: 'MedCare တည်းဖြတ်အဖွဲ့',
+      thumb: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80',
+      title: 'Regular health check-ups',
+      titleMy: 'ကျန်းမာရေး ပုံမှန်စစ်ဆေးခြင်း (Medical Checkup)',
+      excerpt: 'Even with no symptoms, a check-up once a year finds problems while they are still easy to treat.',
+      excerptMy: 'ရောဂါလက္ခဏာ မပြသော်လည်း တစ်နှစ်လျှင် တစ်ကြိမ်ခန့် ပုံမှန်စစ်ဆေးမှု ခံယူခြင်းဖြင့် ရောဂါများကို ကြိုတင်သိရှိနိုင်ပါသည်။' }
+  ];
+
+  var myGrid = byId('myArticleGrid');
+  if (myGrid) {
+    var myState = { query: param('q'), category: param('cat') || 'all' };
+    var mySearch = byId('myArticleSearch');
+    var myChips = byId('myArticleChips');
+    var myCount = byId('myArticleCount');
+    var myEmpty = byId('myArticleEmpty');
+    var myCat = function (id) {
+      return myArticleCats.filter(function (c) { return c.id === id; })[0] || { en: id, my: id };
+    };
+    // Both languages ship in the markup; CSS reveals the one html[lang] selects.
+    var bi = function (en, my) {
+      return '<span class="mc-en">' + esc(en) + '</span><span class="mc-my">' + esc(my) + '</span>';
+    };
+
+    if (mySearch) { mySearch.value = myState.query; }
+
+    myArticleCats.forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'mc-chip';
+      b.innerHTML = bi(c.en, c.my);
+      b.setAttribute('data-cat', c.id);
+      b.addEventListener('click', function () { myState.category = c.id; renderMyArticles(); });
+      myChips.appendChild(b);
+    });
+
+    var renderMyArticles = function () {
+      var q = myState.query.trim().toLowerCase();
+      var cat = myState.category;
+      var filtered = myArticles.filter(function (a) {
+        // Search both languages, so either script finds the article.
+        var c = myCat(a.cat);
+        var hay = (a.title + ' ' + a.excerpt + ' ' + c.en + ' ' +
+                   a.titleMy + ' ' + a.excerptMy + ' ' + c.my).toLowerCase();
+        return (!q || hay.indexOf(q) !== -1) && (cat === 'all' || a.cat === cat);
+      });
+      myGrid.innerHTML = filtered.map(function (a) {
+        var c = myCat(a.cat);
+        return '<div class="col-md-6 col-lg-4">' +
+          '<a href="' + esc(a.href) + '" class="mc-article d-block text-decoration-none text-reset">' +
+          '<div class="mc-article-thumb"><img src="' + esc(a.thumb) + '" alt="">' +
+          '<span class="badge-cat">' + bi(c.en, c.my) + '</span></div>' +
+          '<div class="mc-article-body">' +
+          '<h3 class="mc-en">' + esc(a.title) + '</h3>' +
+          '<h3 class="mc-my">' + esc(a.titleMy) + '</h3>' +
+          '<p class="mc-en">' + esc(a.excerpt) + '</p>' +
+          '<p class="mc-my">' + esc(a.excerptMy) + '</p>' +
+          '<div class="mc-article-meta"><span>' + bi(a.by, a.byMy) + '</span></div>' +
+          '</div></a></div>';
+      }).join('');
+      myCount.textContent = filtered.length;
+      myEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
+      Array.prototype.forEach.call(myChips.children, function (b) {
+        b.classList.toggle('active', b.getAttribute('data-cat') === cat);
+      });
+    };
+
+    if (mySearch) {
+      mySearch.addEventListener('input', function (e) { myState.query = e.target.value; renderMyArticles(); });
+    }
+    renderMyArticles();
   }
 
   /* ---------- Single article reader (article.html?id=…) ---------- */
@@ -932,7 +1068,7 @@
         more.innerHTML = articles.filter(function (a) { return a.id !== article.id; })
           .slice(0, 3).map(function (a) {
             return '<div class="col-md-6 col-lg-4">' +
-              '<a href="article.html?id=' + encodeURIComponent(a.id) + '" class="mc-article d-block text-decoration-none text-reset">' +
+              '<a href="health article.html" class="mc-article d-block text-decoration-none text-reset">' +
               '<div class="mc-article-thumb ' + a.thumb + '"><span class="badge-cat">' + esc(a.catLabel) + '</span></div>' +
               '<div class="mc-article-body"><h3>' + esc(a.title) + '</h3>' +
               '<div class="mc-article-meta"><span>' + esc(a.read) + '</span><span class="sep"></span><span>' + esc(a.date) + '</span></div>' +

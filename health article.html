@@ -1,237 +1,111 @@
-<!DOCTYPE html>
-<html lang="my">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedCare - Health Articles</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <style>
-        body {
-            background-color: #ffffff; 
-            font-family: 'Pyidaungsu', 'Myanmar Text', 'Segoe UI', sans-serif; 
-        }
-        
-        .section-title {
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 30px;
-            border-left: #0056b3;
-            
-        }
-
-        .health-card {
-            background-color: #f4f5f7; 
-            border: none;
-            border-radius: 20px; 
-            padding: 10px;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-
-        .health-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-        }
-
-        .card-img-top {
-            border-radius: 15px; 
-            height: 220px; 
-            object-fit: cover;
-            background-color: #8cdbad; 
-        }
-
-        .card-body {
-            padding: 1.5rem 1rem 0.5rem 1rem;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-
-        .card-text {
-            color: #5c6873;
-            font-size: 0.95rem;
-            line-height: 1.8;
-            margin-bottom: 20px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3; /* အကျဉ်းချုပ်ကို ၃ ကြောင်းသာပြရန် */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .read-more {
-            text-decoration: none;
-            color: #0056b3;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            transition: color 0.2s ease;
-        }
-
-        .read-more:hover {
-            color: #003d82;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Health Articles — MedCare</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="script.js" defer></script>
 </head>
 <body>
 
-<div class="container py-5">
-    <h2 class="section-title">Health Articles </h2>
-    
-    <!-- Row with gap (g-4). col-md-6 makes it 2 columns -->
-    <div class="row g-4">
-        
-        <!-- Article 1 -->
-        <div class="col-12 col-md-6">
-            <div class="card health-card">
-                <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Healthy Food">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">ကျန်းမာရေးနှင့် ညီညွတ်သော အစားအသောက်များ</h5>
-                    <p class="card-text">အာဟာရပြည့်ဝသော အစားအစာများကို မျှတစွာ စားသုံးခြင်းဖြင့် ကိုယ်ခံစွမ်းအားကို မြင့်တက်စေပြီး ရောဂါဘယများကို ကာကွယ်နိုင်ပါသည်။ မှန်ကန်သော စားသောက်မှုပုံစံက အလွန်အရေးကြီးပါသည်။</p>
-                    <div class="mt-auto">
-                        <a href="healthyfood.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Article 2 -->
-        <div class="col-12 col-md-6">
-            <div class="card health-card">
-                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Mental Health">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">စိတ်ဖိစီးမှု လျှော့ချခြင်းနှင့် စိတ်ကျန်းမာရေး</h5>
-                    <p class="card-text">နေ့စဉ်ဘဝတွင် ကြုံတွေ့နေရသော စိတ်ဖိစီးမှုများကို လျှော့ချရန်အတွက် တရားထိုင်ခြင်းနှင့် အပန်းဖြေခြင်းတို့က များစွာအထောက်အကူပြုပါသည်။ စိတ်ကျန်းမာရေးသည်လည်း အဓိကကျပါသည်။</p>
-                    <div class="mt-auto">
-                        <a href="mentalhealth.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Article 3 -->
-        <div class="col-12 col-md-6">
-            <div class="card health-card">
-                <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Fitness">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">ကိုယ်လက်လှုပ်ရှားမှုနှင့် နှလုံးကျန်းမာရေး</h5>
-                    <p class="card-text">တစ်နေ့လျှင် မိနစ် ၃၀ ခန့် လမ်းလျှောက်ခြင်း၊ လေ့ကျင့်ခန်းလုပ်ခြင်းသည် နှလုံးကြွက်သားများကို သန်စွမ်းစေပြီး သွေးလှည့်ပတ်မှုကို ကောင်းမွန်စေကာ ရောဂါများကို ကာကွယ်ပေးနိုင်ပါသည်။</p>
-                    <div class="mt-auto">
-                        <a href="heartandex.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Article 4 -->
-        <div class="col-12 col-md-6">
-            <div class="card health-card">
-                <img src="images/sleep copy.jpg" class="card-img-top" alt="Sleep">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">လုံလောက်သော အိပ်စက်ချိန်၏ အရေးပါပုံ</h5>
-                    <p class="card-text">လူတစ်ယောက်အတွက် နေ့စဉ် ၇ နာရီမှ ၈ နာရီအထိ အိပ်စက်ရန် လိုအပ်ပါသည်။ ကောင်းမွန်စွာ အိပ်စက်ခြင်းက မှတ်ဉာဏ်စွမ်းရည်ကို တိုးတက်စေပြီး ခန္ဓာကိုယ်အားအင်ကို ပြန်လည်ပြည့်ဖြိုးစေပါသည်။</p>
-                    <div class="mt-auto">
-                        <a href="sleep.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Article 5 -->
-        <div class="col-12 col-md-6">
-            <div class="card health-card">
-                <img src="images/hydration.jpg" class="card-img-top" alt="Water">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">ရေလုံလောက်စွာ သောက်သုံးခြင်း၏ အကျိုးကျေးဇူးများ</h5>
-                    <p class="card-text">ရေသည် ခန္ဓာကိုယ်၏ အဓိက အစိတ်အပိုင်းဖြစ်ပြီး အဆိပ်အတောက်များကို ဖယ်ရှားပေးပါသည်။ ရေဓာတ်ခမ်းခြောက်မှု မဖြစ်စေရန် တစ်နေ့လျှင် ရေ ၈ ဖန်ခွက် အနည်းဆုံး သောက်သုံးသင့်ပါသည်။</p>
-                    <div class="mt-auto">
-                        <a href="hydration.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Article 6 -->
-        <div class="col-12 col-md-6">
-            <div class="card health-card">
-                <img src="images/eyecare.jpg" class="card-img-top" alt="Eye Care">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">မျက်စိကျန်းမာရေးအတွက် ဂရုစိုက်သင့်သည့် အချက်များ</h5>
-                    <p class="card-text">ဖုန်းနှင့် ကွန်ပျူတာ အကြည့်များသည့် ယနေ့ခေတ်တွင် မျက်စိကျန်းမာရေးသည် အရေးကြီးလာသည်။ 20-20-20 rule ကို ကျင့်သုံးခြင်းဖြင့် မျက်စိညောင်းညာမှုကို လျှော့ချနိုင်ပါသည်။</p>
-                    <div class="mt-auto">
-                        <a href="eyehealth.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Article 7 -->
-        <div class="col-12 col-md-6">
-            <div class="card health-card">
-                <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Dental Care">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">ခံတွင်းနှင့် သွားကျန်းမာရေး</h5>
-                    <p class="card-text">သွားတိုက်ခြင်းသာမက သွားကြားထိုးကြိုး (Floss) အသုံးပြုခြင်းသည်လည်း သွားကျန်းမာရေးအတွက် မရှိမဖြစ်လိုအပ်ပါသည်။ ခြောက်လတစ်ကြိမ် သွားဆရာဝန်နှင့် ပုံမှန်ပြသသင့်ပါသည်။</p>
-                    <div class="mt-auto">
-                        <a href="oralhealth.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Article 8 -->
-        <div class="col-12 col-md-6">
-            <div class="card health-card">
-                <img src="images/hygene.jpg" class="card-img-top" alt="Hygiene">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">တစ်ကိုယ်ရည် သန့်ရှင်းရေးနှင့် ရောဂါကာကွယ်ခြင်း</h5>
-                    <p class="card-text">လက်ကို ဆပ်ပြာဖြင့် စနစ်တကျ မကြာခဏ ဆေးကြောခြင်းသည် ကူးစက်ရောဂါများကို ကာကွယ်ရန် အထိရောက်ဆုံးနှင့် အလွယ်ကူဆုံး နည်းလမ်းတစ်ခု ဖြစ်ပါသည်။</p>
-                    <div class="mt-auto">
-                        <a href="hygiene.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Article 9 -->
-        <div class="col-12 col-md-6">
-            <div class="card health-card">
-                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Posture">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">မှန်ကန်သော ကိုယ်နေဟန်ထားနှင့် ခါးနာခြင်း</h5>
-                    <p class="card-text">အထိုင်များသော အလုပ်လုပ်သူများအနေဖြင့် ခါးနှင့် ကျောရိုး အနေအထားမှန်ကန်ရန် ဂရုပြုသင့်ပါသည်။ အကြောဆန့် လေ့ကျင့်ခန်းများ လုပ်ပေးခြင်းဖြင့် ခါးနာခြင်းမှ ကင်းဝေးစေနိုင်ပါသည်။</p>
-                    <div class="mt-auto">
-                        <a href="posture.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Article 10 -->
-        <div class="col-12 col-md-6">
-            <div class="card health-card">
-                <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Medical Checkup">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">ကျန်းမာရေး ပုံမှန်စစ်ဆေးခြင်း (Medical Checkup)</h5>
-                    <p class="card-text">ရောဂါလက္ခဏာ မပြသော်လည်း တစ်နှစ်လျှင် တစ်ကြိမ်ခန့် ကျန်းမာရေး ပုံမှန်စစ်ဆေးမှု ခံယူခြင်းဖြင့် ရောဂါများကို ကြိုတင်သိရှိနိုင်ပြီး ကုသမှုကို အချိန်မီ ပြုလုပ်နိုင်ပါသည်။</p>
-                    <div class="mt-auto">
-                        <a href="medicalcheckup.html" class="read-more">ဆက်လက်ဖတ်ရှုရန် &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+<!-- ===================== Navbar ===================== -->
+<nav class="navbar navbar-expand-lg mc-nav">
+  <div class="container">
+    <a class="navbar-brand" href="index.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mcNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="mcNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="common-diseases.html">Common diseases</a></li>
+        <li class="nav-item"><a class="nav-link" href="hospitals.html">Find Hospitals</a></li>
+        <li class="nav-item"><a class="nav-link" href="emergency-contacts.html">Emergency</a></li>
+        <li class="nav-item"><a class="nav-link" href="pharmacy.html">Pharmacy</a></li>
+      </ul>
+      <a href="emergency-contacts.html" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
     </div>
-</div>
+  </div>
+</nav>
 
-<!-- Bootstrap 5 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- ===================== Health articles ===================== -->
+<main>
+  <section class="mc-page-head">
+    <div class="container">
+      <div class="mc-breadcrumb">
+        <a href="index.html"><i class="bi bi-house"></i> Home</a>
+        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+        <span class="mc-en">Health articles</span>
+        <span class="mc-my">ကျန်းမာရေး ဆောင်းပါးများ</span>
+      </div>
+      <h1><span class="mc-en">Health Articles</span><span class="mc-my">ကျန်းမာရေး ဆောင်းပါးများ</span></h1>
+      <p class="intro mc-en">Plain-language guides on prevention, nutrition, and everyday health. Every article is available in English and Burmese — use the language switcher at the top of the page.</p>
+      <p class="intro mc-my">ကြိုတင်ကာကွယ်ရေး၊ အာဟာရနှင့် နေ့စဉ်ကျန်းမာရေးဆိုင်ရာ ဆောင်းပါးများ။ ဆောင်းပါးတိုင်းကို အင်္ဂလိပ်နှင့် မြန်မာ နှစ်ဘာသာဖြင့် ဖတ်ရှုနိုင်ပါသည် — အပေါ်ဆုံးရှိ ဘာသာစကားခလုတ်ကို အသုံးပြုပါ။</p>
+    </div>
+  </section>
+
+  <section class="mc-toolbar">
+    <div class="container">
+      <div class="mc-filter-bar">
+        <label class="mc-filter-search">
+          <i class="bi bi-search"></i>
+          <input type="text" id="myArticleSearch" placeholder="Search articles by title or topic…">
+        </label>
+        <div class="mc-filter-chips" id="myArticleChips" role="tablist"></div>
+      </div>
+      <p class="mc-result-count">
+        <strong id="myArticleCount">0</strong>
+        <span class="mc-en">articles</span><span class="mc-my">ဆောင်းပါး</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="mc-diseases">
+    <div class="container">
+      <div class="row g-4" id="myArticleGrid"></div>
+      <div class="mc-empty-simple" id="myArticleEmpty" style="display:none">
+        <i class="bi bi-search"></i>
+        <div class="fw-semibold" style="color:var(--mc-text);font-size:1rem;margin-bottom:.25rem">
+          <span class="mc-en">No articles match your search</span>
+          <span class="mc-my">ရှာဖွေမှုနှင့် ကိုက်ညီသော ဆောင်းပါး မရှိပါ</span>
+        </div>
+        <div>
+          <span class="mc-en">Try a different word or clear the filters.</span>
+          <span class="mc-my">အခြားစကားလုံးဖြင့် ရှာကြည့်ပါ သို့မဟုတ် စစ်ထုတ်မှုကို ဖယ်ရှားပါ။</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== Footer ===================== -->
+<footer class="mc-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4 brand-block">
+        <a class="navbar-brand mb-3 d-inline-flex" href="index.html" style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);gap:.55rem;align-items:center">
+          <span style="width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center"><i class="bi bi-heart-pulse-fill"></i></span>MedCare
+        </a>
+        <p>Trusted, plain-language health information reviewed by licensed medical professionals. Free for everyone, everywhere.</p>
+      </div>
+      <div class="col-6 col-md-3 col-lg-2">
+        <h5>About</h5>
+        <ul><li><a href="editor.html">Our editorial team</a></li><li><a href="index.html">Contact us</a></li></ul>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <h5>Legal</h5>
+        <ul><li><a href="index.html">Terms of use</a></li><li><a href="index.html">Privacy policy</a></li><li><a href="index.html">Cookie settings</a></li></ul>
+      </div>
+    </div>
+    <div class="mc-disclaimer">
+      <span class="note"><i class="bi bi-info-circle"></i> Information only — not a substitute for professional medical advice, diagnosis, or treatment.</span>
+      <span>© 2026 MedCare. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

@@ -1,860 +1,305 @@
-<!DOCTYPE html>
-<html lang="my">
-
+<!doctype html>
+<html lang="en">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>
-ကိုယ်လက်လှုပ်ရှားမှုနှင့် နှလုံးကျန်းမာရေး | MedCare
-</title>
-
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-
-body{
-
-    font-family:'Pyidaungsu','Padauk',sans-serif;
-
-    background:#f4faf5;
-
-    color:#333;
-
-    line-height:1.8;
-
-}
-
-
-
-/* Main Container */
-
-.container{
-
-    max-width:900px;
-
-    margin:40px auto;
-
-    background:white;
-
-    padding:40px;
-
-    border-radius:15px;
-
-    box-shadow:0 5px 20px rgba(0,0,0,0.08);
-
-}
-
-
-
-
-/* Header Image */
-
-
-.hero{
-
-    position:relative;
-
-    margin:-40px -40px 30px;
-
-}
-
-
-
-.hero img{
-
-    width:100%;
-
-    height:400px;
-
-    object-fit:cover;
-
-    border-radius:15px 15px 0 0;
-
-}
-
-
-
-
-.hero-text{
-
-    position:absolute;
-
-    bottom:0;
-
-    left:0;
-
-    right:0;
-
-    padding:30px;
-
-    color:white;
-
-    background:linear-gradient(
-    transparent,
-    rgba(0,0,0,0.8)
-    );
-
-}
-
-
-
-.hero-text h1{
-
-    font-size:35px;
-
-    line-height:1.5;
-
-}
-
-
-
-.hero-text p{
-
-    font-size:18px;
-
-}
-
-
-
-/* Doctor Info */
-
-
-.doctor{
-
-    background:#e8f5e9;
-
-    border-left:5px solid #2e7d32;
-
-    padding:20px;
-
-    border-radius:10px;
-
-    margin:30px 0;
-
-}
-
-
-
-/* Heading */
-
-
-h2{
-
-    color:#1b5e20;
-
-    border-left:5px solid #4caf50;
-
-    padding-left:12px;
-
-    margin:35px 0 15px;
-
-}
-
-
-h3{
-
-    color:#2e7d32;
-
-}
-
-
-p{
-
-    margin-bottom:20px;
-
-    text-align:justify;
-
-}
-
-
-
-/* Cards */
-
-
-.card-grid{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(250px,1fr));
-
-    gap:20px;
-
-    margin:30px 0;
-
-}
-
-
-
-.card{
-
-    background:#fff;
-
-    border-radius:12px;
-
-    overflow:hidden;
-
-    box-shadow:0 4px 12px rgba(0,0,0,.1);
-
-    transition:.3s;
-
-}
-
-
-
-.card:hover{
-
-    transform:translateY(-8px);
-
-}
-
-
-
-.card img{
-
-    width:100%;
-
-    height:200px;
-
-    object-fit:cover;
-
-}
-
-
-
-.card-content{
-
-    padding:20px;
-
-}
-
-
-
-.card-content h3{
-
-    margin-bottom:10px;
-
-}
-
-
-
-
-.highlight{
-
-    color:#1b5e20;
-
-    font-weight:bold;
-
-}
-
-
-</style>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physical activity and heart health — MedCare</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="script.js" defer></script>
 </head>
-
-
-
 <body>
 
-
-<div class="container">
-
-
-
-<!-- Hero -->
-
-<div class="hero">
-
-<img src="images/hearthealth.jpg">
-alt="Doctor heart health">
-
-
-<div class="hero-text">
-
-<h1>
-ကိုယ်လက်လှုပ်ရှားမှုနှင့် နှလုံးကျန်းမာရေး
-</h1>
-
-
-<p>
-နေ့စဉ်လှုပ်ရှားမှုများမှတစ်ဆင့်
-ကျန်းမာသောနှလုံးကို တည်ဆောက်ခြင်း
-</p>
-
-
-</div>
-
-
-</div>
-
-
-
-
-<div class="doctor">
-
-<h3>
-👨‍⚕️ ရေးသားသူ - Dr. Aung Min
-</h3>
-
-
-<p>
-
-နှလုံးနှင့် သွေးကြောကျန်းမာရေးဆိုင်ရာ
-အတွေ့အကြုံရှိ ဆရာဝန်တစ်ဦးအနေဖြင့်
-လူနာများအား ကျန်းမာရေးအသိပညာပေးရန်
-ဤဆောင်းပါးကို ရေးသားထားပါသည်။
-
-</p>
-
-</div>
-
-
-
-
-
-<h2>
-နှလုံးကျန်းမာရေး၏ အရေးပါမှု
-</h2>
-
-
-<p>
-
-နှလုံးသည် ခန္ဓာကိုယ်တစ်ခုလုံးသို့
-အောက်ဆီဂျင်နှင့် အာဟာရများပါဝင်သော
-သွေးကို ပို့ဆောင်ပေးသည့် အရေးကြီးဆုံး
-အင်္ဂါအစိတ်အပိုင်းတစ်ခု ဖြစ်ပါသည်။
-
-</p>
-
-
-<p>
-
-ယနေ့ခေတ်တွင် အထိုင်များသောနေထိုင်မှုပုံစံ၊
-အစားအသောက်မမှန်ခြင်းနှင့် လေ့ကျင့်ခန်း
-မလုံလောက်ခြင်းတို့ကြောင့် နှလုံးရောဂါဖြစ်နိုင်ခြေ
-ပိုမိုမြင့်တက်လာလျက်ရှိပါသည်။
-
-</p>
-
-
-
-
-
-<h2>
- ကိုယ်လက်လှုပ်ရှားမှု၏ အကျိုးကျေးဇူးများ
-</h2>
-
-
-
-<div class="card-grid">
-
-
-
-<div class="card">
-
-<img src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=800&q=80">
-
-
-<div class="card-content">
-
-<h3>
-နှလုံးအားကောင်းစေခြင်း
-</h3>
-
-<p>
-
-ပုံမှန်လေ့ကျင့်ခန်းပြုလုပ်ခြင်းသည်
-နှလုံးကြွက်သားများကို သန်မာစေပြီး
-သွေးလည်ပတ်မှုကို ကောင်းမွန်စေပါသည်။
-
-</p>
-
-
-</div>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-
-<img src="https://images.unsplash.com/photo-1486218119243-13883505764c?auto=format&fit=crop&w=800&q=80">
-
-
-<div class="card-content">
-
-<h3>
-ကိုယ်အလေးချိန်ထိန်းခြင်း
-</h3>
-
-
-<p>
-
-ကိုယ်အလေးချိန်ကို ပုံမှန်ထိန်းထားခြင်းသည်
-နှလုံးအပေါ် ဝန်ထမ်းမှုကို လျှော့ချပေးပြီး
-ရောဂါဖြစ်နိုင်ခြေကို လျှော့ချပေးနိုင်ပါသည်။
-
-</p>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-<div class="card">
-
-
-<img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=80">
-
-
-<div class="card-content">
-
-<h3>
-သွေးပေါင်ချိန်ထိန်းညှိခြင်း
-</h3>
-
-
-<p>
-
-ကိုယ်လက်လှုပ်ရှားမှုသည် သွေးကြောများ၏
-ကျန်းမာရေးကို ကောင်းမွန်စေပြီး
-သွေးတိုးရောဂါကို ကာကွယ်ရာတွင် ကူညီပေးပါသည်။
-
-</p>
-
-
-</div>
-
-
-</div>
-
-
-</div>
-<!-- Exercise Section -->
-
-<h2>
-🏃 အကြံပြုထားသော ကိုယ်လက်လှုပ်ရှားမှုများ
-</h2>
-
-
-<div class="card-grid">
-
-
-<div class="card">
-
-<img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=800&q=80"
-alt="Walking exercise">
-
-
-<div class="card-content">
-
-<h3>
-လမ်းလျှောက်ခြင်း
-</h3>
-
-<p>
-
-နေ့စဉ် မိနစ် ၃၀ ခန့် လမ်းလျှောက်ခြင်းသည်
-စတင်ရန်အတွက် အလွယ်ကူဆုံးနှင့်
-လုံခြုံသော နှလုံးလေ့ကျင့်ခန်းတစ်ခုဖြစ်ပါသည်။
-
-</p>
-
-</div>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-<img src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=800&q=80"
-alt="Running">
-
-
-<div class="card-content">
-
-<h3>
-ပြေးခြင်း
-</h3>
-
-
-<p>
-
-ပြေးခြင်းသည် နှလုံးခုန်နှုန်းကို မြှင့်တင်ပေးပြီး
-ခန္ဓာကိုယ်အတွင်း သွေးလည်ပတ်မှုကို
-ပိုမိုကောင်းမွန်စေပါသည်။
-
-</p>
-
-
-</div>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-
-<img src="swimming.jpg"
-alt="Swimming">
-
-
-<div class="card-content">
-
-<h3>
-ရေကူးခြင်း
-</h3>
-
-
-<p>
-
-ရေကူးခြင်းသည် နှလုံးနှင့် အဆုတ်ကို
-တစ်ပြိုင်နက် လေ့ကျင့်ပေးနိုင်ပြီး
-ကိုယ်ခန္ဓာအတွက် ထိရောက်သော လေ့ကျင့်ခန်းဖြစ်သည်။
-
-</p>
-
-
-</div>
-
-</div>
-
-
-</div>
-
-
-
-
-
-<!-- Warning Section -->
-
-
-<h2>
-⚠️ လေ့ကျင့်ခန်းပြုလုပ်ရာတွင် သတိထားရန်
-</h2>
-
-
-
-<div style="
-background:#fff3cd;
-padding:25px;
-border-left:6px solid #ff9800;
-border-radius:10px;
-">
-
-
-<ul>
-
-<li>
-လေ့ကျင့်ခန်းမစတင်မီ ကိုယ်ခန္ဓာကို
-၅ မိနစ်မှ ၁၀ မိနစ်ခန့် နွေးအောင် ပြုလုပ်ပါ။
-</li>
-
-
-<li>
-ရင်ဘတ်အောင့်ခြင်း၊ အသက်ရှူမဝခြင်း၊
-မူးဝေခြင်း ဖြစ်လာပါက ချက်ချင်းရပ်နားပါ။
-</li>
-
-
-<li>
-နှလုံးရောဂါ၊ သွေးတိုးရောဂါရှိသူများသည်
-ပြင်းထန်သော လေ့ကျင့်ခန်းမလုပ်မီ
-ဆရာဝန်နှင့် တိုင်ပင်သင့်ပါသည်။
-</li>
-
-
-<li>
-မိမိခန္ဓာကိုယ်အခြေအနေနှင့် ကိုက်ညီသော
-လေ့ကျင့်ခန်းကိုသာ ရွေးချယ်ပါ။
-</li>
-
-
-</ul>
-
-
-</div>
-
-
-
-
-
-
-
-<!-- Doctor Advice -->
-
-
-<div style="
-margin-top:40px;
-background:#e8f5e9;
-padding:30px;
-border-radius:15px;
-border-left:6px solid #2e7d32;
-">
-
-
-<h2>
-👨‍⚕️ ဆရာဝန်၏ အကြံပြုချက်
-</h2>
-
-
-<p>
-
-ကျန်းမာသောနှလုံးတစ်ခုရရှိရန်
-တစ်ခါတည်း အပြင်းအထန် လေ့ကျင့်ခြင်းထက်
-နေ့စဉ်ပုံမှန် လှုပ်ရှားနေခြင်းက ပိုမိုအရေးကြီးပါသည်။
-
-</p>
-
-
-<p>
-
-အလုပ်လုပ်နေစဉ် အချိန်ကြာကြာ ထိုင်နေခြင်းကို
-ရှောင်ကြဉ်ပြီး မိနစ်အနည်းငယ်တိုင်း ထ၍
-လှုပ်ရှားပေးခြင်းသည်လည်း နှလုံးကျန်းမာရေးအတွက်
-အထောက်အကူပြုပါသည်။
-
-</p>
-
-
-</div>
-
-
-
-
-
-
-<!-- Healthy Habits -->
-
-
-<h2>
- နှလုံးကျန်းမာရေးအတွက် နေ့စဉ်အလေ့အကျင့်များ
-</h2>
-
-
-
-<div class="card-grid">
-
-
-<div class="card">
-
-<div class="card-content">
-
-<h3>
- ကျန်းမာသောအစားအစာ
-</h3>
-
-
-<p>
-
-အသီးအနှံ၊ ဟင်းသီးဟင်းရွက်၊
-ငါးနှင့် အမျှင်ဓာတ်များသော
-အစားအစာများကို ရွေးချယ်စားသုံးပါ။
-
-</p>
-
-
-</div>
-
-</div>
-
-
-
-
-<div class="card">
-
-<div class="card-content">
-
-<h3>
-😴 လုံလောက်သောအိပ်စက်ခြင်း
-</h3>
-
-
-<p>
-
-အိပ်ရေးမဝခြင်းသည် သွေးပေါင်ချိန်နှင့်
-နှလုံးကျန်းမာရေးကို ထိခိုက်စေနိုင်သောကြောင့်
-ပုံမှန်အိပ်စက်ရန် လိုအပ်ပါသည်။
-
-</p>
-
-
-</div>
-
-</div>
-
-
-
-
-<div class="card">
-
-<div class="card-content">
-
-<h3>
-🚭 ဆေးလိပ်ရှောင်ခြင်း
-</h3>
-
-
-<p>
-
-ဆေးလိပ်သည် နှလုံးသွေးကြောများကို
-ထိခိုက်စေပြီး နှလုံးရောဂါဖြစ်နိုင်ခြေ
-မြင့်တက်စေနိုင်ပါသည်။
-
-</p>
-
-
-</div>
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-<!-- FAQ -->
-
-
-<h2>
-❓ မေးလေ့ရှိသော မေးခွန်းများ
-</h2>
-
-
-
-<div class="card">
-
-
-<div class="card-content">
-
-
-<h3>
-Q. တစ်နေ့ဘယ်လောက် လေ့ကျင့်ခန်းလုပ်သင့်ပါသလဲ?
-</h3>
-
-
-<p>
-
-ကျန်းမာသော လူကြီးများအတွက်
-တစ်ပတ်လျှင် အနည်းဆုံး ၁၅၀ မိနစ်ခန့်
-အလယ်အလတ်အဆင့် လေ့ကျင့်ခန်းပြုလုပ်ရန်
-အကြံပြုထားပါသည်။
-
-</p>
-
-
-
-<h3>
-Q. လမ်းလျှောက်ခြင်းက နှလုံးအတွက် ကောင်းပါသလား?
-</h3>
-
-
-<p>
-
-ကောင်းပါသည်။ လမ်းလျှောက်ခြင်းသည်
-စတင်ရန်လွယ်ကူပြီး နှလုံးနှင့် သွေးကြောများကို
-ကျန်းမာစေသော လေ့ကျင့်ခန်းတစ်ခုဖြစ်ပါသည်။
-
-</p>
-
-
-
-<h3>
-Q. အသက်ကြီးသူများ လေ့ကျင့်ခန်းလုပ်နိုင်ပါသလား?
-</h3>
-
-
-<p>
-
-လုပ်နိုင်ပါသည်။ သို့သော် မိမိ၏ ကျန်းမာရေးအခြေအနေနှင့်
-ကိုက်ညီသော လေ့ကျင့်ခန်းကို ရွေးချယ်သင့်ပါသည်။
-
-</p>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-<!-- Conclusion -->
-
-
-<h2>
-နိဂုံးချုပ်
-</h2>
-
-
-<p>
-
-နှလုံးကျန်းမာရေးသည် အသက်ကြီးလာမှသာ
-ဂရုစိုက်ရမည့်အရာ မဟုတ်ပါ။
-
-ယနေ့ပြုလုပ်သော သေးငယ်သည့် ကျန်းမာရေးအလေ့အကျင့်များသည်
-အနာဂတ်တွင် ကျန်းမာသောဘဝကို တည်ဆောက်ပေးနိုင်ပါသည်။
-
-</p>
-
-
-<p>
-
-ပုံမှန်ကိုယ်လက်လှုပ်ရှားမှု၊ မှန်ကန်သောအစားအသောက်နှင့်
-ကျန်းမာသောနေထိုင်မှုပုံစံတို့ကို ပေါင်းစပ်လိုက်နာခြင်းဖြင့်
-မိမိ၏နှလုံးကို ရေရှည်ကာကွယ်စောင့်ရှောက်နိုင်ပါသည်။
-
-</p>
-
-
-
-
-<footer style="
-text-align:center;
-margin-top:40px;
-padding:20px;
-border-top:1px solid #ddd;
-color:#666;
-">
-
-© 2026 MedCare | Health Article
-
+<!-- ===================== Navbar ===================== -->
+<nav class="navbar navbar-expand-lg mc-nav">
+  <div class="container">
+    <a class="navbar-brand" href="index.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mcNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="mcNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="common-diseases.html">Common diseases</a></li>
+        <li class="nav-item"><a class="nav-link" href="hospitals.html">Find Hospitals</a></li>
+        <li class="nav-item"><a class="nav-link" href="emergency-contacts.html">Emergency</a></li>
+        <li class="nav-item"><a class="nav-link" href="pharmacy.html">Pharmacy</a></li>
+      </ul>
+      <a href="emergency-contacts.html" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== Article: Exercise & heart health ===================== -->
+<main>
+  <section class="mc-detail-head">
+    <div class="container">
+      <div class="mc-breadcrumb">
+        <a href="index.html"><i class="bi bi-house"></i> Home</a>
+        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+        <a href="health article.html">Health articles</a>
+        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+        <span class="mc-en">Heart health</span><span class="mc-my">နှလုံးကျန်းမာရေး</span>
+      </div>
+      <div class="head-row">
+        <div class="mc-detail-icon"><i class="bi bi-heart-pulse"></i></div>
+        <div>
+          <span class="mc-detail-tag mc-en">Wellness</span><span class="mc-detail-tag mc-my">ကျန်းမာသုခ</span>
+          <h1><span class="mc-en">Physical activity and heart health</span><span class="mc-my">ကိုယ်လက်လှုပ်ရှားမှုနှင့် နှလုံးကျန်းမာရေး</span></h1>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mc-detail-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+          <figure class="mc-figure">
+            <img src="images/hearthealth.jpg" alt="Heart health">
+            <figcaption>
+              <span class="mc-en">Building a healthy heart through everyday movement.</span>
+              <span class="mc-my">နေ့စဉ်လှုပ်ရှားမှုများမှတစ်ဆင့် ကျန်းမာသောနှလုံးကို တည်ဆောက်ခြင်း</span>
+            </figcaption>
+          </figure>
+
+          <div class="mc-doctor">
+            <span class="ico"><i class="bi bi-person-badge"></i></span>
+            <div>
+              <h3 class="mc-en">Written by Dr. Aung Min</h3>
+              <h3 class="mc-my">ရေးသားသူ — Dr. Aung Min</h3>
+              <p class="mc-en">As a doctor with experience in heart and vascular health, I wrote this article to share what patients most need to know.</p>
+              <p class="mc-my">နှလုံးနှင့် သွေးကြောကျန်းမာရေးဆိုင်ရာ အတွေ့အကြုံရှိ ဆရာဝန်တစ်ဦးအနေဖြင့် လူနာများအား ကျန်းမာရေးအသိပညာပေးရန် ဤဆောင်းပါးကို ရေးသားထားပါသည်။</p>
+            </div>
+          </div>
+
+          <p class="mc-overview mc-en">
+            <span class="lead-line">The heart is the single most important organ delivering oxygen- and nutrient-rich blood to the whole body.</span>
+            Sedentary living, poor diet and too little exercise have all pushed the risk of heart disease steadily higher in recent years.
+          </p>
+          <p class="mc-overview mc-my">
+            <span class="lead-line">နှလုံးသည် ခန္ဓာကိုယ်တစ်ခုလုံးသို့ အောက်ဆီဂျင်နှင့် အာဟာရများပါဝင်သော သွေးကို ပို့ဆောင်ပေးသည့် အရေးကြီးဆုံး အင်္ဂါအစိတ်အပိုင်းတစ်ခု ဖြစ်ပါသည်။</span>
+            ယနေ့ခေတ်တွင် အထိုင်များသောနေထိုင်မှုပုံစံ၊ အစားအသောက်မမှန်ခြင်းနှင့် လေ့ကျင့်ခန်း မလုံလောက်ခြင်းတို့ကြောင့် နှလုံးရောဂါဖြစ်နိုင်ခြေ ပိုမိုမြင့်တက်လာလျက်ရှိပါသည်။
+          </p>
+
+          <h2 class="mc-article-h2 mc-en">What physical activity does for you</h2>
+          <h2 class="mc-article-h2 mc-my">ကိုယ်လက်လှုပ်ရှားမှု၏ အကျိုးကျေးဇူးများ</h2>
+          <div class="mc-cards">
+            <div class="mc-card">
+              <img src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=800&q=80" alt="A stronger heart">
+              <div class="mc-card-body">
+                <h3 class="mc-en">A stronger heart</h3>
+                <h3 class="mc-my">နှလုံးအားကောင်းစေခြင်း</h3>
+                <p class="mc-en">Regular exercise strengthens the heart muscle and improves circulation.</p>
+                <p class="mc-my">ပုံမှန်လေ့ကျင့်ခန်းပြုလုပ်ခြင်းသည် နှလုံးကြွက်သားများကို သန်မာစေပြီး သွေးလည်ပတ်မှုကို ကောင်းမွန်စေပါသည်။</p>
+              </div>
+            </div>
+            <div class="mc-card">
+              <img src="https://images.unsplash.com/photo-1486218119243-13883505764c?auto=format&fit=crop&w=800&q=80" alt="Weight control">
+              <div class="mc-card-body">
+                <h3 class="mc-en">Weight control</h3>
+                <h3 class="mc-my">ကိုယ်အလေးချိန်ထိန်းခြင်း</h3>
+                <p class="mc-en">Keeping your weight steady lightens the load on the heart and lowers the risk of disease.</p>
+                <p class="mc-my">ကိုယ်အလေးချိန်ကို ပုံမှန်ထိန်းထားခြင်းသည် နှလုံးအပေါ် ဝန်ထမ်းမှုကို လျှော့ချပေးပြီး ရောဂါဖြစ်နိုင်ခြေကို လျှော့ချပေးနိုင်ပါသည်။</p>
+              </div>
+            </div>
+            <div class="mc-card">
+              <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=80" alt="Blood pressure control">
+              <div class="mc-card-body">
+                <h3 class="mc-en">Better blood pressure</h3>
+                <h3 class="mc-my">သွေးပေါင်ချိန်ထိန်းညှိခြင်း</h3>
+                <p class="mc-en">Activity improves the health of the blood vessels and helps guard against high blood pressure.</p>
+                <p class="mc-my">ကိုယ်လက်လှုပ်ရှားမှုသည် သွေးကြောများ၏ ကျန်းမာရေးကို ကောင်းမွန်စေပြီး သွေးတိုးရောဂါကို ကာကွယ်ရာတွင် ကူညီပေးပါသည်။</p>
+              </div>
+            </div>
+          </div>
+
+          <h2 class="mc-article-h2 mc-en">Activities worth trying</h2>
+          <h2 class="mc-article-h2 mc-my">အကြံပြုထားသော ကိုယ်လက်လှုပ်ရှားမှုများ</h2>
+          <div class="mc-cards">
+            <div class="mc-card">
+              <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=800&q=80" alt="Walking">
+              <div class="mc-card-body">
+                <h3 class="mc-en">Walking</h3>
+                <h3 class="mc-my">လမ်းလျှောက်ခြင်း</h3>
+                <p class="mc-en">About 30 minutes of walking a day is the easiest and safest heart exercise to begin with.</p>
+                <p class="mc-my">နေ့စဉ် မိနစ် ၃၀ ခန့် လမ်းလျှောက်ခြင်းသည် စတင်ရန်အတွက် အလွယ်ကူဆုံးနှင့် လုံခြုံသော နှလုံးလေ့ကျင့်ခန်းတစ်ခုဖြစ်ပါသည်။</p>
+              </div>
+            </div>
+            <div class="mc-card">
+              <img src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=800&q=80" alt="Running">
+              <div class="mc-card-body">
+                <h3 class="mc-en">Running</h3>
+                <h3 class="mc-my">ပြေးခြင်း</h3>
+                <p class="mc-en">Running raises the heart rate and improves circulation throughout the body.</p>
+                <p class="mc-my">ပြေးခြင်းသည် နှလုံးခုန်နှုန်းကို မြှင့်တင်ပေးပြီး ခန္ဓာကိုယ်အတွင်း သွေးလည်ပတ်မှုကို ပိုမိုကောင်းမွန်စေပါသည်။</p>
+              </div>
+            </div>
+            <div class="mc-card">
+              <img src="swimming.jpg" alt="Swimming">
+              <div class="mc-card-body">
+                <h3 class="mc-en">Swimming</h3>
+                <h3 class="mc-my">ရေကူးခြင်း</h3>
+                <p class="mc-en">Swimming trains the heart and lungs at the same time and is an effective whole-body workout.</p>
+                <p class="mc-my">ရေကူးခြင်းသည် နှလုံးနှင့် အဆုတ်ကို တစ်ပြိုင်နက် လေ့ကျင့်ပေးနိုင်ပြီး ကိုယ်ခန္ဓာအတွက် ထိရောက်သော လေ့ကျင့်ခန်းဖြစ်သည်။</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mc-callout">
+            <span class="ico"><i class="bi bi-exclamation-triangle"></i></span>
+            <div>
+              <h3 class="mc-en">Take care when exercising</h3>
+              <h3 class="mc-my">လေ့ကျင့်ခန်းပြုလုပ်ရာတွင် သတိထားရန်</h3>
+              <ul class="mc-en">
+                <li>Warm up for 5 to 10 minutes before you start.</li>
+                <li>Stop immediately if you feel chest pain, breathlessness or dizziness.</li>
+                <li>If you have heart disease or high blood pressure, talk to your doctor before doing anything strenuous.</li>
+                <li>Choose exercise that matches your own physical condition.</li>
+              </ul>
+              <ul class="mc-my">
+                <li>လေ့ကျင့်ခန်းမစတင်မီ ကိုယ်ခန္ဓာကို ၅ မိနစ်မှ ၁၀ မိနစ်ခန့် နွေးအောင် ပြုလုပ်ပါ။</li>
+                <li>ရင်ဘတ်အောင့်ခြင်း၊ အသက်ရှူမဝခြင်း၊ မူးဝေခြင်း ဖြစ်လာပါက ချက်ချင်းရပ်နားပါ။</li>
+                <li>နှလုံးရောဂါ၊ သွေးတိုးရောဂါရှိသူများသည် ပြင်းထန်သော လေ့ကျင့်ခန်းမလုပ်မီ ဆရာဝန်နှင့် တိုင်ပင်သင့်ပါသည်။</li>
+                <li>မိမိခန္ဓာကိုယ်အခြေအနေနှင့် ကိုက်ညီသော လေ့ကျင့်ခန်းကိုသာ ရွေးချယ်ပါ။</li>
+              </ul>
+            </div>
+          </div>
+
+          <h2 class="mc-article-h2 mc-en">Daily habits for a healthy heart</h2>
+          <h2 class="mc-article-h2 mc-my">နှလုံးကျန်းမာရေးအတွက် နေ့စဉ်အလေ့အကျင့်များ</h2>
+          <div class="mc-cards">
+            <div class="mc-card">
+              <div class="mc-card-body">
+                <h3 class="mc-en">Eat well</h3>
+                <h3 class="mc-my">ကျန်းမာသောအစားအစာ</h3>
+                <p class="mc-en">Choose fruit, vegetables, fish and food rich in fibre.</p>
+                <p class="mc-my">အသီးအနှံ၊ ဟင်းသီးဟင်းရွက်၊ ငါးနှင့် အမျှင်ဓာတ်များသော အစားအစာများကို ရွေးချယ်စားသုံးပါ။</p>
+              </div>
+            </div>
+            <div class="mc-card">
+              <div class="mc-card-body">
+                <h3 class="mc-en">Sleep enough</h3>
+                <h3 class="mc-my">လုံလောက်သောအိပ်စက်ခြင်း</h3>
+                <p class="mc-en">Poor sleep affects blood pressure and heart health, so keep a regular sleep routine.</p>
+                <p class="mc-my">အိပ်ရေးမဝခြင်းသည် သွေးပေါင်ချိန်နှင့် နှလုံးကျန်းမာရေးကို ထိခိုက်စေနိုင်သောကြောင့် ပုံမှန်အိပ်စက်ရန် လိုအပ်ပါသည်။</p>
+              </div>
+            </div>
+            <div class="mc-card">
+              <div class="mc-card-body">
+                <h3 class="mc-en">Avoid smoking</h3>
+                <h3 class="mc-my">ဆေးလိပ်ရှောင်ခြင်း</h3>
+                <p class="mc-en">Tobacco damages the coronary arteries and raises the risk of heart disease.</p>
+                <p class="mc-my">ဆေးလိပ်သည် နှလုံးသွေးကြောများကို ထိခိုက်စေပြီး နှလုံးရောဂါဖြစ်နိုင်ခြေ မြင့်တက်စေနိုင်ပါသည်။</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="mc-section-label"><span class="mc-en">Frequently asked questions</span><span class="mc-my">မေးလေ့ရှိသော မေးခွန်းများ</span></p>
+          <div class="accordion mc-accordion" id="heartFaq">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accHeartQ1" aria-expanded="true">
+                  <span class="head-ico sym"><i class="bi bi-question-circle"></i></span>
+                  <span class="mc-en">How much should I exercise each day?</span><span class="mc-my">တစ်နေ့ဘယ်လောက် လေ့ကျင့်ခန်းလုပ်သင့်ပါသလဲ။</span>
+                </button>
+              </h2>
+              <div id="accHeartQ1" class="accordion-collapse collapse show" data-bs-parent="#heartFaq">
+                <div class="accordion-body">
+                  <p class="mb-0 mc-en" style="font-size:.95rem;line-height:1.7;color:#334155">For healthy adults, the recommendation is at least 150 minutes of moderate exercise a week.</p>
+                  <p class="mb-0 mc-my" style="font-size:.95rem;line-height:1.7;color:#334155">ကျန်းမာသော လူကြီးများအတွက် တစ်ပတ်လျှင် အနည်းဆုံး ၁၅၀ မိနစ်ခန့် အလယ်အလတ်အဆင့် လေ့ကျင့်ခန်းပြုလုပ်ရန် အကြံပြုထားပါသည်။</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accHeartQ2" aria-expanded="false">
+                  <span class="head-ico sym"><i class="bi bi-question-circle"></i></span>
+                  <span class="mc-en">Is walking good for the heart?</span><span class="mc-my">လမ်းလျှောက်ခြင်းက နှလုံးအတွက် ကောင်းပါသလား။</span>
+                </button>
+              </h2>
+              <div id="accHeartQ2" class="accordion-collapse collapse" data-bs-parent="#heartFaq">
+                <div class="accordion-body">
+                  <p class="mb-0 mc-en" style="font-size:.95rem;line-height:1.7;color:#334155">Yes. Walking is easy to start and it keeps the heart and blood vessels healthy.</p>
+                  <p class="mb-0 mc-my" style="font-size:.95rem;line-height:1.7;color:#334155">ကောင်းပါသည်။ လမ်းလျှောက်ခြင်းသည် စတင်ရန်လွယ်ကူပြီး နှလုံးနှင့် သွေးကြောများကို ကျန်းမာစေသော လေ့ကျင့်ခန်းတစ်ခုဖြစ်ပါသည်။</p>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accHeartQ3" aria-expanded="false">
+                  <span class="head-ico sym"><i class="bi bi-question-circle"></i></span>
+                  <span class="mc-en">Can older people exercise?</span><span class="mc-my">အသက်ကြီးသူများ လေ့ကျင့်ခန်းလုပ်နိုင်ပါသလား။</span>
+                </button>
+              </h2>
+              <div id="accHeartQ3" class="accordion-collapse collapse" data-bs-parent="#heartFaq">
+                <div class="accordion-body">
+                  <p class="mb-0 mc-en" style="font-size:.95rem;line-height:1.7;color:#334155">Yes, they can — but the exercise should be chosen to suit their state of health.</p>
+                  <p class="mb-0 mc-my" style="font-size:.95rem;line-height:1.7;color:#334155">လုပ်နိုင်ပါသည်။ သို့သော် မိမိ၏ ကျန်းမာရေးအခြေအနေနှင့် ကိုက်ညီသော လေ့ကျင့်ခန်းကို ရွေးချယ်သင့်ပါသည်။</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mc-callout mc-callout--info">
+            <span class="ico"><i class="bi bi-person-badge"></i></span>
+            <div>
+              <h3 class="mc-en">The doctor's advice</h3>
+              <h3 class="mc-my">ဆရာဝန်၏ အကြံပြုချက်</h3>
+              <p class="mc-en">For a healthy heart, staying active every day matters more than one punishing session.</p>
+              <p class="mc-my">ကျန်းမာသောနှလုံးတစ်ခုရရှိရန် တစ်ခါတည်း အပြင်းအထန် လေ့ကျင့်ခြင်းထက် နေ့စဉ်ပုံမှန် လှုပ်ရှားနေခြင်းက ပိုမိုအရေးကြီးပါသည်။</p>
+              <p class="mc-en">Avoid sitting for long stretches at work — getting up to move every so often also helps your heart.</p>
+              <p class="mc-my">အလုပ်လုပ်နေစဉ် အချိန်ကြာကြာ ထိုင်နေခြင်းကို ရှောင်ကြဉ်ပြီး မိနစ်အနည်းငယ်တိုင်း ထ၍ လှုပ်ရှားပေးခြင်းသည်လည်း နှလုံးကျန်းမာရေးအတွက် အထောက်အကူပြုပါသည်။</p>
+            </div>
+          </div>
+
+          <h2 class="mc-article-h2 mc-en">In summary</h2>
+          <h2 class="mc-article-h2 mc-my">နိဂုံးချုပ်</h2>
+          <div class="mc-article-prose">
+            <p class="mc-en">Heart health is not something to start worrying about only in old age. The small habits you keep today build the healthy life you will have tomorrow.</p>
+            <p class="mc-my">နှလုံးကျန်းမာရေးသည် အသက်ကြီးလာမှသာ ဂရုစိုက်ရမည့်အရာ မဟုတ်ပါ။ ယနေ့ပြုလုပ်သော သေးငယ်သည့် ကျန်းမာရေးအလေ့အကျင့်များသည် အနာဂတ်တွင် ကျန်းမာသောဘဝကို တည်ဆောက်ပေးနိုင်ပါသည်။</p>
+            <p class="mc-en">Combining regular activity, a sound diet and healthy living protects your heart for the long term.</p>
+            <p class="mc-my">ပုံမှန်ကိုယ်လက်လှုပ်ရှားမှု၊ မှန်ကန်သောအစားအသောက်နှင့် ကျန်းမာသောနေထိုင်မှုပုံစံတို့ကို ပေါင်းစပ်လိုက်နာခြင်းဖြင့် မိမိ၏နှလုံးကို ရေရှည်ကာကွယ်စောင့်ရှောက်နိုင်ပါသည်။</p>
+          </div>
+
+          <div class="mc-sources">
+            <p class="text-muted mb-3 mc-en" style="font-size:.83rem">Last reviewed: August 2026 · Reviewed by the MedCare medical editorial team.</p>
+            <p class="text-muted mb-3 mc-my" style="font-size:.83rem">နောက်ဆုံးပြန်လည်သုံးသပ်သည့်ရက် — ဩဂုတ် ၂၀၂၆ · MedCare ဆေးပညာ တည်းဖြတ်အဖွဲ့မှ စိစစ်ပြီး။</p>
+            <a href="health article.html" class="btn btn-mc-outline"><i class="bi bi-arrow-left me-1"></i><span class="mc-en">All articles</span><span class="mc-my">ဆောင်းပါးအားလုံး</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== Footer ===================== -->
+<footer class="mc-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4 brand-block">
+        <a class="navbar-brand mb-3 d-inline-flex" href="index.html" style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);gap:.55rem;align-items:center">
+          <span style="width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center"><i class="bi bi-heart-pulse-fill"></i></span>MedCare
+        </a>
+        <p>Trusted, plain-language health information reviewed by licensed medical professionals. Free for everyone, everywhere.</p>
+      </div>
+      <div class="col-6 col-md-3 col-lg-2">
+        <h5>About</h5>
+        <ul><li><a href="editor.html">Our editorial team</a></li><li><a href="index.html">Contact us</a></li></ul>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <h5>Legal</h5>
+        <ul><li><a href="index.html">Terms of use</a></li><li><a href="index.html">Privacy policy</a></li><li><a href="index.html">Cookie settings</a></li></ul>
+      </div>
+    </div>
+    <div class="mc-disclaimer">
+      <span class="note"><i class="bi bi-info-circle"></i> Information only — not a substitute for professional medical advice, diagnosis, or treatment.</span>
+      <span>© 2026 MedCare. All rights reserved.</span>
+    </div>
+  </div>
 </footer>
-
-
-
-</div>
-
 </body>
-
 </html>

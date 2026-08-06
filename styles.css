@@ -231,7 +231,8 @@
   .mc-article-thumb{aspect-ratio:16/10;background:linear-gradient(135deg,#0d9488 0%,#14b8a6 100%);position:relative;display:flex;align-items:flex-end;padding:1.1rem}
   .mc-article-thumb.b{background:linear-gradient(135deg,#0f766e 0%,#0d9488 100%)}
   .mc-article-thumb.c{background:linear-gradient(135deg,#134e4a 0%,#0f766e 100%)}
-  .mc-article-thumb .badge-cat{background:rgba(255,255,255,.95);color:var(--mc-primary-600);font-weight:600;font-size:.75rem;padding:.35rem .7rem;border-radius:8px}
+  .mc-article-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .mc-article-thumb .badge-cat{position:relative;background:rgba(255,255,255,.95);color:var(--mc-primary-600);font-weight:600;font-size:.75rem;padding:.35rem .7rem;border-radius:8px}
   .mc-article-body{padding:1.35rem 1.4rem 1.5rem}
   .mc-article-body h3{font-size:1.1rem;font-weight:600;margin-bottom:.55rem;line-height:1.35}
   .mc-article-body p{color:var(--mc-muted);font-size:.9rem;margin:0 0 1rem;line-height:1.55}
@@ -432,4 +433,50 @@
     .mc-hero{padding:3rem 0}
     .mc-section{padding:3rem 0}
     .mc-filters{position:static;top:auto;margin-bottom:1.5rem}
+  }
+
+  /* ============ Bilingual article content ============
+     Every health article ships both languages in the markup and the switcher
+     (which sets html[lang]) reveals one. Pages declare lang="en" so the English
+     copy paints first — no flash of both before script.js runs. */
+  html[lang="my"] .mc-en{display:none !important}
+  html[lang="en"] .mc-my{display:none !important}
+  /* Latin faces carry no Myanmar glyphs, so the Burmese copy brings its own stack */
+  .mc-my{font-family:'Noto Sans Myanmar','Inter',system-ui,sans-serif;line-height:1.85}
+  h1.mc-my,h2.mc-my,h3.mc-my,h4.mc-my,h5.mc-my,
+  .mc-my h1,.mc-my h2,.mc-my h3,.mc-my h4,.mc-my h5{letter-spacing:0;line-height:1.5}
+
+  /* Article hero image */
+  .mc-figure{position:relative;border-radius:18px;overflow:hidden;margin:0 0 2rem;box-shadow:var(--mc-shadow);border:1px solid var(--mc-border)}
+  .mc-figure img{display:block;width:100%;height:clamp(200px,32vw,360px);object-fit:cover}
+  .mc-figure figcaption{position:absolute;left:0;right:0;bottom:0;padding:1.5rem 1.6rem .95rem;color:#fff;font-size:.95rem;line-height:1.6;background:linear-gradient(transparent,rgba(15,23,42,.82))}
+
+  /* Author / doctor note */
+  .mc-doctor{display:flex;gap:1.1rem;background:var(--mc-primary-50);border:1px solid #ccfbf1;border-left:4px solid var(--mc-primary);border-radius:16px;padding:1.4rem 1.6rem;margin:0 0 2.25rem}
+  .mc-doctor .ico{width:44px;height:44px;border-radius:12px;background:#fff;color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0}
+  .mc-doctor h3{font-size:1.05rem;font-weight:600;color:var(--mc-primary-600);margin:0 0 .4rem}
+  .mc-doctor p{color:#334155;font-size:.96rem;line-height:1.7;margin:0}
+
+  /* Content card grid — the article equivalent of .mc-disease */
+  .mc-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem;margin:0 0 2.25rem}
+  .mc-card{background:#fff;border:1px solid var(--mc-border);border-radius:18px;overflow:hidden;box-shadow:var(--mc-shadow);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s,border-color .2s}
+  .mc-card:hover{transform:translateY(-3px);box-shadow:var(--mc-shadow-lg);border-color:var(--mc-primary)}
+  .mc-card img{width:100%;height:180px;object-fit:cover;flex-shrink:0}
+  .mc-card-body{padding:1.25rem 1.35rem 1.4rem}
+  .mc-card-body h3{font-size:1.05rem;font-weight:600;margin:0 0 .5rem;line-height:1.4}
+  .mc-card-body p{color:var(--mc-muted);font-size:.92rem;line-height:1.65;margin:0}
+
+  /* Teal variant of .mc-callout, for the doctor's closing advice */
+  .mc-callout--info{background:var(--mc-primary-50);border-color:#ccfbf1;border-left-color:var(--mc-primary)}
+  .mc-callout--info .ico{background:#fff;color:var(--mc-primary-600)}
+  .mc-callout--info h3{color:var(--mc-primary-600)}
+  .mc-callout--info p,.mc-callout--info ul{color:#334155}
+
+  /* Pull quote and inline emphasis */
+  .mc-quote{border-left:4px solid var(--mc-primary);background:#fff;border-radius:0 14px 14px 0;padding:1.25rem 1.5rem;margin:0 0 2rem;color:#334155;font-size:1.02rem;line-height:1.75;box-shadow:var(--mc-shadow)}
+  .mc-highlight{color:var(--mc-primary-600);font-weight:600}
+
+  @media (max-width:575.98px){
+    .mc-cards{grid-template-columns:1fr}
+    .mc-doctor{flex-direction:column;gap:.85rem}
   }

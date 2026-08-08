@@ -1721,6 +1721,12 @@
     'Blurred or double vision': 'အမြင်ဝါးခြင်း သို့မဟုတ် နှစ်ထပ်မြင်ခြင်း',
     'Shortness of breath or chest discomfort': 'အသက်ရှူမဝခြင်း သို့မဟုတ် ရင်ဘတ်မသက်မသာဖြစ်ခြင်း',
     'Nosebleeds (uncommon)': 'နှာခေါင်းသွေးထွက်ခြင်း (ရှားပါးသည်)',
+    'Older adults over 40 years old.': 'အသက် ၄၀ ကျော် သက်ကြီးရွယ်အိုများ။',
+    'People with a family history of hypertension.':
+      'မိသားစုတွင် သွေးတိုး မျိုးရိုးရှိသူများ။',
+    "Individuals with a high-salt diet who don't have a helthy habits.":
+      'ဆားငန်သော အစားအစာ များများ စားပြီး ကျန်းမာသော အလေ့အထ မရှိသူများ။',
+    'People experiencing high stress levels.': 'စိတ်ဖိစီးမှု များပြားသူများ။',
     'Check your blood pressure regularly, at home or at a clinic.':
       'အိမ်တွင် သို့မဟုတ် ဆေးခန်းတွင် သွေးပေါင်ချိန်ကို ပုံမှန် တိုင်းပါ။',
     'Eat more vegetables, fruit, and whole grains; reduce salty foods.':
@@ -1751,8 +1757,680 @@
       'ရင်ဘတ်အောင့်ခြင်း၊ အသက်ရှူရခက်ခြင်း သို့မဟုတ် နှလုံးခုန်နှုန်း မမှန်ခြင်း',
     'Weakness or numbness on one side of the body, or trouble speaking':
       'ကိုယ်တစ်ခြမ်း အားနည်းခြင်း သို့မဟုတ် ထုံကျဉ်ခြင်း၊ စကားပြောရ ခက်ခဲခြင်း',
-    
-    /* --- hypertension detail --- */
+
+    /* --- shared across every disease detail page --- */
+    'Risk Groups': 'ဘယ်သူတွေမှာ အဖြစ်များလဲ',
+    'Respiratory condition': 'အသက်ရှူလမ်းကြောင်းဆိုင်ရာ ရောဂါ',
+    'Infectious disease': 'ကူးစက်ရောဂါ',
+    'Maternal health': 'မိခင်ကျန်းမာရေး',
+
+    /* --- diabetes detail --- */
+    'Diabetes is a long-term condition in which the level of sugar (glucose) in the blood stays too high, because the body either does not make enough insulin or cannot use it properly.':
+      'ဆီးချိုရောဂါဆိုသည်မှာ ခန္ဓာကိုယ်မှ အင်ဆူလင် လုံလောက်စွာ မထုတ်နိုင်ခြင်း သို့မဟုတ် ကောင်းစွာ အသုံးမပြုနိုင်ခြင်းကြောင့် သွေးတွင်း သကြားဓာတ် ပုံမှန်ထက် မြင့်နေသော နာတာရှည်ရောဂါ ဖြစ်သည်။',
+    'Insulin is the hormone that moves sugar out of the blood and into the cells that need it for energy. When that process breaks down, sugar builds up in the bloodstream and, over years, can quietly damage the eyes, kidneys, nerves, and blood vessels. Diabetes cannot usually be cured, but it responds very well to daily care — balanced meals, regular movement, and medication when it is prescribed.':
+      'အင်ဆူလင်သည် သွေးထဲမှ သကြားဓာတ်ကို စွမ်းအင်လိုအပ်သည့် ဆဲလ်များထဲသို့ ပို့ပေးသော ဟော်မုန်း ဖြစ်သည်။ ထိုလုပ်ငန်းစဉ် ချို့ယွင်းသွားပါက သကြားဓာတ်သည် သွေးထဲတွင် စုပုံလာပြီး နှစ်များကြာလာသည်နှင့်အမျှ မျက်စိ၊ ကျောက်ကပ်၊ အာရုံကြောနှင့် သွေးကြောများကို တိတ်တဆိတ် ထိခိုက်စေနိုင်သည်။ ဆီးချိုကို လုံးဝ ပျောက်ကင်းအောင် ကုသ၍ မရသော်လည်း မျှတသော အစားအသောက်၊ ပုံမှန် လှုပ်ရှားမှုနှင့် ညွှန်ကြားထားသည့် ဆေးဝါးဖြင့် ကောင်းစွာ ထိန်းညှိနိုင်ပါသည်။',
+    'Symptoms can come on slowly over months, and some people notice very little at first:':
+      'လက္ခဏာများသည် လများကြာမှ တဖြည်းဖြည်း ပေါ်လာတတ်ပြီး အချို့မှာ အစပိုင်းတွင် သိသာမှု နည်းပါသည်။',
+    'Feeling thirsty much of the time, even after drinking':
+      'ရေသောက်ပြီးသော်လည်း အမြဲလိုလို ရေငတ်နေခြင်း',
+    'Passing urine often, especially waking at night to do so':
+      'ဆီးခဏခဏ သွားခြင်း၊ အထူးသဖြင့် ညဘက် နိုးပြီး ဆီးသွားရခြင်း',
+    'Feeling hungry constantly, even shortly after eating':
+      'ထမင်းစားပြီး မကြာမီပင် ထပ်မံ ဆာလောင်နေခြင်း',
+    'Losing weight without trying to': 'အကြောင်းမဲ့ ကိုယ်အလေးချိန် ကျဆင်းခြင်း',
+    'Tiredness, blurred vision, or cuts that are slow to heal':
+      'နွမ်းနယ်ခြင်း၊ အမြင်ဝါးခြင်း သို့မဟုတ် ဒဏ်ရာများ ကျက်ရန် ကြာခြင်း',
+    'People with a parent or sibling who has diabetes.':
+      'မိဘ သို့မဟုတ် မောင်နှမတွင် ဆီးချိုရှိသူများ။',
+    'People who are overweight, particularly around the waist.':
+      'အဝလွန်သူများ၊ အထူးသဖြင့် ခါးပတ်လည်တွင် အဆီများသူများ။',
+    'Those who eat a lot of sugary food and sweetened drinks.':
+      'အချိုစာနှင့် အချိုရည်များ များများ သုံးဆောင်သူများ။',
+    'People who sit for most of the day and rarely exercise.':
+      'တစ်နေ့တာ အများစု ထိုင်နေပြီး လေ့ကျင့်ခန်း မလုပ်သူများ။',
+    'Check your blood sugar as often as your clinic advises.':
+      'ဆေးခန်းမှ ညွှန်ကြားသည့်အတိုင်း သွေးတွင်း သကြားဓာတ်ကို ပုံမှန် စစ်ဆေးပါ။',
+    'Fill half your plate with vegetables and choose whole grains over white rice where you can.':
+      'ပန်းကန်၏ တစ်ဝက်ကို ဟင်းသီးဟင်းရွက်ဖြင့် ဖြည့်ပါ။ ဖြစ်နိုင်ပါက ဆန်ဖြူအစား အစေ့အဆန်များကို ရွေးပါ။',
+    'Walk or move for about 30 minutes on most days of the week.':
+      'တစ်ပတ်လျှင် နေ့အများစုတွင် ၃၀ မိနစ်ခန့် လမ်းလျှောက်ပါ သို့မဟုတ် လှုပ်ရှားပါ။',
+    'Take your tablets or insulin exactly as prescribed, at the same times each day.':
+      'ဆေးလုံး သို့မဟုတ် အင်ဆူလင်ကို ညွှန်ကြားထားသည့်အတိုင်း နေ့စဉ် အချိန်မှန်မှန် သုံးပါ။',
+    'Look at your feet every day for cuts, blisters, or numbness.':
+      'ခြေထောက်များတွင် ဒဏ်ရာ၊ ရေဖုံး သို့မဟုတ် ထုံကျဉ်မှု ရှိမရှိ နေ့စဉ် စစ်ဆေးပါ။',
+    "Don't skip meals or skip your medicine — both can send your sugar dangerously low.":
+      'အစားအစာကိုဖြစ်စေ ဆေးကိုဖြစ်စေ မလွတ်ပါစေနှင့် — နှစ်မျိုးလုံးက သွေးတွင်း သကြားဓာတ်ကို အန္တရာယ်ရှိလောက်အောင် နည်းသွားစေနိုင်သည်။',
+    "Don't drink sweetened tea, soft drinks, or energy drinks between meals.":
+      'အစားအစာကြားတွင် ချိုသော လက်ဖက်ရည်၊ အအေးဘူး သို့မဟုတ် အားဖြည့်အချိုရည်များ မသောက်ပါနှင့်။',
+    "Don't walk barefoot, indoors or outside.":
+      'အိမ်တွင်းဖြစ်စေ အပြင်ဖြစ်စေ ခြေဗလာ မလျှောက်ပါနှင့်။',
+    "Don't stop treatment because your readings have improved.":
+      'အတိုင်းအတာ ကောင်းလာသည်ဟုဆိုကာ ကုသမှုကို မရပ်ပါနှင့်။',
+    "Don't ignore a wound that isn't healing after a few days.":
+      'ရက်အနည်းငယ်ကြာသည်အထိ မကျက်သေးသော ဒဏ်ရာကို လျစ်လျူမရှုပါနှင့်။',
+    'Have your blood sugar checked if you notice the symptoms above, and seek care promptly for any of these:':
+      'အထက်ပါ လက္ခဏာများ တွေ့ပါက သွေးတွင်း သကြားဓာတ် စစ်ဆေးပါ။ အောက်ပါတို့ ဖြစ်ပါက ချက်ချင်း ဆေးကုသမှု ခံယူပါ။',
+    'Blood sugar that is very high, or very low with shaking, sweating, and confusion':
+      'သွေးတွင်း သကြားဓာတ် အလွန်မြင့်ခြင်း၊ သို့မဟုတ် အလွန်နည်းပြီး တုန်ခြင်း၊ ချွေးထွက်ခြင်းနှင့် စိတ်ရှုပ်ထွေးခြင်း',
+    'A cut, sore, or ulcer — especially on the foot — that will not heal':
+      'မကျက်သော ဒဏ်ရာ သို့မဟုတ် အနာ — အထူးသဖြင့် ခြေထောက်ပေါ်တွင်',
+    'Numbness, tingling, or burning in the hands or feet':
+      'လက်ခြေများတွင် ထုံကျဉ်ခြင်း၊ ကျိန်းစပ်ခြင်း သို့မဟုတ် ပူလောင်ခြင်း',
+    'Sudden blurred vision, or breath that smells fruity with heavy breathing and vomiting':
+      'ရုတ်တရက် အမြင်ဝါးခြင်း၊ သို့မဟုတ် ထွက်သက်တွင် အသီးနံ့ရပြီး အသက်ပြင်းပြင်းရှူကာ အန်ခြင်း',
+    'Diabetes — key facts, types, complications, and prevention.':
+      'ဆီးချိုရောဂါ — အဓိကအချက်များ၊ အမျိုးအစားများ၊ နောက်ဆက်တွဲ ဆိုးကျိုးများနှင့် ကာကွယ်ရေး။',
+    'National guidelines on non-communicable disease care and diabetes services.':
+      'မကူးစက်တတ်သောရောဂါ စောင့်ရှောက်မှုနှင့် ဆီးချို ဝန်ဆောင်မှုဆိုင်ရာ အမျိုးသားအဆင့် လမ်းညွှန်ချက်များ။',
+    'Diabetes prevention and management in primary health care across the region.':
+      'ဒေသတွင်း အခြေခံကျန်းမာရေး စောင့်ရှောက်မှုတွင် ဆီးချို ကာကွယ်ရေးနှင့် ထိန်းညှိမှု။',
+
+    /* --- asthma detail --- */
+    'Asthma is a long-term condition in which the airways become inflamed and narrow, making it harder to move air in and out of the lungs.':
+      'ပန်းနာရင်ကြပ်ဆိုသည်မှာ အသက်ရှူလမ်းကြောင်းများ ရောင်ရမ်းကျဉ်းမြောင်းလာပြီး အဆုတ်အတွင်းသို့ လေဝင်လေထွက် ခက်ခဲစေသော နာတာရှည်ရောဂါ ဖြစ်သည်။',
+    'The narrowing usually comes and goes. Something in the environment — dust, smoke, pollen, cold air, or a chest infection — irritates the airways, the muscles around them tighten, and breathing suddenly becomes difficult. Between these flare-ups many people feel completely well. With the right inhalers and by learning your own triggers, asthma can be controlled well enough to work, study, and exercise normally.':
+      'ကျဉ်းမြောင်းမှုသည် အလှည့်ကျ ဖြစ်လိုက်ပျောက်လိုက် ရှိတတ်သည်။ ဖုန်၊ မီးခိုး၊ ပန်းဝတ်မှုံ၊ အေးသောလေ သို့မဟုတ် ရင်ခေါင်းပိုးဝင်ခြင်းက အသက်ရှူလမ်းကြောင်းကို လှုံ့ဆော်လိုက်သောအခါ ပတ်လည်ရှိ ကြွက်သားများ တင်းလာပြီး အသက်ရှူရ ရုတ်တရက် ခက်ခဲသွားသည်။ ထိုသို့ ပြင်းထန်ချိန်များ အကြားတွင် အများစုမှာ ပုံမှန်အတိုင်း နေကောင်းကြသည်။ သင့်တော်သော ရှူဆေးများနှင့် မိမိ၏ လှုံ့ဆော်အကြောင်းရင်းများကို သိရှိထားခြင်းဖြင့် အလုပ်၊ ကျောင်းနှင့် လေ့ကျင့်ခန်းကို ပုံမှန်အတိုင်း လုပ်နိုင်အောင် ထိန်းညှိနိုင်ပါသည်။',
+    'Symptoms are often worse at night, in the early morning, or after exercise:':
+      'လက္ခဏာများသည် ညဘက်၊ နံနက်စောစော သို့မဟုတ် လေ့ကျင့်ခန်းလုပ်ပြီးချိန်တွင် ပိုဆိုးလေ့ရှိသည်။',
+    'Shortness of breath, or feeling unable to catch your breath':
+      'အသက်ရှူမဝခြင်း သို့မဟုတ် အသက်ရှူမမီသလို ခံစားရခြင်း',
+    'Wheezing — a whistling sound when breathing out':
+      'ထွက်သက်တွင် တရွှီးရွှီး အသံမြည်ခြင်း',
+    'A dry cough that keeps returning, often at night':
+      'ခဏခဏ ပြန်ဖြစ်တတ်သော ချောင်းခြောက်ဆိုးခြင်း၊ အများအားဖြင့် ညဘက်',
+    'Tightness in the chest, as though it is being squeezed':
+      'ရင်ဘတ်ကို ဖိညှစ်ထားသကဲ့သို့ ကျပ်တည်းခြင်း',
+    'Waking from sleep because of coughing or breathlessness':
+      'ချောင်းဆိုးခြင်း သို့မဟုတ် မောဟိုက်ခြင်းကြောင့် အိပ်ရာမှ နိုးလာခြင်း',
+    'People with allergies, eczema, or hay fever.':
+      'ဓာတ်မတည့်ခြင်း၊ အရေပြားယားနာ သို့မဟုတ် နှာစေးနာ ရှိသူများ။',
+    'Those with a family history of asthma or allergy.':
+      'မိသားစုတွင် ပန်းနာ သို့မဟုတ် ဓာတ်မတည့်မှု မျိုးရိုးရှိသူများ။',
+    'People regularly exposed to dust, cooking smoke, or tobacco smoke.':
+      'ဖုန်၊ ထမင်းချက်မီးခိုး သို့မဟုတ် ဆေးလိပ်ငွေ့နှင့် မကြာခဏ ထိတွေ့သူများ။',
+    'Children, in whom asthma often begins early in life.':
+      'ကလေးများ — ပန်းနာသည် ငယ်စဉ်ကတည်းက စတင်တတ်သည်။',
+    'Carry your reliever inhaler with you at all times.':
+      'သက်သာစေသော ရှူဆေးကို အမြဲ ယူဆောင်သွားပါ။',
+    'Use your preventer inhaler every day, even when you feel fine.':
+      'နေကောင်းသည်ဟု ခံစားရသော်လည်း ကာကွယ်ရှူဆေးကို နေ့စဉ် သုံးပါ။',
+    'Learn what sets off your attacks and keep away from it.':
+      'သင့်ရောဂါကို လှုံ့ဆော်သည့် အရာများကို သိအောင်လုပ်ပြီး ရှောင်ပါ။',
+    'Wear a mask when sweeping, in dusty places, or on smoky roads.':
+      'တံမြက်လှည်းသည့်အခါ၊ ဖုန်ထူသောနေရာနှင့် မီးခိုးများသော လမ်းများတွင် နှာခေါင်းစည်း တပ်ပါ။',
+    'Ask your clinic to check your inhaler technique now and then.':
+      'ရှူဆေး သုံးပုံသုံးနည်း မှန်မမှန် ဆေးခန်းတွင် အခါအားလျော်စွာ စစ်ဆေးခိုင်းပါ။',
+    "Don't smoke, and don't stay in rooms where others are smoking.":
+      'ဆေးလိပ် မသောက်ပါနှင့်။ သူများ ဆေးလိပ်သောက်နေသည့် အခန်းတွင်လည်း မနေပါနှင့်။',
+    "Don't stop your preventer inhaler once symptoms settle.":
+      'လက္ခဏာများ သက်သာသွားသည်နှင့် ကာကွယ်ရှူဆေးကို မရပ်ပါနှင့်။',
+    "Don't wait out a bad attack at home hoping it will pass.":
+      'ပြင်းထန်စွာ ဖြစ်ပွားချိန်တွင် အလိုလို ပျောက်လိမ့်မည်ဟု အိမ်တွင် မစောင့်ပါနှင့်။',
+    "Don't keep using a reliever inhaler that has run out or expired.":
+      'ကုန်သွားပြီး သို့မဟုတ် သက်တမ်းလွန်နေသော ရှူဆေးကို ဆက်မသုံးပါနှင့်။',
+    "Don't burn incense, mosquito coils, or rubbish near someone with asthma.":
+      'ပန်းနာရှိသူ အနီးတွင် နံ့သာချောင်း၊ ခြင်ဆေးခွေ သို့မဟုတ် အမှိုက် မီးမရှို့ပါနှင့်။',
+    'See a healthcare worker if you need your reliever more than twice a week. Seek emergency care immediately if you notice any of these:':
+      'တစ်ပတ်လျှင် နှစ်ကြိမ်ထက်ပို၍ သက်သာဆေး သုံးရပါက ကျန်းမာရေးဝန်ထမ်းနှင့် ပြပါ။ အောက်ပါတို့ တွေ့ပါက ချက်ချင်း အရေးပေါ် ကုသမှု ခံယူပါ။',
+    'Breathlessness that does not improve after using the inhaler':
+      'ရှူဆေး သုံးပြီးသော်လည်း မောဟိုက်မှု မသက်သာခြင်း',
+    'Being too breathless to speak a full sentence, eat, or sleep':
+      'စကားတစ်ကြောင်းလုံး မပြောနိုင်၊ မစားနိုင်၊ မအိပ်နိုင်အောင် မောဟိုက်ခြင်း',
+    'Lips, tongue, or fingernails turning blue or grey':
+      'နှုတ်ခမ်း၊ လျှာ သို့မဟုတ် လက်သည်းများ ပြာနှမ်း သို့မဟုတ် မီးခိုးရောင် ဖြစ်လာခြင်း',
+    'The chest drawing in sharply with each breath, or drowsiness and confusion':
+      'အသက်ရှူတိုင်း ရင်ဘတ် ပြင်းပြင်းထန်ထန် ချိုင့်ဝင်ခြင်း၊ သို့မဟုတ် ငိုက်မျဉ်းပြီး စိတ်ရှုပ်ထွေးခြင်း',
+    'Asthma — key facts, common triggers, and treatment principles.':
+      'ပန်းနာရင်ကြပ် — အဓိကအချက်များ၊ အဖြစ်များသော လှုံ့ဆော်အကြောင်းရင်းများနှင့် ကုသမှု အခြေခံများ။',
+    'National guidance on chronic respiratory disease care and inhaler access.':
+      'နာတာရှည် အသက်ရှူလမ်းကြောင်းရောဂါ စောင့်ရှောက်မှုနှင့် ရှူဆေး ရရှိရေးဆိုင်ရာ အမျိုးသားအဆင့် လမ်းညွှန်ချက်များ။',
+    'Management of chronic respiratory conditions in primary care settings.':
+      'အခြေခံကျန်းမာရေး စောင့်ရှောက်မှုတွင် နာတာရှည် အသက်ရှူလမ်းကြောင်းရောဂါ ထိန်းညှိမှု။',
+
+    /* --- dengue fever detail --- */
+    'Dengue is a viral illness spread by the bite of infected Aedes mosquitoes, which breed in clean, still water around the home and bite mostly in the daytime.':
+      'သွေးလွန်တုပ်ကွေးသည် Aedes ခြင်ကျား ကိုက်ခြင်းမှတစ်ဆင့် ကူးစက်သော ဗိုင်းရပ်စ်ရောဂါ ဖြစ်သည်။ ထိုခြင်များသည် အိမ်ပတ်လည်ရှိ သန့်ရှင်းပြီး မငြိမ်မလှုပ်သော ရေတွင် ပေါက်ပွားပြီး နေ့ခင်းဘက်တွင် အများဆုံး ကိုက်တတ်သည်။',
+    'Most people recover within a week with rest and plenty of fluids. A small number, however, become seriously ill at the point when the fever starts to fall — usually the third to seventh day — as fluid leaks from the blood vessels. That is why the days after the fever breaks need the closest watching, not the days of high fever.':
+      'အများစုမှာ အနားယူပြီး ရေဓာတ် များများ သောက်ခြင်းဖြင့် တစ်ပတ်အတွင်း သက်သာလာသည်။ သို့သော် အနည်းငယ်မှာမူ အဖျားစတင် ကျဆင်းချိန် — အများအားဖြင့် တတိယနေ့မှ သတ္တမနေ့အတွင်း — တွင် သွေးကြောများမှ အရည်များ ယိုစိမ့်ထွက်ကာ ပြင်းထန်လာတတ်သည်။ ထို့ကြောင့် အဖျားပြင်းနေချိန်ထက် အဖျားကျပြီးနောက် ရက်များကို ပိုမို အနီးကပ် စောင့်ကြည့်ရန် လိုအပ်သည်။',
+    'Symptoms usually begin suddenly, four to ten days after the mosquito bite:':
+      'လက္ခဏာများသည် ခြင်ကိုက်ပြီး ၄ ရက်မှ ၁၀ ရက်အတွင်း ရုတ်တရက် စတင်လေ့ရှိသည်။',
+    'A high fever that starts abruptly': 'ရုတ်တရက် စတင်သော အဖျားပြင်းခြင်း',
+    'Severe headache, with aching pain behind the eyes':
+      'ပြင်းထန်သော ခေါင်းကိုက်ခြင်းနှင့်အတူ မျက်လုံးနောက်ကွယ်တွင် အောင့်ခြင်း',
+    'Deep muscle, joint, and bone pain':
+      'ကြွက်သား၊ အဆစ်နှင့် အရိုးများ ပြင်းထန်စွာ ကိုက်ခဲခြင်း',
+    'A red skin rash appearing after a few days':
+      'ရက်အနည်းငယ်အကြာတွင် အနီရောင် အဖုအပိန့်များ ထွက်လာခြင်း',
+    'Nausea, vomiting, and loss of appetite':
+      'ပျို့ခြင်း၊ အန်ခြင်းနှင့် အစားအသောက် မဝင်စားခြင်း',
+    'Young children, who can become seriously ill quickly.':
+      'ကလေးငယ်များ — လျင်မြန်စွာ ပြင်းထန်လာနိုင်သည်။',
+    'People living where mosquitoes are dense, especially in the rainy season.':
+      'ခြင်ပေါများသည့် နေရာများတွင် နေထိုင်သူများ၊ အထူးသဖြင့် မိုးရာသီတွင်။',
+    'Households storing water in open pots, tanks, or drums.':
+      'အဖုံးမပါသော အိုး၊ ရေကန် သို့မဟုတ် ဒရမ်များဖြင့် ရေသိုလှောင်သည့် အိမ်ထောင်စုများ။',
+    'Anyone who has had dengue before — a second infection is often more severe.':
+      'ယခင်က သွေးလွန်တုပ်ကွေး ဖြစ်ဖူးသူများ — ဒုတိယအကြိမ် ကူးစက်မှုသည် ပို၍ ပြင်းထန်တတ်သည်။',
+    'Cover, empty, scrub, and change stored water so mosquitoes cannot breed.':
+      'ခြင်မပေါက်ပွားနိုင်စေရန် ရေကို ဖုံး၊ သွန်၊ ခတ်၊ စစ် လုပ်ပါ။',
+    'Sleep under a mosquito net, including during daytime naps.':
+      'နေ့ခင်းဘက် အိပ်စက်ချိန်အပါအဝင် ခြင်ထောင်ဖြင့် အိပ်ပါ။',
+    'Use repellent and wear long sleeves in the early morning and late afternoon.':
+      'နံနက်စောစောနှင့် ညနေပိုင်းတွင် ခြင်ဆေး လိမ်းပြီး လက်ရှည် ဝတ်ဆင်ပါ။',
+    'Drink plenty of fluids — water, oral rehydration solution, or soup.':
+      'ရေဓာတ် များများ သောက်ပါ — ရေ၊ ဓာတ်ဆား သို့မဟုတ် ဟင်းရည်။',
+    'Use paracetamol for fever and watch closely as the fever falls.':
+      'အဖျားအတွက် ပါရာစီတမော သုံးပြီး အဖျားကျချိန်တွင် အနီးကပ် စောင့်ကြည့်ပါ။',
+    "Don't take aspirin or ibuprofen — they increase the risk of bleeding.":
+      'အက်စပရင် သို့မဟုတ် အိုင်ဗျူပရိုဖင် မသောက်ပါနှင့် — သွေးထွက်နိုင်ခြေကို တိုးစေသည်။',
+    "Don't assume recovery just because the fever has come down.":
+      'အဖျားကျသွားရုံဖြင့် သက်သာပြီဟု မထင်ပါနှင့်။',
+    "Don't leave water in flower pots, tyres, or buckets around the house.":
+      'အိမ်ပတ်လည်ရှိ ပန်းအိုး၊ ကားတာယာနှင့် ရေပုံးများတွင် ရေ မထားပါနှင့်။',
+    "Don't wait at home if there is bleeding or severe stomach pain.":
+      'သွေးထွက်ခြင်း သို့မဟုတ် ဗိုက်ပြင်းထန်စွာ အောင့်ခြင်း ရှိပါက အိမ်တွင် မစောင့်ပါနှင့်။',
+    "Don't take antibiotics for dengue — they do not work against viruses.":
+      'သွေးလွန်တုပ်ကွေးအတွက် ပဋိဇီဝဆေး မသောက်ပါနှင့် — ဗိုင်းရပ်စ်ကို မသက်ရောက်ပါ။',
+    'Go to a clinic or hospital straight away — especially between days three and seven of illness — if you notice any of these warning signs:':
+      'အောက်ပါ သတိပေးလက္ခဏာများ တွေ့ပါက ချက်ချင်း ဆေးခန်း သို့မဟုတ် ဆေးရုံသို့ သွားပါ — အထူးသဖြင့် ဖျားပြီး တတိယနေ့မှ သတ္တမနေ့အတွင်း။',
+    'Vomiting that will not stop, or being unable to keep fluids down':
+      'မရပ်တန့်သော အန်ခြင်း၊ သို့မဟုတ် သောက်သမျှ ပြန်အန်ထွက်ခြင်း',
+    'Bleeding from the gums or nose, or bruising easily under the skin':
+      'သွားဖုံး သို့မဟုတ် နှာခေါင်းမှ သွေးထွက်ခြင်း၊ အရေပြားအောက်တွင် လွယ်ကူစွာ သွေးခြေဥခြင်း',
+    'Severe pain in the abdomen': 'ဗိုက်ပြင်းထန်စွာ အောင့်ခြင်း',
+    'Cold, clammy skin, restlessness, or sudden weakness after the fever drops':
+      'အဖျားကျပြီးနောက် အရေပြား အေးစက်စေးထိုင်းခြင်း၊ မငြိမ်မသက် ဖြစ်ခြင်း သို့မဟုတ် ရုတ်တရက် နွမ်းလျခြင်း',
+    'Dengue and severe dengue — transmission, warning signs, and clinical care.':
+      'သွေးလွန်တုပ်ကွေးနှင့် ပြင်းထန်သော သွေးလွန်တုပ်ကွေး — ကူးစက်ပုံ၊ သတိပေးလက္ခဏာများနှင့် ဆေးကုသမှု။',
+    'National dengue control programme and seasonal outbreak guidance.':
+      'အမျိုးသားအဆင့် သွေးလွန်တုပ်ကွေး ထိန်းချုပ်ရေးအစီအစဉ်နှင့် ရာသီအလိုက် ကူးစက်မှု လမ်းညွှန်ချက်များ။',
+    'Regional guidance on dengue prevention, vector control, and case management.':
+      'သွေးလွန်တုပ်ကွေး ကာကွယ်ရေး၊ ခြင်ထိန်းချုပ်ရေးနှင့် လူနာ ကုသမှုဆိုင်ရာ ဒေသတွင်း လမ်းညွှန်ချက်များ။',
+
+    /* --- tuberculosis detail --- */
+    'Tuberculosis is an infection caused by the bacterium Mycobacterium tuberculosis, which usually settles in the lungs and spreads through the air when someone with active TB coughs or sneezes.':
+      'တီဘီရောဂါသည် Mycobacterium tuberculosis ဘက်တီးရီးယားကြောင့် ဖြစ်ပွားပြီး အများအားဖြင့် အဆုတ်တွင် စွဲကပ်ကာ တီဘီရောဂါ ရှိသူ ချောင်းဆိုး နှာချေသည့်အခါ လေထဲမှတစ်ဆင့် ကူးစက်သည်။',
+    'TB develops slowly, so people often carry it for weeks or months before seeking help. It is fully curable — but only with a complete course of antibiotics, usually six months or longer. Stopping early is the single biggest reason TB returns, and returns in a form that is far harder to treat.':
+      'တီဘီသည် တဖြည်းဖြည်း ဖြစ်ပွားသောကြောင့် အများစုမှာ ဆေးကုသမှု မခံယူမီ ရက်သတ္တပတ် သို့မဟုတ် လများစွာ ရောဂါပိုးကို သယ်ဆောင်နေတတ်သည်။ ပဋိဇီဝဆေးကို အများအားဖြင့် ခြောက်လ သို့မဟုတ် ထို့ထက်ပို၍ ပြည့်ပြည့်စုံစုံ သောက်ပါက လုံးဝ ပျောက်ကင်းနိုင်သည်။ ဆေးကို စောစီးစွာ ရပ်လိုက်ခြင်းသည် တီဘီ ပြန်ဖြစ်ရသည့် အဓိကအကြောင်းရင်း ဖြစ်ပြီး ပြန်ဖြစ်ပါက ကုသရန် များစွာ ခက်ခဲသည်။',
+    'Symptoms build up gradually, which is why TB is often mistaken for an ordinary cough at first:':
+      'လက္ခဏာများ တဖြည်းဖြည်း တိုးလာသောကြောင့် အစပိုင်းတွင် သာမန် ချောင်းဆိုးဟု မှတ်ယူတတ်ကြသည်။',
+    'A cough lasting more than two weeks': 'နှစ်ပတ်ထက်ပို၍ ချောင်းဆိုးခြင်း',
+    'Coughing up sputum, sometimes streaked with blood':
+      'သလိပ် ထွက်ခြင်း၊ တစ်ခါတစ်ရံ သွေးပါခြင်း',
+    'Sweating heavily at night, enough to soak the bedding':
+      'ညဘက် အိပ်ရာခင်း စိုစွတ်လောက်အောင် ချွေးများစွာ ထွက်ခြင်း',
+    'A mild fever that returns each afternoon or evening':
+      'နေ့လယ် သို့မဟုတ် ညနေတိုင်း ပြန်ဖြစ်တတ်သော အဖျားငွေ့ငွေ့',
+    'Losing weight and appetite over several weeks':
+      'ရက်သတ္တပတ်များစွာအတွင်း ကိုယ်အလေးချိန်နှင့် အစားအသောက် ကျဆင်းလာခြင်း',
+    'People with weakened immunity, including those living with HIV or diabetes.':
+      'ခံအားနည်းသူများ၊ HIV သို့မဟုတ် ဆီးချိုရှိသူများ အပါအဝင်။',
+    'Household members and close contacts of someone with active TB.':
+      'တီဘီရောဂါ ရှိသူနှင့် အတူနေ မိသားစုဝင်များနှင့် နီးကပ်စွာ ထိတွေ့သူများ။',
+    'Smokers, and people exposed to heavy indoor smoke.':
+      'ဆေးလိပ်သောက်သူများနှင့် အိမ်တွင်း မီးခိုးထူထပ်စွာ ရှူရှိုက်ရသူများ။',
+    'Those living or working in crowded, poorly ventilated spaces.':
+      'လူစည်ကားပြီး လေဝင်လေထွက် မကောင်းသည့် နေရာများတွင် နေထိုင် သို့မဟုတ် အလုပ်လုပ်သူများ။',
+    'Finish the whole course of treatment, even after you start feeling better.':
+      'နေကောင်းလာသည့်တိုင် ဆေးကုသမှုကို အပြည့်အဝ ပြီးဆုံးအောင် ယူပါ။',
+    'Make sure children receive the BCG vaccination.':
+      'ကလေးများ BCG ကာကွယ်ဆေး ရရှိအောင် ဆောင်ရွက်ပါ။',
+    'Open windows and doors to keep rooms well ventilated.':
+      'အခန်းများ လေဝင်လေထွက် ကောင်းစေရန် ပြတင်းပေါက်နှင့် တံခါးများ ဖွင့်ထားပါ။',
+    'Cover your mouth and nose when coughing or sneezing.':
+      'ချောင်းဆိုး နှာချေသည့်အခါ ပါးစပ်နှင့် နှာခေါင်းကို အုပ်ပါ။',
+    'Ask everyone in the household to be screened if one person is diagnosed.':
+      'တစ်ဦးဦး ရောဂါတွေ့ပါက အိမ်ထောင်စုဝင် အားလုံးကို စစ်ဆေးခိုင်းပါ။',
+    "Don't stop the antibiotics early — TB can come back resistant to treatment.":
+      'ပဋိဇီဝဆေးကို စောစီးစွာ မရပ်ပါနှင့် — တီဘီသည် ဆေးယဉ်ပါးပြီး ပြန်ဖြစ်နိုင်သည်။',
+    "Don't spit in public places.": 'အများပြည်သူ နေရာများတွင် တံတွေး မထွေးပါနှင့်။',
+    "Don't share a closed, unventilated room while you are still infectious.":
+      'ရောဂါပိုး ကူးစက်နိုင်သေးချိန်တွင် လေဝင်လေထွက်မရှိသော အခန်းပိတ်တွင် အတူ မနေပါနှင့်။',
+    "Don't smoke — it slows healing of the lungs.":
+      'ဆေးလိပ် မသောက်ပါနှင့် — အဆုတ် ပြန်လည်ကောင်းမွန်မှုကို နှေးကွေးစေသည်။',
+    "Don't hide the diagnosis from your family; they may need testing too.":
+      'ရောဂါတွေ့ရှိမှုကို မိသားစုထံမှ မဖုံးကွယ်ပါနှင့် — သူတို့လည်း စစ်ဆေးရန် လိုနိုင်သည်။',
+    'TB testing is free at public clinics in Myanmar. Get checked if you notice any of these:':
+      'မြန်မာနိုင်ငံရှိ အစိုးရဆေးခန်းများတွင် တီဘီစစ်ဆေးမှုကို အခမဲ့ ရရှိနိုင်သည်။ အောက်ပါတို့ တွေ့ပါက စစ်ဆေးပါ။',
+    'A cough that has lasted longer than two weeks':
+      'နှစ်ပတ်ထက်ပိုကြာသည့် ချောင်းဆိုးခြင်း',
+    'Blood in the sputum, at any time': 'သလိပ်တွင် သွေးပါခြင်း၊ မည်သည့်အချိန်မဆို',
+    'Night sweats and weight loss without an obvious cause':
+      'အကြောင်းရင်း မသိဘဲ ညဘက် ချွေးထွက်ခြင်းနှင့် ကိုယ်အလေးချိန် ကျခြင်း',
+    'Chest pain, or breathlessness that is getting worse':
+      'ရင်ဘတ်အောင့်ခြင်း သို့မဟုတ် ပိုဆိုးလာသော မောဟိုက်ခြင်း',
+    'Tuberculosis — transmission, diagnosis, and treatment guidance.':
+      'တီဘီရောဂါ — ကူးစက်ပုံ၊ ရောဂါရှာဖွေမှုနှင့် ကုသမှု လမ်းညွှန်။',
+    'National Tuberculosis Programme — free screening, diagnosis, and treatment services.':
+      'အမျိုးသားအဆင့် တီဘီရောဂါ တိုက်ဖျက်ရေးအစီအစဉ် — အခမဲ့ စစ်ဆေးမှု၊ ရောဂါရှာဖွေမှုနှင့် ကုသမှု ဝန်ဆောင်မှုများ။',
+    'Regional TB control strategy and drug-resistant TB management.':
+      'ဒေသတွင်း တီဘီ ထိန်းချုပ်ရေး မဟာဗျူဟာနှင့် ဆေးယဉ်ပါး တီဘီ ကုသမှု။',
+
+    /* --- malaria detail --- */
+    'Malaria is caused by a parasite passed to people through the bite of an infected female Anopheles mosquito, which feeds mainly between dusk and dawn.':
+      'ငှက်ဖျားရောဂါသည် ရောဂါပိုးရှိသော အနောဖလင်း ခြင်မ ကိုက်ခြင်းမှတစ်ဆင့် ကူးစက်သော ကပ်ပါးပိုးကြောင့် ဖြစ်သည်။ ထိုခြင်များသည် နေဝင်ချိန်မှ အရုဏ်တက်ချိန်အထိ အဓိက ကိုက်တတ်သည်။',
+    'The parasite multiplies in the liver and then in the red blood cells, which is what produces the familiar pattern of shivering chills followed by fever and drenching sweats. Malaria is both preventable and curable, but it can turn severe within a day or two, so a fever after travel to a forested or border area should always be tested rather than waited out.':
+      'ကပ်ပါးပိုးသည် အသည်းတွင် ပွားများပြီး ထို့နောက် သွေးနီဥများအတွင်း ဆက်လက် ပွားများသည်။ ထို့ကြောင့် ချမ်းတုန်ခြင်း၊ ဖျားခြင်းနှင့် ချွေးရွှဲစိုခြင်း ဟူသော ပုံစံ ဖြစ်ပေါ်လာသည်။ ငှက်ဖျားကို ကာကွယ်နိုင်သလို ကုသ၍လည်း ပျောက်ကင်းနိုင်သည်။ သို့သော် တစ်ရက်နှစ်ရက်အတွင်း ပြင်းထန်လာနိုင်သဖြင့် တောတောင် သို့မဟုတ် နယ်စပ်ဒေသ သွားရောက်ပြီးနောက် ဖျားပါက စောင့်ဆိုင်းမနေဘဲ အမြဲ စစ်ဆေးသင့်သည်။',
+    'Symptoms usually appear 10 to 15 days after the bite and often come in cycles:':
+      'လက္ခဏာများသည် ခြင်ကိုက်ပြီး ၁၀ ရက်မှ ၁၅ ရက်အကြာတွင် ပေါ်လာလေ့ရှိပြီး အလှည့်ကျ ဖြစ်တတ်သည်။',
+    'Shivering chills that make the whole body shake':
+      'တစ်ကိုယ်လုံး တုန်ခါလောက်အောင် ချမ်းစိမ့်စိမ့် ဖြစ်ခြင်း',
+    'High fever following the chills': 'ချမ်းတုန်ပြီးနောက် အဖျားပြင်းလာခြင်း',
+    'Heavy sweating as the fever falls': 'အဖျားကျချိန်တွင် ချွေးများစွာ ထွက်ခြင်း',
+    'Headache and aching muscles': 'ခေါင်းကိုက်ခြင်းနှင့် ကြွက်သားများ ကိုက်ခဲခြင်း',
+    'Nausea, vomiting, and general weakness':
+      'ပျို့ခြင်း၊ အန်ခြင်းနှင့် တစ်ကိုယ်လုံး နွမ်းနယ်ခြင်း',
+    'People living in forested, hilly, or border areas where malaria is endemic.':
+      'ငှက်ဖျား အဖြစ်များသည့် တောတောင်၊ တောင်ကုန်းနှင့် နယ်စပ်ဒေသများတွင် နေထိုင်သူများ။',
+    'Travellers, loggers, miners, and farmers who stay overnight in the forest.':
+      'တောအတွင်း ညအိပ်တည်းခိုသည့် ခရီးသွားများ၊ သစ်ထုတ်လုပ်သားများ၊ သတ္တုတွင်းလုပ်သားများနှင့် တောင်သူများ။',
+    'Pregnant women, in whom malaria is more dangerous for mother and baby.':
+      'ကိုယ်ဝန်ဆောင်မိခင်များ — မိခင်နှင့် ကလေးအတွက် ပိုမို အန္တရာယ်ရှိသည်။',
+    'Young children, who can deteriorate very quickly.':
+      'ကလေးငယ်များ — အလွန်လျင်မြန်စွာ ဆိုးရွားလာနိုင်သည်။',
+    'Sleep under an insecticide-treated mosquito net every night.':
+      'ညတိုင်း ဆေးစိမ် ခြင်ထောင်ဖြင့် အိပ်ပါ။',
+    'Apply repellent and cover your arms and legs after dark.':
+      'နေဝင်ပြီးနောက် ခြင်ဆေး လိမ်းပြီး လက်ခြေများကို ဖုံးအုပ်ထားပါ။',
+    'Take preventive medication if your doctor advises it before travelling to an endemic area.':
+      'ငှက်ဖျားဒေသသို့ မသွားမီ ဆရာဝန် ညွှန်ကြားပါက ကြိုတင်ကာကွယ်ဆေး သောက်ပါ။',
+    'Get a blood test for any fever within a month of visiting a malaria area.':
+      'ငှက်ဖျားဒေသ သွားပြီး တစ်လအတွင်း ဖျားပါက သွေးစစ်ပါ။',
+    'Complete the full course of anti-malarial tablets you are given.':
+      'ရရှိသည့် ငှက်ဖျားဆေးလုံးများကို အပြည့်အဝ သောက်ပါ။',
+    "Don't treat a fever as ordinary flu if you have been in a malaria area.":
+      'ငှက်ဖျားဒေသ ရောက်ဖူးပါက အဖျားကို သာမန် တုပ်ကွေးဟု မမှတ်ယူပါနှင့်။',
+    "Don't buy anti-malarial tablets without a confirmed test result.":
+      'စစ်ဆေးမှု အဖြေ အတည်မပြုရသေးဘဲ ငှက်ဖျားဆေး မဝယ်သောက်ပါနှင့်။',
+    "Don't stop the tablets once the fever settles — the parasite may still be there.":
+      'အဖျားကျသည်နှင့် ဆေးမရပ်ပါနှင့် — ကပ်ပါးပိုး ကျန်နေနိုင်သေးသည်။',
+    "Don't sleep outdoors without a net, even for one night.":
+      'တစ်ညမျှပင် ခြင်ထောင်မပါဘဲ အပြင်တွင် မအိပ်ပါနှင့်။',
+    "Don't delay care for a child or pregnant woman with fever.":
+      'ဖျားနေသော ကလေး သို့မဟုတ် ကိုယ်ဝန်ဆောင်အတွက် ကုသမှုကို မဆိုင်းငံ့ပါနှင့်။',
+    'Get a malaria test for any fever after being in an endemic area. Seek emergency care immediately for any of these:':
+      'ငှက်ဖျားဒေသ ရောက်ပြီးနောက် ဖျားပါက ငှက်ဖျားစစ်ပါ။ အောက်ပါတို့ ဖြစ်ပါက ချက်ချင်း အရေးပေါ် ကုသမှု ခံယူပါ။',
+    'High fever with severe chills that keeps returning':
+      'ချမ်းတုန်ခြင်းနှင့်အတူ ခဏခဏ ပြန်ဖြစ်သော အဖျားပြင်းခြင်း',
+    'Confusion, strange behaviour, or difficulty waking — signs of cerebral malaria':
+      'စိတ်ရှုပ်ထွေးခြင်း၊ ဂယောင်ဂတမ်း ပြောခြင်း သို့မဟုတ် နိုးရန် ခက်ခဲခြင်း — ဦးနှောက်ငှက်ဖျား လက္ခဏာများ',
+    'Fits or convulsions': 'တက်ခြင်း သို့မဟုတ် တုန်တက်ခြင်း',
+    'Yellow eyes, very dark urine, or passing little urine':
+      'မျက်လုံးဝါခြင်း၊ ဆီးအရောင် အလွန်ရင့်ခြင်း သို့မဟုတ် ဆီးနည်းခြင်း',
+    'Malaria — transmission, prevention, diagnosis, and treatment.':
+      'ငှက်ဖျားရောဂါ — ကူးစက်ပုံ၊ ကာကွယ်ရေး၊ ရောဂါရှာဖွေမှုနှင့် ကုသမှု။',
+    'National Malaria Control Programme — testing, treatment, and bed net distribution.':
+      'အမျိုးသားအဆင့် ငှက်ဖျား ထိန်းချုပ်ရေးအစီအစဉ် — စစ်ဆေးမှု၊ ကုသမှုနှင့် ခြင်ထောင် ဖြန့်ဝေမှု။',
+    'Regional malaria elimination strategy and artemisinin resistance monitoring.':
+      'ဒေသတွင်း ငှက်ဖျား ပပျောက်ရေး မဟာဗျူဟာနှင့် ဆေးယဉ်ပါးမှု စောင့်ကြည့်ရေး။',
+
+    /* --- hepatitis B detail --- */
+    'Hepatitis B is a viral infection of the liver, spread through infected blood and body fluids — most often from mother to baby at birth, through unsterile needles, or through unprotected sex.':
+      'အသည်းရောင် အသားဝါ ဘီသည် သွေးနှင့် ခန္ဓာကိုယ်အရည်များမှတစ်ဆင့် ကူးစက်သော အသည်း ဗိုင်းရပ်စ် ပိုးဝင်ခြင်း ဖြစ်သည် — အများအားဖြင့် မွေးဖွားစဉ် မိခင်မှ ကလေးသို့၊ မသန့်ရှင်းသော ဆေးထိုးအပ်မှတစ်ဆင့် သို့မဟုတ် ကာကွယ်မှုမဲ့ လိင်ဆက်ဆံမှုမှတစ်ဆင့် ကူးစက်သည်။',
+    'Many people carry the virus for years without feeling unwell, while it quietly scars the liver. Left unchecked it can lead to cirrhosis or liver cancer, which is why testing matters even when you feel healthy. A safe and effective vaccine prevents it, and long-term medication can keep chronic infection under control.':
+      'အများစုမှာ နှစ်များစွာ ဗိုင်းရပ်စ်ပိုးကို သယ်ဆောင်ထားသော်လည်း မကျန်းမမာဟု မခံစားရဘဲ အသည်းကို တိတ်တဆိတ် ထိခိုက်စေသည်။ မစစ်ဆေးဘဲ ထားပါက အသည်းခြောက်ခြင်း သို့မဟုတ် အသည်းကင်ဆာအထိ ဖြစ်နိုင်သဖြင့် ကျန်းမာသည်ဟု ခံစားရချိန်တွင်ပင် စစ်ဆေးရန် အရေးကြီးသည်။ ဘေးကင်းပြီး ထိရောက်သော ကာကွယ်ဆေးဖြင့် ကာကွယ်နိုင်ပြီး ရေရှည် ဆေးဝါးဖြင့် နာတာရှည် ပိုးဝင်မှုကို ထိန်းချုပ်ထားနိုင်သည်။',
+    'Early infection often causes no symptoms at all. When they do appear, they may include:':
+      'အစပိုင်း ပိုးဝင်ချိန်တွင် လက္ခဏာ လုံးဝ မပြတတ်ပါ။ ပေါ်လာပါက အောက်ပါတို့ ဖြစ်နိုင်သည်။',
+    'Yellowing of the skin and the whites of the eyes (jaundice)':
+      'အသားနှင့် မျက်လုံးအဖြူသား ဝါလာခြင်း (အသားဝါ)',
+    'Urine that is unusually dark': 'ဆီးအရောင် ပုံမှန်ထက် ရင့်ခြင်း',
+    'Pain or fullness in the upper right side of the abdomen':
+      'ဗိုက်ညာဘက် အပေါ်ပိုင်းတွင် နာကျင်ခြင်း သို့မဟုတ် ဖင့်နေခြင်း',
+    /* 'Nausea, vomiting, and loss of appetite' is shared with the dengue block above. */
+    'Tiredness that does not lift with rest':
+      'အနားယူသော်လည်း မပျောက်သော ပင်ပန်းနွမ်းနယ်ခြင်း',
+    'Babies born to mothers who carry the virus.':
+      'ဗိုင်းရပ်စ်ပိုး သယ်ဆောင်ထားသော မိခင်များမှ မွေးဖွားသည့် ကလေးများ။',
+    'Anyone who has received an injection or tattoo with reused needles.':
+      'ပြန်သုံးထားသော အပ်ဖြင့် ဆေးထိုးခံရသူ သို့မဟုတ် ဆေးမင်ကြောင် ထိုးသူများ။',
+    'People with unprotected sex or multiple partners.':
+      'ကာကွယ်မှုမဲ့ လိင်ဆက်ဆံသူများ သို့မဟုတ် လိင်ဖော်ပေါင်းများသူများ။',
+    'Household members of someone with hepatitis B, and healthcare workers.':
+      'အသည်းရောင် အသားဝါ ဘီ ရှိသူနှင့် အတူနေသူများနှင့် ကျန်းမာရေးဝန်ထမ်းများ။',
+    'Get vaccinated — and make sure newborns receive the birth dose on time.':
+      'ကာကွယ်ဆေး ထိုးပါ — မွေးကင်းစကလေးများ မွေးဖွားချိန် ကာကွယ်ဆေးကို အချိန်မီ ရရှိအောင် ဆောင်ရွက်ပါ။',
+    'Insist on new, single-use needles for any injection, piercing, or tattoo.':
+      'ဆေးထိုးခြင်း၊ နားဖောက်ခြင်း သို့မဟုတ် ဆေးမင်ကြောင်ထိုးခြင်း မှန်သမျှတွင် တစ်ခါသုံး အပ်အသစ်ကိုသာ တောင်းဆိုပါ။',
+    'Use condoms, and ask your partner to be tested and vaccinated.':
+      'ကွန်ဒုံး သုံးပါ။ လိင်ဖော်အား စစ်ဆေးပြီး ကာကွယ်ဆေး ထိုးရန် ပြောပါ။',
+    'Have regular liver check-ups if you are a carrier.':
+      'ပိုးသယ်ဆောင်သူ ဖြစ်ပါက အသည်းကို ပုံမှန် စစ်ဆေးပါ။',
+    'Tell any doctor or dentist treating you that you have hepatitis B.':
+      'ကုသပေးမည့် ဆရာဝန် သို့မဟုတ် သွားဆရာဝန်အား အသည်းရောင် အသားဝါ ဘီ ရှိကြောင်း ပြောပါ။',
+    "Don't share razors, toothbrushes, or nail clippers.":
+      'မုတ်ဆိတ်ရိတ်ဓား၊ သွားတိုက်တံ သို့မဟုတ် လက်သည်းညှပ် မမျှဝေသုံးပါနှင့်။',
+    "Don't drink alcohol — it adds to the damage the virus is already doing.":
+      'အရက် မသောက်ပါနှင့် — ဗိုင်းရပ်စ်၏ ထိခိုက်မှုအပေါ် ထပ်ဆင့် ပိုဆိုးစေသည်။',
+    "Don't take herbal remedies or painkillers without asking about your liver first.":
+      'သင့်အသည်းအခြေအနေကို မမေးမြန်းဘဲ ဆေးဖက်ဝင်အပင်ဆေးများ သို့မဟုတ် အကိုက်အခဲပျောက်ဆေး မသောက်ပါနှင့်။',
+    "Don't assume you are safe because you feel well; get tested.":
+      'နေကောင်းသည်ဟု ခံစားရရုံဖြင့် ဘေးကင်းသည်ဟု မထင်ပါနှင့် — စစ်ဆေးပါ။',
+    "Don't stop antiviral medication on your own.":
+      'ဗိုင်းရပ်စ်ပိုးသတ်ဆေးကို ကိုယ်တိုင်သဘောနှင့် မရပ်ပါနှင့်။',
+    'Ask for a hepatitis B test if you have any of the risk factors above. Seek care promptly if you notice:':
+      'အထက်ပါ အန္တရာယ်အချက်များ ရှိပါက အသည်းရောင် အသားဝါ ဘီ စစ်ဆေးမှု တောင်းဆိုပါ။ အောက်ပါတို့ တွေ့ပါက ချက်ချင်း ဆေးကုသမှု ခံယူပါ။',
+    'Yellowing of the eyes or skin': 'မျက်လုံး သို့မဟုတ် အသား ဝါလာခြင်း',
+    'Persistent pain in the upper right abdomen':
+      'ဗိုက်ညာဘက် အပေါ်ပိုင်းတွင် ဆက်တိုက် နာကျင်ခြင်း',
+    'Severe tiredness that lasts for weeks':
+      'ရက်သတ္တပတ်များစွာ ကြာမြင့်သော ပြင်းထန်သည့် နွမ်းနယ်ခြင်း',
+    'Swelling of the abdomen or legs, vomiting blood, or confusion':
+      'ဗိုက် သို့မဟုတ် ခြေထောက် ဖောရောင်ခြင်း၊ သွေးအန်ခြင်း သို့မဟုတ် စိတ်ရှုပ်ထွေးခြင်း',
+    'Hepatitis B — transmission, vaccination, and long-term management.':
+      'အသည်းရောင် အသားဝါ ဘီ — ကူးစက်ပုံ၊ ကာကွယ်ဆေးထိုးခြင်းနှင့် ရေရှည် ထိန်းညှိမှု။',
+    'National hepatitis programme and the routine childhood immunisation schedule.':
+      'အမျိုးသားအဆင့် အသည်းရောင်ရောဂါ အစီအစဉ်နှင့် ကလေးသူငယ် ပုံမှန် ကာကွယ်ဆေးထိုး အချိန်ဇယား။',
+    'Regional action plan on viral hepatitis and mother-to-child transmission.':
+      'ဗိုင်းရပ်စ် အသည်းရောင်ရောဂါနှင့် မိခင်မှ ကလေးသို့ ကူးစက်မှုဆိုင်ရာ ဒေသတွင်း လုပ်ငန်းစီမံချက်။',
+
+    /* --- coronary heart disease detail --- */
+    'Coronary heart disease develops when fatty deposits, called plaque, build up inside the arteries that supply the heart muscle, narrowing them and reducing blood flow.':
+      'နှလုံးသွေးကြောကျဉ်းရောဂါသည် နှလုံးကြွက်သားသို့ သွေးပို့ပေးသည့် သွေးလွှတ်ကြောများအတွင်း အဆီဂျီးများ စုပုံလာပြီး သွေးကြောများ ကျဉ်းမြောင်းကာ သွေးစီးဆင်းမှု လျော့နည်းလာသောအခါ ဖြစ်ပွားသည်။',
+    'For a long time this causes nothing at all. Then, as the narrowing worsens, the heart begins to run short of oxygen during effort — climbing stairs, carrying loads, walking uphill — and that shortage is felt as chest pain. If a plaque tears and a clot blocks the artery completely, the result is a heart attack. Much of the risk can be lowered by treating blood pressure, sugar, and cholesterol, and by stopping smoking.':
+      'ကာလကြာရှည်စွာ လက္ခဏာ လုံးဝ မပြတတ်ပါ။ ကျဉ်းမြောင်းမှု ပိုဆိုးလာသောအခါ လှေကားတက်ခြင်း၊ ဝန်ထမ်းခြင်း၊ ကုန်းတက်လမ်းလျှောက်ခြင်းကဲ့သို့ အားစိုက်ရချိန်တွင် နှလုံးသည် အောက်ဆီဂျင် လိုအပ်လာပြီး ထိုချို့တဲ့မှုကို ရင်ဘတ်အောင့်ခြင်းအဖြစ် ခံစားရသည်။ အဆီဂျီး ကွဲအက်ပြီး သွေးခဲက သွေးကြောကို လုံးဝ ပိတ်ဆို့သွားပါက နှလုံးဖောက်ခြင်း ဖြစ်သည်။ သွေးပေါင်ချိန်၊ သကြားဓာတ်နှင့် ကိုလက်စထရော ကုသခြင်းနှင့် ဆေးလိပ်ဖြတ်ခြင်းဖြင့် အန္တရာယ် အများစုကို လျှော့ချနိုင်သည်။',
+    'Symptoms typically appear during exertion or stress and ease with rest:':
+      'လက္ခဏာများသည် အားစိုက်ချိန် သို့မဟုတ် စိတ်ဖိစီးချိန်တွင် ပေါ်လာပြီး အနားယူပါက သက်သာလေ့ရှိသည်။',
+    'Chest pain, tightness, or a heavy pressing feeling (angina)':
+      'ရင်ဘတ်အောင့်ခြင်း၊ ကျပ်တည်းခြင်း သို့မဟုတ် လေးလံစွာ ဖိထားသလို ခံစားရခြင်း',
+    'Pain spreading to the left arm, shoulder, neck, or jaw':
+      'ဘယ်ဘက်လက်မောင်း၊ ပခုံး၊ လည်ပင်း သို့မဟုတ် မေးရိုးသို့ နာကျင်မှု ကူးစက်ခြင်း',
+    'Breathlessness on climbing stairs or walking uphill':
+      'လှေကားတက်ခြင်း သို့မဟုတ် ကုန်းတက်လမ်းလျှောက်ခြင်းတွင် မောဟိုက်ခြင်း',
+    'Unusual tiredness with light activity':
+      'အလုပ်ပေါ့ပေါ့လုပ်ရုံဖြင့် ပုံမှန်မဟုတ်သော ပင်ပန်းနွမ်းနယ်ခြင်း',
+    'Cold sweat, nausea, or light-headedness':
+      'ချွေးစိမ့်ထွက်ခြင်း၊ ပျို့ခြင်း သို့မဟုတ် ခေါင်းပေါ့သလို ခံစားရခြင်း',
+    'Older adults, and people with a family history of heart disease.':
+      'အသက်ကြီးသူများနှင့် မိသားစုတွင် နှလုံးရောဂါ မျိုးရိုးရှိသူများ။',
+    'Smokers, including those exposed to smoke at home or work.':
+      'ဆေးလိပ်သောက်သူများ၊ အိမ် သို့မဟုတ် အလုပ်တွင် ဆေးလိပ်ငွေ့ ရှူရှိုက်ရသူများ အပါအဝင်။',
+    'People with high blood pressure, diabetes, or high cholesterol.':
+      'သွေးတိုး၊ ဆီးချို သို့မဟုတ် ကိုလက်စထရော မြင့်သူများ။',
+    'Those eating a lot of fried and fatty food, with little physical activity.':
+      'အဆီများပြီး ကြော်လှော်ထားသော အစားအစာ များများစားကာ ကိုယ်လက်လှုပ်ရှားမှု နည်းသူများ။',
+    'Stop smoking — the benefit to your heart begins within weeks.':
+      'ဆေးလိပ် ဖြတ်ပါ — သင့်နှလုံးအတွက် အကျိုးကျေးဇူးသည် ရက်သတ္တပတ်အနည်းငယ်အတွင်း စတင်သည်။',
+    'Choose grilled, steamed, or boiled food over fried, and cut back on oil.':
+      'ကြော်ထားသည့်အစား ကင်ထား၊ ပေါင်းထား သို့မဟုတ် ပြုတ်ထားသော အစားအစာကို ရွေးပြီး ဆီကို လျှော့ပါ။',
+    'Keep blood pressure, blood sugar, and cholesterol at your target levels.':
+      'သွေးပေါင်ချိန်၊ သွေးတွင်းသကြားဓာတ်နှင့် ကိုလက်စထရောကို ရည်မှန်းချက် အဆင့်တွင် ထိန်းထားပါ။',
+    'Walk briskly for about 30 minutes on most days, as your doctor allows.':
+      'ဆရာဝန် ခွင့်ပြုသလောက် နေ့အများစုတွင် ၃၀ မိနစ်ခန့် သွက်သွက်လက်လက် လမ်းလျှောက်ပါ။',
+    'Take your heart medicines every day, exactly as prescribed.':
+      'နှလုံးဆေးများကို ညွှန်ကြားထားသည့်အတိုင်း နေ့စဉ် သောက်ပါ။',
+    "Don't ignore chest pain, however brief, and don't drive yourself to hospital with it.":
+      'ခဏတာမျှသာ ဖြစ်စေကာမူ ရင်ဘတ်အောင့်ခြင်းကို လျစ်လျူမရှုပါနှင့်။ ကိုယ်တိုင် ကားမောင်းပြီး ဆေးရုံ မသွားပါနှင့်။',
+    "Don't smoke or chew tobacco.": 'ဆေးလိပ် မသောက်ပါနှင့်၊ ဆေးရွက်ကြီးလည်း မဝါးပါနှင့်။',
+    "Don't eat heavily salted or deep-fried food regularly.":
+      'ဆားငန်လွန်းသော သို့မဟုတ် ဆီနစ်ကြော်ထားသော အစားအစာများကို ပုံမှန် မစားပါနှင့်။',
+    "Don't begin hard exercise without asking your doctor first.":
+      'ဆရာဝန်နှင့် တိုင်ပင်ခြင်းမပြုဘဲ ပြင်းထန်သော လေ့ကျင့်ခန်း မစတင်ပါနှင့်။',
+    "Don't stop your blood pressure or cholesterol tablets once you feel well.":
+      'နေကောင်းလာသည်နှင့် သွေးတိုး သို့မဟုတ် ကိုလက်စထရော ဆေးလုံးများကို မရပ်ပါနှင့်။',
+    'Call an ambulance immediately — this is a medical emergency — if you or someone near you has:':
+      'သင် သို့မဟုတ် အနီးအနားရှိ တစ်စုံတစ်ဦးတွင် အောက်ပါတို့ ဖြစ်ပါက ချက်ချင်း လူနာတင်ယာဉ် ခေါ်ပါ — ဤသည်မှာ အရေးပေါ် အခြေအနေ ဖြစ်သည်။',
+    'Sudden severe chest pain or crushing pressure lasting more than a few minutes':
+      'ရုတ်တရက် ရင်ဘတ် ပြင်းထန်စွာ အောင့်ခြင်း သို့မဟုတ် မိနစ်အနည်းငယ်ထက်ပိုကြာအောင် ဖိညှစ်ခံရသလို ခံစားရခြင်း',
+    'Chest pain together with cold sweating and extreme breathlessness':
+      'ရင်ဘတ်အောင့်ခြင်းနှင့်အတူ ချွေးစိမ့်ထွက်ပြီး အလွန်အမင်း မောဟိုက်ခြင်း',
+    'Pain spreading into the arm, neck, or jaw with nausea or vomiting':
+      'လက်မောင်း၊ လည်ပင်း သို့မဟုတ် မေးရိုးသို့ နာကျင်မှု ကူးစက်ပြီး ပျို့အန်ခြင်း',
+    'Collapse, fainting, or a very irregular heartbeat':
+      'လဲကျခြင်း၊ မေ့မြောခြင်း သို့မဟုတ် နှလုံးခုန်နှုန်း အလွန်မမှန်ခြင်း',
+    'Cardiovascular diseases — risk factors, warning signs, and prevention.':
+      'နှလုံးသွေးကြောရောဂါများ — အန္တရာယ်အချက်များ၊ သတိပေးလက္ခဏာများနှင့် ကာကွယ်ရေး။',
+    'National guidelines on non-communicable disease and cardiovascular risk management.':
+      'မကူးစက်တတ်သောရောဂါနှင့် နှလုံးသွေးကြော အန္တရာယ် ထိန်းညှိမှုဆိုင်ရာ အမျိုးသားအဆင့် လမ်းညွှန်ချက်များ။',
+
+    /* --- stroke detail --- */
+    'A stroke happens when the blood supply to part of the brain is suddenly cut off — either by a clot blocking an artery, or by a vessel bursting and bleeding into the brain.':
+      'လေဖြတ်ခြင်းသည် ဦးနှောက်တစ်စိတ်တစ်ပိုင်းသို့ သွေးစီးဆင်းမှု ရုတ်တရက် ပြတ်တောက်သွားသောအခါ ဖြစ်ပွားသည် — သွေးခဲက သွေးကြောကို ပိတ်ဆို့ခြင်း သို့မဟုတ် သွေးကြောပေါက်ပြီး ဦးနှောက်အတွင်း သွေးယိုခြင်းကြောင့် ဖြစ်သည်။',
+    'Brain cells begin to die within minutes of losing their blood supply, so a stroke is always an emergency. Treatment that can dissolve a clot or stop a bleed works best in the first few hours, which is why recognising the signs and calling for help immediately matters more than anything else. Most strokes can be prevented by controlling blood pressure and stopping smoking.':
+      'သွေးမရောက်သည့် မိနစ်အနည်းငယ်အတွင်းမှာပင် ဦးနှောက်ဆဲလ်များ စတင် သေဆုံးသောကြောင့် လေဖြတ်ခြင်းသည် အမြဲတမ်း အရေးပေါ် အခြေအနေ ဖြစ်သည်။ သွေးခဲပျော်စေသော သို့မဟုတ် သွေးယိုမှု ရပ်တန့်စေသော ကုသမှုသည် ပထမ နာရီအနည်းငယ်အတွင်း အထိရောက်ဆုံး ဖြစ်သည်။ ထို့ကြောင့် လက္ခဏာများကို သိရှိပြီး ချက်ချင်း အကူအညီ ခေါ်ခြင်းသည် အရေးအကြီးဆုံး ဖြစ်သည်။ လေဖြတ်မှု အများစုကို သွေးပေါင်ချိန် ထိန်းချုပ်ခြင်းနှင့် ဆေးလိပ်ဖြတ်ခြင်းဖြင့် ကာကွယ်နိုင်သည်။',
+    'Symptoms (F.A.S.T.)': 'ရောဂါလက္ခဏာများ (F.A.S.T.)',
+    'Stroke signs come on suddenly, without warning. Remember the word F.A.S.T.:':
+      'လေဖြတ်ခြင်း၏ လက္ခဏာများသည် ကြိုတင်သတိပေးမှုမရှိဘဲ ရုတ်တရက် ပေါ်လာသည်။ F.A.S.T. ဟူသော စကားလုံးကို မှတ်ထားပါ။',
+    'F — Face:': 'F — မျက်နှာ −',
+    'one side of the face droops, or the smile is uneven':
+      'မျက်နှာ တစ်ဖက် ကျဆင်းသွားခြင်း သို့မဟုတ် အပြုံး မညီညာခြင်း',
+    'A — Arm:': 'A — လက်မောင်း −',
+    'one arm or leg is weak or numb and cannot be raised':
+      'လက် သို့မဟုတ် ခြေထောက် တစ်ဖက် အားနည်း သို့မဟုတ် ထုံကျဉ်ပြီး မမြှောက်နိုင်ခြင်း',
+    'S — Speech:': 'S — အပြောအဆို −',
+    'speech is slurred, or the person cannot find words':
+      'စကား ဗလုံးဗထွေး ဖြစ်ခြင်း သို့မဟုတ် စကားလုံး ရှာမရခြင်း',
+    'T — Time:': 'T — အချိန် −',
+    'call for emergency help at once and note when symptoms began':
+      'ချက်ချင်း အရေးပေါ် အကူအညီ ခေါ်ပြီး လက္ခဏာ စတင်သည့်အချိန်ကို မှတ်ထားပါ',
+    'Other signs: sudden severe headache, loss of balance, or blurred vision':
+      'အခြားလက္ခဏာများ − ရုတ်တရက် ပြင်းထန်သော ခေါင်းကိုက်ခြင်း၊ မျှခြေ မထိန်းနိုင်ခြင်း သို့မဟုတ် အမြင်ဝါးခြင်း',
+    'People with high blood pressure — by far the biggest single cause.':
+      'သွေးတိုးရှိသူများ — အဓိကအကျဆုံး အကြောင်းရင်း ဖြစ်သည်။',
+    'Those with diabetes, heart disease, or an irregular heartbeat.':
+      'ဆီးချို၊ နှလုံးရောဂါ သို့မဟုတ် နှလုံးခုန်နှုန်း မမှန်သူများ။',
+    'Older adults, and anyone with high cholesterol.':
+      'အသက်ကြီးသူများနှင့် ကိုလက်စထရော မြင့်သူများ။',
+    'Smokers, and people who drink heavily.':
+      'ဆေးလိပ်သောက်သူများနှင့် အရက် အလွန်အကျွံ သောက်သူများ။',
+    'Call an ambulance the moment you notice any F.A.S.T. sign.':
+      'F.A.S.T. လက္ခဏာ တစ်ခုခု တွေ့သည်နှင့် ချက်ချင်း လူနာတင်ယာဉ် ခေါ်ပါ။',
+    'Note the exact time symptoms started — treatment depends on it.':
+      'လက္ခဏာ စတင်သည့် အချိန်အတိအကျကို မှတ်ထားပါ — ကုသမှုသည် ထိုအချိန်အပေါ် မူတည်သည်။',
+    'Keep your blood pressure checked and treated.':
+      'သွေးပေါင်ချိန်ကို ပုံမှန် စစ်ဆေးပြီး ကုသထားပါ။',
+    'Stop smoking, cut down salt, and stay physically active.':
+      'ဆေးလိပ် ဖြတ်ပါ၊ ဆား လျှော့ပါ၊ ကိုယ်လက်လှုပ်ရှားမှု ရှိပါစေ။',
+    'Start rehabilitation exercises early if a stroke has already happened.':
+      'လေဖြတ်ပြီးဖြစ်ပါက ပြန်လည်သန်စွမ်းရေး လေ့ကျင့်ခန်းများကို စောစီးစွာ စတင်ပါ။',
+    "Don't wait to see whether the weakness passes — every minute counts.":
+      'အားနည်းမှု ပျောက်မပျောက် စောင့်မကြည့်ပါနှင့် — တစ်မိနစ်ချင်းစီ အရေးကြီးသည်။',
+    "Don't give food, drink, or tablets to someone who may be having a stroke; they can choke.":
+      'လေဖြတ်နိုင်ဖွယ်ရှိသူအား အစားအစာ၊ အရည် သို့မဟုတ် ဆေးလုံး မကျွေးပါနှင့် — လည်ချောင်း ပိတ်နိုင်သည်။',
+    "Don't massage, pinch, or apply traditional remedies instead of going to hospital.":
+      'ဆေးရုံသွားမည့်အစား နှိပ်နယ်ခြင်း၊ ဆွဲညှစ်ခြင်း သို့မဟုတ် ရိုးရာနည်းလမ်းများ မသုံးပါနှင့်။',
+    "Don't stop blood pressure medication once you feel fine.":
+      'နေကောင်းလာသည်နှင့် သွေးတိုးဆေးကို မရပ်ပါနှင့်။',
+    "Don't ignore brief weakness or slurred speech that resolves — it is a warning.":
+      'ခဏတာ အားနည်းခြင်း သို့မဟုတ် စကားဗလုံးဗထွေးဖြစ်ပြီး ပြန်ကောင်းသွားခြင်းကို လျစ်လျူမရှုပါနှင့် — ၎င်းသည် သတိပေးချက် ဖြစ်သည်။',
+    'Any of these means calling emergency services immediately — do not wait until morning:':
+      'အောက်ပါတို့ တစ်ခုခု ဖြစ်ပါက ချက်ချင်း အရေးပေါ် ဝန်ဆောင်မှုကို ခေါ်ပါ — မနက်ဖြန်အထိ မစောင့်ပါနှင့်။',
+    'Sudden drooping on one side of the face': 'ရုတ်တရက် မျက်နှာ တစ်ဖက် ကျဆင်းသွားခြင်း',
+    'Sudden weakness or numbness in one arm or leg':
+      'ရုတ်တရက် လက် သို့မဟုတ် ခြေထောက် တစ်ဖက် အားနည်းခြင်း သို့မဟုတ် ထုံကျဉ်ခြင်း',
+    'Sudden difficulty speaking or understanding others':
+      'ရုတ်တရက် စကားပြောရ ခက်ခဲခြင်း သို့မဟုတ် သူတစ်ပါး ပြောသည်ကို နားမလည်ခြင်း',
+    'Sudden loss of vision, severe headache, or loss of balance and consciousness':
+      'ရုတ်တရက် အမြင်အာရုံ ဆုံးရှုံးခြင်း၊ ပြင်းထန်သော ခေါင်းကိုက်ခြင်း သို့မဟုတ် မျှခြေနှင့် သတိလစ်ခြင်း',
+    'Stroke and cardiovascular disease — warning signs, risk factors, and prevention.':
+      'လေဖြတ်ခြင်းနှင့် နှလုံးသွေးကြောရောဂါ — သတိပေးလက္ခဏာများ၊ အန္တရာယ်အချက်များနှင့် ကာကွယ်ရေး။',
+    'National guidelines on stroke care, emergency referral, and rehabilitation.':
+      'လေဖြတ်ရောဂါ စောင့်ရှောက်မှု၊ အရေးပေါ် လွှဲပြောင်းမှုနှင့် ပြန်လည်သန်စွမ်းရေးဆိုင်ရာ အမျိုးသားအဆင့် လမ်းညွှန်ချက်များ။',
+    'HEARTS technical package and regional stroke prevention guidance.':
+      'HEARTS နည်းပညာအစီအစဉ်နှင့် ဒေသတွင်း လေဖြတ်ခြင်း ကာကွယ်ရေး လမ်းညွှန်ချက်များ။',
+
+    /* --- anemia detail --- */
+    'Anemia means the blood does not have enough healthy red blood cells, or enough haemoglobin inside them, to carry oxygen around the body.':
+      'သွေးအားနည်းရောဂါဆိုသည်မှာ ခန္ဓာကိုယ်တစ်ဝှမ်း အောက်ဆီဂျင် သယ်ဆောင်ရန် လိုအပ်သော ကျန်းမာသည့် သွေးနီဥများ သို့မဟုတ် ၎င်းတို့အတွင်းရှိ ဟေမိုဂလိုဘင် မလုံလောက်ခြင်း ဖြစ်သည်။',
+    'Because every organ depends on that oxygen, the first sign is usually simple tiredness — often put down to overwork or lack of sleep. The most common cause here is a shortage of iron, from a diet low in iron-rich food, from heavy monthly periods, or from the extra demands of pregnancy. Once the cause is found, anemia usually improves well with diet, supplements, or treatment of the underlying problem.':
+      'ကိုယ်တွင်းအင်္ဂါ အားလုံးသည် ထိုအောက်ဆီဂျင်ကို မှီခိုသောကြောင့် ပထမဆုံး လက္ခဏာမှာ ပင်ပန်းနွမ်းနယ်ခြင်း ဖြစ်လေ့ရှိပြီး အလုပ်ပင်ပန်းလွန်းသည် သို့မဟုတ် အိပ်ရေးမဝဟု ထင်မှတ်တတ်ကြသည်။ အဖြစ်များဆုံး အကြောင်းရင်းမှာ သံဓာတ် ချို့တဲ့ခြင်း ဖြစ်ပြီး သံဓာတ်ပါသော အစားအစာ နည်းခြင်း၊ ဓမ္မတာ သွေးဆင်းများခြင်း သို့မဟုတ် ကိုယ်ဝန်ဆောင်ချိန် လိုအပ်ချက် များပြားခြင်းတို့ကြောင့် ဖြစ်သည်။ အကြောင်းရင်း တွေ့ရှိပါက အစားအသောက်၊ အားဆေးများ သို့မဟုတ် မူလရောဂါကို ကုသခြင်းဖြင့် ကောင်းစွာ သက်သာလာတတ်သည်။',
+    'Mild anemia may cause almost nothing. As it deepens, you may notice:':
+      'အပျော့စား သွေးအားနည်းမှုတွင် လက္ခဏာ မရှိသလောက် ဖြစ်နိုင်သည်။ ပိုဆိုးလာသည်နှင့်အမျှ အောက်ပါတို့ ခံစားရနိုင်သည်။',
+    'Tiredness and weakness that rest does not fix':
+      'အနားယူသော်လည်း မပျောက်သော ပင်ပန်းနွမ်းနယ်ခြင်းနှင့် အားနည်းခြင်း',
+    'Dizziness or light-headedness, especially on standing up':
+      'မူးဝေခြင်း သို့မဟုတ် ခေါင်းပေါ့ခြင်း၊ အထူးသဖြင့် ထရပ်လိုက်သည့်အခါ',
+    'Pale skin, and pale lips, gums, or inner eyelids':
+      'အသားအရေ ဖျော့တော့ခြင်း၊ နှုတ်ခမ်း၊ သွားဖုံးနှင့် မျက်ခွံအတွင်းသား ဖြူဖျော့ခြင်း',
+    'Getting breathless with ordinary activity':
+      'သာမန် လှုပ်ရှားမှုဖြင့်ပင် မောဟိုက်ခြင်း',
+    'Cold hands and feet, headaches, or a fast heartbeat':
+      'လက်ခြေ အေးစက်ခြင်း၊ ခေါင်းကိုက်ခြင်း သို့မဟုတ် နှလုံးခုန်မြန်ခြင်း',
+    'Women of childbearing age, particularly with heavy periods.':
+      'သားဖွားနိုင်သည့် အရွယ် အမျိုးသမီးများ၊ အထူးသဖြင့် ဓမ္မတာ သွေးဆင်းများသူများ။',
+    'Pregnant women, whose iron needs rise sharply.':
+      'ကိုယ်ဝန်ဆောင်မိခင်များ — သံဓာတ် လိုအပ်ချက် သိသိသာသာ တိုးလာသည်။',
+    'Young children and adolescents during growth spurts.':
+      'ကြီးထွားမှု မြန်ဆန်ချိန်ရှိ ကလေးငယ်များနှင့် ဆယ်ကျော်သက်များ။',
+    'People with a poor diet, worm infection, or long-term blood loss.':
+      'အာဟာရ ချို့တဲ့သူများ၊ သန်ကောင်ရှိသူများ သို့မဟုတ် ရေရှည် သွေးဆုံးရှုံးနေသူများ။',
+    'Eat iron-rich foods: meat, liver, fish, beans, and dark green leafy vegetables.':
+      'သံဓာတ် ကြွယ်ဝသော အစားအစာများ စားပါ − အသား၊ အသည်း၊ ငါး၊ ပဲမျိုးစုံနှင့် အစိမ်းရင့်ရောင် အရွက်များ။',
+    'Add vitamin C — a lime, orange, or tomato with meals helps you absorb iron.':
+      'ဗီတာမင် C ဖြည့်ပါ — ထမင်းနှင့်အတူ သံပုရာ၊ လိမ္မော် သို့မဟုတ် ခရမ်းချဉ်သီး စားပါက သံဓာတ် စုပ်ယူမှု ပိုကောင်းသည်။',
+    'Take iron tablets for the full period advised, not just until you feel better.':
+      'သံဓာတ်ဆေးလုံးများကို နေကောင်းသည်အထိသာမက ညွှန်ကြားထားသည့် ကာလ အပြည့် သောက်ပါ။',
+    'Have a blood test in pregnancy and at antenatal visits.':
+      'ကိုယ်ဝန်ဆောင်စဉ်နှင့် ကိုယ်ဝန်ဆောင် ပြသချိန်များတွင် သွေးစစ်ပါ။',
+    'Take deworming treatment if your health worker recommends it.':
+      'ကျန်းမာရေးဝန်ထမ်းက ညွှန်ကြားပါက သန်ချဆေး သောက်ပါ။',
+    "Don't drink strong tea or coffee with meals — they block iron absorption.":
+      'ထမင်းနှင့်အတူ လက်ဖက်ရည်ကြမ်း သို့မဟုတ် ကော်ဖီ မသောက်ပါနှင့် — သံဓာတ် စုပ်ယူမှုကို ပိတ်ဆို့သည်။',
+    "Don't dismiss constant tiredness as simply overwork.":
+      'အမြဲ ပင်ပန်းနေခြင်းကို အလုပ်များလွန်း၍ဟု လွယ်လွယ် မမှတ်ယူပါနှင့်။',
+    "Don't take iron tablets long-term without a blood test confirming you need them.":
+      'သွေးစစ်ချက်ဖြင့် အတည်မပြုရသေးဘဲ သံဓာတ်ဆေးလုံးများကို ရေရှည် မသောက်ပါနှင့်။',
+    "Don't ignore heavy periods or blood in the stool.":
+      'ဓမ္မတာ သွေးဆင်းများခြင်း သို့မဟုတ် ဝမ်းတွင် သွေးပါခြင်းကို လျစ်လျူမရှုပါနှင့်။',
+    "Don't stand up suddenly if you feel faint.":
+      'မူးဝေသလို ခံစားရပါက ရုတ်တရက် မထရပ်ပါနှင့်။',
+    'Ask for a simple blood test if tiredness and paleness last more than a few weeks, and seek care promptly if you have:':
+      'ပင်ပန်းနွမ်းနယ်ခြင်းနှင့် အသားဖျော့ခြင်း ရက်သတ္တပတ်အနည်းငယ်ထက် ကြာပါက သွေးစစ်ခိုင်းပါ။ အောက်ပါတို့ ဖြစ်ပါက ချက်ချင်း ဆေးကုသမှု ခံယူပါ။',
+    'Fainting spells or repeated dizziness':
+      'မေ့လဲခြင်း သို့မဟုတ် ထပ်ခါထပ်ခါ မူးဝေခြင်း',
+    'Severe weakness, or breathlessness while sitting still':
+      'ပြင်းထန်သော အားနည်းခြင်း သို့မဟုတ် ငြိမ်ငြိမ်ထိုင်နေစဉ်ပင် မောဟိုက်ခြင်း',
+    'A racing or pounding heartbeat with chest discomfort':
+      'နှလုံးခုန် မြန်ခြင်း သို့မဟုတ် ပြင်းထန်စွာ ခုန်ခြင်းနှင့်အတူ ရင်ဘတ် မသက်မသာ ဖြစ်ခြင်း',
+    'Black or bloody stools, or unusually heavy menstrual bleeding':
+      'ဝမ်း အနက်ရောင် သို့မဟုတ် သွေးပါခြင်း၊ သို့မဟုတ် ဓမ္မတာ သွေးဆင်း ပုံမှန်ထက် များလွန်းခြင်း',
+    'Anaemia — causes, consequences, and iron supplementation guidance.':
+      'သွေးအားနည်းရောဂါ — အကြောင်းရင်းများ၊ ဆိုးကျိုးများနှင့် သံဓာတ် ဖြည့်စွက်မှု လမ်းညွှန်။',
+    'National nutrition programme, iron-folate supplementation, and maternal health services.':
+      'အမျိုးသားအဆင့် အာဟာရအစီအစဉ်၊ သံဓာတ်နှင့် ဖောလိတ် ဖြည့်စွက်မှုနှင့် မိခင်ကျန်းမာရေး ဝန်ဆောင်မှုများ။',
+    'Regional guidance on anaemia reduction in women and children.':
+      'အမျိုးသမီးများနှင့် ကလေးများတွင် သွေးအားနည်းမှု လျှော့ချရေးဆိုင်ရာ ဒေသတွင်း လမ်းညွှန်ချက်များ။',
+
+    /* --- typhoid fever detail --- */
+    'Typhoid fever is an infection caused by the bacterium Salmonella Typhi, which spreads through food and drinking water contaminated by human waste.':
+      'တိုက်ဖွိုက်ရောဂါသည် Salmonella Typhi ဘက်တီးရီးယားကြောင့် ဖြစ်ပွားပြီး လူ့မစင်ဖြင့် ညစ်ညမ်းသော အစားအစာနှင့် သောက်ရေမှတစ်ဆင့် ကူးစက်သည်။',
+    'Unlike most fevers, typhoid builds up step by step: a low fever in the first days that climbs higher each evening, along with headache, stomach pain, and deep weakness. It responds well to antibiotics, but if it is left untreated the infection can damage the wall of the intestine, so a fever lasting more than three days deserves a proper test rather than guesswork.':
+      'အခြားအဖျားများနှင့် မတူဘဲ တိုက်ဖွိုက်သည် တဆင့်ချင်း တိုးလာသည် − ပထမရက်များတွင် အဖျားနည်းနည်းဖြစ်ပြီး ညနေတိုင်း ပိုမြင့်လာကာ ခေါင်းကိုက်ခြင်း၊ ဗိုက်အောင့်ခြင်းနှင့် အလွန်အမင်း နွမ်းနယ်ခြင်းတို့ ပါလာသည်။ ပဋိဇီဝဆေးဖြင့် ကောင်းစွာ သက်သာသော်လည်း ကုသမှု မခံယူပါက အူနံရံကို ထိခိုက်စေနိုင်သည်။ ထို့ကြောင့် သုံးရက်ထက်ပိုကြာသော အဖျားကို မှန်းဆခြင်းမပြုဘဲ စနစ်တကျ စစ်ဆေးသင့်သည်။',
+    'Symptoms usually appear one to three weeks after exposure and worsen gradually:':
+      'လက္ခဏာများသည် ရောဂါပိုးနှင့် ထိတွေ့ပြီး တစ်ပတ်မှ သုံးပတ်အတွင်း ပေါ်လာပြီး တဖြည်းဖြည်း ပိုဆိုးလာသည်။',
+    'A fever that rises higher day by day and stays for a week or more':
+      'တစ်နေ့ထက်တစ်နေ့ ပိုမြင့်လာပြီး တစ်ပတ် သို့မဟုတ် ထို့ထက်ပို ကြာသော အဖျား',
+    'Stomach pain, bloating, and tenderness':
+      'ဗိုက်အောင့်ခြင်း၊ ဗိုက်အောင့်ဖင့်ခြင်းနှင့် ထိလျှင် နာခြင်း',
+    'Constipation in adults, or diarrhoea in children':
+      'လူကြီးများတွင် ဝမ်းချုပ်ခြင်း၊ ကလေးများတွင် ဝမ်းလျှောခြင်း',
+    'Persistent headache and loss of appetite':
+      'ဆက်တိုက် ခေါင်းကိုက်ခြင်းနှင့် အစားအသောက် မဝင်စားခြင်း',
+    'Marked weakness, and sometimes nosebleeds':
+      'သိသိသာသာ နွမ်းနယ်ခြင်းနှင့် တစ်ခါတစ်ရံ နှာခေါင်းသွေးယိုခြင်း',
+    'People without a reliable supply of safe drinking water.':
+      'သန့်ရှင်းသော သောက်သုံးရေ မှန်မှန် မရရှိသူများ။',
+    'Those who often eat street food prepared in unhygienic conditions.':
+      'သန့်ရှင်းမှု မရှိသည့် အခြေအနေတွင် ပြင်ဆင်ထားသော လမ်းဘေးစားသောက်ဆိုင်များကို မကြာခဏ စားသုံးသူများ။',
+    'Communities with poor sanitation or flooding.':
+      'မိလ္လာစနစ် ညံ့ဖျင်းသော သို့မဟုတ် ရေကြီးတတ်သော ရပ်ရွာများ။',
+    'Household contacts of someone recently ill with typhoid.':
+      'မကြာသေးမီက တိုက်ဖွိုက်ဖြစ်ခဲ့သူနှင့် အတူနေ မိသားစုဝင်များ။',
+    'Drink only boiled or properly treated water.':
+      'ကျိုချက်ထားသော သို့မဟုတ် စနစ်တကျ သန့်စင်ထားသော ရေကိုသာ သောက်ပါ။',
+    'Eat food that is freshly cooked and still hot.':
+      'အသစ်ချက်ထားပြီး ပူနွေးနေဆဲ အစားအစာကို စားပါ။',
+    'Wash your hands with soap before eating and after using the toilet.':
+      'မစားမီနှင့် အိမ်သာသုံးပြီးနောက် ဆပ်ပြာဖြင့် လက်ဆေးပါ။',
+    'Ask about the typhoid vaccine, especially for children.':
+      'တိုက်ဖွိုက် ကာကွယ်ဆေးအကြောင်း မေးမြန်းပါ၊ အထူးသဖြင့် ကလေးများအတွက်။',
+    'Finish the whole antibiotic course your doctor prescribes.':
+      'ဆရာဝန် ညွှန်ကြားထားသော ပဋိဇီဝဆေးကို အပြည့်အဝ သောက်ပါ။',
+    "Don't drink untreated water or take ice from an unknown source.":
+      'သန့်စင်မထားသော ရေ မသောက်ပါနှင့်။ မည်သည့်နေရာမှ လာသည် မသိသော ရေခဲကိုလည်း မသုံးပါနှင့်။',
+    "Don't eat raw salads or peeled fruit washed in unsafe water.":
+      'မသန့်သော ရေဖြင့် ဆေးထားသည့် အသုပ်စိမ်းများနှင့် အခွံနွှာထားသော သစ်သီးများ မစားပါနှင့်။',
+    "Don't buy antibiotics over the counter and stop when the fever settles.":
+      'ဆေးဆိုင်တွင် ကိုယ်တိုင် ပဋိဇီဝဆေး ဝယ်သောက်ပြီး အဖျားကျသည်နှင့် မရပ်ပါနှင့်။',
+    "Don't prepare food for others while you are ill or just recovering.":
+      'ဖျားနာနေချိန် သို့မဟုတ် ခုမှ သက်သာစ ကာလတွင် သူတစ်ပါးအတွက် အစားအစာ မပြင်ဆင်ပါနှင့်။',
+    "Don't let a fever run past three days without getting it checked.":
+      'အဖျားကို သုံးရက်ကျော်သည်အထိ မစစ်ဆေးဘဲ မထားပါနှင့်။',
+    'See a healthcare worker for any fever lasting more than three days, and go to hospital urgently if you notice:':
+      'သုံးရက်ထက်ပိုကြာသော အဖျားအတွက် ကျန်းမာရေးဝန်ထမ်းနှင့် ပြပါ။ အောက်ပါတို့ တွေ့ပါက အမြန် ဆေးရုံသို့ သွားပါ။',
+    'High fever that persists for several days despite treatment':
+      'ကုသသော်လည်း ရက်များစွာ မကျသော အဖျားပြင်းခြင်း',
+    'Severe abdominal pain, or a stomach that becomes hard and swollen':
+      'ဗိုက် ပြင်းထန်စွာ အောင့်ခြင်း သို့မဟုတ် ဗိုက် မာတောင့်ပြီး ဖောရောင်လာခြင်း',
+    'Blood in the stools, or black tarry stools':
+      'ဝမ်းတွင် သွေးပါခြင်း သို့မဟုတ် ဝမ်း အနက်ရောင် ကတ္တရာကဲ့သို့ ဖြစ်ခြင်း',
+    'Confusion, drowsiness, or being unable to keep fluids down':
+      'စိတ်ရှုပ်ထွေးခြင်း၊ ငိုက်မျဉ်းခြင်း သို့မဟုတ် သောက်သမျှ ပြန်အန်ထွက်ခြင်း',
+    'Typhoid — transmission, symptoms, vaccination, and treatment.':
+      'တိုက်ဖွိုက်ရောဂါ — ကူးစက်ပုံ၊ လက္ခဏာများ၊ ကာကွယ်ဆေးထိုးခြင်းနှင့် ကုသမှု။',
+    'Water, sanitation and hygiene guidance and communicable disease control.':
+      'ရေ၊ မိလ္လာနှင့် သန့်ရှင်းရေး လမ်းညွှန်ချက်များနှင့် ကူးစက်ရောဂါ ထိန်းချုပ်ရေး။',
+    'Regional guidance on enteric fever, safe water, and antimicrobial resistance.':
+      'အူလမ်းကြောင်း အဖျားရောဂါ၊ ဘေးကင်းသောရေနှင့် ဆေးယဉ်ပါးမှုဆိုင်ရာ ဒေသတွင်း လမ်းညွှန်ချက်များ။',
+
+    /* --- pre-eclampsia detail --- */
+    'Pre-eclampsia is a complication of pregnancy in which blood pressure rises after about 20 weeks, usually together with protein in the urine.':
+      'ကိုယ်ဝန်ဆောင် သွေးတိုးရောဂါဆိုသည်မှာ ကိုယ်ဝန် ရက်သတ္တပတ် ၂၀ ခန့် နောက်ပိုင်းတွင် သွေးဖိအား မြင့်တက်လာပြီး အများအားဖြင့် ဆီးတွင် ပရိုတင်း ပါလာသည့် ကိုယ်ဝန်ဆောင် နောက်ဆက်တွဲ ပြဿနာ ဖြစ်သည်။',
+    "It affects the mother's blood vessels and can reduce the blood supply reaching the baby. Many women feel entirely well while it develops, which is exactly why antenatal visits check blood pressure and urine every time. Caught early it can be watched and managed safely; left unrecognised it can progress to eclampsia, in which the mother has seizures. The only complete cure is the birth of the baby, and the timing of that is a decision for the medical team.":
+      'ဤရောဂါသည် မိခင်၏ သွေးကြောများကို ထိခိုက်စေပြီး ကလေးထံ ရောက်ရှိသည့် သွေးကို လျော့နည်းစေနိုင်သည်။ ဖြစ်ပွားနေချိန်တွင် အမျိုးသမီးများစွာမှာ လုံးဝ နေကောင်းသည်ဟု ခံစားရသောကြောင့် ကိုယ်ဝန်ဆောင် ပြသတိုင်း သွေးဖိအားနှင့် ဆီးကို စစ်ဆေးပေးခြင်း ဖြစ်သည်။ စောစီးစွာ တွေ့ရှိပါက ဘေးကင်းစွာ စောင့်ကြည့် ထိန်းညှိနိုင်သည်။ မသိရှိဘဲ ထားပါက မိခင်တွင် တက်ခြင်း ဖြစ်စေသော ပရီအက်ကလမ်ဆီးယား အဆင့်သို့ ရောက်နိုင်သည်။ လုံးဝ ပျောက်ကင်းစေသည့် တစ်ခုတည်းသော နည်းလမ်းမှာ ကလေး မွေးဖွားခြင်းဖြစ်ပြီး မည်သည့်အချိန်တွင် မွေးမည်ကို ဆေးအဖွဲ့က ဆုံးဖြတ်ပါသည်။',
+    'Early pre-eclampsia often has no symptoms and is found only at a check-up. Warning signs include:':
+      'အစပိုင်းတွင် လက္ခဏာ မပြဘဲ ဆေးစစ်မှသာ တွေ့ရှိတတ်သည်။ သတိပေးလက္ခဏာများမှာ −',
+    'Swelling of the hands, face, and feet, coming on quickly':
+      'လက်၊ မျက်နှာနှင့် ခြေထောက်များ လျင်မြန်စွာ ဖောရောင်လာခြင်း',
+    'A severe headache that does not go away':
+      'မပျောက်သော ပြင်းထန်သည့် ခေါင်းကိုက်ခြင်း',
+    'Blurred vision, flashing lights, or spots before the eyes':
+      'အမြင်ဝါးခြင်း၊ အလင်းများ လက်နေခြင်း သို့မဟုတ် မျက်စိရှေ့တွင် အစက်များ မြင်ခြင်း',
+    'Pain just below the ribs on the right side, or in the upper abdomen':
+      'ညာဘက် နံရိုးအောက် သို့မဟုတ် ဗိုက်အထက်ပိုင်းတွင် နာကျင်ခြင်း',
+    'Vomiting, or a sudden gain in weight over a few days':
+      'အန်ခြင်း သို့မဟုတ် ရက်အနည်းငယ်အတွင်း ကိုယ်အလေးချိန် ရုတ်တရက် တက်လာခြင်း',
+    'Women in their first pregnancy.': 'ပထမဆုံး ကိုယ်ဝန်ဆောင်သည့် အမျိုးသမီးများ။',
+    'Mothers over the age of 35.': 'အသက် ၃၅ နှစ်အထက် မိခင်များ။',
+    'Those carrying twins or triplets.':
+      'အမြွှာ နှစ်ယောက် သို့မဟုတ် သုံးယောက် ကိုယ်ဝန်ဆောင်ထားသူများ။',
+    'Women with existing high blood pressure, diabetes, kidney disease, or pre-eclampsia in an earlier pregnancy.':
+      'သွေးတိုး၊ ဆီးချို၊ ကျောက်ကပ်ရောဂါ ရှိနှင့်ပြီးသူများ သို့မဟုတ် ယခင် ကိုယ်ဝန်တွင် သွေးတိုး ဖြစ်ဖူးသူများ။',
+    'Attend every antenatal check-up, even when you feel perfectly well.':
+      'လုံးဝ နေကောင်းသည်ဟု ခံစားရသော်လည်း ကိုယ်ဝန်ဆောင် ဆေးစစ်ချိန် တိုင်းသို့ သွားပါ။',
+    'Have your blood pressure and urine checked at each visit.':
+      'ပြသတိုင်း သွေးဖိအားနှင့် ဆီးကို စစ်ဆေးပါ။',
+    'Rest when you can, and lie on your left side when resting.':
+      'အားလပ်ချိန်တွင် အနားယူပါ။ အနားယူသည့်အခါ ဘယ်ဘက်စောင်း အိပ်ပါ။',
+    'Report any headache, swelling, or vision change straight away.':
+      'ခေါင်းကိုက်ခြင်း၊ ဖောရောင်ခြင်း သို့မဟုတ် အမြင်အာရုံ ပြောင်းလဲခြင်း ရှိပါက ချက်ချင်း အကြောင်းကြားပါ။',
+    'Take the calcium or aspirin your doctor prescribes for prevention.':
+      'ကာကွယ်ရန်အတွက် ဆရာဝန် ညွှန်ကြားထားသော ကယ်လ်ဆီယမ် သို့မဟုတ် အက်စပရင်ကို သောက်ပါ။',
+    "Don't skip antenatal visits because the pregnancy feels normal.":
+      'ကိုယ်ဝန်က ပုံမှန်ဟု ထင်ရသောကြောင့် ကိုယ်ဝန်ဆောင် ပြသချိန်များကို မလွတ်ပါစေနှင့်။',
+    "Don't dismiss swelling of the face and hands as ordinary pregnancy swelling.":
+      'မျက်နှာနှင့် လက်များ ဖောရောင်ခြင်းကို သာမန် ကိုယ်ဝန်ဆောင် ဖောရောင်မှုဟု မမှတ်ယူပါနှင့်။',
+    "Don't take any medicine, herbal or otherwise, without asking your midwife or doctor.":
+      'သားဖွားဆရာမ သို့မဟုတ် ဆရာဝန်နှင့် မတိုင်ပင်ဘဲ မည်သည့်ဆေးမဆို၊ ဆေးဖက်ဝင်အပင် ဆေးများပါ မသောက်ပါနှင့်။',
+    "Don't plan a home delivery if you have been told your blood pressure is high.":
+      'သွေးဖိအား မြင့်နေသည်ဟု ပြောခံရပါက အိမ်တွင် မွေးဖွားရန် မစီစဉ်ပါနှင့်။',
+    "Don't wait until morning to report severe headache or blurred vision.":
+      'ပြင်းထန်သော ခေါင်းကိုက်ခြင်း သို့မဟုတ် အမြင်ဝါးခြင်းကို မနက်ဖြန်အထိ မစောင့်ဘဲ အကြောင်းကြားပါ။',
+    'Go to a hospital with maternity care immediately — this is an emergency for both mother and baby — if you have:':
+      'အောက်ပါတို့ ဖြစ်ပါက သားဖွားဌာန ရှိသည့် ဆေးရုံသို့ ချက်ချင်း သွားပါ — မိခင်နှင့် ကလေး နှစ်ဦးစလုံးအတွက် အရေးပေါ် အခြေအနေ ဖြစ်သည်။',
+    'A sudden severe headache that will not ease':
+      'ရုတ်တရက် ဖြစ်ပေါ်လာပြီး မသက်သာသော ပြင်းထန်သည့် ခေါင်းကိုက်ခြင်း',
+    'Blurred vision, flashing lights, or loss of vision':
+      'အမြင်ဝါးခြင်း၊ အလင်းများ လက်နေခြင်း သို့မဟုတ် အမြင်အာရုံ ဆုံးရှုံးခြင်း',
+    'Rapid swelling of the face and hands':
+      'မျက်နှာနှင့် လက်များ လျင်မြန်စွာ ဖောရောင်လာခြင်း',
+    "A fit or convulsion (eclampsia), or the baby's movements slowing or stopping":
+      'တက်ခြင်း (အက်ကလမ်ဆီးယား) သို့မဟုတ် ကလေး၏ လှုပ်ရှားမှု နှေးလာခြင်း သို့မဟုတ် ရပ်သွားခြင်း',
+    'Maternal health — recommendations on the prevention and treatment of pre-eclampsia and eclampsia.':
+      'မိခင်ကျန်းမာရေး — ကိုယ်ဝန်ဆောင် သွေးတိုးနှင့် တက်ခြင်းရောဂါ ကာကွယ်ရေးနှင့် ကုသရေး အကြံပြုချက်များ။',
+    'Antenatal care standards and maternal and reproductive health services.':
+      'ကိုယ်ဝန်ဆောင် စောင့်ရှောက်မှု စံနှုန်းများနှင့် မိခင်နှင့် မျိုးဆက်ပွား ကျန်းမာရေး ဝန်ဆောင်မှုများ။',
+    'Regional guidance on maternal mortality reduction and emergency obstetric care.':
+      'မိခင် သေဆုံးမှု လျှော့ချရေးနှင့် အရေးပေါ် သားဖွား စောင့်ရှောက်မှုဆိုင်ရာ ဒေသတွင်း လမ်းညွှန်ချက်များ။',
 
     'Five students who researched, designed, and built MedCare together.':
       'အဖွဲ့ဝင်ငါးယောက်စုပေါင်းကာ အချက်အလက်များ ရှာဖွေ၊ ဒီဇိုင်းချကာ MedCare Website ကို တည်ဆောက်ထားပါသည်',

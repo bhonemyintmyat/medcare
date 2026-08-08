@@ -953,6 +953,30 @@
       excerptMy: 'ရောဂါလက္ခဏာ မပြသော်လည်း တစ်နှစ်လျှင် တစ်ကြိမ်ခန့် ပုံမှန်စစ်ဆေးမှု ခံယူခြင်းဖြင့် ရောဂါများကို ကြိုတင်သိရှိနိုင်ပါသည်။' }
   ];
 
+  var myCat = function (id) {
+    return myArticleCats.filter(function (c) { return c.id === id; })[0] || { en: id, my: id };
+  };
+  // Both languages ship in the markup; CSS reveals the one html[lang] selects.
+  var bi = function (en, my) {
+    return '<span class="mc-en">' + esc(en) + '</span><span class="mc-my">' + esc(my) + '</span>';
+  };
+  // One card, used by the article grid and by the home page's Editor's picks,
+  // so the two never drift apart.
+  var myArticleCard = function (a) {
+    var c = myCat(a.cat);
+    return '<div class="col-md-6 col-lg-4">' +
+      '<a href="' + esc(a.href) + '" class="mc-article d-block text-decoration-none text-reset">' +
+      '<div class="mc-article-thumb"><img src="' + esc(a.thumb) + '" alt="">' +
+      '<span class="badge-cat">' + bi(c.en, c.my) + '</span></div>' +
+      '<div class="mc-article-body">' +
+      '<h3 class="mc-en">' + esc(a.title) + '</h3>' +
+      '<h3 class="mc-my">' + esc(a.titleMy) + '</h3>' +
+      '<p class="mc-en">' + esc(a.excerpt) + '</p>' +
+      '<p class="mc-my">' + esc(a.excerptMy) + '</p>' +
+      '<div class="mc-article-meta"><span>' + bi(a.by, a.byMy) + '</span></div>' +
+      '</div></a></div>';
+  };
+
   var myGrid = byId('myArticleGrid');
   if (myGrid) {
     var myState = { query: param('q'), category: param('cat') || 'all' };
@@ -960,13 +984,6 @@
     var myChips = byId('myArticleChips');
     var myCount = byId('myArticleCount');
     var myEmpty = byId('myArticleEmpty');
-    var myCat = function (id) {
-      return myArticleCats.filter(function (c) { return c.id === id; })[0] || { en: id, my: id };
-    };
-    // Both languages ship in the markup; CSS reveals the one html[lang] selects.
-    var bi = function (en, my) {
-      return '<span class="mc-en">' + esc(en) + '</span><span class="mc-my">' + esc(my) + '</span>';
-    };
 
     if (mySearch) { mySearch.value = myState.query; }
 
@@ -990,20 +1007,7 @@
                    a.titleMy + ' ' + a.excerptMy + ' ' + c.my).toLowerCase();
         return (!q || hay.indexOf(q) !== -1) && (cat === 'all' || a.cat === cat);
       });
-      myGrid.innerHTML = filtered.map(function (a) {
-        var c = myCat(a.cat);
-        return '<div class="col-md-6 col-lg-4">' +
-          '<a href="' + esc(a.href) + '" class="mc-article d-block text-decoration-none text-reset">' +
-          '<div class="mc-article-thumb"><img src="' + esc(a.thumb) + '" alt="">' +
-          '<span class="badge-cat">' + bi(c.en, c.my) + '</span></div>' +
-          '<div class="mc-article-body">' +
-          '<h3 class="mc-en">' + esc(a.title) + '</h3>' +
-          '<h3 class="mc-my">' + esc(a.titleMy) + '</h3>' +
-          '<p class="mc-en">' + esc(a.excerpt) + '</p>' +
-          '<p class="mc-my">' + esc(a.excerptMy) + '</p>' +
-          '<div class="mc-article-meta"><span>' + bi(a.by, a.byMy) + '</span></div>' +
-          '</div></a></div>';
-      }).join('');
+      myGrid.innerHTML = filtered.map(myArticleCard).join('');
       myCount.textContent = filtered.length;
       myEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
       Array.prototype.forEach.call(myChips.children, function (b) {
@@ -1015,6 +1019,19 @@
       mySearch.addEventListener('input', function (e) { myState.query = e.target.value; renderMyArticles(); });
     }
     renderMyArticles();
+  }
+
+  /* ---------- Editor's picks (index.html) ----------
+     A hand-picked three drawn from the same article data as the articles
+     page, one per category, so the home page cannot advertise a piece
+     that does not exist. Edit the hrefs below to change the selection. */
+  var featuredGrid = byId('featuredGrid');
+  if (featuredGrid) {
+    var featuredHrefs = ['healthyfood.html', 'heartandex.html', 'hygiene.html'];
+    var featured = featuredHrefs.map(function (h) {
+      return myArticles.filter(function (a) { return a.href === h; })[0];
+    }).filter(Boolean);
+    featuredGrid.innerHTML = featured.map(myArticleCard).join('');
   }
 
   /* ---------- Single article reader (article.html?id=…) ---------- */

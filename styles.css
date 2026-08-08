@@ -476,7 +476,28 @@
   .mc-quote{border-left:4px solid var(--mc-primary);background:#fff;border-radius:0 14px 14px 0;padding:1.25rem 1.5rem;margin:0 0 2rem;color:#334155;font-size:1.02rem;line-height:1.75;box-shadow:var(--mc-shadow)}
   .mc-highlight{color:var(--mc-primary-600);font-weight:600}
 
+  /* Privacy controls (cookies.html) and the click-to-load map gate */
+  .mc-setting{background:#fff;border:1px solid var(--mc-border);border-radius:16px;padding:1.4rem 1.5rem;margin:0 0 1.1rem;box-shadow:var(--mc-shadow)}
+  .mc-setting-head{display:flex;gap:1.1rem;align-items:flex-start}
+  .mc-setting-ico{width:44px;height:44px;border-radius:12px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+  .mc-setting-head h3{font-size:1.08rem;font-weight:600;margin:0 0 .4rem}
+  .mc-setting-head p{color:var(--mc-muted);font-size:.94rem;line-height:1.6;margin:0}
+  .mc-setting-head code{background:var(--mc-bg);border:1px solid var(--mc-border);border-radius:5px;padding:.05rem .35rem;font-size:.85em;color:var(--mc-text)}
+  .mc-setting-foot{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--mc-border)}
+  .mc-setting-state{font-size:.9rem;color:var(--mc-muted)}
+  .mc-setting-state.on{color:var(--mc-green);font-weight:500}
+  .mc-setting-state.off{color:var(--mc-muted)}
+  .mc-btn-ghost{background:#fff;border:1px solid var(--mc-border);color:var(--mc-text);border-radius:10px;padding:.45rem .95rem;font-size:.9rem;font-weight:500;cursor:pointer}
+  .mc-btn-ghost:hover:not(:disabled){border-color:var(--mc-primary);color:var(--mc-primary-600)}
+  .mc-btn-ghost:disabled{opacity:.5;cursor:default}
+  .mc-switch{display:flex;align-items:center;gap:.6rem;font-size:.92rem;color:var(--mc-text);cursor:pointer;margin:0}
+  .mc-switch input{width:1.1rem;height:1.1rem;accent-color:var(--mc-primary);cursor:pointer}
+  .mc-map-gate{background:var(--mc-bg);border:1px dashed var(--mc-border);border-radius:12px;padding:1.1rem;text-align:center}
+  .mc-map-gate p{color:var(--mc-muted);font-size:.85rem;line-height:1.5;margin:0 0 .75rem}
+  .mc-map-gate .mc-btn-ghost{width:100%}
+
   @media (max-width:575.98px){
     .mc-cards{grid-template-columns:1fr}
     .mc-doctor{flex-direction:column;gap:.85rem}
+    .mc-setting-foot{align-items:flex-start;flex-direction:column}
   }

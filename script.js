@@ -2432,6 +2432,40 @@
     'Regional guidance on maternal mortality reduction and emergency obstetric care.':
       'မိခင် သေဆုံးမှု လျှော့ချရေးနှင့် အရေးပေါ် သားဖွား စောင့်ရှောက်မှုဆိုင်ရာ ဒေသတွင်း လမ်းညွှန်ချက်များ။',
 
+    /* --- legal pages: headings and controls --------------------------
+       The body text of these three pages is English only and says so
+       through .mc-lang-note. Headings, the map gate, and the settings
+       controls are translated, since those are interface, not prose. */
+    'Terms of Use': 'အသုံးပြုမှု စည်းကမ်းချက်များ',
+    'Privacy Policy': 'ကိုယ်ရေးအချက်အလက် မူဝါဒ',
+    'Cookie Settings': 'ကွတ်ကီး ဆက်တင်များ',
+    'The full text of this page is currently available in English only.':
+      'ဤစာမျက်နှာ၏ အပြည့်အစုံကို လက်ရှိတွင် အင်္ဂလိပ်ဘာသာဖြင့်သာ ဖတ်ရှုနိုင်ပါသည်။',
+    'The conditions under which MedCare is offered, and the limits of what this site can do for you.':
+      'MedCare ကို မည်သည့်စည်းကမ်းဖြင့် ပေးအပ်သည်နှင့် ဤဝဘ်ဆိုက်က သင့်အတွက် လုပ်ပေးနိုင်သည့် အကန့်အသတ်များ။',
+    'What MedCare knows about you, what it stores, and who else sees your visit.':
+      'MedCare က သင့်အကြောင်း မည်သည်ကို သိသလဲ၊ မည်သည်ကို သိမ်းဆည်းသလဲနှင့် သင့်လာရောက်မှုကို အခြားမည်သူ မြင်နိုင်သလဲ။',
+    'Exactly what this site keeps in your browser, and the controls to change it.':
+      'ဤဝဘ်ဆိုက်က သင့်ဘရောက်ဆာတွင် သိမ်းထားသည့်အရာ အတိအကျနှင့် ၎င်းကို ပြောင်းလဲရန် ထိန်းချုပ်မှုများ။',
+    'Your settings': 'သင့်ဆက်တင်များ',
+    'Language preference': 'ဘာသာစကား ရွေးချယ်မှု',
+    'Google Maps on the Find Hospitals page': 'ဆေးရုံရှာသည့် စာမျက်နှာရှိ Google Maps',
+    'Forget this setting': 'ဤဆက်တင်ကို ဖျက်ရန်',
+    'Load the map automatically': 'မြေပုံကို အလိုအလျောက် ဖွင့်ရန်',
+    'Nothing stored': 'သိမ်းထားသည် မရှိပါ',
+    'Stored — English': 'သိမ်းထားသည် — အင်္ဂလိပ်',
+    'Stored — Burmese': 'သိမ်းထားသည် — မြန်မာ',
+    'Allowed — the map loads automatically': 'ခွင့်ပြုထားသည် — မြေပုံ အလိုအလျောက် ပေါ်မည်',
+    'Not allowed — the map waits for a click': 'ခွင့်မပြုထားပါ — မြေပုံသည် နှိပ်မှသာ ပေါ်မည်',
+    'The map is loaded from Google, which may set cookies and will see your IP address.':
+      'မြေပုံကို Google မှ ရယူသည်။ ၎င်းသည် ကွတ်ကီးများ ထားရှိနိုင်ပြီး သင့် IP လိပ်စာကို မြင်ရပါမည်။',
+    'Load the map': 'မြေပုံ ဖွင့်ရန်',
+    'MedCare is not medical care': 'MedCare သည် ဆေးကုသမှု မဟုတ်ပါ',
+    'The short version': 'အကျဉ်းချုပ်',
+    'MedCare sets no cookies': 'MedCare သည် ကွတ်ကီး မထားရှိပါ',
+    'A note on shared devices': 'အတူတကွ သုံးသည့် ဖုန်း/ကွန်ပျူတာအတွက် မှတ်ချက်',
+    'Related pages': 'ဆက်စပ် စာမျက်နှာများ',
+
     'Five students who researched, designed, and built MedCare together.':
       'အဖွဲ့ဝင်ငါးယောက်စုပေါင်းကာ အချက်အလက်များ ရှာဖွေ၊ ဒီဇိုင်းချကာ MedCare Website ကို တည်ဆောက်ထားပါသည်',
     'Team Lead & Developer':
@@ -2557,6 +2591,102 @@
   var saved = 'en';
   try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) { /* ignore */ }
   applyLang(saved);
+
+  /* ==================================================================
+     Privacy controls
+     ------------------------------------------------------------------
+     The site sets no cookies. Two things live in local storage: the
+     language choice above, and whether the visitor has agreed to load
+     the Google map on the hospitals page. The map is the only third-
+     party embed that can set cookies, so it stays behind a click until
+     that agreement exists. cookies.html reads and clears both.
+     ================================================================== */
+  var MAP_KEY = 'mc-map';
+
+  function readStore(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  }
+  function writeStore(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) { /* private mode */ }
+  }
+  function dropStore(key) {
+    try { localStorage.removeItem(key); } catch (e) { /* private mode */ }
+  }
+
+  /* --- Click-to-load map (hospitals.html) --- */
+  var mapSlot = byId('hospMapGate');
+  if (mapSlot) {
+    var mapSrc = mapSlot.getAttribute('data-map-src') || '';
+
+    function showMap() {
+      mapSlot.innerHTML = '';
+      var frame = document.createElement('iframe');
+      frame.src = mapSrc;
+      frame.width = '100%';
+      frame.height = '200';
+      frame.setAttribute('allowfullscreen', '');
+      frame.setAttribute('loading', 'lazy');
+      frame.setAttribute('title', 'Map of hospitals in Yangon');
+      mapSlot.appendChild(frame);
+    }
+
+    function showGate() {
+      mapSlot.innerHTML =
+        '<div class="mc-map-gate">' +
+          '<p>The map is loaded from Google, which may set cookies and will see your IP address.</p>' +
+          '<button type="button" class="mc-btn-ghost" id="hospMapLoad">Load the map</button>' +
+        '</div>';
+      byId('hospMapLoad').addEventListener('click', function () {
+        writeStore(MAP_KEY, 'on');
+        showMap();
+      });
+    }
+
+    if (readStore(MAP_KEY) === 'on') { showMap(); } else { showGate(); }
+  }
+
+  /* --- Settings panel (cookies.html) --- */
+  var langState = byId('langState');
+  if (langState) {
+    var langClear = byId('langClear');
+    var mapState = byId('mapState');
+    var mapToggle = byId('mapToggle');
+
+    function paintLang() {
+      var v = readStore(LANG_KEY);
+      if (v) {
+        langState.textContent = v === 'my' ? 'Stored — Burmese' : 'Stored — English';
+        langState.className = 'mc-setting-state on';
+        langClear.disabled = false;
+      } else {
+        langState.textContent = 'Nothing stored';
+        langState.className = 'mc-setting-state off';
+        langClear.disabled = true;
+      }
+    }
+
+    function paintMap() {
+      var on = readStore(MAP_KEY) === 'on';
+      mapState.textContent = on ? 'Allowed — the map loads automatically' : 'Not allowed — the map waits for a click';
+      mapState.className = 'mc-setting-state ' + (on ? 'on' : 'off');
+      mapToggle.checked = on;
+    }
+
+    langClear.addEventListener('click', function () {
+      // applyLang writes the key back, so switch first and clear afterwards.
+      applyLang('en');
+      dropStore(LANG_KEY);
+      paintLang();
+    });
+
+    mapToggle.addEventListener('change', function () {
+      if (mapToggle.checked) { writeStore(MAP_KEY, 'on'); } else { dropStore(MAP_KEY); }
+      paintMap();
+    });
+
+    paintLang();
+    paintMap();
+  }
 })();
 
 document.addEventListener("DOMContentLoaded", () => {

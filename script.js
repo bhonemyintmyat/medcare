@@ -556,190 +556,6 @@
     { id: 'open24', label: 'Open 24 hours' },
     { id: 'delivery', label: 'Home delivery' }
   ];
-  var articleCats = [
-    { id: 'all', label: 'All' },
-    { id: 'prevention', label: 'Prevention' },
-    { id: 'nutrition', label: 'Nutrition' },
-    { id: 'maternal', label: 'Maternal care' },
-    { id: 'chronic', label: 'Chronic care' },
-    { id: 'wellness', label: 'Wellness' }
-  ];
-  // Article bodies are stored as blocks so one reader page (article.html) can
-  // render any of them: { p: paragraph, h: heading, ul: bullet list }.
-  var articles = [
-    {
-      id: 'dengue-rainy-season',
-      title: 'Protecting your family from dengue during the rainy season',
-      excerpt: 'Simple steps every household in Yangon can take to prevent mosquito breeding at home.',
-      cat: 'prevention', catLabel: 'Monsoon health', thumb: '',
-      author: 'Dr. Thiri Aung', read: '5 min read', date: 'Jul 22, 2026',
-      body: [
-        { p: 'Dengue spreads through the bite of the Aedes mosquito, which breeds in clean, still water close to where people live. In Yangon most bites happen during the day, so bed nets alone are not enough. The most effective protection is removing the water the mosquitoes breed in.' },
-        { h: 'Check your home once a week' },
-        { p: 'Aedes mosquitoes need only a bottle cap of water to lay eggs, and it takes about a week for those eggs to become biting adults. A weekly walk around the house breaks that cycle.' },
-        { ul: [
-          'Empty and scrub water storage jars, drums and buckets, then cover them tightly.',
-          'Tip out saucers under flower pots, pet bowls and the tray behind the refrigerator.',
-          'Clear blocked roof gutters and drains where rainwater collects.',
-          'Turn over or throw away old tyres, tins and coconut shells in the yard.'
-        ] },
-        { h: 'Avoid bites during the day' },
-        { ul: [
-          'Wear long sleeves and long trousers, especially in the early morning and late afternoon.',
-          'Use repellent on exposed skin, and fit screens on windows where you can.',
-          'Let small children and anyone resting during the day sleep under a net.'
-        ] },
-        { h: 'Know the warning signs' },
-        { p: 'Most people recover at home with rest and plenty of fluids. Paracetamol can be used for fever and pain. Do not take aspirin or ibuprofen, as they increase the risk of bleeding.' },
-        { p: 'Go to a hospital straight away if you notice severe stomach pain, repeated vomiting, bleeding from the gums or nose, black stools, cold or clammy skin, restlessness, or if the person becomes very tired as the fever drops. These can be signs of severe dengue, which needs urgent care.' }
-      ]
-    },
-    {
-      id: 'eating-well-on-a-budget',
-      title: 'Eating well on a Myanmar family budget',
-      excerpt: 'Everyday foods from the market that support blood pressure, heart, and blood-sugar health.',
-      cat: 'nutrition', catLabel: 'Nutrition', thumb: 'b',
-      author: 'Ma Nilar, RD', read: '7 min read', date: 'Jul 19, 2026',
-      body: [
-        { p: 'Eating for your heart and blood sugar does not mean buying imported or expensive food. Most of what your body needs is already in the local market, and the cheapest items are often the most useful.' },
-        { h: 'Build the plate around vegetables and pulses' },
-        { p: 'Aim for half your plate to be vegetables, a quarter protein, and a quarter rice or another staple. Beans, chickpeas, lentils and tofu cost far less than meat and give you protein plus fibre, which slows the rise in blood sugar after a meal.' },
-        { ul: [
-          'Seasonal vegetables are cheapest and freshest — buy what is plentiful that week.',
-          'Add pulses to curries and soups to stretch a small amount of meat further.',
-          'Keep eggs on hand as an affordable, complete protein.'
-        ] },
-        { h: 'Cut back on salt without losing flavour' },
-        { p: 'Most of the salt we eat comes from fish sauce, ngapi, stock cubes, instant noodles and packaged snacks rather than the salt shaker. Lowering it is one of the fastest ways to bring blood pressure down.' },
-        { ul: [
-          'Use half the fish sauce or stock you normally would, then taste before adding more.',
-          'Build flavour with garlic, ginger, lemongrass, tamarind, lime and fresh herbs.',
-          'Treat instant noodles and packaged snacks as occasional food, not daily food.'
-        ] },
-        { h: 'Choose better staples and fats' },
-        { ul: [
-          'Mix in brown or parboiled rice, or serve rice with plenty of vegetables and beans.',
-          'Fry less often; steam, boil or grill where you can, and reuse cooking oil sparingly.',
-          'Drink water or plain tea instead of sweetened drinks — sugary drinks add a lot of calories with no fullness.'
-        ] },
-        { p: 'Small, steady changes work better than strict diets. Changing one meal a day is enough to start.' }
-      ]
-    },
-    {
-      id: 'first-antenatal-visit',
-      title: 'What to expect at your first antenatal visit',
-      excerpt: 'A step-by-step guide for expecting mothers — what to bring, what to ask, and why it matters.',
-      cat: 'maternal', catLabel: 'Maternal care', thumb: 'c',
-      author: 'Dr. Khin Sandar', read: '6 min read', date: 'Jul 15, 2026',
-      body: [
-        { p: 'Your first antenatal visit should happen as early as possible in the pregnancy, ideally in the first three months. It sets a baseline for everything that follows and picks up problems while they are still easy to manage.' },
-        { h: 'What to bring' },
-        { ul: [
-          'Any identity or health card you have, and records from earlier pregnancies.',
-          'A list of medicines, supplements or traditional remedies you are taking.',
-          'The date your last period started, if you remember it.',
-          'A family member or friend if you would like support.'
-        ] },
-        { h: 'What usually happens' },
-        { ul: [
-          'Your weight, height and blood pressure are measured.',
-          'Blood and urine tests check for anaemia, blood group, blood sugar, and infections such as hepatitis B, syphilis and HIV.',
-          'The health worker estimates your due date and may arrange an ultrasound.',
-          'You are offered iron and folic acid supplements, and a tetanus vaccination if it is due.'
-        ] },
-        { h: 'Questions worth asking' },
-        { ul: [
-          'Which warning signs should make me come back immediately?',
-          'What should I be eating, and are my current medicines safe?',
-          'Where should I plan to give birth, and how do I get there quickly if needed?',
-          'When is my next visit?'
-        ] },
-        { h: 'Go back sooner if you notice' },
-        { p: 'Bleeding, severe or constant headache, blurred vision, swelling of the face or hands, high fever, severe abdominal pain, or a noticeable drop in the baby’s movements later in pregnancy. Any of these needs same-day care.' },
-        { p: 'Plan on at least eight antenatal visits across the pregnancy. Each one is short, and together they substantially reduce the risk to you and your baby.' }
-      ]
-    },
-    {
-      id: 'measure-blood-pressure-at-home',
-      title: 'How to measure your blood pressure at home',
-      excerpt: 'Home readings are more reliable than a single clinic check — if you take them the right way.',
-      cat: 'chronic', catLabel: 'Chronic care', thumb: 'b',
-      author: 'Dr. Aung Ko Latt', read: '4 min read', date: 'Jul 10, 2026',
-      body: [
-        { p: 'Blood pressure rises and falls through the day, so one reading at a clinic can be misleading. Measuring at home, in the same way each time, gives your health worker a much clearer picture.' },
-        { h: 'Before you measure' },
-        { ul: [
-          'Avoid coffee, tea, smoking and exercise for 30 minutes beforehand.',
-          'Empty your bladder — a full bladder raises the reading.',
-          'Sit quietly for five minutes first.'
-        ] },
-        { h: 'How to sit' },
-        { ul: [
-          'Sit with your back supported and both feet flat on the floor; do not cross your legs.',
-          'Rest your arm on a table so the cuff is level with your heart.',
-          'Put the cuff on bare skin, not over a sleeve, snug enough for one finger to fit underneath.',
-          'Stay still and do not talk while the machine is working.'
-        ] },
-        { h: 'What to record' },
-        { p: 'Take two readings a minute apart and write down both, along with the date and time. Measure in the morning before medicine and again in the evening, for about a week before a clinic appointment.' },
-        { h: 'What the numbers mean' },
-        { p: 'For most adults a home reading below 135/85 is the usual target, but your own target may differ — ask your health worker. One high reading is not a diagnosis; the pattern over days is what matters.' },
-        { p: 'Seek care the same day for a reading of 180/120 or above, especially with chest pain, breathlessness, severe headache, weakness on one side of the body or trouble speaking.' }
-      ]
-    },
-    {
-      id: 'safe-water-and-handwashing',
-      title: 'Safe water and handwashing at home',
-      excerpt: 'The two cheapest habits that prevent diarrhoea, typhoid and hepatitis A in the household.',
-      cat: 'prevention', catLabel: 'Prevention', thumb: 'c',
-      author: 'Ma Thida Win', read: '4 min read', date: 'Jul 5, 2026',
-      body: [
-        { p: 'Most stomach infections spread through water and unwashed hands. Handwashing with soap alone cuts diarrhoea cases dramatically, and it costs almost nothing.' },
-        { h: 'Wash hands at the moments that matter' },
-        { ul: [
-          'Before preparing food, before eating, and before feeding a child.',
-          'After using the toilet and after cleaning a child.',
-          'After handling rubbish, animals or raw meat and fish.'
-        ] },
-        { p: 'Use soap and rub all surfaces — palms, backs, between the fingers, thumbs and nails — for about 20 seconds, then rinse with running water and air dry. Plain soap works as well as antibacterial soap.' },
-        { h: 'Make drinking water safe' },
-        { ul: [
-          'Boil water and keep it at a rolling boil for one minute.',
-          'Or treat it with chlorine tablets or drops, following the packet instructions.',
-          'Store treated water in a clean, covered container and pour rather than dipping cups into it.'
-        ] },
-        { h: 'Handling food' },
-        { ul: [
-          'Wash fruit and vegetables with safe water, and peel where you can.',
-          'Cook meat, fish and eggs thoroughly, and reheat leftovers until steaming hot.',
-          'Keep raw and cooked food on separate boards and plates.'
-        ] },
-        { p: 'If someone has diarrhoea, keep giving fluids and oral rehydration solution. Seek care if there is blood in the stool, a high fever, repeated vomiting, or signs of dehydration such as sunken eyes, very little urine, or drowsiness — especially in young children and older adults.' }
-      ]
-    },
-    {
-      id: 'hot-season-heat-safety',
-      title: 'Staying safe through the hot season',
-      excerpt: 'Who is most at risk from heat, how to recognise heat exhaustion, and what to do first.',
-      cat: 'wellness', catLabel: 'Wellness', thumb: '',
-      author: 'Dr. Nyi Nyi Soe', read: '5 min read', date: 'Jun 28, 2026',
-      body: [
-        { p: 'Heat becomes dangerous long before anyone collapses. Outdoor workers, older adults, pregnant women, young children and people with heart, kidney or lung conditions are affected first.' },
-        { h: 'Reduce the load on your body' },
-        { ul: [
-          'Drink water through the day rather than waiting until you feel thirsty.',
-          'Do heavy work early in the morning or after sunset, and rest in shade regularly.',
-          'Wear loose, light-coloured clothing and a hat outdoors.',
-          'Never leave a child or an older person in a parked vehicle, even briefly.'
-        ] },
-        { h: 'Heat exhaustion — act early' },
-        { p: 'Heavy sweating, cool clammy skin, headache, dizziness, nausea, weakness and muscle cramps. Move the person to a cool place, loosen clothing, cool the skin with damp cloths or a fan, and give sips of water or oral rehydration solution. They should feel better within about 30 minutes.' },
-        { h: 'Heat stroke — a medical emergency' },
-        { p: 'Very hot skin that may be dry, a body temperature above 40°C, confusion, slurred speech, seizures or loss of consciousness. Call an ambulance on 192 immediately. While waiting, move the person into shade, remove outer clothing and cool them aggressively with water and fanning. Do not give fluids by mouth to someone who is not fully awake.' },
-        { p: 'If you take medicine for blood pressure or heart problems, ask your health worker whether your dose needs adjusting during the hottest months.' }
-      ]
-    }
-  ];
 
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
@@ -823,62 +639,6 @@
       dSearch.addEventListener('input', function (e) { dState.query = e.target.value; renderDiseases(); });
     }
     renderDiseases();
-  }
-
-  /* ---------- Health Articles listing page ---------- */
-  var aGrid = byId('articleGrid');
-  if (aGrid) {
-    var aState = { query: param('q'), category: param('cat') || 'all' };
-    var aSearch = byId('articleSearch');
-    var aChips = byId('articleChips');
-    var aCount = byId('articleCount');
-    var aWord = byId('articleWord');
-    var aEmpty = byId('articleEmpty');
-
-    if (aSearch) { aSearch.value = aState.query; }
-
-    articleCats.forEach(function (c) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'mc-chip';
-      b.textContent = c.label;
-      b.setAttribute('data-cat', c.id);
-      b.addEventListener('click', function () { aState.category = c.id; renderArticles(); });
-      aChips.appendChild(b);
-    });
-
-    var renderArticles = function () {
-      var q = aState.query.trim().toLowerCase();
-      var cat = aState.category;
-      var filtered = articles.filter(function (a) {
-        var hay = (a.title + ' ' + a.excerpt + ' ' + a.catLabel).toLowerCase();
-        var nameMatch = !q || hay.indexOf(q) !== -1;
-        var catMatch = cat === 'all' || a.cat === cat;
-        return nameMatch && catMatch;
-      });
-      aGrid.innerHTML = filtered.map(function (a) {
-        return '<div class="col-md-6 col-lg-4">' +
-          '<a href="health article.html" class="mc-article d-block text-decoration-none text-reset">' +
-          '<div class="mc-article-thumb ' + a.thumb + '"><span class="badge-cat">' + esc(a.catLabel) + '</span></div>' +
-          '<div class="mc-article-body">' +
-          '<h3>' + esc(a.title) + '</h3>' +
-          '<p>' + esc(a.excerpt) + '</p>' +
-          '<div class="mc-article-meta"><span>' + esc(a.author) + '</span><span class="sep"></span>' +
-          '<span>' + esc(a.read) + '</span><span class="sep"></span><span>' + esc(a.date) + '</span></div>' +
-          '</div></a></div>';
-      }).join('');
-      aCount.textContent = filtered.length;
-      aWord.textContent = filtered.length === 1 ? 'article' : 'articles';
-      aEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
-      Array.prototype.forEach.call(aChips.children, function (b) {
-        b.classList.toggle('active', b.getAttribute('data-cat') === cat);
-      });
-    };
-
-    if (aSearch) {
-      aSearch.addEventListener('input', function (e) { aState.query = e.target.value; renderArticles(); });
-    }
-    renderArticles();
   }
 
   /* ---------- Health articles listing ("health article.html") ----------
@@ -1032,67 +792,6 @@
       return myArticles.filter(function (a) { return a.href === h; })[0];
     }).filter(Boolean);
     featuredGrid.innerHTML = featured.map(myArticleCard).join('');
-  }
-
-  /* ---------- Single article reader (article.html?id=…) ---------- */
-  var artBody = byId('articleBody');
-  if (artBody) {
-    var wanted = param('id');
-    var article = articles.filter(function (a) { return a.id === wanted; })[0];
-    var artMain = byId('articleMain');
-    var artMissing = byId('articleMissing');
-
-    if (!article) {
-      // Unknown or missing id — show the fallback instead of an empty shell.
-      if (artMain) { artMain.style.display = 'none'; }
-      if (artMissing) { artMissing.style.display = 'block'; }
-    } else {
-      document.title = article.title + ' — MedCare';
-      byId('articleTag').textContent = article.catLabel;
-      byId('articleTitle').textContent = article.title;
-      byId('articleCrumb').textContent = article.title;
-      byId('articleLede').textContent = article.excerpt;
-      byId('articleByline').innerHTML =
-        '<span>' + esc(article.author) + '</span><span class="sep"></span>' +
-        '<span>' + esc(article.read) + '</span><span class="sep"></span>' +
-        '<span>' + esc(article.date) + '</span>';
-
-      // The article body is not translated yet. Say so in Burmese rather than
-      // silently showing English prose under a Burmese heading. Hidden in
-      // English mode by CSS.
-      if (!artBody.previousElementSibling ||
-          !artBody.previousElementSibling.classList.contains('mc-lang-note')) {
-        var note = document.createElement('p');
-        note.className = 'mc-lang-note';
-        note.innerHTML = '<i class="bi bi-translate"></i> ' +
-          'The full text of this article is currently available in English only.';
-        artBody.parentNode.insertBefore(note, artBody);
-      }
-
-      artBody.innerHTML = article.body.map(function (block) {
-        if (block.h) { return '<h2 class="mc-article-h2">' + esc(block.h) + '</h2>'; }
-        if (block.ul) {
-          return '<ul class="mc-list sym">' + block.ul.map(function (li) {
-            return '<li><i class="bi bi-dot"></i><span>' + esc(li) + '</span></li>';
-          }).join('') + '</ul>';
-        }
-        return '<p>' + esc(block.p) + '</p>';
-      }).join('');
-
-      // "More articles" — three others, newest first as authored.
-      var more = byId('articleMore');
-      if (more) {
-        more.innerHTML = articles.filter(function (a) { return a.id !== article.id; })
-          .slice(0, 3).map(function (a) {
-            return '<div class="col-md-6 col-lg-4">' +
-              '<a href="health article.html" class="mc-article d-block text-decoration-none text-reset">' +
-              '<div class="mc-article-thumb ' + a.thumb + '"><span class="badge-cat">' + esc(a.catLabel) + '</span></div>' +
-              '<div class="mc-article-body"><h3>' + esc(a.title) + '</h3>' +
-              '<div class="mc-article-meta"><span>' + esc(a.read) + '</span><span class="sep"></span><span>' + esc(a.date) + '</span></div>' +
-              '</div></a></div>';
-          }).join('');
-      }
-    }
   }
 
   /* ---------- Find Hospitals page ---------- */
@@ -1483,62 +1182,16 @@
     'All articles': 'ဆောင်းပါးအားလုံး',
 
     /* --- article cards / listing --- */
-    'Plain-language guides on prevention, nutrition, and everyday health — written for Myanmar families and reviewed by our medical editorial team.':
-      'ကာကွယ်ရေး၊ အာဟာရနှင့် နေ့စဉ်ကျန်းမာရေးအတွက် နားလည်လွယ်သော လမ်းညွှန်များ — မြန်မာမိသားစုများအတွက် ရေးသားပြီး ဆေးပညာအယ်ဒီတာအဖွဲ့မှ စိစစ်ထားပါသည်။',
     'Search articles by title or topic…': 'ခေါင်းစဉ် သို့မဟုတ် အကြောင်းအရာဖြင့် ဆောင်းပါးရှာရန်…',
     'articles': 'ဆောင်းပါးများ',
     'article': 'ဆောင်းပါး',
     'No articles match your search': 'သင့်ရှာဖွေမှုနှင့် ကိုက်ညီသော ဆောင်းပါး မတွေ့ပါ',
     'Try a different word or clear the filters.': 'အခြားစကားလုံးဖြင့် ရှာကြည့်ပါ သို့မဟုတ် စစ်ထုတ်မှုကို ရှင်းလင်းပါ။',
-    'Monsoon health': 'မိုးရာသီ ကျန်းမာရေး',
     'Nutrition': 'အာဟာရ',
     'Maternal care': 'မိခင်စောင့်ရှောက်မှု',
-    'Protecting your family from dengue during the rainy season':
-      'မိုးရာသီတွင် သွေးလွန်တုပ်ကွေးမှ မိသားစုကို ကာကွယ်ခြင်း',
-    'Simple steps every household in Yangon can take to prevent mosquito breeding at home.':
-      'အိမ်တွင်း ခြင်ပေါက်ပွားမှု တားဆီးရန် ရန်ကုန်ရှိ အိမ်ထောင်စုတိုင်း လုပ်ဆောင်နိုင်သည့် ရိုးရှင်းသောအဆင့်များ။',
-    'Eating well on a Myanmar family budget': 'မြန်မာမိသားစု ဘတ်ဂျက်ဖြင့် အာဟာရပြည့်ဝစွာ စားသုံးခြင်း',
-    'Everyday foods from the market that support blood pressure, heart, and blood-sugar health.':
-      'သွေးပေါင်ချိန်၊ နှလုံးနှင့် သွေးတွင်းသကြားဓာတ်အတွက် ကောင်းမွန်သည့် ဈေးမှ နေ့စဉ်အစားအစာများ။',
-    'What to expect at your first antenatal visit':
-      'ပထမဆုံး ကိုယ်ဝန်ဆောင် စစ်ဆေးမှုတွင် ဘာတွေ မျှော်လင့်ရမလဲ',
-    'A step-by-step guide for expecting mothers — what to bring, what to ask, and why it matters.':
-      'ကိုယ်ဝန်ဆောင်မိခင်များအတွက် အဆင့်ဆင့်လမ်းညွှန် — ဘာယူသွားရမလဲ၊ ဘာမေးရမလဲ၊ ဘာကြောင့် အရေးကြီးသလဲ။',
-    'Dr. Thiri Aung': 'ဒေါက်တာ သီရိအောင်',
-    'Ma Nilar, RD': 'မနီလာ (အာဟာရပညာရှင်)',
-    'Dr. Khin Sandar': 'ဒေါက်တာ ခင်စန္ဒာ',
-    '4 min read': '၄ မိနစ် ဖတ်ရန်',
-    '5 min read': '၅ မိနစ် ဖတ်ရန်',
-    '6 min read': '၆ မိနစ် ဖတ်ရန်',
-    '7 min read': '၇ မိနစ် ဖတ်ရန်',
-    'Jul 22': 'ဇူလိုင် ၂၂',
-    'Jul 19': 'ဇူလိုင် ၁၉',
-    'Jul 15': 'ဇူလိုင် ၁၅',
-    'Jul 22, 2026': 'ဇူလိုင် ၂၂၊ ၂၀၂၆',
-    'Jul 19, 2026': 'ဇူလိုင် ၁၉၊ ၂၀၂၆',
-    'Jul 15, 2026': 'ဇူလိုင် ၁၅၊ ၂၀၂၆',
-    'Jul 10, 2026': 'ဇူလိုင် ၁၀၊ ၂၀၂၆',
-    'Jul 5, 2026': 'ဇူလိုင် ၅၊ ၂၀၂၆',
-    'Jun 28, 2026': 'ဇွန် ၂၈၊ ၂၀၂၆',
     'Prevention': 'ကာကွယ်ရေး',
-    'Chronic care': 'နာတာရှည် စောင့်ရှောက်မှု',
     'Wellness': 'ကျန်းမာသုခ',
-    'How to measure your blood pressure at home': 'အိမ်တွင် သွေးပေါင်ချိန် တိုင်းနည်း',
-    'Home readings are more reliable than a single clinic check — if you take them the right way.':
-      'မှန်ကန်သောနည်းဖြင့် တိုင်းမည်ဆိုပါက အိမ်တွင်တိုင်းသော အတိုင်းအတာသည် ဆေးခန်းတွင် တစ်ကြိမ်တိုင်းခြင်းထက် ပိုမှန်ကန်သည်။',
-    'Safe water and handwashing at home': 'အိမ်တွင် သောက်သုံးရေ သန့်ရှင်းမှုနှင့် လက်ဆေးခြင်း',
-    'The two cheapest habits that prevent diarrhoea, typhoid and hepatitis A in the household.':
-      'အိမ်ထောင်စုအတွင်း ဝမ်းလျှောခြင်း၊ အူရောင်ငန်းဖျားနှင့် အသည်းရောင် အေ ကို ကာကွယ်ပေးသည့် အသက်သာဆုံး အလေ့အထ နှစ်ခု။',
-    'Staying safe through the hot season': 'နွေရာသီတွင် ဘေးကင်းစွာ နေထိုင်ခြင်း',
-    'Who is most at risk from heat, how to recognise heat exhaustion, and what to do first.':
-      'အပူဒဏ်ကြောင့် အန္တရာယ်အရှိဆုံးမှာ မည်သူများနည်း၊ အပူလျှံခြင်းကို မည်သို့သိနိုင်မည်နည်းနှင့် ဦးစွာ ဘာလုပ်ရမည်နည်း။',
-    'Dr. Aung Ko Latt': 'ဒေါက်တာ အောင်ကိုလတ်',
-    'Ma Thida Win': 'မသီတာဝင်း',
-    'Dr. Nyi Nyi Soe': 'ဒေါက်တာ ညီညီစိုး',
     'Health article': 'ကျန်းမာရေးဆောင်းပါး',
-    'The full text of this article is currently available in English only.':
-      'ဤဆောင်းပါး၏ အပြည့်အစုံကို လက်ရှိတွင် အင်္ဂလိပ်ဘာသာဖြင့်သာ ဖတ်ရှုနိုင်ပါသည်။',
-    'When to seek care': 'ဘယ်အချိန် ဆေးကုသမှု ခံယူသင့်သလဲ',
     'World Health Organization (WHO)': 'ကမ္ဘာ့ကျန်းမာရေးအဖွဲ့ (WHO)',
     'Ministry of Health, Myanmar': 'ကျန်းမာရေးဝန်ကြီးဌာန၊ မြန်မာနိုင်ငံ',
 
@@ -1727,10 +1380,6 @@
       'အခြေခံကျန်းမာရေးစောင့်ရှောက်မှုတွင် နှလုံးသွေးကြောရောဂါ ထိန်းညှိရန် HEARTS နည်းပညာအစီအစဉ်။',
     'Last reviewed: July 2026 · Reviewed by the MedCare medical editorial team.':
       'နောက်ဆုံးစိစစ်သည့်ရက်− ၂၀၂၆ ဇူလိုင် · MedCare ဆေးပညာအယ်ဒီတာအဖွဲ့မှ စိစစ်ထားပါသည်။',
-    'Fact sheets on prevention, nutrition and maternal health.':
-      'ကာကွယ်ရေး၊ အာဟာရနှင့် မိခင်ကျန်းမာရေးဆိုင်ရာ အချက်အလက်စာရွက်များ။',
-    'This article is general information, not a diagnosis. If symptoms are severe, getting worse, or you are worried about a child, an older adult or someone who is pregnant, speak to a health worker. In an emergency call an ambulance on':
-      'ဤဆောင်းပါးသည် အထွေထွေအချက်အလက်သာဖြစ်ပြီး ရောဂါရှာဖွေချက် မဟုတ်ပါ။ လက္ခဏာများ ပြင်းထန်လာပါက၊ ပိုဆိုးလာပါက သို့မဟုတ် ကလေး၊ သက်ကြီးရွယ်အို သို့မဟုတ် ကိုယ်ဝန်ဆောင်အတွက် စိုးရိမ်ပါက ကျန်းမာရေးဝန်ထမ်းနှင့် တိုင်ပင်ပါ။ အရေးပေါ်ဖြစ်ပါက လူနာတင်ယာဉ်ကို ဤနံပါတ်သို့ ခေါ်ပါ −',
     'Most people have no symptoms. When blood pressure is very high, some may notice:':
       'အများစုမှာ လက္ခဏာမပြပါ။ သွေးပေါင်ချိန် အလွန်မြင့်သည့်အခါ အချို့တွင် အောက်ပါတို့ ခံစားရနိုင်သည်။',
     'Headaches, especially at the back of the head': 'ခေါင်းကိုက်ခြင်း၊ အထူးသဖြင့် ခေါင်းနောက်ပိုင်း',
@@ -2456,8 +2105,6 @@
     'Terms of Use': 'အသုံးပြုမှု စည်းကမ်းချက်များ',
     'Privacy Policy': 'ကိုယ်ရေးအချက်အလက် မူဝါဒ',
     'Cookie Settings': 'ကွတ်ကီး ဆက်တင်များ',
-    'The full text of this page is currently available in English only.':
-      'ဤစာမျက်နှာ၏ အပြည့်အစုံကို လက်ရှိတွင် အင်္ဂလိပ်ဘာသာဖြင့်သာ ဖတ်ရှုနိုင်ပါသည်။',
     'The conditions under which MedCare is offered, and the limits of what this site can do for you.':
       'MedCare ကို မည်သည့်စည်းကမ်းဖြင့် ပေးအပ်သည်နှင့် ဤဝဘ်ဆိုက်က သင့်အတွက် လုပ်ပေးနိုင်သည့် အကန့်အသတ်များ။',
     'What MedCare knows about you, what it stores, and who else sees your visit.':

@@ -3,18 +3,18 @@
 
   /* ---------- Data ---------- */
   var diseases = [
-    { name: 'Hypertension', icon: 'bi-heart-pulse', tag: 'Chronic', cat: 'chronic', href: 'https://www.nhs.uk/conditions/high-blood-pressure/', desc: 'High blood pressure often has no symptoms but raises the risk of stroke and heart disease over time. ' },
-    { name: 'Diabetes', icon: 'bi-droplet-half', tag: 'Chronic', cat: 'chronic', href: 'https://www.nhs.uk/conditions/diabetes/', desc: 'A long-term condition where blood sugar levels are too high, manageable with diet, exercise, and medication.' },
-    { name: 'Asthma', icon: 'bi-lungs', tag: 'Respiratory', cat: 'respiratory',href: 'https://www.nhs.uk/conditions/asthma/', desc: 'Airways narrow and swell, causing wheezing and shortness of breath — usually controlled with inhalers.' },
-    { name: 'Dengue fever', icon: 'bi-bug', tag: 'Infectious', cat: 'infectious', href: 'hypertension.html', desc: 'A mosquito-borne viral illness common in the rainy season, causing high fever, body aches, and rash.' },
-    { name: 'Tuberculosis (TB)', icon: 'bi-clipboard2-pulse', tag: 'Infectious', cat: 'infectious respiratory', href: 'hypertension.html', desc: 'A bacterial infection mainly affecting the lungs, treatable with a full course of antibiotics.' },
-    { name: 'Malaria', icon: 'bi-thermometer-half', tag: 'Infectious', cat: 'infectious', href: 'hypertension.html', desc: 'A mosquito-borne parasitic disease that causes cyclic fever and chills; preventable with nets and repellents.' },
-    { name: 'Hepatitis B', icon: 'bi-shield-plus', tag: 'Infectious', cat: 'infectious', href: 'hypertension.html', desc: 'A liver infection that can become long-term; a safe vaccine prevents it and testing catches it early.' },
-    { name: 'Coronary heart disease', icon: 'bi-heart', tag: 'Chronic', cat: 'chronic', href: 'hypertension.html', desc: 'Narrowed arteries reduce blood flow to the heart and can cause chest pain or a heart attack.' },
-    { name: 'Stroke', icon: 'bi-brain', tag: 'Chronic', cat: 'chronic', href: 'hypertension.html', desc: 'A sudden interruption of blood to the brain — act fast; call an ambulance if you notice F.A.S.T. signs.' },
-    { name: 'Anemia', icon: 'bi-droplet', tag: 'Chronic', cat: 'chronic maternal', href: 'hypertension.html', desc: 'Low red blood cell counts cause fatigue and weakness; iron-rich foods and supplements often help.' },
-    { name: 'Typhoid fever', icon: 'bi-cup-hot', tag: 'Infectious', cat: 'infectious', href: 'hypertension.html', desc: 'A bacterial infection spread through contaminated food or water — safe hygiene and vaccination help prevent it.' },
-    { name: 'Pre-eclampsia', icon: 'bi-person-heart', tag: 'Maternal', cat: 'maternal', href: 'hypertension.html', desc: 'A pregnancy complication with high blood pressure — regular antenatal check-ups are essential.' }
+    { name: 'Hypertension', icon: 'bi-heart-pulse', tag: 'Chronic', cat: 'chronic', href: 'diseases/hypertension.html', desc: 'High blood pressure often has no symptoms but raises the risk of stroke and heart disease over time. ' },
+    { name: 'Diabetes', icon: 'bi-droplet-half', tag: 'Chronic', cat: 'chronic', href: 'diseases/diabetes.html', desc: 'A long-term condition where blood sugar levels are too high, manageable with diet, exercise, and medication.' },
+    { name: 'Asthma', icon: 'bi-lungs', tag: 'Respiratory', cat: 'respiratory',href: 'diseases/asthma.html', desc: 'Airways narrow and swell, causing wheezing and shortness of breath — usually controlled with inhalers.' },
+    { name: 'Dengue fever', icon: 'bi-bug', tag: 'Infectious', cat: 'infectious', href: 'diseases/dengue.html', desc: 'A mosquito-borne viral illness common in the rainy season, causing high fever, body aches, and rash.' },
+    { name: 'Tuberculosis (TB)', icon: 'bi-clipboard2-pulse', tag: 'Infectious', cat: 'infectious respiratory', href: 'diseases/tb.html', desc: 'A bacterial infection mainly affecting the lungs, treatable with a full course of antibiotics.' },
+    { name: 'Malaria', icon: 'bi-thermometer-half', tag: 'Infectious', cat: 'infectious', href: 'diseases/malaria.html', desc: 'A mosquito-borne parasitic disease that causes cyclic fever and chills; preventable with nets and repellents.' },
+    { name: 'Hepatitis B', icon: 'bi-shield-plus', tag: 'Infectious', cat: 'infectious', href: 'diseases/hepatitis.html', desc: 'A liver infection that can become long-term; a safe vaccine prevents it and testing catches it early.' },
+    { name: 'Coronary heart disease', icon: 'bi-heart', tag: 'Chronic', cat: 'chronic', href: 'diseases/coronary.html', desc: 'Narrowed arteries reduce blood flow to the heart and can cause chest pain or a heart attack.' },
+    { name: 'Stroke', icon: 'bi-brain', tag: 'Chronic', cat: 'chronic', href: 'diseases/stroke.html', desc: 'A sudden interruption of blood to the brain — act fast; call an ambulance if you notice F.A.S.T. signs.' },
+    { name: 'Anemia', icon: 'bi-droplet', tag: 'Chronic', cat: 'chronic maternal', href: 'diseases/anemia.html', desc: 'Low red blood cell counts cause fatigue and weakness; iron-rich foods and supplements often help.' },
+    { name: 'Typhoid fever', icon: 'bi-cup-hot', tag: 'Infectious', cat: 'infectious', href: 'diseases/typhoid.html', desc: 'A bacterial infection spread through contaminated food or water — safe hygiene and vaccination help prevent it.' },
+    { name: 'Pre-eclampsia', icon: 'bi-person-heart', tag: 'Maternal', cat: 'maternal', href: 'diseases/eclampsia.html', desc: 'A pregnancy complication with high blood pressure — regular antenatal check-ups are essential.' }
   ];
   var cats = [
     { id: 'all', label: 'All' },

@@ -641,7 +641,7 @@
     renderDiseases();
   }
 
-  /* ---------- Health articles listing ("health article.html") ----------
+  /* ---------- Health articles listing (articles.html) ----------
      Each article lives in its own page and carries both languages, so the cards
      link straight to the file and render both titles behind .mc-en / .mc-my. */
   var myArticleCats = [

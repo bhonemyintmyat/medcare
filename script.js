@@ -2465,6 +2465,136 @@
     'MedCare sets no cookies': 'MedCare သည် ကွတ်ကီး မထားရှိပါ',
     'A note on shared devices': 'အတူတကွ သုံးသည့် ဖုန်း/ကွန်ပျူတာအတွက် မှတ်ချက်',
     'Related pages': 'ဆက်စပ် စာမျက်နှာများ',
+    '— what we do and do not collect.': '— ကျွန်ုပ်တို့ စုဆောင်းသည်နှင့် မစုဆောင်းသည်များ။',
+    '— what this site stores in your browser.':
+      '— ဤဝဘ်ဆိုက်က သင့်ဘရောက်ဆာတွင် သိမ်းထားသည့်အရာများ။',
+    '— the conditions for using the site.': '— ဝဘ်ဆိုက် အသုံးပြုမှု စည်းကမ်းချက်များ။',
+    'Last updated: August 2026.': 'နောက်ဆုံး ပြင်ဆင်သည့်ရက် − ၂၀၂၆ ဩဂုတ်။',
+    'Contact': 'ဆက်သွယ်ရန်',
+
+    /* --- terms of use: body --- */
+    'MedCare is a free health information website. By using it, you agree to the terms set out below.':
+      'MedCare သည် အခမဲ့ ကျန်းမာရေး အချက်အလက် ဝဘ်ဆိုက် ဖြစ်သည်။ ၎င်းကို အသုံးပြုခြင်းဖြင့် အောက်ဖော်ပြပါ စည်းကမ်းချက်များကို သဘောတူသည်ဟု မှတ်ယူပါမည်။',
+    'Everything on this site is general information for the public. It is not a diagnosis, a prescription, or personal medical advice, and it cannot take the place of a consultation with a qualified health worker who can examine you.':
+      'ဤဝဘ်ဆိုက်ရှိ အရာအားလုံးသည် အများပြည်သူအတွက် အထွေထွေ အချက်အလက်များသာ ဖြစ်သည်။ ရောဂါရှာဖွေချက်၊ ဆေးညွှန်း သို့မဟုတ် တစ်ဦးချင်း ဆေးပညာ အကြံပြုချက် မဟုတ်ပါ။ သင့်ကို စစ်ဆေးပေးနိုင်သည့် အရည်အချင်းပြည့်မီသော ကျန်းမာရေးဝန်ထမ်းနှင့် တိုင်ပင်ခြင်းအစား အစားထိုး၍ မရပါ။',
+    'If you think you are having a medical emergency, do not spend time reading. Go to the nearest hospital or call an ambulance.':
+      'အရေးပေါ် ဖြစ်နေသည်ဟု ထင်ပါက စာဖတ်၍ အချိန်မကုန်ပါစေနှင့်။ အနီးဆုံး ဆေးရုံသို့ သွားပါ သို့မဟုတ် လူနာတင်ယာဉ် ခေါ်ပါ။',
+    'Who we are': 'ကျွန်ုပ်တို့ မည်သူများလဲ',
+    'MedCare is a student project, built and maintained by a five-person team as coursework. It is offered free of charge, with no advertising and no commercial sponsor. It is not a hospital, a clinic, a pharmacy, or a registered healthcare provider, and no doctor–patient relationship is created by your use of it.':
+      'MedCare သည် ကျောင်းသား စီမံကိန်းတစ်ခု ဖြစ်ပြီး ငါးဦးပါ အဖွဲ့တစ်ဖွဲ့မှ သင်တန်းလုပ်ငန်းအဖြစ် တည်ဆောက် ထိန်းသိမ်းထားသည်။ ကြော်ငြာမပါ၊ စီးပွားရေး ကမကထပြုသူ မရှိဘဲ အခမဲ့ ပေးအပ်ထားပါသည်။ ဆေးရုံ၊ ဆေးခန်း၊ ဆေးဆိုင် သို့မဟုတ် မှတ်ပုံတင်ထားသော ကျန်းမာရေး ဝန်ဆောင်မှုပေးသူ မဟုတ်ပါ။ ၎င်းကို အသုံးပြုခြင်းဖြင့် ဆရာဝန်နှင့် လူနာ ဆက်ဆံရေး မဖြစ်ပေါ်ပါ။',
+    'Using the site': 'ဝဘ်ဆိုက် အသုံးပြုခြင်း',
+    'You may read, print, and share our pages for your own personal, non-commercial use, and for teaching or community health education, as long as you keep the content intact and credit MedCare as the source.':
+      'အကြောင်းအရာကို မပြောင်းလဲဘဲ ထားပြီး MedCare ကို ရင်းမြစ်အဖြစ် ဖော်ပြပါက ကိုယ်ပိုင် စီးပွားဖြစ်မဟုတ်သော အသုံးပြုမှု၊ သင်ကြားရေး သို့မဟုတ် ရပ်ရွာ ကျန်းမာရေး ပညာပေးအတွက် ကျွန်ုပ်တို့၏ စာမျက်နှာများကို ဖတ်ရှု၊ ပုံနှိပ်၊ မျှဝေနိုင်ပါသည်။',
+    'You agree not to:': 'အောက်ပါတို့ကို မပြုလုပ်ရန် သဘောတူပါသည် −',
+    'Present our content as your own, or as the advice of a licensed clinician.':
+      'ကျွန်ုပ်တို့၏ အကြောင်းအရာကို ကိုယ်ပိုင်အဖြစ် သို့မဟုတ် လိုင်စင်ရ ဆရာဝန်၏ အကြံပြုချက်အဖြစ် မဖော်ပြရန်။',
+    'Alter the medical content and continue to attribute it to MedCare.':
+      'ဆေးပညာ အကြောင်းအရာကို ပြင်ဆင်ပြီးနောက် MedCare မှဟု ဆက်လက် ဖော်ပြခြင်း မပြုရန်။',
+    'Sell the content, or place it behind a paywall.':
+      'အကြောင်းအရာကို ရောင်းချခြင်း သို့မဟုတ် ငွေပေးမှသာ ဖတ်ရသည့် စနစ်ဖြင့် ထားရှိခြင်း မပြုရန်။',
+    'Attempt to disrupt the site, or use automated tools to overload it.':
+      'ဝဘ်ဆိုက်ကို အနှောင့်အယှက်ပေးရန် သို့မဟုတ် အလိုအလျောက် ကိရိယာများဖြင့် ဝန်ပိုစေရန် မကြိုးပမ်းရန်။',
+    'Accuracy and limits of the information': 'အချက်အလက်၏ တိကျမှုနှင့် အကန့်အသတ်များ',
+    'Our disease and article pages are written in plain language from public health sources, and each page lists the sources it draws on. We review them periodically and show the date of the last review at the foot of each page.':
+      'ကျွန်ုပ်တို့၏ ရောဂါနှင့် ဆောင်းပါး စာမျက်နှာများကို အများပြည်သူ ကျန်းမာရေး ရင်းမြစ်များမှ ရိုးရှင်းသော ဘာသာစကားဖြင့် ရေးသားထားပြီး စာမျက်နှာတိုင်းတွင် ကိုးကားသည့် ရင်းမြစ်များကို ဖော်ပြထားသည်။ အခါအားလျော်စွာ ပြန်လည် စိစစ်ပြီး နောက်ဆုံး စိစစ်သည့်ရက်ကို စာမျက်နှာအောက်ခြေတွင် ဖော်ပြပါသည်။',
+    'Even so, medical knowledge changes, and general guidance cannot account for your age, your other conditions, the medicines you already take, or whether you are pregnant. Information here may be incomplete or out of date by the time you read it. Always confirm anything that affects a decision about your health with a health worker.':
+      'သို့သော်လည်း ဆေးပညာ အသိပညာသည် ပြောင်းလဲနေပြီး အထွေထွေ လမ်းညွှန်ချက်များက သင့်အသက်၊ သင့်တွင်ရှိသည့် အခြားရောဂါများ၊ သောက်နေဆဲ ဆေးများ သို့မဟုတ် ကိုယ်ဝန်ရှိမရှိကို ထည့်သွင်း စဉ်းစားနိုင်ခြင်း မရှိပါ။ ဤနေရာရှိ အချက်အလက်များသည် သင်ဖတ်ချိန်တွင် မပြည့်စုံ သို့မဟုတ် ခေတ်မမီတော့ဘဲ ဖြစ်နေနိုင်သည်။ သင့်ကျန်းမာရေး ဆုံးဖြတ်ချက်ကို သက်ရောက်စေမည့် အရာမှန်သမျှကို ကျန်းမာရေးဝန်ထမ်းနှင့် အမြဲ အတည်ပြုပါ။',
+    'Drug names, dosages, and treatment schedules are described only in general terms. Never start, stop, or change a medicine on the strength of what you read here.':
+      'ဆေးအမည်များ၊ ဆေးပမာဏနှင့် ကုသမှု အချိန်ဇယားများကို အထွေထွေအားဖြင့်သာ ဖော်ပြထားသည်။ ဤနေရာတွင် ဖတ်ရသည်ကို အခြေခံ၍ ဆေးတစ်မျိုးမျိုးကို စတင်ခြင်း၊ ရပ်ခြင်း သို့မဟုတ် ပြောင်းလဲခြင်း လုံးဝ မပြုပါနှင့်။',
+    'Hospital, pharmacy, and emergency listings': 'ဆေးရုံ၊ ဆေးဆိုင်နှင့် အရေးပေါ် စာရင်းများ',
+    'The directories of hospitals, pharmacies, and emergency numbers are compiled from public sources and checked by our team. Opening hours, phone numbers, and services change frequently and without notice. Treat every listing as a starting point, and telephone ahead before travelling — particularly at night or in an emergency.':
+      'ဆေးရုံ၊ ဆေးဆိုင်နှင့် အရေးပေါ် ဖုန်းနံပါတ် စာရင်းများကို အများပြည်သူ ရင်းမြစ်များမှ စုစည်းပြီး ကျွန်ုပ်တို့ အဖွဲ့မှ စိစစ်ထားသည်။ ဖွင့်ချိန်၊ ဖုန်းနံပါတ်နှင့် ဝန်ဆောင်မှုများသည် ကြိုတင် အသိပေးခြင်းမရှိဘဲ မကြာခဏ ပြောင်းလဲတတ်သည်။ စာရင်းတိုင်းကို အစပြုချက်အဖြစ်သာ မှတ်ယူပြီး မသွားမီ ဖုန်းဖြင့် ကြိုတင် စုံစမ်းပါ — အထူးသဖြင့် ညဘက် သို့မဟုတ် အရေးပေါ် အခြေအနေတွင်။',
+    'Listing a facility is not a recommendation or an endorsement of it, and we have no commercial relationship with any facility named on this site.':
+      'ဆေးခန်း/ဆေးရုံ တစ်ခုကို စာရင်းတွင် ဖော်ပြခြင်းသည် အကြံပြုခြင်း သို့မဟုတ် ထောက်ခံခြင်း မဟုတ်ပါ။ ဤဝဘ်ဆိုက်တွင် ဖော်ပြထားသော မည်သည့်နေရာနှင့်မျှ စီးပွားရေး ဆက်နွှယ်မှု မရှိပါ။',
+    'Links to other websites': 'အခြား ဝဘ်ဆိုက်များသို့ လင့်ခ်များ',
+    'We link to organisations such as the World Health Organization and the Ministry of Health so you can read the primary source. Those sites are not under our control. We are not responsible for their content, their accuracy, or how they handle your data — their own terms and privacy policies apply once you follow the link.':
+      'မူရင်း ရင်းမြစ်ကို ဖတ်နိုင်ရန် ကမ္ဘာ့ကျန်းမာရေးအဖွဲ့နှင့် ကျန်းမာရေးဝန်ကြီးဌာန ကဲ့သို့သော အဖွဲ့အစည်းများသို့ လင့်ခ် ချိတ်ထားပါသည်။ ထိုဝဘ်ဆိုက်များသည် ကျွန်ုပ်တို့၏ ထိန်းချုပ်မှုအောက်တွင် မရှိပါ။ ၎င်းတို့၏ အကြောင်းအရာ၊ တိကျမှု သို့မဟုတ် သင့်အချက်အလက်ကို မည်သို့ ကိုင်တွယ်သည်အတွက် ကျွန်ုပ်တို့ တာဝန်မယူပါ — လင့်ခ်ကို နှိပ်လိုက်သည်နှင့် ၎င်းတို့၏ စည်းကမ်းနှင့် မူဝါဒများ သက်ရောက်ပါမည်။',
+    'Availability': 'ဝန်ဆောင်မှု ရရှိနိုင်မှု',
+    'We offer the site as it is. We do not promise that it will always be reachable, free of errors, or uninterrupted, and we may change, move, or remove any page at any time. As a student project, MedCare may be taken offline at the end of the course.':
+      'ဤဝဘ်ဆိုက်ကို ရှိသည့်အတိုင်း ပေးအပ်ပါသည်။ အမြဲတမ်း ဝင်ရောက်နိုင်မည်၊ အမှားကင်းမည် သို့မဟုတ် ပြတ်တောက်မှု မရှိမည်ဟု ကတိမပြုပါ။ မည်သည့် စာမျက်နှာကိုမဆို အချိန်မရွေး ပြောင်းလဲ၊ ရွှေ့ပြောင်း သို့မဟုတ် ဖယ်ရှားနိုင်ပါသည်။ ကျောင်းသား စီမံကိန်း ဖြစ်သဖြင့် သင်တန်းပြီးဆုံးချိန်တွင် MedCare ကို ပိတ်သိမ်းနိုင်ပါသည်။',
+    'Liability': 'တာဝန်ခံမှု',
+    'To the fullest extent permitted by law, the MedCare team accepts no liability for any loss, injury, or harm arising from reliance on the information on this site, from any inaccuracy in it, or from the site being unavailable. Your use of MedCare, and any decision you make on the basis of it, is your own responsibility.':
+      'ဥပဒေက ခွင့်ပြုသည့် အတိုင်းအတာ အပြည့်အဝအထိ — ဤဝဘ်ဆိုက်ရှိ အချက်အလက်ကို အားကိုးခြင်းကြောင့်ဖြစ်စေ၊ ၎င်းတွင် မတိကျမှုကြောင့်ဖြစ်စေ၊ ဝဘ်ဆိုက် အသုံးမပြုနိုင်ခြင်းကြောင့်ဖြစ်စေ ပေါ်ပေါက်လာသည့် ဆုံးရှုံးမှု၊ ထိခိုက်မှု သို့မဟုတ် နစ်နာမှု မှန်သမျှအတွက် MedCare အဖွဲ့မှ တာဝန်မယူပါ။ MedCare ကို အသုံးပြုခြင်းနှင့် ၎င်းအပေါ် အခြေခံ၍ ချမှတ်သည့် ဆုံးဖြတ်ချက် မှန်သမျှသည် သင့်တာဝန်သာ ဖြစ်ပါသည်။',
+    'Nothing in these terms limits any liability that cannot lawfully be limited.':
+      'ဥပဒေအရ ကန့်သတ်၍ မရသော တာဝန်ခံမှုကို ဤစည်းကမ်းချက်များက ကန့်သတ်ခြင်း မရှိပါ။',
+    'Content that belongs to others': 'အခြားသူများ ပိုင်ဆိုင်သည့် အကြောင်းအရာများ',
+    'The MedCare name, page designs, and written content belong to the MedCare team. Photographs are used under the licences granted by their sources. Icons and page framework come from Bootstrap and Bootstrap Icons under their own open-source licences. If you believe material on this site infringes your rights, write to us and we will remove it while we look into it.':
+      'MedCare အမည်၊ စာမျက်နှာ ဒီဇိုင်းများနှင့် ရေးသားထားသော အကြောင်းအရာများသည် MedCare အဖွဲ့ ပိုင်ဆိုင်သည်။ ဓာတ်ပုံများကို ၎င်းတို့၏ ရင်းမြစ်များမှ ခွင့်ပြုထားသည့် လိုင်စင်အရ အသုံးပြုထားပါသည်။ သင်္ကေတများနှင့် စာမျက်နှာ မူဘောင်ကို Bootstrap နှင့် Bootstrap Icons မှ ၎င်းတို့၏ ပွင့်လင်း အရင်းအမြစ် လိုင်စင်များအရ ရယူထားသည်။ ဤဝဘ်ဆိုက်ရှိ အရာတစ်ခုခုက သင့်အခွင့်အရေးကို ချိုးဖောက်သည်ဟု ယူဆပါက ကျွန်ုပ်တို့ထံ အကြောင်းကြားပါ။ စစ်ဆေးနေစဉ်အတွင်း ၎င်းကို ဖယ်ရှားပေးပါမည်။',
+    'Changes to these terms': 'ဤစည်းကမ်းချက်များ ပြောင်းလဲခြင်း',
+    'We may update these terms as the site develops. The version published here is the one that applies, and the date below shows when it last changed. Continuing to use MedCare after a change means you accept the revised terms.':
+      'ဝဘ်ဆိုက် တိုးတက်လာသည်နှင့်အမျှ ဤစည်းကမ်းချက်များကို ပြင်ဆင်နိုင်ပါသည်။ ဤနေရာတွင် ဖော်ပြထားသည့် မူသည် သက်ရောက်မှုရှိသော မူဖြစ်ပြီး အောက်ပါရက်စွဲက နောက်ဆုံး ပြောင်းလဲသည့်အချိန်ကို ပြသည်။ ပြောင်းလဲပြီးနောက် MedCare ကို ဆက်လက် အသုံးပြုခြင်းသည် ပြင်ဆင်ထားသော စည်းကမ်းများကို လက်ခံသည်ဟု ဆိုလိုပါသည်။',
+    'Questions about these terms, corrections to a page, or a request to remove material can be sent to the team.':
+      'ဤစည်းကမ်းချက်များနှင့် ပတ်သက်သည့် မေးခွန်းများ၊ စာမျက်နှာ ပြင်ဆင်ချက်များ သို့မဟုတ် အကြောင်းအရာ ဖယ်ရှားပေးရန် တောင်းဆိုချက်များကို အဖွဲ့ထံ ပေးပို့နိုင်ပါသည်။',
+
+    /* --- privacy policy: body --- */
+    'Looking up a health condition is private. MedCare is built so that you can do it without telling us who you are.':
+      'ကျန်းမာရေး အခြေအနေတစ်ခုကို ရှာဖွေခြင်းသည် ကိုယ်ရေးကိုယ်တာ ကိစ္စဖြစ်သည်။ သင်မည်သူဖြစ်ကြောင်း ကျွန်ုပ်တို့အား မပြောဘဲ ရှာဖွေနိုင်စေရန် MedCare ကို တည်ဆောက်ထားပါသည်။',
+    'We have no accounts, no sign-up, no contact forms, and no analytics. We do not ask for your name, and we have no database of visitors. Everything you type into a search box stays inside your own browser. We set no cookies of our own.':
+      'အကောင့်များ မရှိ၊ စာရင်းသွင်းရန် မရှိ၊ ဆက်သွယ်ရန် ဖောင်များ မရှိ၊ ခွဲခြမ်းစိတ်ဖြာမှု ကိရိယာများလည်း မရှိပါ။ သင့်အမည်ကို မမေးပါ။ လာရောက်သူများ၏ ဒေတာဘေ့စ်လည်း မရှိပါ။ ရှာဖွေရေး အကွက်တွင် ရိုက်ထည့်သမျှသည် သင့်ဘရောက်ဆာ အတွင်း၌သာ ရှိနေပါသည်။ ကျွန်ုပ်တို့၏ ကိုယ်ပိုင် ကွတ်ကီးများ မထားရှိပါ။',
+    'What we do not collect': 'ကျွန်ုပ်တို့ မစုဆောင်းသည်များ',
+    'MedCare has no user accounts and no way to register. We do not ask for, and cannot receive, your name, age, phone number, email address, or any detail of your health. There is no form on this site that sends anything to us.':
+      'MedCare တွင် အသုံးပြုသူ အကောင့်များ မရှိသလို စာရင်းသွင်းရန် နည်းလမ်းလည်း မရှိပါ။ သင့်အမည်၊ အသက်၊ ဖုန်းနံပါတ်၊ အီးမေးလ်လိပ်စာ သို့မဟုတ် သင့်ကျန်းမာရေး အသေးစိတ် မည်သည်ကိုမျှ မတောင်းပါ၊ လက်ခံ၍လည်း မရပါ။ ဤဝဘ်ဆိုက်တွင် ကျွန်ုပ်တို့ထံ တစ်စုံတစ်ရာ ပေးပို့သည့် ဖောင် မရှိပါ။',
+    'We do not run advertising, and we do not use analytics or tracking services of any kind. No advertising network is given access to your visit.':
+      'ကြော်ငြာများ မလုပ်ဆောင်ပါ။ ခွဲခြမ်းစိတ်ဖြာမှု သို့မဟုတ် ခြေရာခံသည့် ဝန်ဆောင်မှု မည်သည့်အမျိုးအစားကိုမျှ မသုံးပါ။ မည်သည့် ကြော်ငြာကွန်ရက်ကိုမျှ သင့်လာရောက်မှုအား ဝင်ရောက်ကြည့်ရှုခွင့် မပေးပါ။',
+    'Searching and filtering': 'ရှာဖွေခြင်းနှင့် စစ်ထုတ်ခြင်း',
+    'The search boxes on the diseases, hospitals, pharmacy, and article pages work entirely inside your browser. What you type is matched against a list already loaded on the page. It is never sent to us or to anyone else, and it is not saved after you close the page.':
+      'ရောဂါများ၊ ဆေးရုံများ၊ ဆေးဆိုင်နှင့် ဆောင်းပါး စာမျက်နှာများရှိ ရှာဖွေရေး အကွက်များသည် သင့်ဘရောက်ဆာ အတွင်း၌သာ လုံးဝ အလုပ်လုပ်သည်။ သင်ရိုက်ထည့်သည်ကို စာမျက်နှာပေါ်တွင် ရှိပြီးသား စာရင်းနှင့် တိုက်ဆိုင်စစ်ဆေးပါသည်။ ကျွန်ုပ်တို့ထံ သို့မဟုတ် အခြားမည်သူ့ထံမျှ လုံးဝ မပေးပို့ပါ။ စာမျက်နှာ ပိတ်ပြီးနောက် သိမ်းဆည်းထားခြင်းလည်း မရှိပါ။',
+    'What is stored on your device': 'သင့်စက်ပစ္စည်းတွင် သိမ်းဆည်းထားသည်များ',
+    "MedCare stores one thing, and only if you choose a language: your preference for English or Burmese, kept in your browser's local storage so the site opens in the same language next time. It is a single setting, held on your own device, readable only by this site, and never transmitted to us.":
+      'MedCare သည် တစ်ခုတည်းကိုသာ သိမ်းဆည်းပြီး ၎င်းမှာလည်း သင် ဘာသာစကား ရွေးချယ်မှသာ ဖြစ်သည် − အင်္ဂလိပ် သို့မဟုတ် မြန်မာ ရွေးချယ်မှုကို သင့်ဘရောက်ဆာ၏ local storage တွင် သိမ်းထားပြီး နောက်တစ်ကြိမ် ဝင်ရောက်ချိန်တွင် တူညီသော ဘာသာစကားဖြင့် ပွင့်စေရန် ဖြစ်သည်။ ၎င်းသည် ဆက်တင်တစ်ခုတည်းသာ ဖြစ်ပြီး သင့်စက်ပစ္စည်းပေါ်တွင်သာ ရှိကာ ဤဝဘ်ဆိုက်ကသာ ဖတ်နိုင်ပြီး ကျွန်ုပ်တို့ထံ လုံးဝ မပေးပို့ပါ။',
+    'You can inspect and erase it at any time, or clear all site data in your browser.':
+      '၎င်းကို အချိန်မရွေး စစ်ဆေးနိုင်၊ ဖျက်နိုင်ပါသည်။ သို့မဟုတ် ဘရောက်ဆာတွင် ဝဘ်ဆိုက် ဒေတာအားလုံးကို ရှင်းလင်းနိုင်ပါသည်။',
+    'Others who see your visit': 'သင့်လာရောက်မှုကို မြင်နိုင်သည့် အခြားသူများ',
+    "Like most websites, MedCare loads some files from other companies' servers. When your browser fetches a file, that company necessarily learns your IP address, roughly where you are, and which page requested it. We do not control what they do with that, and their privacy policies apply:":
+      'ဝဘ်ဆိုက်အများစုကဲ့သို့ပင် MedCare သည် အချို့ ဖိုင်များကို အခြားကုမ္ပဏီများ၏ ဆာဗာမှ ရယူသည်။ သင့်ဘရောက်ဆာက ဖိုင်တစ်ခု ရယူသည့်အခါ ထိုကုမ္ပဏီသည် သင့် IP လိပ်စာ၊ သင်ရှိသည့် ခန့်မှန်း တည်နေရာနှင့် မည်သည့်စာမျက်နှာမှ တောင်းဆိုသည်ကို မလွှဲမရှောင်သာ သိရှိပါသည်။ ၎င်းတို့က မည်သို့ ဆက်လက် လုပ်ဆောင်သည်ကို ကျွန်ုပ်တို့ မထိန်းချုပ်နိုင်ဘဲ ၎င်းတို့၏ ကိုယ်ရေးအချက်အလက် မူဝါဒများ သက်ရောက်ပါသည် −',
+    '— supply the typefaces, icons, and layout framework used on every page.':
+      '— စာမျက်နှာတိုင်းတွင် သုံးသည့် စာလုံးပုံစံများ၊ သင်္ကေတများနှင့် အပြင်အဆင် မူဘောင်ကို ပေးသည်။',
+    '— supplies the photographs used on the home page and article pages.':
+      '— ပင်မစာမျက်နှာနှင့် ဆောင်းပါး စာမျက်နှာများတွင် သုံးသည့် ဓာတ်ပုံများကို ပေးသည်။',
+    '— supplies the map embedded on the Find Hospitals page. This is the one place on the site where a third party may set cookies in your browser.':
+      '— ဆေးရုံရှာသည့် စာမျက်နှာရှိ မြေပုံကို ပေးသည်။ ဤနေရာသည် တတိယအဖွဲ့တစ်ခုက သင့်ဘရောက်ဆာတွင် ကွတ်ကီး ထားရှိနိုင်သည့် ဝဘ်ဆိုက်ပေါ်ရှိ တစ်ခုတည်းသော နေရာ ဖြစ်သည်။',
+    "Because the map is the most intrusive of these, we do not load it until you ask for it. You will see a placeholder with a button, and the map — and Google's cookies with it — arrive only after you click. Your choice is remembered, and you can change it at any time.":
+      'မြေပုံသည် ဤအရာများထဲတွင် အထိရောက်ဆုံး ဝင်ရောက်စွက်ဖက်သူ ဖြစ်သောကြောင့် သင် တောင်းဆိုမှသာ ရယူပါသည်။ ခလုတ်တစ်ခုပါသော နေရာလွတ်ကို မြင်ရမည်ဖြစ်ပြီး မြေပုံနှင့် ၎င်းနှင့်အတူ Google ၏ ကွတ်ကီးများသည် သင်နှိပ်ပြီးမှသာ ရောက်ရှိလာမည်။ သင့်ရွေးချယ်မှုကို မှတ်ထားပြီး အချိန်မရွေး ပြောင်းလဲနိုင်ပါသည်။',
+    'Links to other sites': 'အခြား ဝဘ်ဆိုက်များသို့ လင့်ခ်များ',
+    'Our source lists link to organisations such as the World Health Organization and the Ministry of Health. Once you follow a link you are on their site, under their privacy policy, and we no longer have any part in it.':
+      'ကျွန်ုပ်တို့၏ ကိုးကားစာရင်းများသည် ကမ္ဘာ့ကျန်းမာရေးအဖွဲ့နှင့် ကျန်းမာရေးဝန်ကြီးဌာန ကဲ့သို့သော အဖွဲ့အစည်းများသို့ လင့်ခ် ချိတ်ထားသည်။ လင့်ခ်ကို နှိပ်လိုက်သည်နှင့် သင်သည် ၎င်းတို့၏ ဝဘ်ဆိုက်ပေါ်တွင် ၎င်းတို့၏ မူဝါဒအောက်၌ ရှိနေပြီး ကျွန်ုပ်တို့ မပါဝင်တော့ပါ။',
+    'Server logs': 'ဆာဗာ မှတ်တမ်းများ',
+    'MedCare is published as static pages. Whoever hosts them may keep ordinary server logs — IP address, time, and page requested — as part of running the service. We do not add to those logs, do not analyse them, and do not use them to build any profile of you.':
+      'MedCare ကို ပုံသေ စာမျက်နှာများအဖြစ် ထုတ်ဝေထားသည်။ ၎င်းတို့ကို လက်ခံထားသူသည် ဝန်ဆောင်မှု လည်ပတ်ရေး အစိတ်အပိုင်းအဖြစ် သာမန် ဆာဗာမှတ်တမ်းများ — IP လိပ်စာ၊ အချိန်နှင့် တောင်းဆိုသည့် စာမျက်နှာ — ကို သိမ်းထားနိုင်သည်။ ကျွန်ုပ်တို့သည် ထိုမှတ်တမ်းများသို့ ထပ်မထည့်ပါ၊ ခွဲခြမ်းစိတ်ဖြာခြင်းလည်း မပြုပါ၊ သင့်အကြောင်း ပရိုဖိုင် တည်ဆောက်ရန်လည်း မသုံးပါ။',
+    'Children': 'ကလေးသူငယ်များ',
+    'The site is written for a general audience, including families. Since we collect nothing, we hold no information about children any more than about anyone else.':
+      'ဤဝဘ်ဆိုက်ကို မိသားစုများ အပါအဝင် အများပြည်သူအတွက် ရေးသားထားသည်။ ကျွန်ုပ်တို့ မည်သည်ကိုမျှ မစုဆောင်းသောကြောင့် အခြားမည်သူ့အကြောင်းမျှ မထားရှိသကဲ့သို့ ကလေးများ၏ အချက်အလက်ကိုလည်း မထားရှိပါ။',
+    'Your rights': 'သင့်အခွင့်အရေးများ',
+    'Rights to see, correct, or delete personal data depend on our holding some. We hold none — so there is nothing for us to show you, amend, or erase. The single language preference described above is on your device and entirely under your control.':
+      'ကိုယ်ရေးအချက်အလက်ကို ကြည့်ရှုခွင့်၊ ပြင်ဆင်ခွင့် သို့မဟုတ် ဖျက်ခွင့်များသည် ကျွန်ုပ်တို့ထံတွင် အချက်အလက် ရှိမှသာ သက်ရောက်သည်။ ကျွန်ုပ်တို့ထံတွင် မည်သည်မျှ မရှိပါ — ထို့ကြောင့် သင့်အား ပြသရန်၊ ပြင်ဆင်ရန် သို့မဟုတ် ဖျက်ရန် မည်သည်မျှ မရှိပါ။ အထက်တွင် ဖော်ပြခဲ့သည့် ဘာသာစကား ရွေးချယ်မှု တစ်ခုတည်းသည် သင့်စက်ပစ္စည်းပေါ်တွင် ရှိပြီး လုံးဝ သင့်ထိန်းချုပ်မှုအောက်တွင် ရှိသည်။',
+    'Changes to this policy': 'ဤမူဝါဒ ပြောင်းလဲခြင်း',
+    'If we ever add a feature that collects anything, we will change this page before that feature goes live, and update the date below. Continuing to use MedCare after a change means you accept the revised policy.':
+      'တစ်စုံတစ်ရာ စုဆောင်းသည့် လုပ်ဆောင်ချက်တစ်ခု ထည့်သွင်းမည်ဆိုပါက ထိုလုပ်ဆောင်ချက် စတင်အသုံးပြုမီ ဤစာမျက်နှာကို ပြောင်းလဲပြီး အောက်ပါရက်စွဲကို ပြင်ဆင်ပါမည်။ ပြောင်းလဲပြီးနောက် MedCare ကို ဆက်လက် အသုံးပြုခြင်းသည် ပြင်ဆင်ထားသော မူဝါဒကို လက်ခံသည်ဟု ဆိုလိုပါသည်။',
+    'Questions about privacy can be sent to the team.':
+      'ကိုယ်ရေးအချက်အလက်နှင့် ပတ်သက်သည့် မေးခွန်းများကို အဖွဲ့ထံ ပေးပို့နိုင်ပါသည်။',
+    'Your browser keeps its own history of the pages you visit, and MedCare cannot clear it. On a shared or family phone, use a private browsing window if you would rather your visit left no trace.':
+      'သင့်ဘရောက်ဆာသည် သင်ဝင်ကြည့်ခဲ့သည့် စာမျက်နှာများ၏ မှတ်တမ်းကို ကိုယ်ပိုင် သိမ်းထားပြီး MedCare က ၎င်းကို ရှင်းလင်း၍ မရပါ။ အတူတကွ သုံးသည့် သို့မဟုတ် မိသားစု ဖုန်းတွင် သင့်လာရောက်မှု ခြေရာမကျန်စေလိုပါက private browsing ဝင်းဒိုးကို အသုံးပြုပါ။',
+
+    /* --- cookie settings: body --- */
+    'There is no consent banner on this site because there is nothing to consent to. We use no advertising, no analytics, and no tracking. The two settings below are the only things stored on your device, and both are yours to change.':
+      'သဘောတူရန် မည်သည်မျှ မရှိသောကြောင့် ဤဝဘ်ဆိုက်တွင် သဘောတူညီချက် ဘန်နာ မရှိပါ။ ကြော်ငြာ၊ ခွဲခြမ်းစိတ်ဖြာမှုနှင့် ခြေရာခံမှု မသုံးပါ။ အောက်ပါ ဆက်တင်နှစ်ခုသည် သင့်စက်ပစ္စည်းတွင် သိမ်းထားသည့် တစ်ခုတည်းသော အရာများဖြစ်ပြီး နှစ်ခုစလုံးကို သင် ပြောင်းလဲနိုင်ပါသည်။',
+    "Remembers whether you chose English or Burmese, so the site opens the same way next time. It is kept in your browser's local storage under the name mc-lang, and is never sent to us.":
+      'အင်္ဂလိပ် သို့မဟုတ် မြန်မာ ရွေးချယ်ခဲ့သည်ကို မှတ်ထားပြီး နောက်တစ်ကြိမ် ဝင်ရောက်ချိန်တွင် တူညီစွာ ပွင့်စေသည်။ သင့်ဘရောက်ဆာ၏ local storage တွင် mc-lang အမည်ဖြင့် သိမ်းထားပြီး ကျွန်ုပ်တို့ထံ လုံးဝ မပေးပို့ပါ။',
+    'Checking…': 'စစ်ဆေးနေသည်…',
+    'The hospital map is served by Google, which can set its own cookies and will see your IP address. We do not load it until you ask. Turning this on loads the map automatically from now on; it is the only third-party embed on the site.':
+      'ဆေးရုံမြေပုံကို Google မှ ပေးပို့ပြီး ၎င်းသည် ကိုယ်ပိုင် ကွတ်ကီးများ ထားရှိနိုင်ကာ သင့် IP လိပ်စာကို မြင်ရပါမည်။ သင် တောင်းဆိုမှသာ ရယူပါသည်။ ဤအရာကို ဖွင့်ထားပါက ယခုမှစ၍ မြေပုံ အလိုအလျောက် ပေါ်လာမည်။ ၎င်းသည် ဝဘ်ဆိုက်ပေါ်ရှိ တစ်ခုတည်းသော တတိယအဖွဲ့ ထည့်သွင်းမှု ဖြစ်သည်။',
+    'Why there is no cookie banner': 'ကွတ်ကီး ဘန်နာ မရှိရသည့် အကြောင်းရင်း',
+    'Consent banners exist because most sites place cookies that follow you between pages and between websites, usually for advertising. MedCare places none. A banner asking permission for something we do not do would only add a click.':
+      'ဝဘ်ဆိုက်အများစုသည် စာမျက်နှာအကြားနှင့် ဝဘ်ဆိုက်အကြား သင့်ကို လိုက်ခြေရာခံသည့် ကွတ်ကီးများကို အများအားဖြင့် ကြော်ငြာအတွက် ထားရှိသောကြောင့် သဘောတူညီချက် ဘန်နာများ ရှိလာခြင်း ဖြစ်သည်။ MedCare သည် မည်သည်မျှ မထားရှိပါ။ မလုပ်သည့်အရာအတွက် ခွင့်တောင်းသည့် ဘန်နာသည် နှိပ်ရသည့် အကြိမ်ရေ တိုးစေရုံသာ ဖြစ်ပါမည်။',
+    'Local storage is not a cookie': 'Local storage သည် ကွတ်ကီး မဟုတ်ပါ',
+    'The language setting uses local storage rather than a cookie. The practical difference is that a cookie is attached to every request your browser sends to the server, while local storage stays on your device and is read only by the page itself. Nothing about your language choice reaches us either way.':
+      'ဘာသာစကား ဆက်တင်သည် ကွတ်ကီးအစား local storage ကို သုံးသည်။ လက်တွေ့ ကွာခြားချက်မှာ ကွတ်ကီးသည် သင့်ဘရောက်ဆာက ဆာဗာသို့ ပို့သည့် တောင်းဆိုမှုတိုင်းတွင် ပါသွားသော်လည်း local storage သည် သင့်စက်ပစ္စည်းပေါ်တွင်သာ ရှိပြီး စာမျက်နှာကိုယ်တိုင်ကသာ ဖတ်နိုင်ခြင်း ဖြစ်သည်။ မည်သည့်နည်းဖြင့်မဆို သင့်ဘာသာစကား ရွေးချယ်မှုအကြောင်း ကျွန်ုပ်တို့ထံ မရောက်ပါ။',
+    'Files loaded from other companies': 'အခြားကုမ္ပဏီများမှ ရယူသည့် ဖိုင်များ',
+    'Every page pulls fonts, icons, and layout styles from Google Fonts and jsDelivr, and photographs from Unsplash. Those requests do not create cookies here, but the companies serving them can see your IP address and which page asked. This is how nearly all websites are built; if you would rather avoid it entirely, a content blocker or a privacy-focused browser will stop the requests, and MedCare will still be readable without them.':
+      'စာမျက်နှာတိုင်းသည် စာလုံးပုံစံများ၊ သင်္ကေတများနှင့် အပြင်အဆင်ကို Google Fonts နှင့် jsDelivr မှ၊ ဓာတ်ပုံများကို Unsplash မှ ရယူသည်။ ထိုတောင်းဆိုမှုများက ဤနေရာတွင် ကွတ်ကီး မဖန်တီးသော်လည်း ဝန်ဆောင်မှုပေးသည့် ကုမ္ပဏီများက သင့် IP လိပ်စာနှင့် မည်သည့်စာမျက်နှာမှ တောင်းဆိုသည်ကို မြင်နိုင်သည်။ ဝဘ်ဆိုက် အားလုံးနီးပါးကို ဤသို့ တည်ဆောက်ကြသည်။ လုံးဝ ရှောင်လိုပါက content blocker သို့မဟုတ် ကိုယ်ရေးလုံခြုံမှု အလေးထားသည့် ဘရောက်ဆာက ထိုတောင်းဆိုမှုများကို ပိတ်ပေးမည်ဖြစ်ပြီး ၎င်းတို့မပါဘဲလည်း MedCare ကို ဖတ်ရှုနိုင်ပါသည်။',
+    'Clearing everything': 'အားလုံး ရှင်းလင်းခြင်း',
+    'Use the buttons above, or clear site data for this domain in your browser settings. Either removes the settings completely — the site will simply open in English and ask again before loading the map.':
+      'အထက်ပါ ခလုတ်များကို သုံးပါ သို့မဟုတ် ဘရောက်ဆာ ဆက်တင်တွင် ဤဒိုမိန်းအတွက် ဝဘ်ဆိုက် ဒေတာကို ရှင်းလင်းပါ။ နှစ်မျိုးလုံးက ဆက်တင်များကို လုံးဝ ဖယ်ရှားပေးသည် — ဝဘ်ဆိုက်သည် အင်္ဂလိပ်ဘာသာဖြင့် ပွင့်မည်ဖြစ်ပြီး မြေပုံ မရယူမီ ထပ်မံ မေးမြန်းပါမည်။',
 
     'Five students who researched, designed, and built MedCare together.':
       'အဖွဲ့ဝင်ငါးယောက်စုပေါင်းကာ အချက်အလက်များ ရှာဖွေ၊ ဒီဇိုင်းချကာ MedCare Website ကို တည်ဆောက်ထားပါသည်',

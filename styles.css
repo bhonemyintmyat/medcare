@@ -553,3 +553,37 @@
     .mc-account{margin:.9rem 0 .35rem;flex-wrap:wrap}
     .mc-account-who{max-width:100%}
   }
+
+  /* ===================== Manage diseases (editor tool) ===================== */
+  .mc-admin-card{background:#fff;border:1px solid var(--mc-border);border-radius:18px;box-shadow:var(--mc-shadow);padding:1.6rem 1.65rem 1.75rem}
+  .mc-admin-card h2{font-family:'Poppins',sans-serif;font-size:1.2rem;font-weight:700;color:var(--mc-text);margin:0 0 1.3rem}
+  .mc-admin-listhead{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .mc-admin-listhead h2{margin:0 0 1.3rem}
+  .mc-admin-count{display:inline-block;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:700;background:var(--mc-primary-50);color:var(--mc-primary-600);border:1px solid #ccfbf1;border-radius:999px;padding:.1rem .55rem;margin-left:.35rem;vertical-align:middle}
+  .mc-admin-note{display:flex;gap:.9rem;align-items:flex-start;background:var(--mc-amber-50);border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:14px;padding:1rem 1.2rem;margin:0 0 1.5rem;font-size:.92rem;line-height:1.6;color:#78350f}
+  .mc-admin-note .bi{color:var(--mc-amber);font-size:1.15rem;flex-shrink:0;margin-top:.1rem}
+  .mc-admin-msg{border-radius:10px;padding:.75rem 1rem;margin:0 0 1.3rem;font-size:.93rem;line-height:1.55}
+  .mc-admin-msg--error{background:var(--mc-danger-50);border:1px solid #fecaca;color:var(--mc-danger-700)}
+  .mc-admin-msg--ok{background:var(--mc-green-50);border:1px solid #bbf7d0;color:#15803d}
+  .mc-admin-hint{font-size:.82rem;color:var(--mc-muted);line-height:1.5;margin:-.75rem 0 1.1rem}
+  .mc-admin-hint-inline{font-weight:400;color:var(--mc-muted);font-size:.82rem}
+  .mc-admin-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.35rem}
+  .mc-admin-icon-preview{position:absolute;right:.9rem;color:var(--mc-primary-600);font-size:1.1rem;pointer-events:none}
+  .mc-auth-field textarea{flex:1;border:none;outline:none;background:transparent;font-family:inherit;font-size:.97rem;color:var(--mc-text);padding:.7rem .9rem;border-radius:12px;resize:vertical;min-height:90px}
+  .mc-auth-field textarea::placeholder{color:var(--mc-muted)}
+  .mc-admin-loading{color:var(--mc-muted);font-size:.93rem;padding:1.1rem 0;text-align:center}
+  .mc-admin-row{display:flex;align-items:flex-start;gap:.9rem;padding:.85rem 0;border-bottom:1px solid var(--mc-border)}
+  .mc-admin-row:last-child{border-bottom:none}
+  .mc-admin-row-icon{width:38px;height:38px;border-radius:11px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0}
+  .mc-admin-row-main{flex:1;min-width:0}
+  .mc-admin-row-name{font-weight:600;color:var(--mc-text);font-size:.98rem;margin-bottom:.25rem}
+  .mc-admin-row-meta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.2rem}
+  .mc-admin-pill{font-size:.68rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;background:var(--mc-bg);border:1px solid var(--mc-border);color:var(--mc-muted);border-radius:999px;padding:.12rem .5rem}
+  .mc-admin-cat{font-size:.8rem;color:var(--mc-muted)}
+  .mc-admin-row-href{font-size:.78rem;color:var(--mc-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mc-admin-row-actions{display:flex;gap:.35rem;flex-shrink:0}
+  .mc-admin-icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--mc-border);background:#fff;color:var(--mc-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+  .mc-admin-icon-btn:hover{border-color:var(--mc-primary);color:var(--mc-primary-600);background:var(--mc-primary-50)}
+  .mc-admin-icon-btn--danger:hover{border-color:var(--mc-danger);color:var(--mc-danger);background:var(--mc-danger-50)}
+  .mc-admin-icon-btn:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
+  .mc-admin-icon-btn:disabled{opacity:.5;cursor:default}

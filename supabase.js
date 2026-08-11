@@ -24,7 +24,7 @@
   ---------------------------------------------------------------- */
 
   // >>> REPLACE THIS <<<  e.g. 'https://abcdefghijklm.supabase.co'
-  var SUPABASE_URL = 'https://dszujgyrbmtygzyfijtr.supabase.co/rest/v1/';
+  var SUPABASE_URL = 'https://dszujgyrbmtygzyfijtr.supabase.co';
 
   // >>> REPLACE THIS <<<  the long "anon public" key (starts with 'eyJ...' or 'sb_publishable_...')
   var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzenVqZ3lyYm10eWd6eWZpanRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0NTY5MDEsImV4cCI6MjEwMjAzMjkwMX0.gQsbAVhCbmVtWUD4m6d_gt7wJYDmK5bCyXQz2j9EC8w';

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Common Diseases — MedCare</title>
+<title>Sign in — MedCare</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,7 +25,7 @@
     <div class="collapse navbar-collapse" id="mcNav">
       <ul class="navbar-nav mx-auto">
         <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-        <li class="nav-item"><a class="nav-link active" href="common-diseases.html">Common diseases</a></li>
+        <li class="nav-item"><a class="nav-link" href="common-diseases.html">Common diseases</a></li>
         <li class="nav-item"><a class="nav-link" href="hospitals.html">Find Hospitals</a></li>
         <li class="nav-item"><a class="nav-link" href="emergency-contacts.html">Emergency</a></li>
         <li class="nav-item"><a class="nav-link" href="pharmacy.html">Pharmacy</a></li>
@@ -35,40 +35,78 @@
   </div>
 </nav>
 
-<!-- ===================== Common Diseases ===================== -->
+<!-- ===================== Sign in ===================== -->
 <main>
   <section class="mc-page-head">
     <div class="container">
       <div class="mc-breadcrumb">
         <a href="index.html"><i class="bi bi-house"></i> Home</a>
         <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
-        <span>Common diseases</span>
+        <span>Sign in</span>
       </div>
-      <h1>Common Diseases</h1>
-      <p class="intro">Learn about conditions that are frequently seen in Myanmar communities — their signs, causes, and when to seek care.</p>
+      <h1>Sign in to MedCare</h1>
+      <p class="intro">An account is only needed for editorial tools. Reading health information never requires one.</p>
     </div>
   </section>
 
-  <section class="mc-toolbar">
+  <section class="mc-detail-body">
     <div class="container">
-      <div class="mc-filter-bar">
-        <label class="mc-filter-search">
-          <i class="bi bi-search"></i>
-          <input type="text" id="diseaseSearch" placeholder="Filter diseases by name…">
-        </label>
-        <div class="mc-filter-chips" id="diseaseChips" role="tablist"></div>
-      </div>
-      <p class="mc-result-count"><strong id="diseaseCount">0</strong> <span id="diseaseWord">conditions</span></p>
-    </div>
-  </section>
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
 
-  <section class="mc-diseases">
-    <div class="container">
-      <div class="row g-4" id="diseaseGrid"></div>
-      <div class="mc-empty-simple" id="diseaseEmpty" style="display:none">
-        <i class="bi bi-search"></i>
-        <div class="fw-semibold" style="color:var(--mc-text);font-size:1rem;margin-bottom:.25rem">No conditions match your search</div>
-        <div>Try a different name or clear the filters.</div>
+          <!-- Signed-in panel: replaces the form once you have an account session -->
+          <div class="mc-auth-card" id="authSignedIn" style="display:none">
+            <div class="mc-auth-ico"><i class="bi bi-check-circle"></i></div>
+            <h2>You are signed in</h2>
+            <p class="mc-auth-sub" id="authWhoEmail"></p>
+            <p class="mc-auth-role-line">
+              Your role is <span class="mc-account-role" id="authWhoRole">user</span>
+            </p>
+            <div class="mc-auth-actions">
+              <a href="index.html" class="mc-auth-btn">Go to the site</a>
+              <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="authSignOut">Sign out</button>
+            </div>
+          </div>
+
+          <!-- Sign in / create account -->
+          <div class="mc-auth-card" id="authFormCard">
+            <div class="mc-auth-tabs" role="tablist">
+              <button type="button" class="mc-auth-tab is-active" id="tabSignIn" data-mode="signin" role="tab" aria-selected="true">Sign in</button>
+              <button type="button" class="mc-auth-tab" id="tabSignUp" data-mode="signup" role="tab" aria-selected="false">Create account</button>
+            </div>
+
+            <form id="authForm" novalidate>
+              <label class="mc-auth-label" for="authEmail">Email address</label>
+              <div class="mc-auth-field">
+                <i class="bi bi-envelope"></i>
+                <input type="email" id="authEmail" name="email" autocomplete="email" placeholder="you@example.com" required>
+              </div>
+
+              <label class="mc-auth-label" for="authPassword">Password</label>
+              <div class="mc-auth-field">
+                <i class="bi bi-lock"></i>
+                <input type="password" id="authPassword" name="password" autocomplete="current-password" placeholder="At least 6 characters" required minlength="6">
+                <button type="button" class="mc-auth-reveal" id="authReveal" aria-label="Show password"><i class="bi bi-eye"></i></button>
+              </div>
+
+              <p class="mc-auth-hint" id="authHint">Use the email and password you signed up with.</p>
+
+              <div class="mc-auth-msg" id="authMsg" role="status" aria-live="polite" style="display:none"></div>
+
+              <button type="submit" class="mc-auth-btn mc-auth-btn--full" id="authSubmit">Sign in</button>
+            </form>
+          </div>
+
+          <div class="mc-auth-note">
+            <i class="bi bi-shield-lock"></i>
+            <div>
+              <strong>New accounts are always created as <code>user</code>.</strong>
+              Editor and admin roles are granted by a site administrator in the
+              database — they can never be chosen at signup.
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   </section>
@@ -99,5 +137,7 @@
     </div>
   </div>
 </footer>
+
+<script src="login.js" defer></script>
 </body>
 </html>

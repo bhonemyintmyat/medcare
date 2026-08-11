@@ -2,7 +2,17 @@
   'use strict';
 
   /* ---------- Data ---------- */
-  var diseases = [
+
+  // Live disease list. Starts EMPTY and is filled in at runtime by
+  // loadDiseases() from the Supabase `diseases` table. Because the fetch is
+  // asynchronous, any code reading this must cope with it being [] at first.
+  var diseases = [];
+
+  // BACKUP of the original hard-coded list. Nothing reads this any more — it
+  // is kept on purpose so the data is not lost while Supabase beds in.
+  // To go back to it, either point renderDiseaseList() at `diseasesBackup`,
+  // or see the one-line fallback note inside loadDiseases().
+  var diseasesBackup = [
     { name: 'Hypertension', icon: 'bi-heart-pulse', tag: 'Chronic', cat: 'chronic', href: 'diseases/hypertension.html', desc: 'High blood pressure often has no symptoms but raises the risk of stroke and heart disease over time. ' },
     { name: 'Diabetes', icon: 'bi-droplet-half', tag: 'Chronic', cat: 'chronic', href: 'diseases/diabetes.html', desc: 'A long-term condition where blood sugar levels are too high, manageable with diet, exercise, and medication.' },
     { name: 'Asthma', icon: 'bi-lungs', tag: 'Respiratory', cat: 'respiratory',href: 'diseases/asthma.html', desc: 'Airways narrow and swell, causing wheezing and shortness of breath — usually controlled with inhalers.' },
@@ -608,7 +618,9 @@
       dChips.appendChild(b);
     });
 
-    var renderDiseases = function () {
+    // Unchanged from before: this is your original search + category filter and
+    // card markup, untouched. It only ever runs once the data has arrived.
+    var renderDiseaseList = function () {
       var q = dState.query.trim().toLowerCase();
       var cat = dState.category;
       var filtered = diseases.filter(function (d) {
@@ -635,10 +647,93 @@
       });
     };
 
+    /* ---------- Loading / error states ----------
+       The array was available the instant the script ran. A fetch is not, so
+       the page now has three possible states instead of one. `dPhase` tracks
+       which one we are in, and renderDiseases() picks the right view. */
+    var dPhase = 'loading';   // 'loading' | 'ready' | 'error'
+
+    // Shows a full-width panel in the grid, reusing the existing empty-state
+    // styling so it matches the rest of the page.
+    var showDiseasePanel = function (html) {
+      dGrid.innerHTML = '<div class="col-12"><div class="mc-empty-simple" style="display:block">' + html + '</div></div>';
+      dEmpty.style.display = 'none';
+      dCount.textContent = '0';
+      dWord.textContent = 'conditions';
+    };
+
+    var showDiseaseLoading = function () {
+      showDiseasePanel(
+        '<div class="spinner-border text-secondary" role="status" style="width:1.75rem;height:1.75rem;border-width:.2em"></div>' +
+        '<div class="fw-semibold" style="color:var(--mc-text);font-size:1rem;margin:.6rem 0 .25rem">Loading conditions…</div>' +
+        '<div>Fetching the latest list.</div>'
+      );
+    };
+
+    var showDiseaseError = function () {
+      showDiseasePanel(
+        '<i class="bi bi-wifi-off"></i>' +
+        '<div class="fw-semibold" style="color:var(--mc-text);font-size:1rem;margin-bottom:.25rem">Could not load conditions</div>' +
+        '<div>Something went wrong fetching the list. Check your connection and try again.</div>' +
+        '<button type="button" class="mc-chip" id="diseaseRetry" style="margin-top:.85rem">Try again</button>'
+      );
+      var retry = byId('diseaseRetry');
+      if (retry) { retry.addEventListener('click', function () { loadDiseases(); }); }
+    };
+
+    // Everything that used to call renderDiseases() still does. It now decides
+    // which of the three views to show, so the chips and the search box behave
+    // sensibly even while the data is still in flight.
+    var renderDiseases = function () {
+      if (dPhase === 'loading') { showDiseaseLoading(); return; }
+      if (dPhase === 'error') { showDiseaseError(); return; }
+      renderDiseaseList();
+    };
+
+    /* ---------- The fetch ---------- */
+    var loadDiseases = function () {
+      dPhase = 'loading';
+      renderDiseases();
+
+      var db = window.supabaseClient;
+      if (!db) {
+        // supabase.js sets this to null when the library or the keys are
+        // missing; it already logged why.
+        dPhase = 'error';
+        renderDiseases();
+        return;
+      }
+
+      // .order('id') matters: without an explicit order, Postgres makes no
+      // promise about row order, so the cards could shuffle between loads.
+      db.from('diseases')
+        .select('*')
+        .order('id')
+        .then(function (res) {
+          // supabase-js does NOT throw on a database error — it resolves with
+          // { data, error }. A missing table or a blocking RLS policy shows up
+          // here, not in .catch(), so this check has to be explicit.
+          if (res.error) { throw res.error; }
+          diseases = res.data || [];
+          dPhase = 'ready';
+          renderDiseases();
+        })
+        .catch(function (err) {
+          // .catch() handles the other failure mode: the request never
+          // completed at all (offline, DNS, CORS, project paused).
+          console.error('[MedCare] Could not load diseases from Supabase:', err);
+          // To fall back to the old hard-coded list instead of showing an
+          // error, replace the next two lines with:
+          //   diseases = diseasesBackup; dPhase = 'ready';
+          dPhase = 'error';
+          renderDiseases();
+        });
+    };
+
     if (dSearch) {
       dSearch.addEventListener('input', function (e) { dState.query = e.target.value; renderDiseases(); });
     }
-    renderDiseases();
+    loadDiseases();
   }
 
   /* ---------- Health articles listing (articles.html) ----------

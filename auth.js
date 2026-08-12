@@ -182,7 +182,8 @@
         // not protect it. The page itself re-checks, and the RLS policies
         // are what actually refuse their writes.
         var manage = api.isStaff()
-          ? '<a class="mc-account-btn" href="' + depth + 'manage-diseases.html">Manage</a>'
+          ? '<a class="mc-account-btn" href="' + depth + 'manage-diseases.html">Manage</a>' +
+            '<a class="mc-account-btn" href="' + depth + 'reports.html">Inbox</a>'
           : '';
         wrap.innerHTML = manage +
           '<span class="mc-account-who" title="' + esc(state.user.email) + '">' +

@@ -87,6 +87,7 @@
       checking.style.display = 'none';
       app.style.display = 'block';
       load();
+      loadReports();
     });
   }
 
@@ -132,6 +133,9 @@
         rows = res.data || [];
         render();
         fillDatalists();
+        // Reports may have arrived first; re-render so they can show the
+        // condition name rather than a bare id.
+        if (reportRows.length) { renderReports(); }
       })
       .catch(function (err) {
         console.error('[MedCare] Could not load diseases:', err);
@@ -295,6 +299,164 @@
       submitBtn.disabled = false;
       submitBtn.textContent = f.id.value ? 'Save changes' : 'Add condition';
     });
+  });
+
+  /* ================================================================
+     READER REPORTS QUEUE
+     ----------------------------------------------------------------
+     Everything here leans on two policies from supabase_reports_rls.sql:
+
+       "Staff can read all reports"      lets an editor see everyone's
+                                         reports, where a plain user sees
+                                         only their own. Same table, same
+                                         query, different result set.
+
+       "Staff can update report status"  lets an editor move a report
+                                         through the workflow.
+
+     And on one thing that is NOT a policy: UPDATE is granted on the
+     `status` column alone, so this page physically cannot rewrite a
+     reader's `reason` even if the code tried. RLS decides which rows;
+     the column grant decides which columns.
+     ================================================================ */
+
+  var reportList    = document.getElementById('reportList');
+  var reportMsgEl   = document.getElementById('reportMsg');
+  var reportCountEl = document.getElementById('reportNewCount');
+  var reportFilters = document.getElementById('reportFilters');
+  var reportRefresh = document.getElementById('reportRefresh');
+
+  var reportRows = [];
+  var reportFilter = 'new';
+
+  function reportMessage(text, kind) {
+    reportMsgEl.textContent = text;
+    reportMsgEl.className = 'mc-admin-msg mc-admin-msg--' + (kind || 'error');
+    reportMsgEl.style.display = 'block';
+    if (kind === 'ok') {
+      window.setTimeout(function () { reportMsgEl.style.display = 'none'; }, 4000);
+    }
+  }
+
+  function when(iso) {
+    if (!iso) { return ''; }
+    var d = new Date(iso);
+    if (isNaN(d)) { return ''; }
+    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) +
+           ' ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  }
+
+  /* reports.item_id is deliberately not a foreign key — the table it points
+     at depends on item_type — so PostgREST cannot embed the disease for us.
+     The join happens here instead, against the conditions this page has
+     already loaded. */
+  function itemLabel(r) {
+    if (r.item_type === 'disease') {
+      var hit = rows.filter(function (d) { return d.id === r.item_id; })[0];
+      if (hit) { return esc(hit.name); }
+    }
+    return esc(r.item_type) + ' #' + esc(r.item_id);
+  }
+
+  function loadReports() {
+    reportList.innerHTML = '<div class="mc-admin-loading">Loading reports…</div>';
+    var q = db.from('reports').select('*').order('created_at', { ascending: false });
+    if (reportFilter !== 'all') { q = q.eq('status', reportFilter); }
+
+    q.then(function (res) {
+      if (res.error) { throw res.error; }
+      reportRows = res.data || [];
+      renderReports();
+      refreshNewCount();
+    }).catch(function (err) {
+      console.error('[MedCare] Could not load reports:', err);
+      reportList.innerHTML = '<div class="mc-admin-loading">Could not load reports.</div>';
+      reportMessage(explain(err));
+    });
+  }
+
+  // Always counts outstanding reports, whatever filter is showing.
+  function refreshNewCount() {
+    db.from('reports').select('id', { count: 'exact', head: true }).eq('status', 'new')
+      .then(function (res) {
+        if (!res.error) { reportCountEl.textContent = res.count == null ? '0' : res.count; }
+      })
+      .catch(function () { /* the badge is cosmetic */ });
+  }
+
+  function renderReports() {
+    if (!reportRows.length) {
+      reportList.innerHTML = '<div class="mc-admin-loading">' +
+        (reportFilter === 'new' ? 'No new reports. Nothing waiting for you.'
+                                : 'No reports match this filter.') + '</div>';
+      return;
+    }
+    reportList.innerHTML = reportRows.map(function (r) {
+      var reviewed = r.status === 'reviewed';
+      return '<div class="mc-report-row" data-id="' + r.id + '">' +
+        '<div class="mc-report-row-head">' +
+          '<span class="mc-report-item"><i class="bi bi-file-medical"></i> ' + itemLabel(r) + '</span>' +
+          '<span class="mc-admin-pill mc-report-status mc-report-status--' + esc(r.status) + '">' + esc(r.status) + '</span>' +
+        '</div>' +
+        // Reader-supplied text: escaped, never inserted as markup.
+        '<div class="mc-report-reason">' + esc(r.reason) + '</div>' +
+        '<div class="mc-report-foot">' +
+          '<span class="mc-report-meta">' +
+            '<i class="bi bi-clock"></i> ' + esc(when(r.created_at)) +
+            ' · reporter ' + esc(String(r.user_id || 'unknown').slice(0, 8)) +
+          '</span>' +
+          '<button type="button" class="mc-auth-btn ' + (reviewed ? 'mc-auth-btn--ghost' : '') + '" ' +
+            'data-report-act="' + (reviewed ? 'reopen' : 'review') + '" data-id="' + r.id + '">' +
+            (reviewed ? 'Reopen' : 'Mark reviewed') + '</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  reportList.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-report-act]');
+    if (!btn) { return; }
+    var id = Number(btn.getAttribute('data-id'));
+    var next = btn.getAttribute('data-report-act') === 'review' ? 'reviewed' : 'new';
+
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    // Only `status` is sent — it is also the only column this role may
+    // write, so adding anything else here would fail outright.
+    db.from('reports').update({ status: next }).eq('id', id).select()
+      .then(function (res) {
+        if (res.error) { throw res.error; }
+        if (!res.data || !res.data.length) {
+          // Allowed to run, matched no rows: RLS filtered it out.
+          reportMessage('That report was not updated. The database did not permit the change.');
+          return;
+        }
+        reportMessage(next === 'reviewed' ? 'Report marked reviewed.' : 'Report reopened.', 'ok');
+        loadReports();
+      })
+      .catch(function (err) {
+        console.error('[MedCare] Could not update report:', err);
+        btn.disabled = false;
+        btn.textContent = next === 'reviewed' ? 'Mark reviewed' : 'Reopen';
+        reportMessage(explain(err));
+      });
+  });
+
+  reportFilters.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-status]');
+    if (!btn) { return; }
+    reportFilter = btn.getAttribute('data-status');
+    Array.prototype.forEach.call(reportFilters.children, function (b) {
+      b.classList.toggle('is-active', b === btn);
+    });
+    reportMsgEl.style.display = 'none';
+    loadReports();
+  });
+
+  reportRefresh.addEventListener('click', function () {
+    reportMsgEl.style.display = 'none';
+    loadReports();
   });
 
   guard();

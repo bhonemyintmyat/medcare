@@ -144,6 +144,23 @@
           </div>
         </div>
 
+        <!-- ---------- Reports queue ---------- -->
+        <div class="mc-admin-card mc-admin-queue">
+          <div class="mc-admin-listhead">
+            <h2>Reader reports <span class="mc-admin-count" id="reportNewCount">0</span></h2>
+            <div class="mc-admin-queue-tools">
+              <div class="mc-admin-filters" id="reportFilters" role="group" aria-label="Filter reports">
+                <button type="button" class="mc-chip is-active" data-status="new">New</button>
+                <button type="button" class="mc-chip" data-status="reviewed">Reviewed</button>
+                <button type="button" class="mc-chip" data-status="all">All</button>
+              </div>
+              <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="reportRefresh">Refresh</button>
+            </div>
+          </div>
+          <div class="mc-admin-msg" id="reportMsg" role="status" aria-live="polite" style="display:none"></div>
+          <div id="reportList"></div>
+        </div>
+
       </div>
     </section>
   </div>

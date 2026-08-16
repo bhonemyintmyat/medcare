@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Looking after your eyes — MedCare</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
+<script src="supabase.js" defer></script>
+<script src="auth.js" defer></script>
+<script src="script.js" defer></script>
+</head>
+<body>
+
+<!-- ===================== Navbar ===================== -->
+<nav class="navbar navbar-expand-lg mc-nav">
+  <div class="container">
+    <a class="navbar-brand" href="index.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mcNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="mcNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="common-diseases.html">Common diseases</a></li>
+        <li class="nav-item"><a class="nav-link" href="hospitals.html">Find Hospitals</a></li>
+        <li class="nav-item"><a class="nav-link" href="emergency-contacts.html">Emergency</a></li>
+        <li class="nav-item"><a class="nav-link" href="pharmacy.html">Pharmacy</a></li>
+      </ul>
+      <a href="emergency-contacts.html" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== Article: Eye health ===================== -->
+<main>
+  <section class="mc-detail-head">
+    <div class="container">
+      <div class="mc-breadcrumb">
+        <a href="index.html"><i class="bi bi-house"></i> Home</a>
+        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+        <a href="articles.html">Health articles</a>
+        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+        <span class="mc-en">Eye health</span><span class="mc-my">မျက်စိကျန်းမာရေး</span>
+      </div>
+      <div class="head-row">
+        <div class="mc-detail-icon"><i class="bi bi-eye"></i></div>
+        <div>
+          <span class="mc-detail-tag mc-en">Prevention</span><span class="mc-detail-tag mc-my">ကြိုတင်ကာကွယ်ရေး</span>
+          <h1><span class="mc-en">Looking after your eyes: what to watch</span><span class="mc-my">မျက်စိကျန်းမာရေးအတွက် ဂရုစိုက်သင့်သည့် အချက်များ</span></h1>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mc-detail-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+          <figure class="mc-figure">
+            <img src="images/eyecare.jpg" alt="A doctor examining a patient's eyes">
+            <figcaption>
+              <span class="mc-en">Notes from the clinic — from an eye specialist.</span>
+              <span class="mc-my">ဆေးခန်းမှတ်စုများ — မျက်စိအထူးကုဆရာဝန်</span>
+            </figcaption>
+          </figure>
+
+          <div class="mc-doctor">
+            <span class="ico"><i class="bi bi-person-badge"></i></span>
+            <div>
+              <h3 class="mc-en">A note from the doctor</h3>
+              <h3 class="mc-my">ဆရာဝန်၏ မှတ်စု</h3>
+              <p class="mc-en">Examining patients at the eye clinic day after day, most of them arrive with the same complaints — burning eyes, strain, and blurred vision.</p>
+              <p class="mc-my">မျက်စိအထူးကု ဆေးခန်းမှာ နေ့စဉ်လူနာများစွာကို စမ်းသပ်ကုသပေးရတဲ့အခါ အများစုဟာ မျက်စိပူစပ်ခြင်း၊ ညောင်းညာခြင်းနဲ့ အမြင်အာရုံမှုန်ဝါးခြင်း စတဲ့ လက္ခဏာတွေနဲ့ လာပြကြပါတယ်။</p>
+            </div>
+          </div>
+
+          <p class="mc-overview mc-en">
+            <span class="lead-line">A good share of the damage we see could have been prevented by small changes to daily habits.</span>
+            As a doctor, I urge you to follow the points below so that you can protect your eyesight — something no money can replace — for years to come.
+          </p>
+          <p class="mc-overview mc-my">
+            <span class="lead-line">တချို့သော မျက်စိထိခိုက်မှုတွေဟာ နေ့စဉ်နေထိုင်မှုပုံစံကို အနည်းငယ်ပြောင်းလဲလိုက်ရုံနဲ့ ကြိုတင်ကာကွယ်နိုင်ပါတယ်။</span>
+            ဆရာဝန်တစ်ယောက်အနေနဲ့ သင့်ရဲ့ တန်ဖိုးမဖြတ်နိုင်တဲ့ အမြင်အာရုံကို ရေရှည်ထိန်းသိမ်းနိုင်ဖို့ အောက်ပါအချက်လေးတွေကို မဖြစ်မနေ လိုက်နာဖို့ စေတနာရှေ့ထား၍ တိုက်တွန်းအပ်ပါတယ်။
+          </p>
+
+          <h2 class="mc-article-h2 mc-en">Everyday habits worth keeping</h2>
+          <h2 class="mc-article-h2 mc-my">နေ့စဉ် လိုက်နာသင့်သော အချက်များ</h2>
+          <div class="mc-cards">
+            <div class="mc-card">
+              <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80" alt="Managing screen time">
+              <div class="mc-card-body">
+                <h3 class="mc-en">The 20-20-20 rule</h3>
+                <h3 class="mc-my">၂၀-၂၀-၂၀ စည်းမျဉ်း</h3>
+                <p class="mc-en">Most patients stare at a phone or computer without a break. Every 20 minutes of screen time, look at something 20 feet away for 20 seconds — it noticeably relieves the strain on the eye muscles.</p>
+                <p class="mc-my">လူနာအများစုဟာ ဖုန်းနဲ့ ကွန်ပျူတာကို အနားမယူဘဲ ကြည့်တတ်ကြပါတယ်။ ဖန်သားပြင်ကို မိနစ် ၂၀ ကြည့်ပြီးတိုင်း၊ ပေ ၂၀ အကွာကို စက္ကန့် ၂၀ ကြာ အဝေးကြည့်ပေးခြင်းဖြင့် မျက်စိကြွက်သားများ တင်းမာမှုကို သိသာစွာ လျော့ကျစေပါတယ်။</p>
+              </div>
+            </div>
+            <div class="mc-card">
+              <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80" alt="Nutrition for the eyes">
+              <div class="mc-card-body">
+                <h3 class="mc-en">Feed your eyes properly</h3>
+                <h3 class="mc-my">အာဟာရ ဖြည့်စွက်ခြင်း</h3>
+                <p class="mc-en">Natural nutrition beats supplements for eye strength. Work carrots, leafy greens and fish — rich in vitamins A, C, E and omega-3 — into your daily meals.</p>
+                <p class="mc-my">မျက်စိအားကောင်းစေဖို့ အားဆေးတွေ သောက်တာထက် သဘာဝအာဟာရက ပိုထိရောက်ပါတယ်။ ဗီတာမင် A, C, E နဲ့ Omega-3 ကြွယ်ဝတဲ့ မုန်လာဥနီ၊ ဟင်းနုနွယ်ရွက်နဲ့ ငါးများကို နေ့စဉ်စားသောက်မှုမှာ ထည့်သွင်းပါ။</p>
+              </div>
+            </div>
+            <div class="mc-card">
+              <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80" alt="UV protection">
+              <div class="mc-card-body">
+                <h3 class="mc-en">Protect against UV light</h3>
+                <h3 class="mc-my">ခရမ်းလွန်ရောင်ခြည် (UV) ကာကွယ်ခြင်း</h3>
+                <p class="mc-en">UV rays in sunlight noticeably speed up the formation of cataracts. Wear sunglasses rated for UV 400 protection whenever you go out.</p>
+                <p class="mc-my">နေရောင်ခြည်ထဲက UV အလင်းတန်းများဟာ အတွင်းတိမ် (Cataract) ဖြစ်ပေါ်မှုကို သိသာစွာ မြန်ဆန်စေပါတယ်။ အပြင်ထွက်တဲ့အခါတိုင်း UV 400 ကာကွယ်နိုင်စွမ်းရှိတဲ့ နေကာမျက်မှန် တပ်ဆင်ပါ။</p>
+              </div>
+            </div>
+            <div class="mc-card">
+              <img src="https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&w=800&q=80" alt="Routine eye examination">
+              <div class="mc-card-body">
+                <h3 class="mc-en">Have your eyes checked regularly</h3>
+                <h3 class="mc-my">မျက်စိ ပုံမှန်စစ်ဆေးခြင်း</h3>
+                <p class="mc-en">Many conditions — glaucoma among them — show no early symptoms. See a doctor for an examination at least once a year.</p>
+                <p class="mc-my">ရောဂါတော်တော်များများ (ဥပမာ — ရေတိမ်ရောဂါ) ဟာ အစောပိုင်းမှာ လက္ခဏာ မပြတတ်ပါဘူး။ အနည်းဆုံး တစ်နှစ်လျှင် တစ်ကြိမ် ဆရာဝန်နှင့် ပြသ၍ စစ်ဆေးမှု ခံယူပါ။</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="mc-section-label"><span class="mc-en">Learn more</span><span class="mc-my">အသေးစိတ် လေ့လာရန်</span></p>
+          <div class="accordion mc-accordion" id="eyeAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accEyeSym" aria-expanded="true">
+                  <span class="head-ico sym"><i class="bi bi-clipboard2-pulse"></i></span>
+                  <span class="mc-en">Symptoms that need a clinic visit</span><span class="mc-my">ဆေးခန်းပြသင့်သော လက္ခဏာများ</span>
+                </button>
+              </h2>
+              <div id="accEyeSym" class="accordion-collapse collapse show" data-bs-parent="#eyeAccordion">
+                <div class="accordion-body">
+                  <ul class="mc-list sym mc-en">
+                    <li><i class="bi bi-dot"></i><span>Vision that blurs suddenly</span></li>
+                    <li><i class="bi bi-dot"></i><span>Eye pain or redness that keeps coming back</span></li>
+                    <li><i class="bi bi-dot"></i><span>Haloes around lights</span></li>
+                    <li><i class="bi bi-dot"></i><span>A sudden increase in floaters or dark spots in your vision</span></li>
+                  </ul>
+                  <ul class="mc-list sym mc-my">
+                    <li><i class="bi bi-dot"></i><span>အမြင်အာရုံ ရုတ်တရက် မှုန်ဝါးလာခြင်း</span></li>
+                    <li><i class="bi bi-dot"></i><span>မျက်စိနာကျင်ခြင်း သို့မဟုတ် အနီရောင် ဆက်တိုက်ဖြစ်ခြင်း</span></li>
+                    <li><i class="bi bi-dot"></i><span>အလင်းကို ကြည့်သောအခါ စက်ဝိုင်းများ မြင်ရခြင်း</span></li>
+                    <li><i class="bi bi-dot"></i><span>အမြင်ကွင်းအတွင်း အမည်းစက်များ ရုတ်တရက် တိုးလာခြင်း</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accEyeDos" aria-expanded="false">
+                  <span class="head-ico dos"><i class="bi bi-check2-circle"></i></span>
+                  <span class="mc-en">Do's</span><span class="mc-my">လုပ်သင့်သည်များ</span>
+                </button>
+              </h2>
+              <div id="accEyeDos" class="accordion-collapse collapse" data-bs-parent="#eyeAccordion">
+                <div class="accordion-body">
+                  <ul class="mc-list dos mc-en">
+                    <li><i class="bi bi-check-circle-fill"></i><span>Blink consciously and regularly while looking at a screen.</span></li>
+                    <li><i class="bi bi-check-circle-fill"></i><span>Keep your workspace well lit.</span></li>
+                    <li><i class="bi bi-check-circle-fill"></i><span>Position the screen slightly below eye level.</span></li>
+                    <li><i class="bi bi-check-circle-fill"></i><span>Drink enough water to guard against dry eyes.</span></li>
+                  </ul>
+                  <ul class="mc-list dos mc-my">
+                    <li><i class="bi bi-check-circle-fill"></i><span>ဖန်သားပြင်ကြည့်ချိန်တွင် မျက်တောင်ခတ်မှုကို သတိထားပြီး ပုံမှန်ခတ်ပါ။</span></li>
+                    <li><i class="bi bi-check-circle-fill"></i><span>အလုပ်လုပ်သည့်နေရာတွင် အလင်းရောင် လုံလောက်အောင် ထားပါ။</span></li>
+                    <li><i class="bi bi-check-circle-fill"></i><span>ဖန်သားပြင်ကို မျက်လုံးအဆင့်ထက် အနည်းငယ်နိမ့်၍ ထားပါ။</span></li>
+                    <li><i class="bi bi-check-circle-fill"></i><span>ရေလုံလောက်စွာ သောက်ပြီး မျက်စိခြောက်သွေ့မှုကို ကာကွယ်ပါ။</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accEyeDonts" aria-expanded="false">
+                  <span class="head-ico donts"><i class="bi bi-x-circle"></i></span>
+                  <span class="mc-en">Don'ts</span><span class="mc-my">ရှောင်ကြဉ်သင့်သည်များ</span>
+                </button>
+              </h2>
+              <div id="accEyeDonts" class="accordion-collapse collapse" data-bs-parent="#eyeAccordion">
+                <div class="accordion-body">
+                  <ul class="mc-list donts mc-en">
+                    <li><i class="bi bi-x-circle-fill"></i><span>Don't rub your eyes with your hands when they itch.</span></li>
+                    <li><i class="bi bi-x-circle-fill"></i><span>Don't use eye drops that a doctor has not prescribed.</span></li>
+                    <li><i class="bi bi-x-circle-fill"></i><span>Don't stare at your phone for long stretches in the dark.</span></li>
+                    <li><i class="bi bi-x-circle-fill"></i><span>Don't sleep while wearing contact lenses.</span></li>
+                  </ul>
+                  <ul class="mc-list donts mc-my">
+                    <li><i class="bi bi-x-circle-fill"></i><span>မျက်စိယားသည့်အခါ လက်ဖြင့် ပွတ်တိုက်ခြင်း မပြုပါနှင့်။</span></li>
+                    <li><i class="bi bi-x-circle-fill"></i><span>ဆရာဝန်ညွှန်ကြားချက်မပါဘဲ မျက်စဉ်းများ အသုံးမပြုပါနှင့်။</span></li>
+                    <li><i class="bi bi-x-circle-fill"></i><span>အမှောင်ထဲတွင် ဖုန်းကို ကြာရှည် မကြည့်ပါနှင့်။</span></li>
+                    <li><i class="bi bi-x-circle-fill"></i><span>Contact Lens ကို တပ်လျက် အိပ်စက်ခြင်း မပြုပါနှင့်။</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mc-callout mc-callout--info">
+            <span class="ico"><i class="bi bi-person-badge"></i></span>
+            <div>
+              <h3 class="mc-en">The doctor's advice</h3>
+              <h3 class="mc-my">ဆရာဝန်၏ အကြံပြုချက်</h3>
+              <p class="mc-en">Don't wait until your sight blurs before coming to the clinic. Regular examinations prevent losses that cannot be undone.</p>
+              <p class="mc-my">မျက်စိဝေဝါးလာမှ ဆေးခန်းလာပြတာမျိုး မလုပ်ဘဲ ပုံမှန်စစ်ဆေးမှု ခံယူခြင်းဖြင့် ပြန်လည်ကုသ၍မရနိုင်သော ဆုံးရှုံးမှုများကို ကာကွယ်နိုင်ပါတယ်။</p>
+              <p class="mc-en">— With continued care for your health (eye specialist)</p>
+              <p class="mc-my">— သင့်ကျန်းမာရေးကို အစဉ်ဂရုစိုက်လျက် (မျက်စိအထူးကုဆရာဝန်)</p>
+            </div>
+          </div>
+
+          <div class="mc-sources">
+            <p class="text-muted mb-3 mc-en" style="font-size:.83rem">Last reviewed: August 2026 · Reviewed by the MedCare medical editorial team.</p>
+            <p class="text-muted mb-3 mc-my" style="font-size:.83rem">နောက်ဆုံးပြန်လည်သုံးသပ်သည့်ရက် — ဩဂုတ် ၂၀၂၆ · MedCare ဆေးပညာ တည်းဖြတ်အဖွဲ့မှ စိစစ်ပြီး။</p>
+            <a href="articles.html" class="btn btn-mc-outline"><i class="bi bi-arrow-left me-1"></i><span class="mc-en">All articles</span><span class="mc-my">ဆောင်းပါးအားလုံး</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== Footer ===================== -->
+<footer class="mc-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4 brand-block">
+        <a class="navbar-brand mb-3 d-inline-flex" href="index.html" style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);gap:.55rem;align-items:center">
+          <span style="width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center"><i class="bi bi-heart-pulse-fill"></i></span>MedCare
+        </a>
+        <p>Trusted, plain-language health information reviewed by licensed medical professionals. Free for everyone, everywhere.</p>
+      </div>
+      <div class="col-6 col-md-3 col-lg-2">
+        <h5>About</h5>
+        <ul><li><a href="editor.html">Our editorial team</a></li><li><a href="index.html">Contact us</a></li></ul>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <h5>Legal</h5>
+        <ul><li><a href="terms.html">Terms of use</a></li><li><a href="privacy.html">Privacy policy</a></li><li><a href="cookies.html">Cookie settings</a></li></ul>
+      </div>
+    </div>
+    <div class="mc-disclaimer">
+      <span class="note"><i class="bi bi-info-circle"></i> Information only — not a substitute for professional medical advice, diagnosis, or treatment.</span>
+      <span>© 2026 MedCare. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

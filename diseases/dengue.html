@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dengue fever — MedCare</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
+<script src="../supabase.js" defer></script>
+<script src="../auth.js" defer></script>
+<script src="../report.js" defer></script>
+<script src="../script.js" defer></script>
+</head>
+<body>
+
+<!-- ===================== Navbar ===================== -->
+<nav class="navbar navbar-expand-lg mc-nav">
+  <div class="container">
+    <a class="navbar-brand" href="../index.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mcNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="mcNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="../common-diseases.html">Common diseases</a></li>
+        <li class="nav-item"><a class="nav-link" href="../hospitals.html">Find Hospitals</a></li>
+        <li class="nav-item"><a class="nav-link" href="../emergency-contacts.html">Emergency</a></li>
+        <li class="nav-item"><a class="nav-link" href="../pharmacy.html">Pharmacy</a></li>
+      </ul>
+      <a href="../emergency-contacts.html" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== Disease detail: Dengue fever ===================== -->
+<main>
+  <section class="mc-detail-head">
+    <div class="container">
+      <div class="mc-breadcrumb">
+        <a href="../index.html"><i class="bi bi-house"></i> Home</a>
+        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+        <a href="../common-diseases.html">Common diseases</a>
+        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+        <span>Dengue fever</span>
+      </div>
+      <div class="head-row">
+        <div class="mc-detail-icon"><i class="bi bi-bug"></i></div>
+        <div><span class="mc-detail-tag">Infectious disease</span><h1>Dengue fever</h1></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mc-detail-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <p class="mc-overview">
+            <span class="lead-line">Dengue is a viral illness spread by the bite of infected Aedes mosquitoes, which breed in clean, still water around the home and bite mostly in the daytime.</span>
+            Most people recover within a week with rest and plenty of fluids. A small number, however, become seriously ill at the point when the fever starts to fall — usually the third to seventh day — as fluid leaks from the blood vessels. That is why the days after the fever breaks need the closest watching, not the days of high fever.
+          </p>
+
+          <p class="mc-section-label">Learn more</p>
+          <div class="accordion mc-accordion" id="dengueAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accSymptoms" aria-expanded="true">
+                  <span class="head-ico sym"><i class="bi bi-clipboard2-pulse"></i></span>Symptoms
+                </button>
+              </h2>
+              <div id="accSymptoms" class="accordion-collapse collapse show" data-bs-parent="#dengueAccordion">
+                <div class="accordion-body">
+                  <p class="text-muted mb-3" style="font-size:.95rem;line-height:1.6">Symptoms usually begin suddenly, four to ten days after the mosquito bite:</p>
+                  <ul class="mc-list sym">
+                    <li><i class="bi bi-dot"></i><span>A high fever that starts abruptly</span></li>
+                    <li><i class="bi bi-dot"></i><span>Severe headache, with aching pain behind the eyes</span></li>
+                    <li><i class="bi bi-dot"></i><span>Deep muscle, joint, and bone pain</span></li>
+                    <li><i class="bi bi-dot"></i><span>A red skin rash appearing after a few days</span></li>
+                    <li><i class="bi bi-dot"></i><span>Nausea, vomiting, and loss of appetite</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accRisk" aria-expanded="false">
+                  <span class="head-ico risk"><i class="bi bi-bell-fill text-danger"></i></span>Risk Groups
+                </button>
+              </h2>
+              <div id="accRisk" class="accordion-collapse collapse" data-bs-parent="#dengueAccordion">
+                <div class="accordion-body">
+                  <ul class="mc-list risk">
+                    <li><i class="bi bi-exclamation-triangle-fill text-danger"></i><span>Young children, who can become seriously ill quickly.</span></li>
+                    <li><i class="bi bi-exclamation-triangle-fill text-danger"></i><span>People living where mosquitoes are dense, especially in the rainy season.</span></li>
+                    <li><i class="bi bi-exclamation-triangle-fill text-danger"></i><span>Households storing water in open pots, tanks, or drums.</span></li>
+                    <li><i class="bi bi-exclamation-triangle-fill text-danger"></i><span>Anyone who has had dengue before — a second infection is often more severe.</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accDos" aria-expanded="false">
+                  <span class="head-ico dos"><i class="bi bi-check2-circle"></i></span>Do's
+                </button>
+              </h2>
+              <div id="accDos" class="accordion-collapse collapse" data-bs-parent="#dengueAccordion">
+                <div class="accordion-body">
+                  <ul class="mc-list dos">
+                    <li><i class="bi bi-check-circle-fill"></i><span>Cover, empty, scrub, and change stored water so mosquitoes cannot breed.</span></li>
+                    <li><i class="bi bi-check-circle-fill"></i><span>Sleep under a mosquito net, including during daytime naps.</span></li>
+                    <li><i class="bi bi-check-circle-fill"></i><span>Use repellent and wear long sleeves in the early morning and late afternoon.</span></li>
+                    <li><i class="bi bi-check-circle-fill"></i><span>Drink plenty of fluids — water, oral rehydration solution, or soup.</span></li>
+                    <li><i class="bi bi-check-circle-fill"></i><span>Use paracetamol for fever and watch closely as the fever falls.</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accDonts" aria-expanded="false">
+                  <span class="head-ico donts"><i class="bi bi-x-circle"></i></span>Don'ts
+                </button>
+              </h2>
+              <div id="accDonts" class="accordion-collapse collapse" data-bs-parent="#dengueAccordion">
+                <div class="accordion-body">
+                  <ul class="mc-list donts">
+                    <li><i class="bi bi-x-circle-fill"></i><span>Don't take aspirin or ibuprofen — they increase the risk of bleeding.</span></li>
+                    <li><i class="bi bi-x-circle-fill"></i><span>Don't assume recovery just because the fever has come down.</span></li>
+                    <li><i class="bi bi-x-circle-fill"></i><span>Don't leave water in flower pots, tyres, or buckets around the house.</span></li>
+                    <li><i class="bi bi-x-circle-fill"></i><span>Don't wait at home if there is bleeding or severe stomach pain.</span></li>
+                    <li><i class="bi bi-x-circle-fill"></i><span>Don't take antibiotics for dengue — they do not work against viruses.</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mc-callout">
+            <span class="ico"><i class="bi bi-exclamation-triangle"></i></span>
+            <div>
+              <h3>When to see a doctor</h3>
+              <p>Go to a clinic or hospital straight away — especially between days three and seven of illness — if you notice any of these warning signs:</p>
+              <ul>
+                <li>Vomiting that will not stop, or being unable to keep fluids down</li>
+                <li>Bleeding from the gums or nose, or bruising easily under the skin</li>
+                <li>Severe pain in the abdomen</li>
+                <li>Cold, clammy skin, restlessness, or sudden weakness after the fever drops</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mc-sources">
+            <h2>Sources</h2>
+            <div class="mc-source">
+              <i class="bi bi-globe2"></i>
+              <div>
+                <div class="src-name">World Health Organization (WHO)</div>
+                <div class="src-desc">Dengue and severe dengue — transmission, warning signs, and clinical care.</div>
+                <a href="https://www.who.int/health-topics/dengue-and-severe-dengue" class="src-link">who.int/health-topics/dengue-and-severe-dengue <i class="bi bi-box-arrow-up-right"></i></a>
+              </div>
+            </div>
+            <div class="mc-source">
+              <i class="bi bi-buildings"></i>
+              <div>
+                <div class="src-name">Ministry of Health, Myanmar</div>
+                <div class="src-desc">National dengue control programme and seasonal outbreak guidance.</div>
+                <a href="https://mohs.gov.mm" class="src-link">mohs.gov.mm <i class="bi bi-box-arrow-up-right"></i></a>
+              </div>
+            </div>
+            <div class="mc-source">
+              <i class="bi bi-journal-text"></i>
+              <div>
+                <div class="src-name">WHO Regional Office for South-East Asia</div>
+                <div class="src-desc">Regional guidance on dengue prevention, vector control, and case management.</div>
+                <a href="https://www.who.int/southeastasia" class="src-link">who.int/southeastasia <i class="bi bi-box-arrow-up-right"></i></a>
+              </div>
+            </div>
+            <p class="text-muted mt-3" style="font-size:.83rem">Last reviewed: July 2026 · Reviewed by the MedCare medical editorial team.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== Footer ===================== -->
+<footer class="mc-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4 brand-block">
+        <a class="navbar-brand mb-3 d-inline-flex" href="../index.html" style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);gap:.55rem;align-items:center">
+          <span style="width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center"><i class="bi bi-heart-pulse-fill"></i></span>MedCare
+        </a>
+        <p>Trusted, plain-language health information reviewed by licensed medical professionals. Free for everyone, everywhere.</p>
+      </div>
+      <div class="col-6 col-md-3 col-lg-2">
+        <h5>About</h5>
+        <ul><li><a href="../editor.html">Our editorial team</a></li><li><a href="../index.html">Contact us</a></li></ul>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <h5>Legal</h5>
+        <ul><li><a href="../terms.html">Terms of use</a></li><li><a href="../privacy.html">Privacy policy</a></li><li><a href="../cookies.html">Cookie settings</a></li></ul>
+      </div>
+    </div>
+    <div class="mc-disclaimer">
+      <span class="note"><i class="bi bi-info-circle"></i> Information only — not a substitute for professional medical advice, diagnosis, or treatment.</span>
+      <span>© 2026 MedCare. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

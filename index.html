@@ -10,6 +10,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
+<script src="supabase.js" defer></script>
+<script src="auth.js" defer></script>
 <script src="script.js" defer></script>
 </head>
 <body>
@@ -67,10 +70,10 @@
       <div class="slider">
         <ul>
             <li>
-                <img src="doctors.jpg" alt="GFG Image 1">
+                <img src="images/doctors.jpg" alt="GFG Image 1">
             </li>
             <li>
-                <img src="earphone.jpg" alt="GFG Image 2">
+                <img src="images/earphone.jpg" alt="GFG Image 2">
             </li>
         </ul>
       </div>
@@ -146,38 +149,8 @@
         <a href="articles.html" class="btn btn-mc-outline">All articles <i class="bi bi-arrow-right ms-1"></i></a>
       </div>
 
-      <div class="row g-4">
-        <div class="col-md-6 col-lg-4">
-          <a href="article.html?id=dengue-rainy-season" class="mc-article d-block text-decoration-none text-reset">
-            <div class="mc-article-thumb"><span class="badge-cat">Monsoon health</span></div>
-            <div class="mc-article-body">
-              <h3>Protecting your family from dengue during the rainy season</h3>
-              <p>Simple steps every household in Yangon can take to prevent mosquito breeding at home.</p>
-              <div class="mc-article-meta"><span>Dr. Thiri Aung</span><span class="sep"></span><span>5 min read</span><span class="sep"></span><span>Jul 22</span></div>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-6 col-lg-4">
-          <a href="article.html?id=eating-well-on-a-budget" class="mc-article d-block text-decoration-none text-reset">
-            <div class="mc-article-thumb b"><span class="badge-cat">Nutrition</span></div>
-            <div class="mc-article-body">
-              <h3>Eating well on a Myanmar family budget</h3>
-              <p>Everyday foods from the market that support blood pressure, heart, and blood-sugar health.</p>
-              <div class="mc-article-meta"><span>Ma Nilar, RD</span><span class="sep"></span><span>7 min read</span><span class="sep"></span><span>Jul 19</span></div>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-6 col-lg-4">
-          <a href="article.html?id=first-antenatal-visit" class="mc-article d-block text-decoration-none text-reset">
-            <div class="mc-article-thumb c"><span class="badge-cat">Maternal care</span></div>
-            <div class="mc-article-body">
-              <h3>What to expect at your first antenatal visit</h3>
-              <p>A step-by-step guide for expecting mothers — what to bring, what to ask, and why it matters.</p>
-              <div class="mc-article-meta"><span>Dr. Khin Sandar</span><span class="sep"></span><span>6 min read</span><span class="sep"></span><span>Jul 15</span></div>
-            </div>
-          </a>
-        </div>
-      </div>
+      <!-- Populated from the article data by script.js -->
+      <div class="row g-4" id="featuredGrid"></div>
     </div>
   </section>
 </main>
@@ -194,11 +167,11 @@
       </div>
       <div class="col-6 col-md-3 col-lg-2">
         <h5>About</h5>
-        <ul><li><a href="index.html">Our editorial team</a></li><li><a href="index.html">Review process</a></li><li><a href="index.html">Contact us</a></li><li><a href="index.html">Careers</a></li><li><a href="index.html">Press</a></li></ul>
+        <ul><li><a href="editor.html">Our editorial team</a></li><li><a href="index.html">Contact us</a></li></ul>
       </div>
       <div class="col-md-6 col-lg-3">
         <h5>Legal</h5>
-        <ul><li><a href="index.html">Terms of use</a></li><li><a href="index.html">Privacy policy</a></li><li><a href="index.html">Cookie settings</a></li><li><a href="index.html">Accessibility</a></li><li><a href="index.html">HIPAA notice</a></li></ul>
+        <ul><li><a href="terms.html">Terms of use</a></li><li><a href="privacy.html">Privacy policy</a></li><li><a href="cookies.html">Cookie settings</a></li></ul>
       </div>
     </div>
     <div class="mc-disclaimer">

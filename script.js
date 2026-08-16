@@ -1748,4 +1748,5 @@
   var saved = 'en';
   try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) { /* ignore */ }
   applyLang(saved);
+
 })();

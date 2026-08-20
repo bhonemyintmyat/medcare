@@ -2472,6 +2472,53 @@
     'Manage Staff': 'ဝန်ထမ်းများ စီမံရန်',
     'Secure Log Out': 'လုံခြုံစွာ ထွက်ရန်',
     'Soon': 'မကြာမီ',
+
+    /* --- sign in and create account ------------------------------
+       Role VALUES stay in English here too: the note says an account
+       starts as `user`, and that is the literal value in profiles.role.
+       The example email and name in the placeholders are left alone. */
+    'Sign in to MedCare': 'MedCare သို့ ဝင်ရန်',
+    'An account is only needed for editorial tools. Reading health information never requires one.': 'အကောင့်သည် အယ်ဒီတာ ကိရိယာများအတွက်သာ လိုအပ်သည်။ ကျန်းမာရေး အချက်အလက် ဖတ်ရှုရန် အကောင့် မလိုပါ။',
+    'You are signed in': 'သင် ဝင်ရောက်ထားပြီ ဖြစ်သည်',
+    'Your role is': 'သင့်ရာထူးမှာ',
+    'Go to the site': 'ဝဘ်ဆိုက်သို့ သွားရန်',
+    'Create account': 'အကောင့် ဖွင့်ရန်',
+    'Creating account…': 'အကောင့် ဖွင့်နေသည်…',
+    'Signing in…': 'ဝင်ရောက်နေသည်…',
+    'Full name': 'အမည်အပြည့်အစုံ',
+    'Username': 'အသုံးပြုသူအမည်',
+    'what the site will call you': 'ဝဘ်ဆိုက်က သင့်ကို ခေါ်မည့် အမည်',
+    '3 to 24 characters: letters, numbers, dots, dashes or underscores.': 'စာလုံး ၃ လုံးမှ ၂၄ လုံး — စာလုံး၊ ဂဏန်း၊ အစက်၊ ဒက်ရှ် သို့မဟုတ် အောက်မျဉ်းသာ။',
+    'Email address': 'အီးမေးလ် လိပ်စာ',
+    'Password': 'စကားဝှက်',
+    'Confirm password': 'စကားဝှက် အတည်ပြုရန်',
+    'Typed twice so a slip cannot lock you out of a new account.': 'အမှားတစ်ခုကြောင့် အကောင့်အသစ်ထဲ ပြန်မဝင်နိုင် ဖြစ်မသွားစေရန် နှစ်ကြိမ် ရိုက်ခိုင်းခြင်း ဖြစ်သည်။',
+    'At least 6 characters': 'အနည်းဆုံး စာလုံး ၆ လုံး',
+    'Your password': 'သင့်စကားဝှက်',
+    'Type the same password again': 'တူညီသည့် စကားဝှက်ကို ထပ်ရိုက်ပါ',
+    'Show password': 'စကားဝှက် ပြရန်',
+    'Hide password': 'စကားဝှက် ဖျောက်ရန်',
+    'Use the email and password you signed up with.': 'စာရင်းသွင်းစဉ်က သုံးခဲ့သည့် အီးမေးလ်နှင့် စကားဝှက်ကို သုံးပါ။',
+    'Pick a password of at least 6 characters. Your account starts with the "user" role.': 'အနည်းဆုံး စာလုံး ၆ လုံးပါသော စကားဝှက် ရွေးပါ။ သင့်အကောင့်သည် "user" ရာထူးဖြင့် စတင်သည်။',
+    'New accounts are always created as': 'အကောင့်အသစ်တိုင်းသည် ဤရာထူးဖြင့် စတင်သည် —',
+    'Editor and admin roles are granted by a site administrator in the database — they can never be chosen at signup.': 'အယ်ဒီတာနှင့် အက်ဒမင် ရာထူးများကို ဒေတာဘေ့စ်ထဲတွင် ဝဘ်ဆိုက် စီမံသူက ပေးအပ်သည် — စာရင်းသွင်းချိန်တွင် ရွေးချယ်၍ မရပါ။',
+    'Enter both your email address and password.': 'အီးမေးလ် လိပ်စာနှင့် စကားဝှက် နှစ်ခုစလုံး ထည့်ပါ။',
+    'Enter your full name, as you would write it on a form.': 'ပုံစံစာရွက်တွင် ရေးသကဲ့သို့ သင့်အမည်အပြည့်အစုံကို ထည့်ပါ။',
+    'Pick a username of 3 to 24 characters: letters, numbers, dots, dashes or underscores.': 'အသုံးပြုသူအမည်ကို စာလုံး ၃ လုံးမှ ၂၄ လုံးအတွင်း ရွေးပါ — စာလုံး၊ ဂဏန်း၊ အစက်၊ ဒက်ရှ် သို့မဟုတ် အောက်မျဉ်းသာ။',
+    'Passwords need to be at least 6 characters long.': 'စကားဝှက်သည် အနည်းဆုံး စာလုံး ၆ လုံး ရှိရမည်။',
+    'The two passwords do not match. Type the same one twice.': 'စကားဝှက် နှစ်ခု မတူညီပါ။ တူညီသည့် တစ်ခုတည်းကို နှစ်ကြိမ် ရိုက်ပါ။',
+    'Account created. Check your email for a confirmation link, then sign in.': 'အကောင့် ဖွင့်ပြီးပါပြီ။ အတည်ပြု လင့်ခ်အတွက် အီးမေးလ်ကို စစ်ဆေးပြီးမှ ဝင်ပါ။',
+    'Could not reach the server. Check your connection and try again.': 'ဆာဗာသို့ မရောက်ပါ။ အင်တာနက် ချိတ်ဆက်မှုကို စစ်ဆေးပြီး ထပ်စမ်းပါ။',
+    'Sign-in is unavailable because Supabase is not configured.': 'Supabase ကို ချိန်ညှိမထားသောကြောင့် ဝင်ရောက်၍ မရပါ။',
+    'That username is already taken. Please pick another one.': 'ထိုအသုံးပြုသူအမည်ကို အသုံးပြုပြီး ဖြစ်သည်။ အခြားတစ်ခု ရွေးပါ။',
+    'That username has characters the site cannot use. Letters, numbers, dots, dashes or underscores only.': 'ထိုအသုံးပြုသူအမည်တွင် ဝဘ်ဆိုက်က မသုံးနိုင်သည့် စာလုံးများ ပါနေသည်။ စာလုံး၊ ဂဏန်း၊ အစက်၊ ဒက်ရှ် သို့မဟုတ် အောက်မျဉ်းသာ။',
+    'The account could not be created. If you picked an unusual username, try a simpler one.': 'အကောင့် ဖန်တီး၍ မရပါ။ ထူးဆန်းသည့် အသုံးပြုသူအမည် ရွေးထားပါက ရိုးရှင်းသည့် အမည်တစ်ခု စမ်းကြည့်ပါ။',
+    'That did not work. Please try again.': 'မအောင်မြင်ပါ။ ထပ်စမ်းကြည့်ပါ။',
+    'Invalid login credentials': 'အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားနေသည်။',
+    'User already registered': 'ဤအီးမေးလ်ဖြင့် အကောင့် ရှိပြီး ဖြစ်သည်။',
+    'Email not confirmed': 'အီးမေးလ်ကို အတည်ပြုရသေးပါ။',
+    'Password should be at least 6 characters.': 'စကားဝှက်သည် အနည်းဆုံး စာလုံး ၆ လုံး ရှိရမည်။',
+    'Unable to validate email address: invalid format': 'အီးမေးလ် လိပ်စာ ပုံစံ မမှန်ပါ။',
   };
 
   var LANGS = { en: null, my: MY };
@@ -2506,12 +2553,30 @@
   function swapAttrs(el) {
     I18N_ATTRS.forEach(function (attr) {
       if (!el.hasAttribute(attr)) { return; }
-      var store = 'i18n-' + attr;
-      var orig = el.getAttribute('data-' + store);
-      if (orig === null) { orig = el.getAttribute(attr); el.setAttribute('data-' + store, orig); }
+      var store = 'data-i18n-' + attr;       // the English we started from
+      var wrote = 'data-i18n-set-' + attr;   // what we last put there
+      var orig  = el.getAttribute(store);
+      var now   = el.getAttribute(attr);
+
+      /* A script may have written a new value since the last pass — the
+         login form swaps its password placeholder when you switch between
+         signing in and signing up. The test is whether the value still
+         matches what WE last wrote: if it does not, a script wrote it, and
+         it becomes the new English original.
+
+         Comparing against the translation instead would misfire the moment
+         the language goes back to English, because by then the attribute
+         holds Burmese and there is no dictionary left to recognise it
+         with — the Burmese would be remembered as the original and stick. */
+      if (orig === null || now !== el.getAttribute(wrote)) {
+        orig = now;
+        el.setAttribute(store, orig);
+      }
+
       var hit = lookup(orig);
       var next = hit === null ? orig : hit;
-      if (el.getAttribute(attr) !== next) { el.setAttribute(attr, next); }
+      if (now !== next) { el.setAttribute(attr, next); }
+      el.setAttribute(wrote, next);
     });
   }
 
@@ -2565,10 +2630,20 @@
       busy = true;
       records.forEach(function (r) {
         if (r.type === 'characterData') { swapText(r.target); }
+        // Placeholders and labels that a script rewrites after load would
+        // otherwise stay in English: attribute changes are not childList
+        // changes, so nothing used to notice them.
+        if (r.type === 'attributes') { swapAttrs(r.target); }
         Array.prototype.forEach.call(r.addedNodes, walk);
       });
       busy = false;
-    }).observe(document.body, { childList: true, subtree: true, characterData: true });
+    }).observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: I18N_ATTRS
+    });
   }
 
   var saved = 'en';

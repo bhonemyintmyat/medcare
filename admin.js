@@ -152,7 +152,8 @@
     count('reports', 'status', 'reviewed')
       .then(function (n) {
         var sub = document.getElementById('statReportsSub');
-        if (sub) { sub.textContent = n + ' already reviewed'; }
+        // Same reason as the staff line above: the label is its own node.
+        if (sub) { sub.innerHTML = '<span>Reviewed</span> ' + n; }
       })
       .catch(function () { /* the sub-line is cosmetic */ });
   }
@@ -164,9 +165,13 @@
     var admins  = rows.filter(function (p) { return p.role === 'admin'; }).length;
     setStat('statAccounts', rows.length);
     setStat('statStaff', editors + admins);
+    // Label first, and each label in its own element. script.js translates
+    // whole text nodes, so a number glued to its word ("2 admins") can never
+    // match a dictionary key; kept apart, both halves work in either language.
     var sub = document.getElementById('statStaffSub');
-    if (sub) { sub.textContent = admins + ' admin' + (admins === 1 ? '' : 's') +
-                                 ' · ' + editors + ' editor' + (editors === 1 ? '' : 's'); }
+    if (sub) {
+      sub.innerHTML = '<span>Admins</span> ' + admins + ' · <span>Editors</span> ' + editors;
+    }
   }
 
   /* ---------- loading the accounts ----------

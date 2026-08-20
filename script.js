@@ -2383,6 +2383,95 @@
 
 
 
+
+    /* --- staff pages: admin dashboard and editor desk -------------
+       Interface, not prose. Role VALUES (admin/editor/user) are left in
+       English on purpose: a pill has to match what profiles.role holds,
+       and so does anything inside <code>. */
+    'Checking your permissions…': 'သင့်ခွင့်ပြုချက်များကို စစ်ဆေးနေသည်…',
+    'One moment.': 'ခဏစောင့်ပါ။',
+    'Signed in': 'ဝင်ရောက်ထားသည်',
+    'Admin dashboard': 'အက်ဒမင် ထိန်းချုပ်ခန်း',
+    'The site at a glance, and the one thing only an admin can do: decide who is a reader, who is an editor, and who is an admin.': 'ဝဘ်ဆိုက်၏ အနှစ်ချုပ်နှင့် အက်ဒမင်သာ လုပ်နိုင်သည့် တစ်ခုတည်းသော အရာ — မည်သူက ဖတ်ရှုသူ၊ မည်သူက အယ်ဒီတာ၊ မည်သူက အက်ဒမင် ဖြစ်မည်ကို ဆုံးဖြတ်ခြင်း။',
+    "A role change takes effect on that person's next request.": "ရာထူး ပြောင်းလဲမှုသည် ထိုသူ၏ နောက်တစ်ကြိမ် တောင်းဆိုမှုတွင် စတင် အကျိုးသက်ရောက်သည်။",
+    'Editors can add, edit, and delete every condition on the site and read every reader report. Grant it deliberately, and to as few accounts as the work needs.': 'အယ်ဒီတာများသည် ဝဘ်ဆိုက်ရှိ ရောဂါအားလုံးကို ထည့်သွင်း၊ ပြင်ဆင်၊ ဖျက်နိုင်ပြီး ဖတ်ရှုသူ တိုင်ကြားချက် အားလုံးကို ဖတ်နိုင်သည်။ ဂရုတစိုက် စဉ်းစားပြီးမှ ပေးပါ။ လိုအပ်သည့် အကောင့် အနည်းဆုံးကိုသာ ပေးပါ။',
+    'Accounts': 'အကောင့်များ',
+    'Everyone who has signed up': 'စာရင်းသွင်းထားသူ အားလုံး',
+    'Staff': 'ဝန်ထမ်းများ',
+    'Editors and admins': 'အယ်ဒီတာများနှင့် အက်ဒမင်များ',
+    'Conditions published': 'ဖော်ပြထားသော ရောဂါများ',
+    'Live on Common diseases': 'ရောဂါများ စာမျက်နှာတွင် ဖော်ပြနေသည်',
+    'Reports waiting': 'စောင့်ဆိုင်းနေသော တိုင်ကြားချက်များ',
+    'Reader-flagged, not yet checked': 'ဖတ်ရှုသူများ ထောက်ပြထားပြီး မစစ်ဆေးရသေးပါ',
+    'People and roles': 'အသုံးပြုသူများနှင့် ရာထူးများ',
+    'Account': 'အကောင့်',
+    'Joined': 'ဝင်ရောက်သည့်ရက်',
+    'Role': 'ရာထူး',
+    'Admins': 'အက်ဒမင်များ',
+    'Editors': 'အယ်ဒီတာများ',
+    'Readers': 'ဖတ်ရှုသူများ',
+    'you': 'သင်',
+    'Save': 'သိမ်းရန်',
+    'Refresh': 'ပြန်လည်ရယူရန်',
+    'Edit': 'ပြင်ဆင်ရန်',
+    'Filter by email, role, or id': 'အီးမေးလ်၊ ရာထူး သို့မဟုတ် id ဖြင့် စစ်ထုတ်ရန်',
+    'Filter accounts': 'အကောင့်များ စစ်ထုတ်ရန်',
+    'Filter by role': 'ရာထူးဖြင့် စစ်ထုတ်ရန်',
+    'Filter reports': 'တိုင်ကြားချက်များ စစ်ထုတ်ရန်',
+    'Changing a role here writes to': 'ဤနေရာတွင် ရာထူး ပြောင်းလဲခြင်းသည်',
+    '. The database allows it only because your own row says': ' သို့ ရေးသွင်းသည်။ သင့်ကိုယ်ပိုင် အချက်အလက်တွင်',
+    '— the same request from an editor is refused by RLS, not by this page.': 'ဟု ဖော်ပြထားသောကြောင့်သာ ဒေတာဘေ့စ်က ခွင့်ပြုခြင်း ဖြစ်သည် — အယ်ဒီတာထံမှ ထိုအတူ တောင်းဆိုမှုကို ဤစာမျက်နှာက မဟုတ်ဘဲ RLS က ငြင်းပယ်သည်။',
+    'Editor desk': 'အယ်ဒီတာ လုပ်ငန်းခွင်',
+    'Everything the editorial team works on, in one place: what readers have reported, and the conditions published on the site.': 'အယ်ဒီတာအဖွဲ့ လုပ်ဆောင်ရသည့် အရာအားလုံး တစ်နေရာတည်းတွင် — ဖတ်ရှုသူများ တိုင်ကြားထားသည်များနှင့် ဝဘ်ဆိုက်တွင် ဖော်ပြထားသော ရောဂါများ။',
+    'You are editing what readers treat as medical guidance.': 'ဖတ်ရှုသူများက ဆေးပညာ လမ်းညွှန်အဖြစ် ယူဆသည့် အချက်အလက်များကို သင် ပြင်ဆင်နေခြင်း ဖြစ်သည်။',
+    'Check every change against a trusted source first. Anything saved from these tools is live on the public site immediately.': 'ပြောင်းလဲမှု တိုင်းကို ယုံကြည်ရသော ရင်းမြစ်နှင့် အရင် တိုက်ဆိုင်စစ်ဆေးပါ။ ဤကိရိယာများမှ သိမ်းလိုက်သည့် အရာတိုင်းသည် အများပြည်သူ မြင်ရသည့် ဝဘ်ဆိုက်တွင် ချက်ချင်း ပေါ်မည်။',
+    'Reports reviewed': 'စစ်ဆေးပြီး တိုင်ကြားချက်များ',
+    'Closed by the team': 'အဖွဲ့မှ ပိတ်သိမ်းပြီး',
+    'Newest condition': 'နောက်ဆုံး ထည့်သွင်းသည့် ရောဂါ',
+    'Added to the site': 'ဝဘ်ဆိုက်တွင် ထည့်သွင်းပြီး',
+    'Recently added': 'မကြာသေးမီက ထည့်သွင်းထားသည်များ',
+    'View as a reader': 'ဖတ်ရှုသူအဖြစ် ကြည့်ရန်',
+    'See the public Common diseases page exactly as a visitor does.': 'ရောဂါများ စာမျက်နှာကို လာရောက်သူ မြင်သည့်အတိုင်း အတိအကျ ကြည့်ရန်။',
+    'Accounts, roles, and the site-wide numbers. Admins only.': 'အကောင့်များ၊ ရာထူးများနှင့် ဝဘ်ဆိုက်တစ်ခုလုံး၏ ကိန်းဂဏန်းများ။ အက်ဒမင်များသာ။',
+    'The editorial hub: the report queue and what has changed on the site lately.': 'အယ်ဒီတာအဖွဲ့၏ ဗဟိုနေရာ — တိုင်ကြားချက် စာရင်းနှင့် မကြာသေးမီက ဝဘ်ဆိုက်တွင် ပြောင်းလဲထားသည်များ။',
+    'Manage diseases': 'ရောဂါများ စီမံရန်',
+    'Add a condition, fix a description, retire a page.': 'ရောဂါ တစ်ခု ထည့်ရန်၊ ဖော်ပြချက် ပြင်ရန်၊ စာမျက်နှာ ရုပ်သိမ်းရန်။',
+    'Add a condition, fix a description, retire a page. Publishes straight to the live site.': 'ရောဂါ တစ်ခု ထည့်ရန်၊ ဖော်ပြချက် ပြင်ရန်၊ စာမျက်နှာ ရုပ်သိမ်းရန်။ အများမြင်ရသည့် ဝဘ်ဆိုက်သို့ တိုက်ရိုက် ရောက်သည်။',
+    'Reports inbox': 'တိုင်ကြားချက် စာတိုက်ပုံး',
+    'Every reader report, filterable, with the review history.': 'ဖတ်ရှုသူ တိုင်ကြားချက် အားလုံး၊ စစ်ထုတ်နိုင်ပြီး စစ်ဆေးမှု မှတ်တမ်းနှင့်အတူ။',
+    'The full queue of reader reports, with filters and the review history.': 'ဖတ်ရှုသူ တိုင်ကြားချက် စာရင်း အပြည့်အစုံ၊ စစ်ထုတ်မှုများနှင့် စစ်ဆေးမှု မှတ်တမ်း အပါအဝင်။',
+    'Reader reports': 'ဖတ်ရှုသူ တိုင်ကြားချက်များ',
+    'New': 'အသစ်',
+    'Reviewed': 'စစ်ဆေးပြီး',
+    'Mark reviewed': 'စစ်ဆေးပြီးဟု မှတ်ရန်',
+    'Reopen': 'ပြန်ဖွင့်ရန်',
+    'Loading reports…': 'တိုင်ကြားချက်များ ရယူနေသည်…',
+    'Could not load reports.': 'တိုင်ကြားချက်များ ရယူ၍ မရပါ။',
+    'No new reports. Nothing waiting for you.': 'တိုင်ကြားချက် အသစ် မရှိပါ။ စောင့်ဆိုင်းနေသည် မရှိပါ။',
+    'No reports match this filter.': 'ဤစစ်ထုတ်မှုနှင့် ကိုက်ညီသော တိုင်ကြားချက် မရှိပါ။',
+    'Report marked reviewed.': 'တိုင်ကြားချက်ကို စစ်ဆေးပြီးဟု မှတ်လိုက်ပြီ။',
+    'Report reopened.': 'တိုင်ကြားချက်ကို ပြန်ဖွင့်လိုက်ပြီ။',
+    'Loading accounts…': 'အကောင့်များ ရယူနေသည်…',
+    'Could not load accounts.': 'အကောင့်များ ရယူ၍ မရပါ။',
+    'No account matches this filter.': 'ဤစစ်ထုတ်မှုနှင့် ကိုက်ညီသော အကောင့် မရှိပါ။',
+    'No accounts yet.': 'အကောင့် မရှိသေးပါ။',
+    'Loading conditions…': 'ရောဂါများ ရယူနေသည်…',
+    'Could not load conditions.': 'ရောဂါများ ရယူ၍ မရပါ။',
+    'No conditions yet. Add the first one in the disease manager.': 'ရောဂါ မရှိသေးပါ။ ပထမဆုံးတစ်ခုကို ရောဂါစီမံသည့် စာမျက်နှာတွင် ထည့်ပါ။',
+    'Something went wrong.': 'တစ်ခုခု မှားယွင်းသွားသည်။',
+    'The database refused this change: your account does not have permission (RLS).': 'ဒေတာဘေ့စ်က ဤပြောင်းလဲမှုကို ငြင်းပယ်သည် — သင့်အကောင့်တွင် ခွင့်ပြုချက် မရှိပါ (RLS)။',
+    'Showing account ids only: profiles has no email column yet. Run supabase_admin.sql to add it.': 'အကောင့် id များကိုသာ ပြသနေသည် — profiles တွင် email ကော်လံ မရှိသေးပါ။ ထည့်ရန် supabase_admin.sql ကို run ပါ။',
+    'Desk': 'လုပ်ငန်းခွင်',
+    'Admin': 'အက်ဒမင်',
+    'Sign in': 'ဝင်ရန်',
+    'Sign out': 'ထွက်ရန်',
+    'Admin Dashboard': 'အက်ဒမင် ထိန်းချုပ်ခန်း',
+    'System Settings': 'စနစ် ဆက်တင်များ',
+    'Security & MFA': 'လုံခြုံရေးနှင့် MFA',
+    'Audit Logs': 'စစ်ဆေးမှု မှတ်တမ်းများ',
+    'Manage Staff': 'ဝန်ထမ်းများ စီမံရန်',
+    'Secure Log Out': 'လုံခြုံစွာ ထွက်ရန်',
+    'Soon': 'မကြာမီ',
   };
 
   var LANGS = { en: null, my: MY };
@@ -2395,7 +2484,12 @@
   function lookup(text) {
     var dict = LANGS[currentLang];
     if (!dict) { return null; }
-    var key = text.trim();
+    // Prose in the HTML is wrapped across source lines, so a text node
+    // arrives carrying newlines and indentation. Collapse runs of
+    // whitespace before looking up: without this, a sentence written over
+    // three lines can never match its single-line key, which is why the
+    // long notes on the staff pages went untranslated.
+    var key = text.trim().replace(/\s+/g, ' ');
     return Object.prototype.hasOwnProperty.call(dict, key) ? dict[key] : null;
   }
 

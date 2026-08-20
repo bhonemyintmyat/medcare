@@ -29,8 +29,9 @@
   var ROLE_CACHE_KEY = 'mc-role';
 
   var state = {
-    user: null,   // the signed-in account, or null
-    role: null,   // 'user' | 'editor' | 'admin', or null when signed out
+    user: null,     // the signed-in account, or null
+    role: null,     // 'user' | 'editor' | 'admin', or null when signed out
+    profile: null,  // the whole profiles row: role, username, full_name
     ready: false
   };
 
@@ -54,27 +55,44 @@
 
   var db = window.supabaseClient;
 
-  /* ---------- Loading the role ----------
+  /* ---------- Loading the profile ----------
      The role is read from the profiles table, not from anything the
      browser sent. RLS makes this query return only this user's own row,
-     so there is no way to ask for somebody else's. */
-  function loadRole(user) {
+     so there is no way to ask for somebody else's.
+
+     The name and username ride along in the same request — one round
+     trip, and the header can greet people by name instead of by email.
+     They are display fields: nothing is ever decided by them. */
+  function loadProfile(user) {
     if (!user) { return Promise.resolve(null); }
     return db.from('profiles')
-      .select('role')
+      .select('role,username,full_name')
       .eq('id', user.id)
       .single()
       .then(function (res) {
         if (res.error) {
-          console.error('[MedCare] Could not read profile role:', res.error);
+          // 42703 = the columns are not there yet, which means
+          // supabase_profile_fields.sql has not been run. Fall back to the
+          // role alone rather than leaving the page looking signed out.
+          if (res.error.code === '42703') { return loadRoleOnly(user); }
+          console.error('[MedCare] Could not read profile:', res.error);
           return null;
         }
-        return res.data ? res.data.role : null;
+        return res.data || null;
       })
       .catch(function (err) {
-        console.error('[MedCare] Could not read profile role:', err);
+        console.error('[MedCare] Could not read profile:', err);
         return null;
       });
+  }
+
+  function loadRoleOnly(user) {
+    return db.from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+      .then(function (res) { return res.error ? null : res.data; })
+      .catch(function () { return null; });
   }
 
   // Bumped on every session event, so a slow reply cannot overwrite a
@@ -85,13 +103,14 @@
   function applySession(session) {
     var mine = ++applyToken;
     state.user = session ? session.user : null;
-    return loadRole(state.user).then(function (role) {
+    return loadProfile(state.user).then(function (profile) {
       if (mine !== applyToken) { return state.role; }
-      state.role = role;
-      writeCachedRole(role);
+      state.profile = profile;
+      state.role = profile ? profile.role : null;
+      writeCachedRole(state.role);
       state.ready = true;
       notify();
-      return role;
+      return state.role;
     });
   }
 
@@ -113,6 +132,19 @@
        what to SHOW. Never use it to decide what is ALLOWED. */
     getRole: function () { return state.role; },
 
+    // The whole profiles row, or null. Display fields only.
+    getProfile: function () { return state.profile; },
+
+    /* What to call this person on screen: the username they chose, then
+       their name, then the email they signed in with. Never used to
+       decide anything — only to write it. */
+    displayName: function () {
+      var p = state.profile;
+      if (p && p.username) { return p.username; }
+      if (p && p.full_name) { return p.full_name; }
+      return state.user ? state.user.email : '';
+    },
+
     hasRole: function (role) { return state.role === role; },
 
     // Convenience for menus: is this an editor or an admin?
@@ -127,10 +159,38 @@
       };
     },
 
-    signUp: function (email, password) {
-      // Note there is no role argument. The client never gets to say what
-      // it should be — the database trigger assigns 'user'.
-      return db.auth.signUp({ email: email, password: password });
+    /* `profile` carries the two display fields the signup form collects:
+       { fullName, username }. There is still no role argument, and there
+       never will be — the trigger assigns 'user' and reads nothing from
+       the client.
+
+       These two DO come from the browser, so Supabase stores them
+       verbatim as user metadata and the trigger re-validates them before
+       they reach profiles. Treat what arrives here as a request, not as
+       a fact. */
+    signUp: function (email, password, profile) {
+      return db.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            full_name: (profile && profile.fullName) || null,
+            username: (profile && profile.username) || null
+          }
+        }
+      });
+    },
+
+    /* Asks the database whether a username is free. The browser cannot
+       answer this itself: RLS shows it one profile row, its own. See
+       supabase_profile_fields.sql for what the function does and does
+       not reveal. */
+    usernameAvailable: function (name) {
+      return db.rpc('username_available', { candidate: name })
+        .then(function (res) {
+          if (res.error) { throw res.error; }
+          return res.data === true;
+        });
     },
 
     signIn: function (email, password) {
@@ -257,15 +317,15 @@
         'aria-hidden="true">' + ICONS[name] + '</svg>';
     }
 
-    // No display name is stored anywhere, so the avatar is built from the
-    // email: "su.aung@..." -> SA, "lead@..." -> LE.
-    function initials(email) {
-      var local = String(email || '').split('@')[0];
-      var parts = local.split(/[._+-]+/).filter(Boolean);
-      var text = parts.length > 1
+    // The avatar is drawn from whatever we can call them by:
+    // "Su Myat Aung" -> SM, "su.aung@..." -> SA, "lead@..." -> LE.
+    function initials(source) {
+      var text = String(source || '').split('@')[0];
+      var parts = text.split(/[\s._+-]+/).filter(Boolean);
+      var out = parts.length > 1
         ? parts[0].charAt(0) + parts[1].charAt(0)
-        : local.slice(0, 2);
-      return (text || '?').toUpperCase();
+        : text.slice(0, 2);
+      return (out || '?').toUpperCase();
     }
 
     // Four of these have no page yet. They are shown, disabled and
@@ -281,7 +341,7 @@
       ];
     }
 
-    function menuMarkup(email) {
+    function menuMarkup(name, email) {
       var rows = adminItems().map(function (it) {
         var inner = svg(it.icon, 18) + '<span>' + it.label + '</span>' +
           (it.soon ? '<span class="mc-menu-soon">Soon</span>' : '');
@@ -297,16 +357,19 @@
       return '<div class="mc-menu">' +
         '<button type="button" class="mc-menu-trigger" id="mcMenuTrigger" ' +
                 'aria-haspopup="true" aria-expanded="false" aria-controls="mcMenuPanel">' +
-          '<span class="mc-menu-avatar">' + esc(initials(email)) + '</span>' +
-          '<span class="mc-menu-name">' + esc(email) + '</span>' +
+          '<span class="mc-menu-avatar">' + esc(initials(name)) + '</span>' +
+          '<span class="mc-menu-name">' + esc(name) + '</span>' +
           '<span class="mc-menu-caret">' + svg('caret', 15) + '</span>' +
         '</button>' +
         '<div class="mc-menu-panel" id="mcMenuPanel" role="menu" aria-labelledby="mcMenuTrigger">' +
           '<div class="mc-menu-head">' +
-            '<span class="mc-menu-avatar">' + esc(initials(email)) + '</span>' +
+            '<span class="mc-menu-avatar">' + esc(initials(name)) + '</span>' +
             '<div class="mc-menu-head-text">' +
-              '<div class="mc-menu-head-name" title="' + esc(email) + '">' + esc(email) + '</div>' +
+              '<div class="mc-menu-head-name" title="' + esc(email) + '">' + esc(name) + '</div>' +
               '<div class="mc-menu-head-sub">Admin</div>' +
+              // Only worth a line when it is not already the name above.
+              (name === email ? '' :
+                '<div class="mc-menu-head-mail">' + esc(email) + '</div>') +
             '</div>' +
           '</div>' +
           '<div class="mc-menu-sep"></div>' +
@@ -399,7 +462,7 @@
           // only the desk link beside it.
           wrap.innerHTML =
             '<a class="mc-account-btn" href="' + depth + 'editor-dashboard.html">Desk</a>' +
-            menuMarkup(state.user.email);
+            menuMarkup(api.displayName(), state.user.email);
           wireMenu();
         } else {
           // Editors and readers keep the plain controls. Staff-only links

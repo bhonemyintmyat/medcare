@@ -757,3 +757,5 @@
   }
   /* The navbar is sticky, so an in-page jump needs room above the target. */
   #people{scroll-margin-top:88px}
+  .mc-menu-head-mail{font-size:.76rem;color:var(--mc-muted);margin-top:.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mc-people-mail{font-size:.8rem;color:var(--mc-muted);margin-top:.1rem;overflow-wrap:anywhere}

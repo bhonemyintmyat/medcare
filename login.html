@@ -76,6 +76,29 @@
             </div>
 
             <form id="authForm" novalidate>
+              <!-- The three signup-only fields. Hidden for sign-in, where they
+                   would only be noise, and shown by setMode() in login.js. -->
+              <div class="mc-signup-only" id="fieldFullName" hidden>
+                <label class="mc-auth-label" for="authFullName">Full name</label>
+                <div class="mc-auth-field">
+                  <i class="bi bi-person"></i>
+                  <input type="text" id="authFullName" name="fullName" autocomplete="name"
+                         placeholder="Su Myat Aung" maxlength="80">
+                </div>
+              </div>
+
+              <div class="mc-signup-only" id="fieldUsername" hidden>
+                <label class="mc-auth-label" for="authUsername">Username
+                  <span class="mc-admin-hint-inline">what the site will call you</span>
+                </label>
+                <div class="mc-auth-field">
+                  <i class="bi bi-at"></i>
+                  <input type="text" id="authUsername" name="username" autocomplete="username"
+                         placeholder="suaung" maxlength="24" spellcheck="false">
+                </div>
+                <p class="mc-auth-hint" id="authUsernameHint">3 to 24 characters: letters, numbers, dots, dashes or underscores.</p>
+              </div>
+
               <label class="mc-auth-label" for="authEmail">Email address</label>
               <div class="mc-auth-field">
                 <i class="bi bi-envelope"></i>
@@ -87,6 +110,16 @@
                 <i class="bi bi-lock"></i>
                 <input type="password" id="authPassword" name="password" autocomplete="current-password" placeholder="At least 6 characters" required minlength="6">
                 <button type="button" class="mc-auth-reveal" id="authReveal" aria-label="Show password"><i class="bi bi-eye"></i></button>
+              </div>
+
+              <div class="mc-signup-only" id="fieldConfirm" hidden>
+                <label class="mc-auth-label" for="authConfirm">Confirm password</label>
+                <div class="mc-auth-field">
+                  <i class="bi bi-lock-fill"></i>
+                  <input type="password" id="authConfirm" name="confirmPassword" autocomplete="new-password"
+                         placeholder="Type the same password again">
+                </div>
+                <p class="mc-auth-hint" id="authConfirmHint">Typed twice so a slip cannot lock you out of a new account.</p>
               </div>
 
               <p class="mc-auth-hint" id="authHint">Use the email and password you signed up with.</p>

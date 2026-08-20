@@ -30,6 +30,7 @@
   var query       = '';
   var myId        = null;
   var hasEmail    = true;   // false until supabase_admin.sql has been run
+  var hasNames    = true;   // false until supabase_profile_fields.sql has been
 
   var ROLES = ['user', 'editor', 'admin'];
 
@@ -182,7 +183,16 @@
   function loadPeople() {
     bodyEl.innerHTML = '<tr><td colspan="3"><div class="mc-admin-loading">Loading accounts…</div></td></tr>';
 
-    select('id,email,role,created_at')
+    select('id,email,username,full_name,role,created_at')
+      .catch(function (err) {
+        // Names arrive with supabase_profile_fields.sql. Without them the
+        // table still works, listing accounts by email.
+        if (err && err.code === '42703') {
+          hasNames = false;
+          return select('id,email,role,created_at');
+        }
+        throw err;
+      })
       .catch(function (err) {
         // The email column arrives with supabase_admin.sql. Without it
         // the page still works, listing accounts by id.
@@ -216,12 +226,24 @@
   }
 
   /* ---------- rendering ---------- */
+  // What to call this account on screen, in the same order the rest of
+  // the site uses: the username they picked, then their name, then the
+  // email, then the bare id.
+  function label(p) {
+    if (hasNames && p.username) { return p.username; }
+    if (hasNames && p.full_name) { return p.full_name; }
+    if (hasEmail && p.email) { return p.email; }
+    return 'Account ' + p.id.slice(0, 8);
+  }
+
   function visible() {
     var q = query.trim().toLowerCase();
     return people.filter(function (p) {
       if (roleFilter !== 'all' && p.role !== roleFilter) { return false; }
       if (!q) { return true; }
-      return (p.email || '').toLowerCase().indexOf(q) !== -1 ||
+      return (p.username || '').toLowerCase().indexOf(q) !== -1 ||
+             (p.full_name || '').toLowerCase().indexOf(q) !== -1 ||
+             (p.email || '').toLowerCase().indexOf(q) !== -1 ||
              p.role.indexOf(q) !== -1 ||
              p.id.toLowerCase().indexOf(q) !== -1;
     });
@@ -239,8 +261,12 @@
     }
 
     bodyEl.innerHTML = rows.map(function (p) {
-      var isMe  = p.id === myId;
-      var label = hasEmail && p.email ? esc(p.email) : 'Account ' + esc(p.id.slice(0, 8));
+      var isMe = p.id === myId;
+      var name = esc(label(p));
+      // The email only earns its own line when it is not already the
+      // name on the line above.
+      var mail = (hasEmail && p.email && p.email !== label(p))
+        ? '<div class="mc-people-mail">' + esc(p.email) + '</div>' : '';
 
       var options = ROLES.map(function (r) {
         return '<option value="' + r + '"' + (r === p.role ? ' selected' : '') + '>' + r + '</option>';
@@ -248,15 +274,16 @@
 
       return '<tr data-id="' + esc(p.id) + '">' +
         '<td>' +
-          '<div class="mc-people-email">' + label +
+          '<div class="mc-people-email">' + name +
             (isMe ? '<span class="mc-people-you">you</span>' : '') + '</div>' +
+          mail +
           '<div class="mc-people-id">' + esc(p.id) + '</div>' +
         '</td>' +
         '<td class="mc-people-when">' + esc(fullDate(p.created_at)) + '</td>' +
         '<td>' +
           '<div class="mc-people-actions">' +
             '<span class="mc-admin-pill mc-account-role--' + esc(p.role) + '" data-current>' + esc(p.role) + '</span>' +
-            '<select class="mc-role-select" aria-label="Role for ' + label + '">' + options + '</select>' +
+            '<select class="mc-role-select" aria-label="Role for ' + name + '">' + options + '</select>' +
             '<button type="button" class="mc-auth-btn mc-people-save" hidden>Save</button>' +
           '</div>' +
         '</td>' +
@@ -328,8 +355,7 @@
         }
 
         row.record.role = next;
-        message((hasEmail && row.record.email ? row.record.email : 'That account') +
-                ' is now ' + next + '.', 'ok');
+        message(label(row.record) + ' is now ' + next + '.', 'ok');
         statsFromPeople(people);
 
         if (row.id === myId) {

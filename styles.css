@@ -636,3 +636,124 @@
   .mc-report-foot{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
   .mc-report-meta{font-size:.8rem;color:var(--mc-muted);display:inline-flex;align-items:center;gap:.35rem;flex-wrap:wrap}
   .mc-report-foot .mc-auth-btn{font-size:.85rem;padding:.45rem 1rem}
+
+  /* ===================== Staff dashboards (admin.html, editor-dashboard.html) ===================== */
+  /* The chips in the reports queue are toggled with .is-active by
+     reports-queue.js; .active is kept for the filter bars elsewhere. */
+  .mc-chip.is-active{background:var(--mc-primary);border-color:var(--mc-primary);color:#fff}
+
+  .mc-dash-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .mc-dash-who{display:inline-flex;align-items:center;gap:.5rem;font-size:.9rem;color:var(--mc-muted);background:#fff;border:1px solid var(--mc-border);border-radius:999px;padding:.4rem .9rem}
+  .mc-dash-who .bi{color:var(--mc-primary-600)}
+
+  /* Stat tiles */
+  .mc-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin:0 0 1.5rem}
+  .mc-stat{background:#fff;border:1px solid var(--mc-border);border-radius:16px;box-shadow:var(--mc-shadow);padding:1.15rem 1.25rem;display:flex;align-items:flex-start;gap:.9rem}
+  .mc-stat-ico{width:42px;height:42px;border-radius:12px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+  .mc-stat--warn .mc-stat-ico{background:var(--mc-amber-50);color:var(--mc-amber)}
+  .mc-stat--ok .mc-stat-ico{background:var(--mc-green-50);color:var(--mc-green)}
+  .mc-stat--danger .mc-stat-ico{background:var(--mc-danger-50);color:var(--mc-danger-700)}
+  .mc-stat-body{min-width:0}
+  .mc-stat-num{font-family:'Poppins',sans-serif;font-size:1.6rem;font-weight:700;line-height:1.1;color:var(--mc-text)}
+  .mc-stat-num.is-loading{color:var(--mc-border)}
+  .mc-stat-label{font-size:.87rem;font-weight:600;color:var(--mc-text);margin-top:.15rem}
+  .mc-stat-sub{font-size:.78rem;color:var(--mc-muted);line-height:1.45;margin-top:.15rem}
+
+  /* Tool tiles */
+  .mc-dash-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:0 0 1.5rem}
+  .mc-dash-card{display:flex;gap:.9rem;align-items:flex-start;background:#fff;border:1px solid var(--mc-border);border-radius:16px;box-shadow:var(--mc-shadow);padding:1.25rem 1.3rem;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s,box-shadow .15s}
+  .mc-dash-card:hover{border-color:var(--mc-primary);transform:translateY(-2px);box-shadow:var(--mc-shadow-lg);text-decoration:none;color:inherit}
+  .mc-dash-card:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
+  .mc-dash-card-ico{width:42px;height:42px;border-radius:12px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
+  .mc-dash-card h3{font-family:'Poppins',sans-serif;font-size:1.02rem;font-weight:700;margin:0 0 .3rem;display:flex;align-items:center;gap:.4rem}
+  .mc-dash-card h3 .bi{font-size:.8rem;color:var(--mc-muted)}
+  .mc-dash-card p{font-size:.87rem;line-height:1.55;color:var(--mc-muted);margin:0}
+
+  /* People and roles table (admin only) */
+  .mc-people-tools{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin-bottom:1.1rem}
+  .mc-people-search{flex:1;min-width:200px;border:1px solid var(--mc-border);border-radius:10px;background:#fff;font:inherit;font-size:.92rem;color:var(--mc-text);padding:.55rem .9rem}
+  .mc-people-search:focus{outline:2px solid var(--mc-primary);outline-offset:-1px;border-color:var(--mc-primary)}
+  .mc-people-wrap{overflow-x:auto}
+  .mc-people{width:100%;border-collapse:collapse;font-size:.92rem;min-width:560px}
+  .mc-people th{text-align:left;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--mc-muted);border-bottom:1px solid var(--mc-border);padding:0 .6rem .6rem}
+  .mc-people td{border-bottom:1px solid var(--mc-border);padding:.75rem .6rem;vertical-align:middle}
+  .mc-people tr:last-child td{border-bottom:none}
+  .mc-people-email{font-weight:600;color:var(--mc-text);overflow-wrap:anywhere}
+  .mc-people-id{font-size:.74rem;color:var(--mc-muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .mc-people-you{font-size:.68rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;background:var(--mc-primary-50);border:1px solid #ccfbf1;color:var(--mc-primary-600);border-radius:999px;padding:.1rem .45rem;margin-left:.4rem}
+  .mc-people-when{font-size:.82rem;color:var(--mc-muted);white-space:nowrap}
+  .mc-people-actions{display:flex;gap:.4rem;align-items:center;justify-content:flex-end}
+  .mc-role-select{border:1px solid var(--mc-border);border-radius:9px;background:#fff;font:inherit;font-size:.88rem;color:var(--mc-text);padding:.4rem .6rem;cursor:pointer}
+  .mc-role-select:focus{outline:2px solid var(--mc-primary);outline-offset:-1px}
+  .mc-role-select:disabled{opacity:.55;cursor:default}
+  .mc-people-save{font-size:.85rem;padding:.42rem .95rem}
+  .mc-people-save[hidden]{display:none}
+  /* The role pill reuses .mc-account-role--* from the navbar. That block
+     sits earlier in this file, so .mc-admin-pill would win on equal
+     specificity and grey it out — these two rules put the colour back. */
+  .mc-people-actions .mc-admin-pill.mc-account-role--editor{background:var(--mc-primary-50);border-color:#ccfbf1;color:var(--mc-primary-600)}
+  .mc-people-actions .mc-admin-pill.mc-account-role--admin{background:var(--mc-danger-50);border-color:#fecaca;color:var(--mc-danger-700)}
+
+  @media (max-width:575.98px){
+    .mc-stat{padding:1rem 1.05rem}
+    .mc-stat-num{font-size:1.4rem}
+  }
+
+  /* ===================== Account menu (admin profile dropdown) ===================== */
+  .mc-menu{position:relative;display:inline-flex}
+  .mc-menu-trigger{display:inline-flex;align-items:center;gap:.55rem;background:#fff;border:1px solid var(--mc-border);border-radius:12px;padding:.25rem .7rem .25rem .25rem;font:inherit;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+  .mc-menu-trigger:hover{background:var(--mc-bg);border-color:var(--mc-muted)}
+  .mc-menu-trigger:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
+  .mc-menu-trigger[aria-expanded="true"]{background:var(--mc-primary-50);border-color:var(--mc-primary)}
+  .mc-menu-trigger[aria-expanded="true"] .mc-menu-name{color:var(--mc-primary-600)}
+  .mc-menu-trigger[aria-expanded="true"] .mc-menu-caret{transform:rotate(180deg);color:var(--mc-primary-600)}
+  .mc-menu-avatar{width:32px;height:32px;border-radius:999px;flex-shrink:0;background:linear-gradient(160deg,#14b8a6 0%,var(--mc-primary-600) 100%);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.02em}
+  .mc-menu-name{font-size:.88rem;font-weight:600;color:var(--mc-text);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mc-menu-caret{color:var(--mc-muted);flex-shrink:0;transition:transform .15s}
+
+  .mc-menu-panel{position:absolute;top:calc(100% + 10px);right:0;z-index:1040;width:304px;background:#fff;border:1px solid var(--mc-border);border-radius:16px;box-shadow:var(--mc-shadow-lg);display:none}
+  .mc-menu-panel.is-open{display:block;animation:mcMenuIn .14s ease-out}
+  @keyframes mcMenuIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .mc-menu-panel::before{content:"";position:absolute;top:-7px;right:28px;width:12px;height:12px;background:#fff;border-left:1px solid var(--mc-border);border-top:1px solid var(--mc-border);transform:rotate(45deg)}
+
+  .mc-menu-head{display:flex;align-items:center;gap:.75rem;padding:1rem 1.15rem .95rem}
+  .mc-menu-head .mc-menu-avatar{width:46px;height:46px;font-size:1.05rem}
+  .mc-menu-head-text{min-width:0}
+  .mc-menu-head-name{font-family:'Poppins',sans-serif;font-weight:600;font-size:1rem;line-height:1.3;color:var(--mc-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mc-menu-head-sub{font-size:.81rem;color:var(--mc-muted);margin-top:.1rem;text-transform:capitalize}
+  .mc-menu-sep{height:1px;background:var(--mc-border)}
+  .mc-menu-list{display:flex;flex-direction:column;padding:.45rem}
+
+  .mc-menu-item{display:flex;align-items:center;gap:.7rem;width:100%;padding:.56rem .7rem;border:none;border-radius:10px;background:none;font:inherit;font-size:.92rem;font-weight:500;color:var(--mc-text);text-align:left;text-decoration:none;cursor:pointer;transition:background .12s,color .12s}
+  .mc-menu-item svg{flex-shrink:0;color:var(--mc-muted)}
+  .mc-menu-item:hover{background:var(--mc-bg);color:var(--mc-text);text-decoration:none}
+  .mc-menu-item:focus-visible{outline:2px solid var(--mc-primary);outline-offset:-2px}
+  .mc-menu-item.is-current{background:var(--mc-primary-50);color:var(--mc-primary-600);font-weight:600}
+  .mc-menu-item.is-current svg{color:var(--mc-primary-600)}
+  .mc-menu-item[aria-disabled="true"]{color:#94a3b8;cursor:default}
+  .mc-menu-item[aria-disabled="true"]:hover{background:none}
+  .mc-menu-item[aria-disabled="true"] svg{color:#cbd5e1}
+  .mc-menu-item--danger{color:var(--mc-danger);font-weight:600}
+  .mc-menu-item--danger svg{color:currentColor}
+  .mc-menu-item--danger:hover{background:var(--mc-danger-50);color:var(--mc-danger-700)}
+  .mc-menu-item--danger:disabled{opacity:.6;cursor:default}
+  .mc-menu-soon{margin-left:auto;font-size:.66rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#94a3b8;background:var(--mc-bg);border:1px solid var(--mc-border);border-radius:999px;padding:.1rem .42rem}
+
+  @media (max-width:991.98px){
+    /* Inside the collapsed navbar the panel is just another block, so the
+       wrapper has to stack instead of sitting the panel beside the trigger. */
+    .mc-menu{width:100%;flex-direction:column;align-items:stretch}
+    .mc-menu-trigger{width:100%;justify-content:flex-start}
+    .mc-menu-name{max-width:none}
+    .mc-menu-caret{margin-left:auto}
+    .mc-menu-panel{position:static;width:100%;margin-top:.5rem;box-shadow:none;border-radius:12px}
+    .mc-menu-panel::before{display:none}
+    /* Roomier rows for thumbs. */
+    .mc-menu-item{padding:.72rem .7rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .mc-menu-panel.is-open{animation:none}
+    .mc-menu-caret{transition:none}
+  }
+  /* The navbar is sticky, so an in-page jump needs room above the target. */
+  #people{scroll-margin-top:88px}

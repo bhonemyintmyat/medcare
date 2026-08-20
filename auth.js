@@ -77,9 +77,16 @@
       });
   }
 
+  // Bumped on every session event, so a slow reply cannot overwrite a
+  // newer one: sign out while the role query is in flight and the answer
+  // that comes back belongs to an account that is no longer here.
+  var applyToken = 0;
+
   function applySession(session) {
+    var mine = ++applyToken;
     state.user = session ? session.user : null;
     return loadRole(state.user).then(function (role) {
+      if (mine !== applyToken) { return state.role; }
       state.role = role;
       writeCachedRole(role);
       state.ready = true;
@@ -151,14 +158,53 @@
   // then overwrite it with the freshly fetched value a moment later.
   state.role = readCachedRole();
 
-  api.ready = db.auth.getSession().then(function (res) {
-    return applySession(res.data ? res.data.session : null);
+  /* ---------- ONE session read, not two ----------
+     Registering this listener is the whole of it. supabase-js emits
+     INITIAL_SESSION as soon as it has read the stored session — first
+     refreshing the access token if it has expired — so there is nothing
+     left for a getSession() call to do.
+
+     This file used to do BOTH: getSession() here, and this listener,
+     which is what produced the 400s in the console:
+
+       POST /auth/v1/token?grant_type=refresh_token  ->  400
+       {"error":"invalid_grant","error_description":"Invalid Refresh Token: Already Used"}
+
+     Two reads, one stored refresh token, two refresh requests in flight.
+     Refresh tokens rotate: the first request consumes the token and
+     returns a new one, so the second arrives holding a token that has
+     already been spent. Supabase treats a reused refresh token as a
+     stolen one and can revoke the whole family — which is how a session
+     that looked fine at page load turned into a silent sign-out later.
+     Reading once removes the race rather than hiding the error. */
+  var settleReady;
+  api.ready = new Promise(function (resolve) { settleReady = resolve; });
+
+  db.auth.onAuthStateChange(function (event, session) {
+    // TOKEN_REFRESHED is a new access token for the same person, roughly
+    // hourly. Their role cannot have changed with it, so keep what we
+    // have instead of asking the database again on every refresh.
+    if (event === 'TOKEN_REFRESHED' && session && session.user &&
+        state.user && session.user.id === state.user.id) {
+      state.user = session.user;
+      settleReady(state.role);
+      return;
+    }
+    applySession(session).then(settleReady);
   });
 
-  // Fires on sign in, sign out, token refresh, and in other tabs.
-  db.auth.onAuthStateChange(function (event, session) {
-    applySession(session);
-  });
+  /* If the library never reports at all — network blocked, wrong project
+     URL — every guarded page would sit on "Checking your permissions…"
+     for ever. Fall through as signed out instead: the guards then send
+     people to the login page, and the database is what refuses the work
+     regardless. */
+  window.setTimeout(function () {
+    if (!state.ready) {
+      console.warn('[MedCare] No session answer from Supabase; treating this visit as signed out.');
+      state.ready = true;
+      settleReady(null);
+    }
+  }, 8000);
 
   /* ---------- Account control in the navbar ----------
      Injected rather than pasted into 33 HTML files, the same way the
@@ -175,23 +221,203 @@
     wrap.className = 'mc-account';
     nav.appendChild(wrap);
 
+    /* ---------- The account menu (admins) ----------
+       An admin's account control is a menu button, not a row of buttons:
+       the tools that only they can reach live behind their own face. The
+       icons are drawn inline rather than taken from the Bootstrap Icons
+       webfont so their stroke weight and size stay put next to 14px text.
+
+       Everything here is still interface. The pages behind these links
+       re-check the role, and RLS refuses the work regardless. */
+    var ICONS = {
+      dashboard: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.6"></rect>' +
+                 '<rect x="13.5" y="3.5" width="7" height="7" rx="1.6"></rect>' +
+                 '<rect x="13.5" y="13.5" width="7" height="7" rx="1.6"></rect>' +
+                 '<rect x="3.5" y="13.5" width="7" height="7" rx="1.6"></rect>',
+      settings:  '<path d="M4 7h16M4 12h16M4 17h16"></path>' +
+                 '<circle cx="9" cy="7" r="2.2" fill="#fff"></circle>' +
+                 '<circle cx="15" cy="12" r="2.2" fill="#fff"></circle>' +
+                 '<circle cx="8" cy="17" r="2.2" fill="#fff"></circle>',
+      security:  '<path d="M12 3.2l7 2.9v5c0 4.3-2.9 7.8-7 8.9-4.1-1.1-7-4.6-7-8.9v-5l7-2.9z"></path>' +
+                 '<path d="M9.2 12.1l2 2 3.6-3.8"></path>',
+      logs:      '<path d="M14 3.2H7.4A2.2 2.2 0 0 0 5.2 5.4v13.2a2.2 2.2 0 0 0 2.2 2.2h9.2a2.2 2.2 0 0 0 2.2-2.2V8.2z"></path>' +
+                 '<path d="M14 3.2v5h4.8"></path><path d="M8.8 13.2h6.4M8.8 17h4.2"></path>',
+      staff:     '<circle cx="9.2" cy="8.4" r="3.2"></circle>' +
+                 '<path d="M3.6 20a5.6 5.6 0 0 1 11.2 0"></path>' +
+                 '<path d="M16.2 5.6a3 3 0 0 1 0 5.8"></path>' +
+                 '<path d="M18.2 20a5.7 5.7 0 0 0-2.4-4.5"></path>',
+      signout:   '<path d="M12 4.2H6.6a2.2 2.2 0 0 0-2.2 2.2v11.2a2.2 2.2 0 0 0 2.2 2.2H12"></path>' +
+                 '<path d="M15.6 16.4l4.4-4.4-4.4-4.4"></path><path d="M20 12H9.4"></path>',
+      caret:     '<path d="M6 9.5l6 6 6-6"></path>'
+    };
+
+    function svg(name, size) {
+      return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" ' +
+        'stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" ' +
+        'aria-hidden="true">' + ICONS[name] + '</svg>';
+    }
+
+    // No display name is stored anywhere, so the avatar is built from the
+    // email: "su.aung@..." -> SA, "lead@..." -> LE.
+    function initials(email) {
+      var local = String(email || '').split('@')[0];
+      var parts = local.split(/[._+-]+/).filter(Boolean);
+      var text = parts.length > 1
+        ? parts[0].charAt(0) + parts[1].charAt(0)
+        : local.slice(0, 2);
+      return (text || '?').toUpperCase();
+    }
+
+    // Four of these have no page yet. They are shown, disabled and
+    // labelled, rather than hidden: the menu is also the plan.
+    function adminItems() {
+      return [
+        { label: 'Admin Dashboard', icon: 'dashboard', href: depth + 'admin.html',
+          current: here === 'admin.html' },
+        { label: 'System Settings', icon: 'settings', soon: true },
+        { label: 'Security &amp; MFA', icon: 'security', soon: true },
+        { label: 'Audit Logs', icon: 'logs', soon: true },
+        { label: 'Manage Staff', icon: 'staff', href: depth + 'admin.html#people' }
+      ];
+    }
+
+    function menuMarkup(email) {
+      var rows = adminItems().map(function (it) {
+        var inner = svg(it.icon, 18) + '<span>' + it.label + '</span>' +
+          (it.soon ? '<span class="mc-menu-soon">Soon</span>' : '');
+        if (it.soon) {
+          return '<span class="mc-menu-item" role="menuitem" tabindex="-1" aria-disabled="true">' +
+            inner + '</span>';
+        }
+        return '<a class="mc-menu-item' + (it.current ? ' is-current' : '') + '" role="menuitem" ' +
+          'tabindex="-1" href="' + it.href + '"' +
+          (it.current ? ' aria-current="page"' : '') + '>' + inner + '</a>';
+      }).join('');
+
+      return '<div class="mc-menu">' +
+        '<button type="button" class="mc-menu-trigger" id="mcMenuTrigger" ' +
+                'aria-haspopup="true" aria-expanded="false" aria-controls="mcMenuPanel">' +
+          '<span class="mc-menu-avatar">' + esc(initials(email)) + '</span>' +
+          '<span class="mc-menu-name">' + esc(email) + '</span>' +
+          '<span class="mc-menu-caret">' + svg('caret', 15) + '</span>' +
+        '</button>' +
+        '<div class="mc-menu-panel" id="mcMenuPanel" role="menu" aria-labelledby="mcMenuTrigger">' +
+          '<div class="mc-menu-head">' +
+            '<span class="mc-menu-avatar">' + esc(initials(email)) + '</span>' +
+            '<div class="mc-menu-head-text">' +
+              '<div class="mc-menu-head-name" title="' + esc(email) + '">' + esc(email) + '</div>' +
+              '<div class="mc-menu-head-sub">Admin</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="mc-menu-sep"></div>' +
+          '<div class="mc-menu-list">' + rows + '</div>' +
+          '<div class="mc-menu-sep"></div>' +
+          '<div class="mc-menu-list">' +
+            '<button type="button" class="mc-menu-item mc-menu-item--danger" role="menuitem" ' +
+                    'tabindex="-1" id="mcSignOut">' + svg('signout', 18) +
+              '<span>Secure Log Out</span></button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    /* Menu-button behaviour, by the book: click or ArrowDown opens and
+       lands on the first item, Escape closes and gives the trigger its
+       focus back, arrows roll around the list, and a click anywhere else
+       or a Tab out closes it. Disabled items stay reachable by keyboard
+       (aria-disabled, not removed) so they are discoverable, not secret. */
+    function wireMenu() {
+      var trigger = document.getElementById('mcMenuTrigger');
+      var panel   = document.getElementById('mcMenuPanel');
+      if (!trigger || !panel) { return; }
+
+      var items = Array.prototype.slice.call(panel.querySelectorAll('[role="menuitem"]'));
+
+      function onDocPointer(e) {
+        if (!panel.contains(e.target) && !trigger.contains(e.target)) { close(false); }
+      }
+
+      function open(focusFirst) {
+        panel.classList.add('is-open');
+        trigger.setAttribute('aria-expanded', 'true');
+        document.addEventListener('mousedown', onDocPointer, true);
+        if (focusFirst && items.length) { items[0].focus(); }
+      }
+
+      function close(returnFocus) {
+        panel.classList.remove('is-open');
+        trigger.setAttribute('aria-expanded', 'false');
+        document.removeEventListener('mousedown', onDocPointer, true);
+        if (returnFocus) { trigger.focus(); }
+      }
+
+      function isOpen() { return panel.classList.contains('is-open'); }
+
+      function move(step) {
+        var i = items.indexOf(document.activeElement);
+        var next = (i + step + items.length) % items.length;
+        items[next < 0 ? items.length - 1 : next].focus();
+      }
+
+      trigger.addEventListener('click', function () {
+        if (isOpen()) { close(false); } else { open(false); }
+      });
+
+      trigger.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowDown' || e.key === 'Down') { e.preventDefault(); open(true); }
+        if (e.key === 'ArrowUp' || e.key === 'Up') {
+          e.preventDefault();
+          open(false);
+          if (items.length) { items[items.length - 1].focus(); }
+        }
+      });
+
+      panel.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' || e.key === 'Esc') { e.preventDefault(); close(true); return; }
+        if (e.key === 'Tab') { close(false); return; }
+        if (e.key === 'ArrowDown' || e.key === 'Down') { e.preventDefault(); move(1); }
+        if (e.key === 'ArrowUp' || e.key === 'Up') { e.preventDefault(); move(-1); }
+        if (e.key === 'Home') { e.preventDefault(); items[0].focus(); }
+        if (e.key === 'End') { e.preventDefault(); items[items.length - 1].focus(); }
+      });
+
+      // A click on a disabled row should do nothing at all — not even
+      // close the menu, which would read as "that worked".
+      panel.addEventListener('click', function (e) {
+        var dead = e.target.closest('[aria-disabled="true"]');
+        if (dead) { e.preventDefault(); e.stopPropagation(); }
+      });
+    }
+
     function render() {
       if (state.user) {
         var role = state.role || 'user';
-        // Staff-only link. This HIDES the tool from ordinary users; it does
-        // not protect it. The page itself re-checks, and the RLS policies
-        // are what actually refuse their writes.
-        var manage = api.isStaff()
-          ? '<a class="mc-account-btn" href="' + depth + 'manage-diseases.html">Manage</a>' +
-            '<a class="mc-account-btn" href="' + depth + 'reports.html">Inbox</a>'
-          : '';
-        wrap.innerHTML = manage +
-          '<span class="mc-account-who" title="' + esc(state.user.email) + '">' +
-            '<i class="bi bi-person-circle"></i>' +
-            '<span class="mc-account-email">' + esc(state.user.email) + '</span>' +
-            '<span class="mc-account-role mc-account-role--' + esc(role) + '">' + esc(role) + '</span>' +
-          '</span>' +
-          '<button type="button" class="mc-account-btn" id="mcSignOut">Sign out</button>';
+
+        if (role === 'admin') {
+          // An admin's tools hang off their own face: the menu carries the
+          // dashboard, the staff list and the sign-out, so the navbar keeps
+          // only the desk link beside it.
+          wrap.innerHTML =
+            '<a class="mc-account-btn" href="' + depth + 'editor-dashboard.html">Desk</a>' +
+            menuMarkup(state.user.email);
+          wireMenu();
+        } else {
+          // Editors and readers keep the plain controls. Staff-only links
+          // HIDE tools from ordinary users; they do not protect them. Each
+          // page re-checks, and the RLS policies are what refuse the writes.
+          var staffLinks = api.isStaff()
+            ? '<a class="mc-account-btn" href="' + depth + 'editor-dashboard.html">Desk</a>'
+            : '';
+          wrap.innerHTML = staffLinks +
+            '<span class="mc-account-who" title="' + esc(state.user.email) + '">' +
+              '<i class="bi bi-person-circle"></i>' +
+              '<span class="mc-account-email">' + esc(state.user.email) + '</span>' +
+              '<span class="mc-account-role mc-account-role--' + esc(role) + '">' + esc(role) + '</span>' +
+            '</span>' +
+            '<button type="button" class="mc-account-btn" id="mcSignOut">Sign out</button>';
+        }
+
+        // Both branches draw a sign-out control; only its shape differs.
         var out = document.getElementById('mcSignOut');
         out.addEventListener('click', function () {
           out.disabled = true;

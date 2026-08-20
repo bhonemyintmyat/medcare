@@ -84,7 +84,22 @@
   // Build the client once and share it on `window` so any page or
   // script can reach it. Creating it once (instead of per page-feature)
   // keeps a single auth session and a single realtime connection.
-  window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      // Keep the session across visits, and renew the access token
+      // before it expires. Both are the library's defaults; they are
+      // written out so a CDN version bump cannot quietly change them.
+      persistSession: true,
+      autoRefreshToken: true,
+
+      // This site signs in with email and password only. Left on, the
+      // client inspects every page's URL for an OAuth or magic-link
+      // callback that never arrives. Off, it reads the stored session
+      // and nothing else. (auth.js reads that session exactly once —
+      // see the note there about refresh tokens and 400s.)
+      detectSessionInUrl: false
+    }
+  });
 
   /* ---------- 4. HOW TO USE IT ELSEWHERE ----------
      From script.js, or any inline <script> on a page:

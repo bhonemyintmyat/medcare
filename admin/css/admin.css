@@ -1,0 +1,265 @@
+/* ============================================================
+   MedCare — admin area
+   Loaded AFTER ../styles.css, which owns the design tokens and most of
+   the pieces used here. This file adds only what the admin area needs
+   on top:
+
+     1. the guard's visibility states
+     2. the shell — sidebar, topbar, content column
+     3. empty, loading and error states
+
+   Deliberately reused from styles.css rather than restated: .mc-admin-card,
+   .mc-admin-msg, .mc-admin-note, .mc-admin-hint, .mc-admin-pill,
+   .mc-people (the accounts table), .mc-role-select, .mc-chip,
+   .mc-auth-btn, .mc-auth-field, .mc-auth-label, .mc-modal. If something
+   is missing here, look there before writing a new class.
+   ============================================================ */
+
+
+/* ===================== 1. The guard ===================== */
+/* admin-guard.js puts .mc-guard-pending on <html> the moment it runs,
+   and swaps it for .mc-guard-ok only once an admin is confirmed.
+
+   The shell is hidden by DEFAULT — not merely while pending — so a
+   guard that never runs at all (a script that 404s, a typo in the
+   src) leaves a blank page rather than a page full of controls. The
+   failure direction matters more than the failure message. */
+.mc-admin-shell { display: none; }
+html.mc-guard-ok .mc-admin-shell { display: grid; }
+
+/* Something to look at while the role is being read. */
+html.mc-guard-pending body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: var(--mc-bg);
+  z-index: 2000;
+}
+html.mc-guard-pending body::after {
+  content: "";
+  position: fixed;
+  top: 50%; left: 50%;
+  width: 34px; height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 3px solid var(--mc-border);
+  border-top-color: var(--mc-primary);
+  border-radius: 50%;
+  animation: mcGuardSpin .7s linear infinite;
+  z-index: 2001;
+}
+@keyframes mcGuardSpin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  html.mc-guard-pending body::after { animation-duration: 2.4s; }
+}
+
+/* Shown in place of the page when the check itself could not run. */
+.mc-guard-stall {
+  max-width: 32rem;
+  margin: 4rem auto;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--mc-text);
+}
+.mc-guard-stall h1 { font-size: 1.4rem; margin: 0 0 .6rem; }
+.mc-guard-stall p { color: var(--mc-muted); line-height: 1.6; margin: 0 0 .5rem; }
+
+
+/* ===================== 2. The shell ===================== */
+.mc-admin-shell {
+  grid-template-columns: 248px minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--mc-bg);
+}
+
+/* ---- Sidebar ---- */
+.mc-admin-side {
+  grid-row: 1 / -1;
+  background: #fff;
+  border-right: 1px solid var(--mc-border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+.mc-admin-brand {
+  display: flex; align-items: center; gap: .55rem;
+  font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.15rem;
+  color: var(--mc-text); text-decoration: none;
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid var(--mc-border);
+}
+.mc-admin-brand:hover { color: var(--mc-text); text-decoration: none; }
+.mc-admin-brand .mc-logo {
+  width: 30px; height: 30px; border-radius: 9px;
+  background: var(--mc-primary); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+}
+.mc-admin-brand small {
+  display: block; font-family: 'Inter', sans-serif; font-size: .7rem;
+  font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--mc-muted);
+}
+
+.mc-admin-nav { padding: .85rem .75rem; display: flex; flex-direction: column; gap: .15rem; }
+.mc-admin-nav-label {
+  font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--mc-muted); padding: .9rem .6rem .35rem;
+}
+.mc-admin-nav a {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .6rem .7rem; border-radius: 10px;
+  font-size: .93rem; font-weight: 500; color: var(--mc-text); text-decoration: none;
+  transition: background .12s, color .12s;
+}
+.mc-admin-nav a svg { flex-shrink: 0; color: var(--mc-muted); }
+.mc-admin-nav a:hover { background: var(--mc-bg); color: var(--mc-text); text-decoration: none; }
+.mc-admin-nav a:focus-visible { outline: 2px solid var(--mc-primary); outline-offset: -2px; }
+.mc-admin-nav a[aria-current="page"] {
+  background: var(--mc-primary-50); color: var(--mc-primary-600); font-weight: 600;
+}
+.mc-admin-nav a[aria-current="page"] svg { color: var(--mc-primary-600); }
+
+/* The one link that leaves the admin area. */
+.mc-admin-side-foot { margin-top: auto; padding: .85rem .75rem 1.1rem; }
+
+/* ---- Topbar ---- */
+.mc-admin-top {
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  background: #fff;
+  border-bottom: 1px solid var(--mc-border);
+  padding: .85rem 1.6rem;
+  position: sticky; top: 0; z-index: 10;
+}
+.mc-admin-top h1 {
+  font-family: 'Poppins', sans-serif; font-size: 1.2rem; font-weight: 700;
+  margin: 0; color: var(--mc-text);
+}
+.mc-admin-top-sub { font-size: .84rem; color: var(--mc-muted); margin: .1rem 0 0; }
+.mc-admin-top-right { margin-left: auto; display: flex; align-items: center; gap: .7rem; }
+
+.mc-admin-who {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-size: .87rem; color: var(--mc-muted);
+  background: var(--mc-bg); border: 1px solid var(--mc-border);
+  border-radius: 999px; padding: .35rem .8rem;
+  max-width: 15rem;
+}
+.mc-admin-who strong {
+  color: var(--mc-text); font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* The sidebar toggle, which only exists on narrow screens. */
+.mc-admin-burger {
+  display: none;
+  width: 38px; height: 38px; border-radius: 10px;
+  border: 1px solid var(--mc-border); background: #fff; color: var(--mc-text);
+  align-items: center; justify-content: center; cursor: pointer;
+}
+.mc-admin-burger:focus-visible { outline: 2px solid var(--mc-primary); outline-offset: 2px; }
+
+/* ---- Content column ---- */
+.mc-admin-main { min-width: 0; display: flex; flex-direction: column; }
+.mc-admin-content { padding: 1.6rem; display: flex; flex-direction: column; gap: 1.25rem; }
+.mc-admin-content > .mc-admin-card { margin: 0; }
+
+
+/* ===================== 3. States ===================== */
+/* The brief asks for these three instead of dashboards nobody reads.
+   Each says what happened and what to do about it. */
+
+.mc-state {
+  text-align: center;
+  padding: 2.75rem 1.25rem;
+  color: var(--mc-muted);
+  font-size: .94rem;
+  line-height: 1.6;
+}
+.mc-state-ico {
+  width: 46px; height: 46px; border-radius: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: .8rem;
+  background: var(--mc-bg); color: var(--mc-muted);
+}
+.mc-state h2 {
+  font-family: 'Poppins', sans-serif; font-size: 1.02rem; font-weight: 600;
+  color: var(--mc-text); margin: 0 0 .3rem;
+}
+.mc-state p { margin: 0 auto; max-width: 30rem; }
+.mc-state .mc-auth-btn { margin-top: 1.1rem; }
+
+.mc-state--error .mc-state-ico { background: var(--mc-danger-50); color: var(--mc-danger-700); }
+.mc-state--empty .mc-state-ico { background: var(--mc-primary-50); color: var(--mc-primary-600); }
+
+/* Loading: rows rather than a spinner, so the layout does not jump when
+   the real ones arrive. */
+.mc-skeleton { display: flex; flex-direction: column; gap: .55rem; padding: .4rem 0; }
+.mc-skeleton span {
+  display: block; height: 44px; border-radius: 10px;
+  background: linear-gradient(90deg, var(--mc-bg) 25%, #eef2f7 37%, var(--mc-bg) 63%);
+  background-size: 400% 100%;
+  animation: mcSkeleton 1.3s ease-in-out infinite;
+}
+@keyframes mcSkeleton { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+@media (prefers-reduced-motion: reduce) {
+  .mc-skeleton span { animation: none; }
+}
+
+
+/* ===================== 4. Small shared pieces ===================== */
+/* Who last touched a row, and when. emergency.html shows this on every
+   row because the brief asks for it there; the other tables use it too,
+   since the question is the same one everywhere. */
+.mc-touched {
+  font-size: .78rem; color: var(--mc-muted);
+  display: inline-flex; align-items: center; gap: .35rem; flex-wrap: wrap;
+}
+.mc-touched b { font-weight: 600; color: var(--mc-text); }
+
+/* A field whose value has to be typed twice before it is believed.
+   emergency.html uses it for phone numbers. */
+.mc-confirm-field { border-left: 3px solid var(--mc-danger); padding-left: .85rem; }
+.mc-confirm-field .mc-auth-label { color: var(--mc-danger-700); }
+
+/* Status of a piece of content, in the workflow sense. */
+.mc-status { text-transform: capitalize; }
+.mc-status--draft     { background: var(--mc-bg);        border-color: var(--mc-border); color: var(--mc-muted); }
+.mc-status--pending   { background: var(--mc-amber-50);  border-color: #fde68a;          color: var(--mc-amber); }
+.mc-status--published { background: var(--mc-green-50);  border-color: #bbf7d0;          color: #15803d; }
+.mc-status--open      { background: var(--mc-amber-50);  border-color: #fde68a;          color: var(--mc-amber); }
+.mc-status--resolved  { background: var(--mc-green-50);  border-color: #bbf7d0;          color: #15803d; }
+.mc-status--dismissed { background: var(--mc-bg);        border-color: var(--mc-border); color: var(--mc-muted); }
+
+
+/* ===================== 5. Narrow screens ===================== */
+@media (max-width: 991.98px) {
+  .mc-admin-shell { grid-template-columns: minmax(0, 1fr); }
+
+  .mc-admin-side {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: 264px; z-index: 1100;
+    transform: translateX(-100%);
+    transition: transform .18s ease-out;
+    box-shadow: var(--mc-shadow-lg);
+  }
+  .mc-admin-shell.is-open .mc-admin-side { transform: none; }
+
+  .mc-admin-backdrop {
+    display: none;
+    position: fixed; inset: 0; z-index: 1050;
+    background: rgba(15, 23, 42, .45);
+  }
+  .mc-admin-shell.is-open .mc-admin-backdrop { display: block; }
+
+  .mc-admin-burger { display: inline-flex; }
+  .mc-admin-top { padding: .8rem 1rem; }
+  .mc-admin-content { padding: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mc-admin-side { transition: none; }
+}

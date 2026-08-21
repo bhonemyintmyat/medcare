@@ -30,7 +30,7 @@
   var query       = '';
   var myId        = null;
   var hasEmail    = true;   // false until supabase_admin.sql has been run
-  var hasNames    = true;   // false until supabase_profile_fields.sql has been
+  var hasNames    = true;   // false until supabase_display_name.sql has been run
 
   var ROLES = ['user', 'editor', 'admin'];
 
@@ -183,9 +183,9 @@
   function loadPeople() {
     bodyEl.innerHTML = '<tr><td colspan="3"><div class="mc-admin-loading">Loading accounts…</div></td></tr>';
 
-    select('id,email,username,full_name,role,created_at')
+    select('id,email,display_name,full_name,role,created_at')
       .catch(function (err) {
-        // Names arrive with supabase_profile_fields.sql. Without them the
+        // Names arrive with supabase_display_name.sql. Without them the
         // table still works, listing accounts by email.
         if (err && err.code === '42703') {
           hasNames = false;
@@ -227,10 +227,10 @@
 
   /* ---------- rendering ---------- */
   // What to call this account on screen, in the same order the rest of
-  // the site uses: the username they picked, then their name, then the
-  // email, then the bare id.
+  // the site uses: the display name they picked, then their name, then
+  // the email, then the bare id.
   function label(p) {
-    if (hasNames && p.username) { return p.username; }
+    if (hasNames && p.display_name) { return p.display_name; }
     if (hasNames && p.full_name) { return p.full_name; }
     if (hasEmail && p.email) { return p.email; }
     return 'Account ' + p.id.slice(0, 8);
@@ -241,7 +241,7 @@
     return people.filter(function (p) {
       if (roleFilter !== 'all' && p.role !== roleFilter) { return false; }
       if (!q) { return true; }
-      return (p.username || '').toLowerCase().indexOf(q) !== -1 ||
+      return (p.display_name || '').toLowerCase().indexOf(q) !== -1 ||
              (p.full_name || '').toLowerCase().indexOf(q) !== -1 ||
              (p.email || '').toLowerCase().indexOf(q) !== -1 ||
              p.role.indexOf(q) !== -1 ||
@@ -263,9 +263,9 @@
     bodyEl.innerHTML = rows.map(function (p) {
       var isMe = p.id === myId;
       var name = esc(label(p));
-      // The email only earns its own line when it is not already the
-      // name on the line above.
-      var mail = (hasEmail && p.email && p.email !== label(p))
+      // The email is a fallback identity, not a second label: it appears
+      // only for accounts that have not picked a display name yet.
+      var mail = (hasEmail && p.email && !(hasNames && p.display_name) && p.email !== label(p))
         ? '<div class="mc-people-mail">' + esc(p.email) + '</div>' : '';
 
       var options = ROLES.map(function (r) {

@@ -23,16 +23,12 @@
   var tabUp      = document.getElementById('tabSignUp');
   var revealBtn  = document.getElementById('authReveal');
 
-  // Signup-only: a name, a handle, and the password a second time.
+  // Signup-only: a real name, a name to be called by, and the password
+  // a second time.
   var fullNameEl = document.getElementById('authFullName');
-  var usernameEl = document.getElementById('authUsername');
+  var displayEl  = document.getElementById('authDisplayName');
   var confirmEl  = document.getElementById('authConfirm');
   var signupOnly = document.querySelectorAll('.mc-signup-only');
-
-  // Kept in step with profiles_username_format in
-  // supabase_profile_fields.sql. The copy here is a courtesy that catches
-  // a typo before a round trip; the constraint is what enforces it.
-  var USERNAME_RE = /^[A-Za-z0-9._-]{3,24}$/;
 
   var mode = 'signin';
 
@@ -50,15 +46,11 @@
   // where they become sentences.
   function explainAuth(err) {
     var text = String((err && err.message) || '');
-    if ((err && err.code === 'username_taken') ||
-        /profiles_username_lower_idx|duplicate key/i.test(text)) {
-      return 'That username is already taken. Please pick another one.';
-    }
-    if (/username_invalid/i.test(text)) {
-      return 'That username has characters the site cannot use. Letters, numbers, dots, dashes or underscores only.';
+    if (/profiles_display_name_len/i.test(text)) {
+      return 'Display names stop at 60 characters.';
     }
     if (/Database error saving new user/i.test(text)) {
-      return 'The account could not be created. If you picked an unusual username, try a simpler one.';
+      return 'The account could not be created. Please try again.';
     }
     return text || 'That did not work. Please try again.';
   }
@@ -91,7 +83,9 @@
   });
 
   function showSignedIn(user, role) {
-    whoEmail.textContent = user.email;
+    // Their display name, if they have one — the site shows that in
+    // place of the email everywhere else, and this panel is no exception.
+    whoEmail.textContent = auth.displayName();
     whoRole.textContent = role || 'user';
     whoRole.className = 'mc-account-role mc-account-role--' + (role || 'user');
     formCard.style.display = 'none';
@@ -123,16 +117,18 @@
     var profile = null;
     if (mode === 'signup') {
       var fullName = fullNameEl.value.trim();
-      var username = usernameEl.value.trim();
+      var displayName = displayEl.value.trim();
 
       if (fullName.length < 2) {
         message('Enter your full name, as you would write it on a form.');
         fullNameEl.focus();
         return;
       }
-      if (!USERNAME_RE.test(username)) {
-        message('Pick a username of 3 to 24 characters: letters, numbers, dots, dashes or underscores.');
-        usernameEl.focus();
+      // A display name has no shape to get wrong — any script, spaces and
+      // punctuation included. It just cannot be nothing.
+      if (!displayName) {
+        message('Enter the name you would like to be called.');
+        displayEl.focus();
         return;
       }
       if (password.length < 6) {
@@ -147,29 +143,16 @@
         confirmEl.focus();
         return;
       }
-      profile = { fullName: fullName, username: username };
+      profile = { fullName: fullName, displayName: displayName };
     }
 
     submitBtn.disabled = true;
     submitBtn.textContent = mode === 'signup' ? 'Creating account…' : 'Signing in…';
 
-    var call;
-    if (mode === 'signup') {
-      call = auth.usernameAvailable(profile.username)
-        .catch(function (err) {
-          // A courtesy, not a guard: the unique index in the database is
-          // what actually stops two people holding one name. If the check
-          // is unavailable, carry on and let the database answer.
-          console.warn('[MedCare] Could not check the username:', err);
-          return true;
-        })
-        .then(function (free) {
-          if (!free) { return { error: { code: 'username_taken' } }; }
-          return auth.signUp(email, password, profile);
-        });
-    } else {
-      call = auth.signIn(email, password);
-    }
+    // Display names are not unique, so there is nothing to check first.
+    var call = mode === 'signup'
+      ? auth.signUp(email, password, profile)
+      : auth.signIn(email, password);
 
     call.then(function (res) {
       if (res.error) {

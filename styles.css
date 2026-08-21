@@ -757,5 +757,7 @@
   }
   /* The navbar is sticky, so an in-page jump needs room above the target. */
   #people{scroll-margin-top:88px}
-  .mc-menu-head-mail{font-size:.76rem;color:var(--mc-muted);margin-top:.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* The rename dialog reuses .mc-modal from the report flow; only the
+     field inside it needs anything of its own. */
+  .mc-modal-panel .mc-auth-field input{width:100%}
   .mc-people-mail{font-size:.8rem;color:var(--mc-muted);margin-top:.1rem;overflow-wrap:anywhere}

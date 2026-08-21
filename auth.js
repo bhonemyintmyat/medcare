@@ -31,7 +31,7 @@
   var state = {
     user: null,     // the signed-in account, or null
     role: null,     // 'user' | 'editor' | 'admin', or null when signed out
-    profile: null,  // the whole profiles row: role, username, full_name
+    profile: null,  // the whole profiles row: role, display_name, full_name
     ready: false
   };
 
@@ -60,13 +60,13 @@
      browser sent. RLS makes this query return only this user's own row,
      so there is no way to ask for somebody else's.
 
-     The name and username ride along in the same request — one round
+     The display name rides along in the same request — one round
      trip, and the header can greet people by name instead of by email.
      They are display fields: nothing is ever decided by them. */
   function loadProfile(user) {
     if (!user) { return Promise.resolve(null); }
     return db.from('profiles')
-      .select('role,username,full_name')
+      .select('role,display_name,full_name')
       .eq('id', user.id)
       .single()
       .then(function (res) {
@@ -135,12 +135,12 @@
     // The whole profiles row, or null. Display fields only.
     getProfile: function () { return state.profile; },
 
-    /* What to call this person on screen: the username they chose, then
-       their name, then the email they signed in with. Never used to
+    /* What to call this person on screen: the display name they chose,
+       then the name they signed up with, then the email. Never used to
        decide anything — only to write it. */
     displayName: function () {
       var p = state.profile;
-      if (p && p.username) { return p.username; }
+      if (p && p.display_name) { return p.display_name; }
       if (p && p.full_name) { return p.full_name; }
       return state.user ? state.user.email : '';
     },
@@ -160,7 +160,7 @@
     },
 
     /* `profile` carries the two display fields the signup form collects:
-       { fullName, username }. There is still no role argument, and there
+       { fullName, displayName }. There is still no role argument, and there
        never will be — the trigger assigns 'user' and reads nothing from
        the client.
 
@@ -175,21 +175,28 @@
         options: {
           data: {
             full_name: (profile && profile.fullName) || null,
-            username: (profile && profile.username) || null
+            display_name: (profile && profile.displayName) || null
           }
         }
       });
     },
 
-    /* Asks the database whether a username is free. The browser cannot
-       answer this itself: RLS shows it one profile row, its own. See
-       supabase_profile_fields.sql for what the function does and does
-       not reveal. */
-    usernameAvailable: function (name) {
-      return db.rpc('username_available', { candidate: name })
+    /* Changes THIS person's display name, and nothing else about them.
+
+       Note what is not here: an id argument. The database takes the
+       account from the verified token, so there is no field to point at
+       somebody else's row. And no UPDATE runs from the browser — a
+       narrow SECURITY DEFINER function does the write, because a policy
+       permitting own-row updates would combine with the existing
+       UPDATE (role) column grant and hand every user a promotion.
+       supabase_display_name.sql spells that out. */
+    setDisplayName: function (name) {
+      return db.rpc('set_display_name', { new_name: name })
         .then(function (res) {
           if (res.error) { throw res.error; }
-          return res.data === true;
+          if (state.profile) { state.profile.display_name = res.data; }
+          notify();   // the header is showing the old name until this runs
+          return res.data;
         });
     },
 
@@ -308,6 +315,15 @@
                  '<path d="M18.2 20a5.7 5.7 0 0 0-2.4-4.5"></path>',
       signout:   '<path d="M12 4.2H6.6a2.2 2.2 0 0 0-2.2 2.2v11.2a2.2 2.2 0 0 0 2.2 2.2H12"></path>' +
                  '<path d="M15.6 16.4l4.4-4.4-4.4-4.4"></path><path d="M20 12H9.4"></path>',
+      desk:      '<rect x="3.4" y="4.4" width="17.2" height="12" rx="2"></rect>' +
+                 '<path d="M8 20h8M12 16.4V20"></path>',
+      pencil:    '<path d="M16.6 3.9a2 2 0 0 1 2.8 2.8L8.2 17.9l-3.7 1 1-3.7z"></path>' +
+                 '<path d="M14.6 5.9l3.5 3.5"></path>',
+      inbox:     '<path d="M4 13.5h4l1.2 2.4h5.6L16 13.5h4"></path>' +
+                 '<path d="M4 13.5l2.4-7.6a1.6 1.6 0 0 1 1.5-1.1h8.2a1.6 1.6 0 0 1 1.5 1.1L20 13.5v4.4a1.6 1.6 0 0 1-1.6 1.6H5.6A1.6 1.6 0 0 1 4 17.9z"></path>',
+      rename:    '<path d="M12 20.4a8.4 8.4 0 1 0 0-16.8 8.4 8.4 0 0 0 0 16.8z"></path>' +
+                 '<circle cx="12" cy="10" r="2.8"></circle>' +
+                 '<path d="M6.6 18.6a6.2 6.2 0 0 1 10.8 0"></path>',
       caret:     '<path d="M6 9.5l6 6 6-6"></path>'
     };
 
@@ -328,21 +344,46 @@
       return (out || '?').toUpperCase();
     }
 
-    // Four of these have no page yet. They are shown, disabled and
-    // labelled, rather than hidden: the menu is also the plan.
-    function adminItems() {
-      return [
-        { label: 'Admin Dashboard', icon: 'dashboard', href: depth + 'admin.html',
-          current: here === 'admin.html' },
-        { label: 'System Settings', icon: 'settings', soon: true },
-        { label: 'Security &amp; MFA', icon: 'security', soon: true },
-        { label: 'Audit Logs', icon: 'logs', soon: true },
-        { label: 'Manage Staff', icon: 'staff', href: depth + 'admin.html#people' }
-      ];
+    /* What each role finds in the menu. Everyone gets the last two
+       groups — a name to change and a way out — so the menu is now the
+       account control for readers as much as for admins.
+
+       Items that have no page yet are shown, disabled and labelled,
+       rather than hidden: the menu is also the plan. */
+    function menuItems(role) {
+      if (role === 'admin') {
+        return [
+          { label: 'Admin Dashboard', icon: 'dashboard', href: depth + 'admin.html',
+            current: here === 'admin.html' },
+          { label: 'System Settings', icon: 'settings', soon: true },
+          { label: 'Security &amp; MFA', icon: 'security', soon: true },
+          { label: 'Audit Logs', icon: 'logs', soon: true },
+          { label: 'Manage Staff', icon: 'staff', href: depth + 'admin.html#people' }
+        ];
+      }
+      if (role === 'editor') {
+        return [
+          { label: 'Editor desk', icon: 'desk', href: depth + 'editor-dashboard.html',
+            current: here === 'editor-dashboard.html' },
+          { label: 'Manage diseases', icon: 'pencil', href: depth + 'manage-diseases.html',
+            current: here === 'manage-diseases.html' },
+          { label: 'Reports inbox', icon: 'inbox', href: depth + 'reports.html',
+            current: here === 'reports.html' }
+        ];
+      }
+      // A reader has no tools, which is not the same as having no menu.
+      return [];
     }
 
-    function menuMarkup(name, email) {
-      var rows = adminItems().map(function (it) {
+    // The role, as a word rather than a database value.
+    function roleLabel(role) {
+      if (role === 'admin') { return 'Admin'; }
+      if (role === 'editor') { return 'Editor'; }
+      return 'Reader';
+    }
+
+    function menuMarkup(name, role) {
+      var rows = menuItems(role).map(function (it) {
         var inner = svg(it.icon, 18) + '<span>' + it.label + '</span>' +
           (it.soon ? '<span class="mc-menu-soon">Soon</span>' : '');
         if (it.soon) {
@@ -353,6 +394,12 @@
           'tabindex="-1" href="' + it.href + '"' +
           (it.current ? ' aria-current="page"' : '') + '>' + inner + '</a>';
       }).join('');
+
+      // Every role gets this one, which is the point of it.
+      var rename =
+        '<button type="button" class="mc-menu-item" role="menuitem" tabindex="-1" ' +
+                'id="mcRename">' + svg('rename', 18) +
+          '<span>Change your display name</span></button>';
 
       return '<div class="mc-menu">' +
         '<button type="button" class="mc-menu-trigger" id="mcMenuTrigger" ' +
@@ -365,15 +412,14 @@
           '<div class="mc-menu-head">' +
             '<span class="mc-menu-avatar">' + esc(initials(name)) + '</span>' +
             '<div class="mc-menu-head-text">' +
-              '<div class="mc-menu-head-name" title="' + esc(email) + '">' + esc(name) + '</div>' +
-              '<div class="mc-menu-head-sub">Admin</div>' +
-              // Only worth a line when it is not already the name above.
-              (name === email ? '' :
-                '<div class="mc-menu-head-mail">' + esc(email) + '</div>') +
+              '<div class="mc-menu-head-name">' + esc(name) + '</div>' +
+              '<div class="mc-menu-head-sub">' + esc(roleLabel(role)) + '</div>' +
             '</div>' +
           '</div>' +
+          (rows ? '<div class="mc-menu-sep"></div>' +
+                  '<div class="mc-menu-list">' + rows + '</div>' : '') +
           '<div class="mc-menu-sep"></div>' +
-          '<div class="mc-menu-list">' + rows + '</div>' +
+          '<div class="mc-menu-list">' + rename + '</div>' +
           '<div class="mc-menu-sep"></div>' +
           '<div class="mc-menu-list">' +
             '<button type="button" class="mc-menu-item mc-menu-item--danger" role="menuitem" ' +
@@ -382,6 +428,142 @@
           '</div>' +
         '</div>' +
       '</div>';
+    }
+
+    /* ---------- "Change your display name" ----------
+       The same lightweight modal the disease pages use to report an
+       inaccuracy — this site does not load Bootstrap's JS bundle — built
+       once on first use and reused after that.
+
+       There is nothing to validate but emptiness. A display name may be
+       written in any script, may hold spaces and punctuation, and does
+       not have to be unique: it is what the site calls you, not how you
+       sign in. The only limit is 60 characters, which is about the
+       navbar rather than about names. */
+    var renameModal = null;
+
+    function renameMessage(text, kind) {
+      var el = document.getElementById('mcRenameMsg');
+      if (!el) { return; }
+      if (!text) { el.style.display = 'none'; el.textContent = ''; return; }
+      el.textContent = text;
+      el.className = 'mc-modal-msg mc-modal-msg--' + (kind || 'error');
+      el.style.display = 'block';
+    }
+
+    // The database answers in error codes. This turns them into sentences.
+    function explainRename(err) {
+      var text = String((err && err.message) || '');
+      if (/display_name_blank/i.test(text)) {
+        return 'Enter the name you would like to be called.';
+      }
+      if (/display_name_too_long|profiles_display_name_len/i.test(text)) {
+        return 'Display names stop at 60 characters.';
+      }
+      if (/not_signed_in/i.test(text)) {
+        return 'You have been signed out. Sign in again and try once more.';
+      }
+      if (err && err.code === 'PGRST202') {
+        // The function is not deployed yet.
+        return 'Display name changes are not switched on for this site yet.';
+      }
+      return text || 'Something went wrong.';
+    }
+
+    function buildRenameDialog() {
+      renameModal = document.createElement('div');
+      renameModal.className = 'mc-modal';
+      renameModal.setAttribute('role', 'dialog');
+      renameModal.setAttribute('aria-modal', 'true');
+      renameModal.setAttribute('aria-labelledby', 'mcRenameTitle');
+      renameModal.innerHTML =
+        '<div class="mc-modal-backdrop" data-close></div>' +
+        '<div class="mc-modal-panel">' +
+          '<button type="button" class="mc-modal-x" data-close aria-label="Close">' +
+            '<i class="bi bi-x-lg"></i></button>' +
+          '<div class="mc-modal-ico mc-modal-ico--muted">' + svg('rename', 26) + '</div>' +
+          '<h2 id="mcRenameTitle">Change your display name</h2>' +
+          '<p class="mc-modal-sub">This is the name the site shows in place of your email address.</p>' +
+          '<form id="mcRenameForm" novalidate>' +
+            '<label class="mc-auth-label" for="mcRenameInput">Display name</label>' +
+            '<div class="mc-auth-field">' +
+              '<input type="text" id="mcRenameInput" maxlength="60" ' +
+                     'autocomplete="nickname" placeholder="Su Myat Aung" style="padding-left:.9rem">' +
+            '</div>' +
+            '<p class="mc-admin-hint" style="text-align:left;margin:-.55rem 0 1rem">' +
+              'Anything you like, in any language. Spaces and punctuation are fine.</p>' +
+            '<div class="mc-modal-msg" id="mcRenameMsg" role="status" aria-live="polite" style="display:none"></div>' +
+            '<div class="mc-modal-actions">' +
+              '<button type="submit" class="mc-auth-btn" id="mcRenameSave">Save</button>' +
+              '<button type="button" class="mc-auth-btn mc-auth-btn--ghost" data-close>Cancel</button>' +
+            '</div>' +
+          '</form>' +
+        '</div>';
+      document.body.appendChild(renameModal);
+
+      renameModal.addEventListener('click', function (e) {
+        if (e.target.closest('[data-close]')) { closeRenameDialog(); }
+      });
+      document.addEventListener('keydown', function (e) {
+        if ((e.key === 'Escape' || e.key === 'Esc') &&
+            renameModal.classList.contains('is-open')) {
+          closeRenameDialog();
+        }
+      });
+      document.getElementById('mcRenameForm').addEventListener('submit', onRenameSubmit);
+    }
+
+    function openRenameDialog() {
+      if (!renameModal) { buildRenameDialog(); }
+
+      // Close the menu behind it, so the dialog is the only thing open.
+      var panel = document.getElementById('mcMenuPanel');
+      var trigger = document.getElementById('mcMenuTrigger');
+      if (panel) { panel.classList.remove('is-open'); }
+      if (trigger) { trigger.setAttribute('aria-expanded', 'false'); }
+
+      var profile = api.getProfile();
+      var input = document.getElementById('mcRenameInput');
+      input.value = (profile && profile.display_name) || '';
+      renameMessage('');
+      renameModal.classList.add('is-open');
+      input.focus();
+      input.select();
+    }
+
+    function closeRenameDialog() {
+      if (renameModal) { renameModal.classList.remove('is-open'); }
+      var trigger = document.getElementById('mcMenuTrigger');
+      if (trigger) { trigger.focus(); }
+    }
+
+    function onRenameSubmit(e) {
+      e.preventDefault();
+      var input = document.getElementById('mcRenameInput');
+      var save = document.getElementById('mcRenameSave');
+      var name = input.value.trim();
+
+      // The only thing that can be wrong with it.
+      if (!name) {
+        renameMessage('Enter the name you would like to be called.');
+        input.focus();
+        return;
+      }
+
+      save.disabled = true;
+      renameMessage('');
+
+      api.setDisplayName(name)
+        .then(function () {
+          // setDisplayName has already told the listeners, so the header is
+          // showing the new name by the time this closes.
+          closeRenameDialog();
+        })
+        .catch(function (err) {
+          console.error('[MedCare] Could not change the display name:', err);
+          renameMessage(explainRename(err));
+        })
+        .then(function () { save.disabled = false; });
     }
 
     /* Menu-button behaviour, by the book: click or ArrowDown opens and
@@ -456,36 +638,29 @@
       if (state.user) {
         var role = state.role || 'user';
 
-        if (role === 'admin') {
-          // An admin's tools hang off their own face: the menu carries the
-          // dashboard, the staff list and the sign-out, so the navbar keeps
-          // only the desk link beside it.
-          wrap.innerHTML =
-            '<a class="mc-account-btn" href="' + depth + 'editor-dashboard.html">Desk</a>' +
-            menuMarkup(api.displayName(), state.user.email);
-          wireMenu();
-        } else {
-          // Editors and readers keep the plain controls. Staff-only links
-          // HIDE tools from ordinary users; they do not protect them. Each
-          // page re-checks, and the RLS policies are what refuse the writes.
-          var staffLinks = api.isStaff()
-            ? '<a class="mc-account-btn" href="' + depth + 'editor-dashboard.html">Desk</a>'
-            : '';
-          wrap.innerHTML = staffLinks +
-            '<span class="mc-account-who" title="' + esc(state.user.email) + '">' +
-              '<i class="bi bi-person-circle"></i>' +
-              '<span class="mc-account-email">' + esc(state.user.email) + '</span>' +
-              '<span class="mc-account-role mc-account-role--' + esc(role) + '">' + esc(role) + '</span>' +
-            '</span>' +
-            '<button type="button" class="mc-account-btn" id="mcSignOut">Sign out</button>';
-        }
+        /* One control for everybody now: the menu hangs off their own
+           face and carries whatever their role can reach. Staff keep the
+           desk link beside it, because that is the page they live on.
 
-        // Both branches draw a sign-out control; only its shape differs.
+           Staff-only links HIDE tools from ordinary users; they do not
+           protect them. Each page re-checks, and the RLS policies are
+           what refuse the writes. */
+        var deskLink = api.isStaff()
+          ? '<a class="mc-account-btn" href="' + depth + 'editor-dashboard.html">Desk</a>'
+          : '';
+        wrap.innerHTML = deskLink + menuMarkup(api.displayName(), role);
+        wireMenu();
+
         var out = document.getElementById('mcSignOut');
         out.addEventListener('click', function () {
           out.disabled = true;
           api.signOut().then(function () { window.location.reload(); });
         });
+
+        var rename = document.getElementById('mcRename');
+        if (rename) {
+          rename.addEventListener('click', function () { openRenameDialog(); });
+        }
       } else if (here !== 'login.html') {
         wrap.innerHTML = '<a class="mc-account-btn" href="' + depth + 'login.html">Sign in</a>';
       } else {

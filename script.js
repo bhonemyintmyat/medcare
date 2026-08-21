@@ -2486,9 +2486,7 @@
     'Creating account…': 'အကောင့် ဖွင့်နေသည်…',
     'Signing in…': 'ဝင်ရောက်နေသည်…',
     'Full name': 'အမည်အပြည့်အစုံ',
-    'Username': 'အသုံးပြုသူအမည်',
     'what the site will call you': 'ဝဘ်ဆိုက်က သင့်ကို ခေါ်မည့် အမည်',
-    '3 to 24 characters: letters, numbers, dots, dashes or underscores.': 'စာလုံး ၃ လုံးမှ ၂၄ လုံး — စာလုံး၊ ဂဏန်း၊ အစက်၊ ဒက်ရှ် သို့မဟုတ် အောက်မျဉ်းသာ။',
     'Email address': 'အီးမေးလ် လိပ်စာ',
     'Password': 'စကားဝှက်',
     'Confirm password': 'စကားဝှက် အတည်ပြုရန်',
@@ -2504,21 +2502,38 @@
     'Editor and admin roles are granted by a site administrator in the database — they can never be chosen at signup.': 'အယ်ဒီတာနှင့် အက်ဒမင် ရာထူးများကို ဒေတာဘေ့စ်ထဲတွင် ဝဘ်ဆိုက် စီမံသူက ပေးအပ်သည် — စာရင်းသွင်းချိန်တွင် ရွေးချယ်၍ မရပါ။',
     'Enter both your email address and password.': 'အီးမေးလ် လိပ်စာနှင့် စကားဝှက် နှစ်ခုစလုံး ထည့်ပါ။',
     'Enter your full name, as you would write it on a form.': 'ပုံစံစာရွက်တွင် ရေးသကဲ့သို့ သင့်အမည်အပြည့်အစုံကို ထည့်ပါ။',
-    'Pick a username of 3 to 24 characters: letters, numbers, dots, dashes or underscores.': 'အသုံးပြုသူအမည်ကို စာလုံး ၃ လုံးမှ ၂၄ လုံးအတွင်း ရွေးပါ — စာလုံး၊ ဂဏန်း၊ အစက်၊ ဒက်ရှ် သို့မဟုတ် အောက်မျဉ်းသာ။',
     'Passwords need to be at least 6 characters long.': 'စကားဝှက်သည် အနည်းဆုံး စာလုံး ၆ လုံး ရှိရမည်။',
     'The two passwords do not match. Type the same one twice.': 'စကားဝှက် နှစ်ခု မတူညီပါ။ တူညီသည့် တစ်ခုတည်းကို နှစ်ကြိမ် ရိုက်ပါ။',
     'Account created. Check your email for a confirmation link, then sign in.': 'အကောင့် ဖွင့်ပြီးပါပြီ။ အတည်ပြု လင့်ခ်အတွက် အီးမေးလ်ကို စစ်ဆေးပြီးမှ ဝင်ပါ။',
     'Could not reach the server. Check your connection and try again.': 'ဆာဗာသို့ မရောက်ပါ။ အင်တာနက် ချိတ်ဆက်မှုကို စစ်ဆေးပြီး ထပ်စမ်းပါ။',
     'Sign-in is unavailable because Supabase is not configured.': 'Supabase ကို ချိန်ညှိမထားသောကြောင့် ဝင်ရောက်၍ မရပါ။',
-    'That username is already taken. Please pick another one.': 'ထိုအသုံးပြုသူအမည်ကို အသုံးပြုပြီး ဖြစ်သည်။ အခြားတစ်ခု ရွေးပါ။',
-    'That username has characters the site cannot use. Letters, numbers, dots, dashes or underscores only.': 'ထိုအသုံးပြုသူအမည်တွင် ဝဘ်ဆိုက်က မသုံးနိုင်သည့် စာလုံးများ ပါနေသည်။ စာလုံး၊ ဂဏန်း၊ အစက်၊ ဒက်ရှ် သို့မဟုတ် အောက်မျဉ်းသာ။',
-    'The account could not be created. If you picked an unusual username, try a simpler one.': 'အကောင့် ဖန်တီး၍ မရပါ။ ထူးဆန်းသည့် အသုံးပြုသူအမည် ရွေးထားပါက ရိုးရှင်းသည့် အမည်တစ်ခု စမ်းကြည့်ပါ။',
     'That did not work. Please try again.': 'မအောင်မြင်ပါ။ ထပ်စမ်းကြည့်ပါ။',
     'Invalid login credentials': 'အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားနေသည်။',
     'User already registered': 'ဤအီးမေးလ်ဖြင့် အကောင့် ရှိပြီး ဖြစ်သည်။',
     'Email not confirmed': 'အီးမေးလ်ကို အတည်ပြုရသေးပါ။',
     'Password should be at least 6 characters.': 'စကားဝှက်သည် အနည်းဆုံး စာလုံး ၆ လုံး ရှိရမည်။',
     'Unable to validate email address: invalid format': 'အီးမေးလ် လိပ်စာ ပုံစံ မမှန်ပါ။',
+
+    /* --- changing your own display name ---------------------------
+       The menu is now every signed-in visitor's account control, so the
+       role words below are the ones it shows as a subtitle. */
+    'This is the name the site shows in place of your email address.': 'ဤအမည်ကို သင့်အီးမေးလ် လိပ်စာအစား ဝဘ်ဆိုက်တွင် ပြသမည် ဖြစ်သည်။',
+    'Cancel': 'မလုပ်တော့ပါ',
+    'Close': 'ပိတ်ရန်',
+    'Editor': 'အယ်ဒီတာ',
+    'Reader': 'ဖတ်ရှုသူ',
+    'You have been signed out. Sign in again and try once more.': 'သင် ထွက်သွားပြီ ဖြစ်သည်။ ပြန်ဝင်ပြီး ထပ်စမ်းကြည့်ပါ။',
+
+    /* --- display names ------------------------------------------
+       No rules to explain here: any script, spaces, punctuation, and
+       two people may share one. The Burmese says so too. */
+    'Display name': 'ပြသမည့်အမည်',
+    'Change your display name': 'ပြသမည့်အမည် ပြောင်းရန်',
+    'Anything you like, in any language. Spaces and punctuation are fine.': 'သင်နှစ်သက်ရာ မည်သည့်ဘာသာစကားဖြင့်မဆို ရေးနိုင်သည်။ ကွက်လပ်နှင့် ပုဒ်ဖြတ်များလည်း ရပါသည်။',
+    'Enter the name you would like to be called.': 'သင့်ကို ခေါ်စေလိုသည့် အမည်ကို ထည့်ပါ။',
+    'Display names stop at 60 characters.': 'ပြသမည့်အမည်သည် စာလုံး ၆၀ ထက် မပိုရပါ။',
+    'Display name changes are not switched on for this site yet.': 'ဤဝဘ်ဆိုက်တွင် ပြသမည့်အမည် ပြောင်းခြင်းကို မဖွင့်ရသေးပါ။',
+    'The account could not be created. Please try again.': 'အကောင့် ဖန်တီး၍ မရပါ။ ထပ်စမ်းကြည့်ပါ။',
   };
 
   var LANGS = { en: null, my: MY };

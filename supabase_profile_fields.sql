@@ -4,6 +4,11 @@
 -- Run AFTER supabase_auth.sql, supabase_rls.sql and supabase_admin.sql.
 -- Safe to re-run.
 --
+-- SUPERSEDED IN PART by supabase_display_name.sql, which renames
+-- `username` to `display_name` and drops every rule about its shape and
+-- its uniqueness. Run this file first if you are setting up from
+-- scratch, then that one; the rename is written to work either way.
+--
 -- The signup form now asks for three things beyond email and password:
 -- a full name, a username to be called by, and the password a second
 -- time. The confirmation never leaves the browser — it exists only so a

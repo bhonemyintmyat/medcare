@@ -363,8 +363,11 @@
       }
       if (role === 'editor') {
         return [
-          { label: 'Editor desk', icon: 'desk', href: depth + 'editor-dashboard.html',
-            current: here === 'editor-dashboard.html' },
+          /* The desk moved into editor/ when it grew past one page. `here`
+             is only the file name, and every area has an index.html, so
+             this one is matched on the directory instead. */
+          { label: 'Editor desk', icon: 'desk', href: depth + 'editor/index.html',
+            current: window.location.pathname.indexOf('/editor/') !== -1 },
           { label: 'Manage diseases', icon: 'pencil', href: depth + 'manage-diseases.html',
             current: here === 'manage-diseases.html' },
           { label: 'Reports inbox', icon: 'inbox', href: depth + 'reports.html',
@@ -646,7 +649,7 @@
            protect them. Each page re-checks, and the RLS policies are
            what refuse the writes. */
         var deskLink = api.isStaff()
-          ? '<a class="mc-account-btn" href="' + depth + 'editor-dashboard.html">Desk</a>'
+          ? '<a class="mc-account-btn" href="' + depth + 'editor/index.html">Desk</a>'
           : '';
         wrap.innerHTML = deskLink + menuMarkup(api.displayName(), role);
         wireMenu();

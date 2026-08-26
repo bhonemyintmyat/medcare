@@ -2534,6 +2534,36 @@
     'Display names stop at 60 characters.': 'ပြသမည့်အမည်သည် စာလုံး ၆၀ ထက် မပိုရပါ။',
     'Display name changes are not switched on for this site yet.': 'ဤဝဘ်ဆိုက်တွင် ပြသမည့်အမည် ပြောင်းခြင်းကို မဖွင့်ရသေးပါ။',
     'The account could not be created. Please try again.': 'အကောင့် ဖန်တီး၍ မရပါ။ ထပ်စမ်းကြည့်ပါ။',
+
+    /* --- admin area: shell, navigation and the guard ------------
+       Every visible string in admin/. Page-specific ones are added as
+       each page is built. Role VALUES stay English, as everywhere else. */
+    'Overview': 'အနှစ်ချုပ်',
+    'People': 'အသုံးပြုသူများ',
+    'Users and roles': 'အသုံးပြုသူများနှင့် ရာထူးများ',
+    'Content': 'အကြောင်းအရာ',
+    'Diseases, articles, hospitals': 'ရောဂါများ၊ ဆောင်းပါးများ၊ ဆေးရုံများ',
+    'Moderation': 'စိစစ်ရေး',
+    'Reports': 'တိုင်ကြားချက်များ',
+    'You': 'သင်',
+    'Your profile': 'သင့်ပရိုဖိုင်',
+    'Back to MedCare': 'MedCare သို့ ပြန်သွားရန်',
+    'Show admin sections': 'အက်ဒမင် မီနူး ပြရန်',
+    'Hide admin sections': 'အက်ဒမင် မီနူး ဖျောက်ရန်',
+    'Everything an admin can reach, in one place.': 'အက်ဒမင် တစ်ဦး လက်လှမ်းမီသည့် အရာအားလုံး တစ်နေရာတည်းတွင်။',
+    'Everything here is enforced by the database, not by this page.': 'ဤနေရာရှိ အရာအားလုံးကို ဤစာမျက်နှာက မဟုတ်ဘဲ ဒေတာဘေ့စ်က စိစစ်သည်။',
+    'These screens decide what to show you. Row Level Security decides what anyone is allowed to do — including you, and including anyone who opens this page with the guard deleted.': 'ဤစာမျက်နှာများက သင့်ကို ဘာပြရမည်ကိုသာ ဆုံးဖြတ်သည်။ မည်သူ ဘာလုပ်ခွင့် ရှိသည်ကို Row Level Security က ဆုံးဖြတ်သည် — သင်လည်း အပါအဝင်၊ ကာကွယ်မှုကို ဖျက်ပြီး ဤစာမျက်နှာကို ဖွင့်သူလည်း အပါအဝင် ဖြစ်သည်။',
+    'Who has an account, and what each of them may do. Role changes are confirmed by name before they are saved.': 'မည်သူ့တွင် အကောင့် ရှိသည်၊ တစ်ဦးချင်းစီ ဘာလုပ်နိုင်သည်ကို ကြည့်ရန်။ ရာထူး ပြောင်းလဲမှုကို မသိမ်းမီ အမည်ဖြင့် အတည်ပြုခိုင်းသည်။',
+    'Diseases, articles and hospitals. Drafts stay invisible to the public until they are published.': 'ရောဂါများ၊ ဆောင်းပါးများနှင့် ဆေးရုံများ။ မူကြမ်းများကို ထုတ်ဝေသည်အထိ အများပြည်သူ မမြင်ရပါ။',
+    'Ambulance, fire, police, poison control. A wrong number here is the worst thing this site can print, so each one is typed twice.': 'လူနာတင်ယာဉ်၊ မီးသတ်၊ ရဲနှင့် အဆိပ်ဖြေဌာန။ ဤနေရာတွင် နံပါတ် မှားခြင်းသည် ဤဝဘ်ဆိုက် ဖော်ပြနိုင်သည့် အဆိုးဆုံး အမှား ဖြစ်သဖြင့် တစ်ခုစီကို နှစ်ကြိမ် ရိုက်ခိုင်းသည်။',
+    'What readers have flagged as wrong. Resolving or dismissing one needs a note saying why.': 'ဖတ်ရှုသူများက မှားနေသည်ဟု ထောက်ပြထားသည်များ။ ဖြေရှင်းခြင်း သို့မဟုတ် ပယ်ဖျက်ခြင်းအတွက် အကြောင်းပြချက် မှတ်ချက် လိုအပ်သည်။',
+    'Your display name, your language, and your password.': 'သင့်ပြသမည့်အမည်၊ သင့်ဘာသာစကားနှင့် သင့်စကားဝှက်။',
+    'What is not here': 'ဤနေရာတွင် မပါဝင်သည်များ',
+    'No traffic charts, no visitor counts, no activity feed. This site does not record what anyone searched for or which disease page they opened — that is identifiable health data, and the way to keep it private is not to collect it. There is nothing to chart, and that is the intended state rather than a missing feature.': 'အသွားအလာ ဇယားများ၊ လာရောက်သူ အရေအတွက်များ၊ လှုပ်ရှားမှု မှတ်တမ်းများ မပါပါ။ ဤဝဘ်ဆိုက်သည် မည်သူက ဘာရှာဖွေသည်၊ မည်သည့် ရောဂါ စာမျက်နှာကို ဖွင့်ကြည့်သည်ကို မမှတ်တမ်းတင်ပါ — ၎င်းသည် တစ်ဦးချင်း ဖော်ထုတ်နိုင်သော ကျန်းမာရေး အချက်အလက် ဖြစ်ပြီး ကာကွယ်ရန် အကောင်းဆုံး နည်းလမ်းမှာ မစုဆောင်းခြင်း ဖြစ်သည်။ ထို့ကြောင့် ဇယားဆွဲစရာ မရှိခြင်းသည် ချို့ယွင်းချက် မဟုတ်ဘဲ ရည်ရွယ်ချက် ဖြစ်သည်။',
+    'Admin area unavailable': 'အက်ဒမင် နေရာကို မရနိုင်ပါ',
+    'This site is not connected to its database. See the console for details.': 'ဤဝဘ်ဆိုက်သည် ဒေတာဘေ့စ်နှင့် မချိတ်ဆက်ထားပါ။ အသေးစိတ်ကို console တွင် ကြည့်ပါ။',
+    'Could not check your permissions': 'သင့်ခွင့်ပြုချက်များကို စစ်ဆေး၍ မရပါ',
+    'The database did not answer. Check your connection and reload the page.': 'ဒေတာဘေ့စ်မှ အဖြေ မရပါ။ ချိတ်ဆက်မှုကို စစ်ဆေးပြီး စာမျက်နှာကို ပြန်ဖွင့်ပါ။',
   };
 
   var LANGS = { en: null, my: MY };
@@ -2664,6 +2694,93 @@
   var saved = 'en';
   try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) { /* ignore */ }
   applyLang(saved);
+
+  /* ==================================================================
+     The dictionary above, but editable
+     ------------------------------------------------------------------
+     MY is the shipped translation. It works, and it means a wrong
+     Burmese sentence needs a developer, a commit and a deploy to fix —
+     which is why some of them have been wrong for a while.
+
+     public.translations is the same dictionary in the database, keyed by
+     the same thing: the English source string. editor/translations.html
+     writes to it. Everything below layers that table over the literal.
+
+     The order matters and it is the file that loses. A key present in
+     both takes the database's value, because that is the one somebody
+     went and corrected. A key present only in the file keeps working, so
+     an empty table changes nothing, and so does an unreachable one — the
+     failure mode of this whole feature is "the translation is as good as
+     it was yesterday", which is the only acceptable one for text a
+     reader is relying on.
+
+     Nothing here touches English. `en` has no dictionary by design.
+     ================================================================== */
+
+  /* What the editor screen lists. Handing over the live object rather
+     than a copy is deliberate: merge() writes into the same one applyLang
+     reads, so a saved string takes effect on the next switch without a
+     reload. The screen only reads it. */
+  window.MedCareI18n = {
+    LANG_KEY: LANG_KEY,
+
+    // Every key the site can translate, in the order they are written.
+    keys: function () { return Object.keys(MY); },
+
+    // What the shipped file says, before any database override.
+    fromFile: function (key) {
+      return Object.prototype.hasOwnProperty.call(MY, key) ? MY[key] : null;
+    },
+
+    current: function () { return currentLang; },
+
+    /* rows: [{ en, my }]. A row with an empty `my` is a key somebody has
+       started and not finished; it must NOT overwrite the file's value
+       with a blank, or filling in half a form would take Burmese off the
+       page. Ignored here, and flagged as unfinished on the editor
+       screen. */
+    merge: function (rows) {
+      var changed = 0;
+      (rows || []).forEach(function (row) {
+        if (!row || !row.en) { return; }
+        var value = row.my == null ? '' : String(row.my).trim();
+        if (!value) { return; }
+        if (MY[row.en] === value) { return; }
+        MY[row.en] = value;
+        changed++;
+      });
+      // Re-run only if the page is actually showing Burmese and
+      // something moved. In English this is a no-op the reader would
+      // still pay a full DOM walk for.
+      if (changed && currentLang !== 'en') { applyLang(currentLang); }
+      return changed;
+    }
+  };
+
+  /* Fetched once per page load, after first paint, and never awaited by
+     anything. If it is slow the page is already correct; if it fails the
+     page stays correct. `translations` is world-readable, so this runs
+     for signed-out visitors too — the whole point is that a fix reaches
+     readers, not just staff. */
+  (function loadTranslationOverrides() {
+    var db = window.supabaseClient;
+    if (!db) { return; }
+
+    db.from('translations').select('en, my')
+      .then(function (res) {
+        if (res.error) {
+          /* The commonest cause by far is supabase_editor.sql not having
+             been run yet, which is a perfectly fine state for this site
+             to be in. Logged, not surfaced: a reader is not owed a
+             message about a table they have never heard of. */
+          console.info('[MedCare] Translation overrides unavailable; using the built-in dictionary.',
+                       res.error.message);
+          return;
+        }
+        window.MedCareI18n.merge(res.data);
+      })
+      .catch(function () { /* offline; the built-in dictionary stands */ });
+  })();
 
 
   /* ==================================================================
@@ -2898,6 +3015,7 @@
       });
     }
   })();
+
 })();
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -2665,6 +2665,239 @@
   try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) { /* ignore */ }
   applyLang(saved);
 
+
+  /* ==================================================================
+     Site state — the maintenance curtain and the site-wide notice
+     ------------------------------------------------------------------
+     Reads site_settings, keys 'maintenance' and 'notice', written by
+     admin/maintenance.html. Both rows are world-readable on purpose: a
+     visitor who is not signed in is exactly the visitor who needs to be
+     told the site is closed.
+
+     WHAT THIS IS. A curtain. It stops the PAGES being shown; it does not
+     stop the data being read, because the policies that decide that have
+     not changed and should not. Anybody who wants what is behind it can
+     still ask the API. That is the right trade — maintenance mode exists
+     so a reader does not act on a page that is half-rewritten, not to
+     keep a secret — but it means nothing that must not be seen may ever
+     be protected by this.
+
+     IT FAILS OPEN. No database, no table, no network, a malformed row:
+     every one of those leaves the site exactly as it was. A health site
+     that hides itself because a fetch timed out has done more harm than
+     the stale page it was trying to prevent, and "closed" is a state
+     this code will only ever enter on a direct answer from the database
+     saying so.
+
+     WHERE IT NEVER RUNS. /admin/ and /editor/, which have guards of
+     their own, and login.html. Curtaining the admin area would mean
+     turning maintenance mode on locks you out of turning it off;
+     curtaining the login page would mean the staff who are exempt from
+     the curtain cannot sign in to become exempt.
+     ================================================================== */
+  (function siteState() {
+    var path = window.location.pathname;
+    if (/\/(admin|editor)\//.test(path)) { return; }
+
+    var file  = (path.split('/').pop() || 'index.html').toLowerCase();
+    var depth = path.indexOf('/diseases/') !== -1 ? '../' : '';
+
+    var EMERGENCY_PAGE = 'emergency-contacts.html';
+    var ALWAYS_OPEN    = ['login.html'];
+    var CACHE_KEY      = 'mc-site-state';
+
+    var state     = null;    // what the database last said, or null for "open"
+    var role      = null;    // once auth.js has answered
+    var roleKnown = false;
+
+    /* Cached for one session so a second page load covers first and
+       checks after, rather than flashing the site at somebody who has
+       already been told it is closed. sessionStorage, not localStorage:
+       a stale "closed" that outlives the browser tab would be a worse
+       bug than the flash it prevents. */
+    function readCache() {
+      try {
+        var raw = window.sessionStorage.getItem(CACHE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) { return null; }
+    }
+    function writeCache(value) {
+      try { window.sessionStorage.setItem(CACHE_KEY, JSON.stringify(value)); }
+      catch (e) { /* private mode, or full: the fetch still decides */ }
+    }
+
+    function bar(id, className, iconClass, text, link) {
+      var el = document.getElementById(id);
+      if (!el) {
+        el = document.createElement('div');
+        el.id = id;
+        document.body.insertBefore(el, document.body.firstChild);
+      }
+      el.className = className;
+      el.setAttribute('role', 'status');
+      el.innerHTML = '<i class="bi ' + iconClass + '" aria-hidden="true"></i><span></span>';
+      // textContent, never innerHTML: this string was typed into a form
+      // by an admin, and an admin typing into a form is not a reason to
+      // trust a string with the rest of the page.
+      el.querySelector('span').textContent = text;
+      if (link) {
+        var a = document.createElement('a');
+        a.href = link.href;
+        a.textContent = link.text;
+        a.style.marginLeft = '.5rem';
+        el.querySelector('span').appendChild(a);
+      }
+      return el;
+    }
+
+    function drop(id) {
+      var el = document.getElementById(id);
+      if (el) { el.remove(); }
+    }
+
+    /* ---------- The notice ---------- */
+    function renderNotice(n) {
+      var text = n && n.enabled ? String(n.text || '').trim() : '';
+      if (!text) { drop('mcSiteNotice'); return; }
+      bar('mcSiteNotice',
+          'mc-site-notice' + (n.tone === 'warning' ? ' mc-site-notice--warning' : ''),
+          n.tone === 'warning' ? 'bi-exclamation-triangle' : 'bi-info-circle',
+          text);
+    }
+
+    /* ---------- The curtain ---------- */
+    function renderCurtain(m) {
+      var closed = !!(m && m.enabled);
+
+      if (!closed) {
+        drop('mcCurtain');
+        drop('mcCurtainStaff');
+        drop('mcMaintenanceBar');
+        document.body.style.overflow = '';
+        return;
+      }
+
+      var message = String(m.message || '').trim() ||
+                    'MedCare is being updated. Please check back shortly.';
+      var emergencyOk = m.allow_emergency !== false;
+
+      /* Staff see the site, and a bar saying nobody else can. Until
+         auth.js answers, roleKnown is false and everybody is treated as
+         a reader — the curtain goes up first and comes down a moment
+         later for the people it does not apply to. That order is
+         deliberate: the reader is the one it exists for. */
+      var staff = roleKnown && (role === 'editor' || role === 'admin');
+
+      var exempt = ALWAYS_OPEN.indexOf(file) !== -1 ||
+                   (file === EMERGENCY_PAGE && emergencyOk);
+
+      if (staff || exempt) {
+        drop('mcCurtain');
+        document.body.style.overflow = '';
+
+        if (staff) {
+          drop('mcMaintenanceBar');
+          bar('mcCurtainStaff', 'mc-curtain-staff', 'bi-cone-striped',
+              'This site is closed to the public. You can see it because you are signed in as staff.',
+              role === 'admin'
+                ? { href: depth + 'admin/maintenance.html', text: 'Reopen it' }
+                : null);
+        } else {
+          drop('mcCurtainStaff');
+          bar('mcMaintenanceBar', 'mc-site-notice mc-site-notice--warning', 'bi-cone-striped',
+              file === EMERGENCY_PAGE
+                ? 'The rest of MedCare is closed for maintenance. These numbers are still here.'
+                : message);
+        }
+        return;
+      }
+
+      drop('mcCurtainStaff');
+      drop('mcMaintenanceBar');
+
+      var el = document.getElementById('mcCurtain');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'mcCurtain';
+        el.className = 'mc-curtain';
+        el.setAttribute('role', 'alertdialog');
+        el.setAttribute('aria-modal', 'true');
+        el.setAttribute('aria-labelledby', 'mcCurtainTitle');
+        el.innerHTML =
+          '<div class="mc-curtain-panel">' +
+            '<div class="mc-curtain-ico"><i class="bi bi-tools" aria-hidden="true"></i></div>' +
+            '<h1 id="mcCurtainTitle">MedCare is closed for maintenance</h1>' +
+            '<p data-message></p>' +
+            '<span class="mc-curtain-emergency" data-emergency hidden>' +
+              'If this is an emergency, the phone numbers are still here.' +
+              '<a class="mc-auth-btn" href="' + depth + EMERGENCY_PAGE + '">Emergency numbers</a>' +
+            '</span>' +
+            '<span class="mc-curtain-sign">You are seeing this because the site is being updated.</span>' +
+          '</div>';
+        document.body.appendChild(el);
+      }
+
+      el.querySelector('[data-message]').textContent = message;
+      el.querySelector('[data-emergency]').hidden = !emergencyOk;
+
+      // The page underneath is left intact and merely covered, so that
+      // taking the curtain away — which is what happens the moment a
+      // staff session is confirmed — puts the site back with nothing to
+      // re-render. Its scrollbar is the only thing that has to go.
+      document.body.style.overflow = 'hidden';
+    }
+
+    function render() {
+      renderNotice(state && state.notice);
+      renderCurtain(state && state.maintenance);
+    }
+
+    // Cover first, check after.
+    state = readCache();
+    if (state) { render(); }
+
+    var db = window.supabaseClient;
+    if (db) {
+      db.from('site_settings').select('key,value').in('key', ['maintenance', 'notice'])
+        .then(function (res) {
+          if (res.error) {
+            /* Commonest cause by far is supabase_admin_scope.sql not
+               having been run, which is a perfectly fine state for this
+               site to be in. Logged, not surfaced: a reader is not owed
+               a message about a table they have never heard of. */
+            console.info('[MedCare] Site settings unavailable; the site stays open.',
+                         res.error.message);
+            state = null;
+            writeCache(null);
+            render();
+            return;
+          }
+          var next = { maintenance: null, notice: null };
+          (res.data || []).forEach(function (row) { next[row.key] = row.value; });
+          state = next;
+          writeCache(next);
+          render();
+        })
+        .catch(function () {
+          // Offline. Fail open, and drop the cache so the next page load
+          // does not put a curtain up on the strength of an old answer.
+          state = null;
+          writeCache(null);
+          render();
+        });
+    } else {
+      state = null;
+      render();
+    }
+
+    if (window.MedCareAuth && window.MedCareAuth.ready) {
+      window.MedCareAuth.ready.then(function () {
+        role = window.MedCareAuth.getRole();
+        roleKnown = true;
+        render();
+      });
+    }
+  })();
 })();
 
 document.addEventListener("DOMContentLoaded", () => {

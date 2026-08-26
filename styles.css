@@ -537,6 +537,17 @@
   .mc-auth-note .bi{color:var(--mc-primary-600);font-size:1.1rem;flex-shrink:0;margin-top:.1rem}
   .mc-auth-note code{background:#fff;border:1px solid #ccfbf1;border-radius:6px;padding:.05rem .35rem;font-size:.85em;color:var(--mc-primary-600)}
 
+  /* Password recovery: the "Forgot your password?" link on the sign-in
+     tab, the way back out of recovery mode, and the two card icons
+     reset-password.html swaps in for a spent or broken link. */
+  .mc-auth-forgot{display:flex;justify-content:flex-end;margin:-.75rem 0 1.15rem}
+  .mc-auth-back{display:flex;justify-content:center;margin:1.05rem 0 0}
+  .mc-auth-link{border:none;background:none;padding:0;font-family:inherit;font-size:.87rem;font-weight:600;color:var(--mc-primary-600);cursor:pointer;text-decoration:none}
+  .mc-auth-link:hover{color:var(--mc-primary);text-decoration:underline}
+  .mc-auth-link:focus-visible{outline:2px solid var(--mc-primary);outline-offset:3px;border-radius:4px}
+  .mc-auth-ico--recover{background:var(--mc-primary-50);color:var(--mc-primary-600)}
+  .mc-auth-ico--warn{background:var(--mc-danger-50);color:var(--mc-danger-700)}
+
   /* Navbar account control */
   .mc-account{display:flex;align-items:center;gap:.7rem;margin-left:.9rem}
   .mc-account-who{display:inline-flex;align-items:center;gap:.45rem;font-size:.88rem;color:var(--mc-muted);max-width:230px}

@@ -22,14 +22,21 @@
   var tabIn      = document.getElementById('tabSignIn');
   var tabUp      = document.getElementById('tabSignUp');
   var revealBtn  = document.getElementById('authReveal');
+  var forgotBtn  = document.getElementById('authForgot');
+  var backBtn    = document.getElementById('authRecoverBack');
+  var passWrap   = document.getElementById('fieldPassword');
 
   // Signup-only: a real name, a name to be called by, and the password
   // a second time.
   var fullNameEl = document.getElementById('authFullName');
   var displayEl  = document.getElementById('authDisplayName');
   var confirmEl  = document.getElementById('authConfirm');
-  var signupOnly = document.querySelectorAll('.mc-signup-only');
+  var signupOnly  = document.querySelectorAll('.mc-signup-only');
+  var signinOnly  = document.querySelectorAll('.mc-signin-only');
+  var recoverOnly = document.querySelectorAll('.mc-recover-only');
 
+  // 'signin' | 'signup' | 'recover'. The third is this same form asking
+  // for one thing only: the address to send a recovery link to.
   var mode = 'signin';
 
   function message(text, kind) {
@@ -52,28 +59,57 @@
     if (/Database error saving new user/i.test(text)) {
       return 'The account could not be created. Please try again.';
     }
+    // Supabase throttles recovery mail per address and per address block,
+    // and says so in several wordings.
+    if (/rate limit|only request this after|too many requests/i.test(text)) {
+      return 'A recovery link was requested very recently. Wait a minute, then try again.';
+    }
     return text || 'That did not work. Please try again.';
+  }
+
+  // Written once because three places need the same three words: both
+  // ends of setMode, and putting the label back after a request finishes.
+  function submitLabel() {
+    if (mode === 'recover') { return 'Send a recovery link'; }
+    return mode === 'signup' ? 'Create account' : 'Sign in';
   }
 
   function setMode(next) {
     mode = next;
     var up = mode === 'signup';
-    tabIn.classList.toggle('is-active', !up);
+    var recover = mode === 'recover';
+
+    // In recovery mode NEITHER tab is current: the form has stopped being
+    // either of the two things they name.
+    tabIn.classList.toggle('is-active', mode === 'signin');
     tabUp.classList.toggle('is-active', up);
-    tabIn.setAttribute('aria-selected', String(!up));
+    tabIn.setAttribute('aria-selected', String(mode === 'signin'));
     tabUp.setAttribute('aria-selected', String(up));
-    submitBtn.textContent = up ? 'Create account' : 'Sign in';
-    hintEl.textContent = up
-      ? 'Pick a password of at least 6 characters. Your account starts with the "user" role.'
-      : 'Use the email and password you signed up with.';
+
+    submitBtn.textContent = submitLabel();
+    hintEl.textContent = recover
+      ? 'Enter the address on your account. We will email a link that lets you pick a new password. It works once, and it expires within the hour.'
+      : up
+        ? 'Pick a password of at least 6 characters. Your account starts with the "user" role.'
+        : 'Use the email and password you signed up with.';
+
     passEl.setAttribute('autocomplete', up ? 'new-password' : 'current-password');
     passEl.setAttribute('placeholder', up ? 'At least 6 characters' : 'Your password');
+    // Not merely hidden. A hidden field that is still `required` is what
+    // makes a form refuse to submit with nothing on screen to fix.
+    passEl.required = !recover;
+    passWrap.hidden = recover;
+
     Array.prototype.forEach.call(signupOnly, function (el) { el.hidden = !up; });
+    Array.prototype.forEach.call(signinOnly, function (el) { el.hidden = mode !== 'signin'; });
+    Array.prototype.forEach.call(recoverOnly, function (el) { el.hidden = !recover; });
     clearMessage();
   }
 
   tabIn.addEventListener('click', function () { setMode('signin'); });
   tabUp.addEventListener('click', function () { setMode('signup'); });
+  forgotBtn.addEventListener('click', function () { setMode('recover'); emailEl.focus(); });
+  backBtn.addEventListener('click', function () { setMode('signin'); emailEl.focus(); });
 
   revealBtn.addEventListener('click', function () {
     var shown = passEl.type === 'text';
@@ -108,6 +144,37 @@
 
     var email = emailEl.value.trim();
     var password = passEl.value;
+
+    /* Recovery asks for one field and leaves by its own door. Nothing
+       below this block applies to it: no password to check, no profile
+       to build, and no session at the end of it — only an email on its
+       way to a mailbox we are not told exists. */
+    if (mode === 'recover') {
+      if (!email) {
+        message('Enter the email address on your account.');
+        emailEl.focus();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      auth.sendRecovery(email).then(function (res) {
+        if (res.error) { message(explainAuth(res.error)); return; }
+        /* The same sentence whether or not that address has an account.
+           "No account with that email" would turn this form into a way
+           of asking whether a named person uses a health site — the
+           note in auth.js has the longer version. */
+        message('If that address has an account, a recovery link is on its way. Open it and you can choose a new password.', 'ok');
+      }).catch(function (err) {
+        console.error('[MedCare] Recovery request failed:', err);
+        message('Could not reach the server. Check your connection and try again.');
+      }).then(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitLabel();
+      });
+      return;
+    }
 
     if (!email || !password) {
       message('Enter both your email address and password.');
@@ -181,7 +248,7 @@
       message('Could not reach the server. Check your connection and try again.');
     }).then(function () {
       submitBtn.disabled = false;
-      submitBtn.textContent = mode === 'signup' ? 'Create account' : 'Sign in';
+      submitBtn.textContent = submitLabel();
     });
   });
 

@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editor desk — MedCare</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../admin/css/admin.css">
+<link rel="stylesheet" href="css/editor.css">
+<!-- Same order as every public page, then the editor set. The guard has
+     to run before the page's own script, and everything needs the
+     client that supabase.js creates. admin-shell.js is the chrome both
+     staff areas share; editor-guard.js publishes itself under the name
+     it looks for. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
+<script src="../supabase.js" defer></script>
+<script src="../auth.js" defer></script>
+<script src="../script.js" defer></script>
+<script src="js/editor-guard.js" defer></script>
+<script src="../admin/js/admin-shell.js" defer></script>
+<script src="js/editor-api.js" defer></script>
+<script src="js/editor-desk.js" defer></script>
+</head>
+<body>
+
+<!-- Nothing inside .mc-admin-shell is displayed until editor-guard.js
+     confirms an editor or an admin: admin.css hides it by default. -->
+<div class="mc-admin-shell" id="adminShell">
+
+  <div class="mc-admin-backdrop" data-shell-close></div>
+
+  <!-- ===================== Sidebar ===================== -->
+  <aside class="mc-admin-side">
+    <a class="mc-admin-brand" href="index.html">
+      <span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>
+      <span>MedCare<small>Editor</small></span>
+    </a>
+
+    <nav class="mc-admin-nav" aria-label="Editor sections">
+      <a href="index.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.5" y="3.5" width="7" height="7" rx="1.6"></rect>
+          <rect x="13.5" y="3.5" width="7" height="7" rx="1.6"></rect>
+          <rect x="13.5" y="13.5" width="7" height="7" rx="1.6"></rect>
+          <rect x="3.5" y="13.5" width="7" height="7" rx="1.6"></rect>
+        </svg>
+        Desk
+      </a>
+
+      <div class="mc-admin-nav-label">Write</div>
+      <a href="content.html?type=disease">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M16.6 3.9a2 2 0 0 1 2.8 2.8L8.2 17.9l-3.7 1 1-3.7z"></path>
+          <path d="M14.6 5.9l3.5 3.5"></path>
+        </svg>
+        Diseases and articles
+      </a>
+      <a href="content.html?type=hospital">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4.5 20V8.4a1.4 1.4 0 0 1 .8-1.3l6-2.9a1.4 1.4 0 0 1 1.4 0l6 2.9a1.4 1.4 0 0 1 .8 1.3V20"></path>
+          <path d="M3 20h18"></path>
+          <path d="M12 9.2v4.6M9.7 11.5h4.6"></path>
+        </svg>
+        Hospitals
+      </a>
+      <a href="emergency.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.15.38 2.4.58 3.6.58a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.4a1 1 0 0 1 1 1c0 1.25.2 2.45.58 3.6a1 1 0 0 1-.25 1z"></path>
+        </svg>
+        Emergency numbers
+      </a>
+
+      <div class="mc-admin-nav-label">Dress it</div>
+      <a href="media.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.5" y="5" width="17" height="14" rx="2"></rect>
+          <circle cx="8.6" cy="9.8" r="1.5"></circle>
+          <path d="M4 16.5l4.4-4a1.5 1.5 0 0 1 2 0l3.3 3 2.2-1.9a1.5 1.5 0 0 1 2 .05L20 15.4"></path>
+        </svg>
+        Images
+      </a>
+      <a href="translations.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3.5 5.4h8.2"></path>
+          <path d="M7.6 3.4v2"></path>
+          <path d="M9.9 5.4a9.6 9.6 0 0 1-5.3 8.4"></path>
+          <path d="M5.4 9.6a8 8 0 0 0 5.5 4.6"></path>
+          <path d="M12.4 20.6l4-9.2 4 9.2"></path>
+          <path d="M13.9 17.2h5"></path>
+        </svg>
+        Translations
+      </a>
+
+      <div class="mc-admin-nav-label">Moderation</div>
+      <a href="reports.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 13.5h4l1.2 2.4h5.6L16 13.5h4"></path>
+          <path d="M4 13.5l2.4-7.6a1.6 1.6 0 0 1 1.5-1.1h8.2a1.6 1.6 0 0 1 1.5 1.1L20 13.5v4.4a1.6 1.6 0 0 1-1.6 1.6H5.6A1.6 1.6 0 0 1 4 17.9z"></path>
+        </svg>
+        Reports
+      </a>
+    </nav>
+
+    <div class="mc-admin-side-foot">
+      <a class="mc-auth-btn mc-auth-btn--ghost mc-auth-btn--full" href="../index.html">
+        Back to MedCare
+      </a>
+    </div>
+  </aside>
+
+  <!-- ===================== Main ===================== -->
+  <div class="mc-admin-main">
+
+    <header class="mc-admin-top">
+      <button type="button" class="mc-admin-burger" id="adminBurger"
+              aria-label="Show editor sections" aria-expanded="false" aria-controls="adminShell">
+        <i class="bi bi-list"></i>
+      </button>
+      <div>
+        <h1>Editor desk</h1>
+        <p class="mc-admin-top-sub">What is waiting, and where to pick it up.</p>
+      </div>
+      <div class="mc-admin-top-right">
+        <span class="mc-admin-who">
+          <i class="bi bi-pencil-square"></i>
+          <strong id="adminWho">…</strong>
+        </span>
+        <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="adminSignOut">Sign out</button>
+      </div>
+    </header>
+
+    <main class="mc-admin-content">
+
+      <p class="mc-admin-msg" id="deskMsg" hidden></p>
+
+      <!-- Shown only to an admin, who has an area of their own and did
+           not necessarily mean to be in this one. -->
+      <div class="mc-admin-note" id="deskAdminNote" hidden>
+        <i class="bi bi-shield-lock"></i>
+        <div>
+          <strong>Publishing is yours, and it happens here.</strong>
+          Editors write and submit; an admin is what puts a page in front of
+          readers. The queue is
+          <a href="content.html?type=disease&amp;status=pending">everything at
+          pending</a>, and the tab counts there show how much is waiting under each
+          kind. The Publish button appears on those rows for you and for nobody else.
+          Accounts and roles are still in the
+          <a href="../admin/index.html">admin area</a>.
+        </div>
+      </div>
+
+      <section class="mc-ed-stats" id="deskStats" aria-label="What is waiting">
+        <!-- editor-desk.js fills this. The markup starts empty rather
+             than with zeros: a zero that is really "not loaded yet" is
+             the one number on this screen worth not printing. -->
+      </section>
+
+      <div class="mc-admin-card">
+        <h2>Pick up where you left off</h2>
+        <div id="deskRecent">
+          <div class="mc-skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+
+      <div class="mc-admin-card">
+        <h2>What this area cannot do</h2>
+        <p class="mc-admin-hint">
+          Not a list of buttons that are hidden. Every line here is a rule in
+          the database, which refuses the request whatever the page in front
+          of you looks like.
+        </p>
+        <ul class="mc-ed-limits">
+          <li>
+            <i class="bi bi-person-slash"></i>
+            <div><b>User accounts and roles.</b> There is no policy anywhere letting an
+            editor read another account or change anybody's role — including
+            their own. That screen exists, and it is in the admin area.</div>
+          </li>
+          <li>
+            <i class="bi bi-globe"></i>
+            <div><b>Publishing, or changing a page that is already live.</b>
+            Submitting for review is where an editor's part ends. An admin is what
+            puts a page in front of readers — and what changes one that is already
+            there. To correct a live page, take it off the site first: the text is
+            kept, and an admin puts it back. Taking one <em>off</em> needs nobody's
+            approval, because a page you think is wrong should come down while you
+            are still looking at it.</div>
+          </li>
+          <li>
+            <i class="bi bi-trash3"></i>
+            <div><b>Deleting anything.</b> Unpublishing takes a page off the site and
+            keeps the row. There is no editor delete policy on any table, so a
+            hard delete is refused rather than hidden.</div>
+          </li>
+          <li>
+            <i class="bi bi-telephone-plus"></i>
+            <div><b>Putting an emergency number on the page.</b> Writing one and
+            correcting one are an editor's. Publishing it is an admin's, like every
+            other kind of content — and so is changing a number that is already on
+            the page. If a live number is wrong, take it off the page: that needs
+            nobody, and it is the right first move anyway.</div>
+          </li>
+          <li>
+            <i class="bi bi-link-45deg"></i>
+            <div><b>Citing a source that is not WHO or the Myanmar Ministry of
+            Health.</b> The field checks as you type, and the database checks
+            again when you save.</div>
+          </li>
+        </ul>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

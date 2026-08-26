@@ -1,0 +1,457 @@
+/* ============================================================
+   MedCare — editor area
+   Loaded AFTER ../styles.css and ../admin/css/admin.css.
+
+   The shell, the guard states, the loading and empty states, the status
+   pills and .mc-touched all come from admin.css, which the two staff
+   areas share. This file adds only what the editor screens need that
+   the admin ones did not:
+
+     1. the type tabs and the filter row
+     2. the content list
+     3. the entry form, including the English/Burmese pairs
+     4. the media library
+     5. the translations table
+     6. the report queue
+
+   Deliberately reused rather than restated: .mc-admin-card, .mc-admin-msg,
+   .mc-admin-note, .mc-admin-hint, .mc-admin-pill, .mc-auth-btn,
+   .mc-auth-field, .mc-auth-label, .mc-modal, .mc-chip, .mc-state,
+   .mc-skeleton, .mc-status--*, .mc-touched, .mc-confirm-field,
+   .mc-report-row and its parts. If something is missing here, look in
+   admin.css and then styles.css before writing a new class.
+   ============================================================ */
+
+
+/* ===================== 1. Tabs and filters ===================== */
+
+/* Which kind of content am I looking at. A row of links rather than
+   buttons: each is a real URL, so a bookmark and the back button both
+   land on the tab you were on. */
+.mc-ed-tabs {
+  display: flex; gap: .4rem; flex-wrap: wrap;
+  border-bottom: 1px solid var(--mc-border);
+  margin: 0 0 1.25rem;
+}
+.mc-ed-tabs a {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .6rem .95rem;
+  font-size: .93rem; font-weight: 500; color: var(--mc-muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .12s, border-color .12s;
+}
+.mc-ed-tabs a:hover { color: var(--mc-text); text-decoration: none; }
+.mc-ed-tabs a:focus-visible { outline: 2px solid var(--mc-primary); outline-offset: -2px; border-radius: 6px; }
+.mc-ed-tabs a[aria-current="page"] {
+  color: var(--mc-primary-600); font-weight: 600;
+  border-bottom-color: var(--mc-primary);
+}
+.mc-ed-tabs .mc-ed-tab-count {
+  font-size: .72rem; font-weight: 700;
+  background: var(--mc-bg); border: 1px solid var(--mc-border);
+  color: var(--mc-muted); border-radius: 999px; padding: .05rem .4rem;
+}
+
+.mc-ed-tools {
+  display: flex; align-items: center; gap: .7rem; flex-wrap: wrap;
+  margin: 0 0 1.1rem;
+}
+.mc-ed-search {
+  flex: 1; min-width: 200px;
+  border: 1px solid var(--mc-border); border-radius: 10px; background: #fff;
+  font: inherit; font-size: .92rem; color: var(--mc-text);
+  padding: .55rem .9rem;
+}
+.mc-ed-search:focus { outline: 2px solid var(--mc-primary); outline-offset: -1px; border-color: var(--mc-primary); }
+.mc-ed-filters { display: flex; gap: .35rem; flex-wrap: wrap; }
+.mc-ed-filters .mc-chip { font-size: .82rem; padding: .38rem .8rem; }
+
+/* How many rows the filters left, so an empty screen is legible as a
+   filter result rather than as an empty table. */
+.mc-ed-count { font-size: .84rem; color: var(--mc-muted); margin: 0 0 .9rem; }
+
+/* Why a form is read-only. Shown in place of the Save button, and on an
+   emergency card in place of Save and Undo, so the explanation sits
+   where the missing control was rather than somewhere the eye has to
+   hunt for it. Carries its own way out, so it is a door and not a sign. */
+.mc-ed-locked {
+  display: flex; gap: .7rem; align-items: flex-start;
+  background: var(--mc-amber-50); border: 1px solid #fde68a;
+  border-radius: 12px; padding: .9rem 1rem;
+  margin-bottom: 1.2rem;
+}
+.mc-ed-locked .bi { color: var(--mc-amber); font-size: 1.05rem; margin-top: .1rem; }
+.mc-ed-locked p  { margin: 0 0 .7rem; font-size: .88rem; color: #78350f; line-height: 1.55; }
+.mc-ed-locked p:last-child { margin-bottom: 0; }
+
+/* Stands where a Publish button would be, for somebody who has no
+   Publish. Deliberately not shaped like a button: a disabled-looking
+   control gets clicked and then reported as broken, whereas a label is
+   read. It says who the row is with, which is the actual question. */
+.mc-ed-waiting {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-size: .78rem; font-weight: 600; color: var(--mc-amber);
+  background: var(--mc-amber-50); border: 1px solid #fde68a;
+  border-radius: 999px; padding: .22rem .65rem;
+  white-space: nowrap;
+}
+
+
+/* ===================== 2. The content list ===================== */
+/* Rows, not a table. Every row carries a title, a status, a "who
+   touched it" line and up to three actions, and at 560px a table of
+   that either scrolls sideways or shrinks the actions to nothing. */
+
+.mc-ed-list { display: flex; flex-direction: column; gap: .6rem; }
+
+.mc-ed-row {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: .35rem 1rem;
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--mc-border);
+  border-radius: 14px;
+  padding: .9rem 1.1rem;
+  transition: border-color .12s, box-shadow .12s;
+}
+.mc-ed-row:hover { border-color: #cbd5e1; box-shadow: var(--mc-shadow); }
+
+.mc-ed-row-ico {
+  grid-row: span 2;
+  width: 38px; height: 38px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--mc-primary-50); color: var(--mc-primary-600);
+  font-size: 1.05rem;
+}
+/* Archived rows are off the site. They stay legible — they are not an
+   error — but they should not read as live at a glance. */
+.mc-ed-row--archived { background: var(--mc-bg); }
+.mc-ed-row--archived .mc-ed-row-ico { background: #eef2f7; color: var(--mc-muted); }
+.mc-ed-row--archived .mc-ed-row-title { color: var(--mc-muted); }
+
+.mc-ed-row-title {
+  font-weight: 600; font-size: .98rem; color: var(--mc-text);
+  display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+  min-width: 0;
+}
+.mc-ed-row-title a { color: inherit; }
+.mc-ed-row-title a:hover { color: var(--mc-primary-600); }
+.mc-ed-row-meta {
+  grid-column: 2;
+  display: flex; align-items: center; gap: .35rem .85rem; flex-wrap: wrap;
+  font-size: .8rem; color: var(--mc-muted);
+}
+.mc-ed-row-meta code {
+  font-size: .76rem; color: var(--mc-muted);
+  background: var(--mc-bg); border-radius: 5px; padding: .05rem .35rem;
+  overflow-wrap: anywhere;
+}
+.mc-ed-row-actions {
+  grid-row: span 2; grid-column: 3;
+  display: flex; align-items: center; gap: .4rem; flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.mc-ed-row-actions .mc-auth-btn { font-size: .85rem; padding: .42rem .95rem; }
+.mc-ed-row-actions .mc-auth-btn--danger {
+  background: #fff; color: var(--mc-danger-700); border-color: #fecaca;
+}
+.mc-ed-row-actions .mc-auth-btn--danger:hover {
+  background: var(--mc-danger-50); border-color: var(--mc-danger); color: var(--mc-danger-700);
+}
+
+@media (max-width: 700px) {
+  .mc-ed-row { grid-template-columns: 38px minmax(0, 1fr); }
+  .mc-ed-row-actions {
+    grid-row: auto; grid-column: 1 / -1;
+    justify-content: flex-start; padding-top: .55rem;
+    border-top: 1px solid var(--mc-border); margin-top: .35rem;
+  }
+}
+
+
+/* ===================== 3. The entry form ===================== */
+
+.mc-ed-form { display: flex; flex-direction: column; gap: 0; }
+
+/* .mc-auth-field carries its own bottom margin, which is right in a
+   login card and too much in a form of fourteen fields. */
+.mc-ed-field { margin: 0 0 1.15rem; }
+.mc-ed-field .mc-auth-field { margin: 0; }
+.mc-ed-field .mc-auth-field input,
+.mc-ed-field .mc-auth-field textarea,
+.mc-ed-field .mc-auth-field select { padding-left: .9rem; }
+.mc-ed-field .mc-admin-hint { margin: .4rem 0 0; }
+.mc-ed-field select {
+  flex: 1; border: none; outline: none; background: transparent;
+  font: inherit; font-size: .97rem; color: var(--mc-text);
+  padding: .7rem .9rem; border-radius: 12px; cursor: pointer;
+}
+
+.mc-ed-label-row {
+  display: flex; align-items: baseline; gap: .5rem;
+  margin: 0 0 .4rem;
+}
+.mc-ed-label-row .mc-auth-label { margin: 0; }
+.mc-ed-req { font-size: .72rem; font-weight: 700; color: var(--mc-danger); }
+.mc-ed-optional { font-size: .78rem; color: var(--mc-muted); font-weight: 500; }
+/* Counts down only near the limit. A counter that is always there is
+   read as a target. */
+.mc-ed-count-chars { margin-left: auto; font-size: .76rem; color: var(--mc-muted); }
+.mc-ed-count-chars[data-near="true"] { color: var(--mc-amber); font-weight: 600; }
+.mc-ed-count-chars[data-over="true"] { color: var(--mc-danger-700); font-weight: 700; }
+
+/* A field the database will refuse. Marked as the person types, not
+   after they press Save. */
+.mc-ed-field.is-bad .mc-auth-field { border-color: var(--mc-danger); }
+.mc-ed-field.is-bad .mc-auth-field:focus-within { box-shadow: 0 0 0 3px var(--mc-danger-50); }
+.mc-ed-error {
+  display: flex; align-items: flex-start; gap: .4rem;
+  font-size: .82rem; color: var(--mc-danger-700); margin: .4rem 0 0;
+}
+.mc-ed-error .bi { margin-top: .1rem; }
+
+/* An English field and its Burmese partner, side by side rather than
+   twelve fields apart — a translation is written while looking at what
+   it translates. */
+.mc-ed-pair {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.1rem;
+  border-left: 3px solid var(--mc-primary-50);
+  padding-left: 1rem;
+  margin: 0 0 .35rem;
+}
+.mc-ed-pair .mc-ed-field { margin-bottom: 1.15rem; }
+@media (max-width: 780px) {
+  .mc-ed-pair { grid-template-columns: 1fr; border-left: none; padding-left: 0; }
+}
+/* Burmese needs its own face and its own line height; styles.css swaps
+   the stack by html[lang], which is English here while the page chrome
+   is English. So the field opts in on its own. */
+.mc-ed-field--my textarea,
+.mc-ed-field--my input {
+  font-family: 'Noto Sans Myanmar', 'Inter', system-ui, sans-serif;
+  line-height: 1.85;
+}
+.mc-ed-field--my .mc-auth-label::after {
+  content: "မြန်မာ";
+  font-family: 'Noto Sans Myanmar', sans-serif;
+  font-size: .72rem; font-weight: 600;
+  color: var(--mc-primary-600); background: var(--mc-primary-50);
+  border-radius: 999px; padding: .05rem .45rem; margin-left: .45rem;
+}
+
+/* The icon field shows what it will draw. A Bootstrap Icons name is
+   unguessable from the string, and this is one glance versus a trip to
+   the icon list and back. */
+.mc-ed-icon-preview {
+  width: 42px; height: 42px; flex-shrink: 0;
+  border-radius: 11px; border: 1px solid var(--mc-border); background: var(--mc-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; color: var(--mc-primary-600);
+}
+.mc-ed-icon-preview.is-empty { color: var(--mc-muted); }
+.mc-ed-icon-row { display: flex; align-items: flex-start; gap: .7rem; }
+.mc-ed-icon-row > div:first-child { flex: 1; min-width: 0; }
+
+/* The image field: a thumbnail, the path, and the way to change it. */
+.mc-ed-thumb-row { display: flex; align-items: flex-start; gap: .9rem; }
+.mc-ed-thumb {
+  width: 92px; height: 68px; flex-shrink: 0;
+  border-radius: 11px; border: 1px solid var(--mc-border);
+  background: var(--mc-bg) center/cover no-repeat;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--mc-muted); font-size: 1.1rem;
+}
+.mc-ed-thumb-row > div:first-child { flex: 1; min-width: 0; }
+
+/* Sticky footer on the form. On a long entry the Save button should not
+   be a scroll away from the field that made you want to press it. */
+.mc-ed-actions {
+  position: sticky; bottom: 0;
+  display: flex; align-items: center; gap: .6rem; flex-wrap: wrap;
+  background: #fff;
+  border-top: 1px solid var(--mc-border);
+  margin: .5rem -1.65rem -1.75rem;
+  padding: 1rem 1.65rem;
+  border-radius: 0 0 18px 18px;
+}
+.mc-ed-actions .mc-ed-actions-right { margin-left: auto; display: flex; gap: .6rem; flex-wrap: wrap; }
+.mc-ed-dirty {
+  font-size: .82rem; color: var(--mc-amber); font-weight: 600;
+  display: inline-flex; align-items: center; gap: .35rem;
+}
+.mc-ed-dirty[hidden] { display: none; }
+
+/* The workflow strip at the top of the form: where this row is now, and
+   the ways out of it. */
+.mc-ed-workflow {
+  display: flex; align-items: center; gap: .6rem .9rem; flex-wrap: wrap;
+  background: var(--mc-bg);
+  border: 1px solid var(--mc-border);
+  border-radius: 14px;
+  padding: .85rem 1.1rem;
+  margin: 0 0 1.5rem;
+}
+.mc-ed-workflow-state { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; }
+.mc-ed-workflow-hint { font-size: .84rem; color: var(--mc-muted); }
+.mc-ed-workflow-acts { margin-left: auto; display: flex; gap: .45rem; flex-wrap: wrap; }
+.mc-ed-workflow-acts .mc-auth-btn { font-size: .86rem; padding: .45rem 1rem; }
+
+
+/* ===================== 4. The media library ===================== */
+
+.mc-ed-media {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+  gap: .9rem;
+}
+.mc-ed-media-item {
+  border: 1px solid var(--mc-border); border-radius: 14px;
+  background: #fff; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.mc-ed-media-shot {
+  aspect-ratio: 4 / 3;
+  background: var(--mc-bg) center/cover no-repeat;
+  border-bottom: 1px solid var(--mc-border);
+}
+.mc-ed-media-body { padding: .6rem .7rem .7rem; display: flex; flex-direction: column; gap: .45rem; }
+.mc-ed-media-name {
+  font-size: .82rem; font-weight: 600; color: var(--mc-text);
+  overflow-wrap: anywhere; line-height: 1.35;
+}
+.mc-ed-media-meta { font-size: .74rem; color: var(--mc-muted); }
+.mc-ed-media-acts { display: flex; gap: .35rem; flex-wrap: wrap; margin-top: auto; }
+.mc-ed-media-acts .mc-auth-btn { font-size: .78rem; padding: .3rem .7rem; flex: 1; }
+
+/* Drag a file onto the page, or use the button inside it. Both end up
+   in the same handler; the drop zone is the discoverable one and the
+   button is the one that works with a keyboard. */
+.mc-ed-drop {
+  border: 2px dashed var(--mc-border); border-radius: 16px;
+  padding: 2rem 1.25rem; text-align: center;
+  color: var(--mc-muted); font-size: .92rem;
+  transition: border-color .12s, background .12s;
+  margin: 0 0 1.4rem;
+}
+.mc-ed-drop.is-over { border-color: var(--mc-primary); background: var(--mc-primary-50); color: var(--mc-primary-600); }
+.mc-ed-drop .bi { font-size: 1.6rem; display: block; margin: 0 0 .5rem; }
+.mc-ed-drop input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+.mc-ed-progress {
+  height: 6px; border-radius: 999px; background: var(--mc-border);
+  overflow: hidden; margin: .8rem 0 0;
+}
+.mc-ed-progress span {
+  display: block; height: 100%; width: 0;
+  background: var(--mc-primary); transition: width .2s;
+}
+
+
+/* ===================== 5. Translations ===================== */
+
+.mc-ed-tr {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0 1.1rem;
+  border: 1px solid var(--mc-border); border-radius: 14px;
+  background: #fff; padding: .9rem 1.1rem;
+  margin: 0 0 .6rem;
+}
+.mc-ed-tr-en {
+  font-size: .93rem; line-height: 1.6; color: var(--mc-text);
+  overflow-wrap: anywhere;
+}
+.mc-ed-tr-where { font-size: .76rem; color: var(--mc-muted); margin: .35rem 0 0; }
+.mc-ed-tr-my textarea {
+  width: 100%;
+  border: 1px solid var(--mc-border); border-radius: 10px; background: #fff;
+  font-family: 'Noto Sans Myanmar', 'Inter', system-ui, sans-serif;
+  font-size: .93rem; line-height: 1.85; color: var(--mc-text);
+  padding: .55rem .75rem; resize: vertical; min-height: 68px;
+}
+.mc-ed-tr-my textarea:focus { outline: 2px solid var(--mc-primary); outline-offset: -1px; border-color: var(--mc-primary); }
+.mc-ed-tr-my textarea::placeholder { font-family: 'Inter', system-ui, sans-serif; }
+.mc-ed-tr-foot {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: .6rem; flex-wrap: wrap;
+  margin: .6rem 0 0;
+}
+.mc-ed-tr-foot .mc-auth-btn { font-size: .82rem; padding: .35rem .85rem; }
+.mc-ed-tr-saved { font-size: .8rem; color: var(--mc-green); font-weight: 600; }
+.mc-ed-tr-saved[hidden] { display: none; }
+/* A key with no Burmese yet. The whole job of this screen is to find
+   these, so they are marked rather than merely being blank. */
+.mc-ed-tr--todo { border-left: 3px solid var(--mc-amber); }
+.mc-ed-tr--file { border-left: 3px solid var(--mc-border); }
+
+@media (max-width: 780px) {
+  .mc-ed-tr { grid-template-columns: 1fr; }
+  .mc-ed-tr-my { margin-top: .7rem; }
+}
+
+
+/* ===================== 6. The report queue ===================== */
+/* .mc-report-row and its parts come from styles.css. These are the
+   pieces triage adds: what the report points at, and the note. */
+
+.mc-ed-report-target {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .82rem; color: var(--mc-muted);
+}
+.mc-ed-report-target a { font-weight: 600; }
+.mc-ed-report-note {
+  background: var(--mc-green-50); border: 1px solid #bbf7d0;
+  border-radius: 10px; padding: .6rem .8rem; margin: 0 0 .7rem;
+  font-size: .86rem; line-height: 1.55; color: #15803d;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.mc-ed-report-note--dismissed { background: var(--mc-bg); border-color: var(--mc-border); color: var(--mc-muted); }
+.mc-ed-report-form { display: flex; flex-direction: column; gap: .6rem; margin: .7rem 0 0; }
+.mc-ed-report-form textarea {
+  width: 100%;
+  border: 1px solid var(--mc-border); border-radius: 10px; background: #fff;
+  font: inherit; font-size: .9rem; line-height: 1.55; color: var(--mc-text);
+  padding: .6rem .8rem; resize: vertical; min-height: 62px;
+}
+.mc-ed-report-form textarea:focus { outline: 2px solid var(--mc-primary); outline-offset: -1px; border-color: var(--mc-primary); }
+.mc-ed-report-form .mc-ed-report-acts { display: flex; gap: .5rem; flex-wrap: wrap; }
+.mc-ed-report-form .mc-auth-btn { font-size: .85rem; padding: .42rem 1rem; }
+
+
+/* ===================== 7. The desk ===================== */
+
+.mc-ed-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: .8rem;
+  margin: 0 0 .4rem;
+}
+.mc-ed-stat {
+  background: #fff; border: 1px solid var(--mc-border); border-radius: 14px;
+  padding: 1rem 1.1rem;
+  text-decoration: none; color: inherit;
+  display: block;
+  transition: border-color .12s, box-shadow .12s;
+}
+a.mc-ed-stat:hover { border-color: var(--mc-primary); box-shadow: var(--mc-shadow); text-decoration: none; color: inherit; }
+.mc-ed-stat-num {
+  font-family: 'Poppins', sans-serif; font-size: 1.7rem; font-weight: 700;
+  line-height: 1.1; color: var(--mc-text);
+}
+.mc-ed-stat-label { font-size: .82rem; color: var(--mc-muted); margin: .2rem 0 0; }
+.mc-ed-stat--attention .mc-ed-stat-num { color: var(--mc-amber); }
+
+/* What this area cannot do, said once, plainly, on the desk. It is not
+   a warning — nothing has gone wrong — so it is not styled as one. */
+.mc-ed-limits { list-style: none; margin: 0; padding: 0; }
+.mc-ed-limits li {
+  display: flex; align-items: flex-start; gap: .6rem;
+  font-size: .9rem; line-height: 1.6; color: var(--mc-muted);
+  padding: .45rem 0;
+  border-bottom: 1px solid var(--mc-border);
+}
+.mc-ed-limits li:last-child { border-bottom: none; }
+.mc-ed-limits .bi { color: var(--mc-muted); margin-top: .18rem; flex-shrink: 0; }
+.mc-ed-limits b { color: var(--mc-text); font-weight: 600; }

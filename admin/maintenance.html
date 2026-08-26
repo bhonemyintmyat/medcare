@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maintenance mode — MedCare</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="css/admin.css">
+<!-- Same order as every public page, then the admin set. The guard has
+     to run before the page's own script, and everything needs the
+     client that supabase.js creates. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
+<script src="../supabase.js" defer></script>
+<script src="../auth.js" defer></script>
+<script src="../script.js" defer></script>
+<script src="js/admin-guard.js" defer></script>
+<script src="js/admin-shell.js" defer></script>
+<script src="js/admin-api.js" defer></script>
+<script src="js/admin-maintenance.js" defer></script>
+</head>
+<body>
+
+<!-- Nothing inside .mc-admin-shell is displayed until admin-guard.js
+     confirms an admin: admin.css hides it by default. -->
+<div class="mc-admin-shell" id="adminShell">
+
+  <div class="mc-admin-backdrop" data-shell-close></div>
+
+  <!-- ===================== Sidebar ===================== -->
+  <aside class="mc-admin-side">
+    <a class="mc-admin-brand" href="index.html">
+      <span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>
+      <span>MedCare<small>Admin</small></span>
+    </a>
+
+    <nav class="mc-admin-nav" aria-label="Admin sections">
+      <a href="index.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.5" y="3.5" width="7" height="7" rx="1.6"></rect>
+          <rect x="13.5" y="3.5" width="7" height="7" rx="1.6"></rect>
+          <rect x="13.5" y="13.5" width="7" height="7" rx="1.6"></rect>
+          <rect x="3.5" y="13.5" width="7" height="7" rx="1.6"></rect>
+        </svg>
+        Overview
+      </a>
+
+      <div class="mc-admin-nav-label">People</div>
+      <a href="users.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9.2" cy="8.4" r="3.2"></circle>
+          <path d="M3.6 20a5.6 5.6 0 0 1 11.2 0"></path>
+          <path d="M16.2 5.6a3 3 0 0 1 0 5.8"></path>
+          <path d="M18.2 20a5.7 5.7 0 0 0-2.4-4.5"></path>
+        </svg>
+        Users and accounts
+      </a>
+      <a href="permissions.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3.2l7 2.8v5.3c0 4.2-2.9 7.6-7 9.5-4.1-1.9-7-5.3-7-9.5V6z"></path>
+          <path d="M9.2 12.1l2 2 3.6-3.9"></path>
+        </svg>
+        Roles and permissions
+      </a>
+
+      <div class="mc-admin-nav-label">Site</div>
+      <a href="maintenance.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15.6 3.4a4.6 4.6 0 0 0-5.9 5.9l-6 6a1.7 1.7 0 0 0 2.4 2.4l6-6a4.6 4.6 0 0 0 5.9-5.9l-2.7 2.7-2.4-2.4z"></path>
+          <path d="M15.4 15.4l4.4 4.4"></path>
+        </svg>
+        Maintenance mode
+      </a>
+      <a href="housekeeping.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <ellipse cx="12" cy="6" rx="7" ry="2.8"></ellipse>
+          <path d="M5 6v12c0 1.6 3.1 2.8 7 2.8s7-1.2 7-2.8V6"></path>
+          <path d="M5 12c0 1.6 3.1 2.8 7 2.8s7-1.2 7-2.8"></path>
+        </svg>
+        Housekeeping
+      </a>
+      <a href="pages.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 3.2h7.4L18.8 8.6V20a.8.8 0 0 1-.8.8H6a.8.8 0 0 1-.8-.8V4a.8.8 0 0 1 .8-.8z"></path>
+          <path d="M13.2 3.4v5.4h5.4"></path>
+          <path d="M8.4 13h7"></path>
+          <path d="M8.4 16.6h4.6"></path>
+        </svg>
+        Legal and footer pages
+      </a>
+
+      <div class="mc-admin-nav-label">You</div>
+      <a href="profile.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="9.4" r="3.4"></circle>
+          <path d="M5.2 20a6.8 6.8 0 0 1 13.6 0"></path>
+        </svg>
+        Your profile
+      </a>
+    </nav>
+
+    <div class="mc-admin-side-foot">
+      <a class="mc-auth-btn mc-auth-btn--ghost mc-auth-btn--full" href="../index.html">
+        Back to MedCare
+      </a>
+    </div>
+  </aside>
+
+  <!-- ===================== Main ===================== -->
+  <div class="mc-admin-main">
+
+    <header class="mc-admin-top">
+      <button type="button" class="mc-admin-burger" id="adminBurger"
+              aria-label="Show admin sections" aria-expanded="false" aria-controls="adminShell">
+        <i class="bi bi-list"></i>
+      </button>
+      <div>
+        <h1>Maintenance mode</h1>
+        <p class="mc-admin-top-sub">Closing the site, and the banner across the top of it.</p>
+      </div>
+      <div class="mc-admin-top-right">
+        <span class="mc-admin-who">
+          <i class="bi bi-shield-lock"></i>
+          <strong id="adminWho">…</strong>
+        </span>
+        <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="adminSignOut">Sign out</button>
+      </div>
+    </header>
+
+    <main class="mc-admin-content">
+
+      <p class="mc-admin-msg" id="mtMsg" hidden></p>
+
+      <!-- ---------- Where things stand ----------
+           First thing on the page, because "is the site up?" is the
+           question somebody has come here to answer, and it should not
+           need reading a form to find out. -->
+      <div id="mtStatus">
+        <div class="mc-skeleton" aria-hidden="true"><span></span></div>
+      </div>
+
+      <!-- ---------- Maintenance mode ---------- -->
+      <div class="mc-admin-card">
+        <h2>The public site</h2>
+        <p class="mc-admin-hint">
+          Closing the site puts a “back soon” page in front of every public
+          page. It does not stop anybody working: the admin and editor areas
+          are never closed, and anybody signed in as staff keeps seeing the
+          real site with a bar across the top saying it is shut to everyone
+          else.
+        </p>
+
+        <form id="mtForm" novalidate>
+          <fieldset class="mc-ad-choices">
+            <legend class="mc-auth-label">State</legend>
+
+            <label class="mc-ad-choice" for="mtOpen">
+              <input type="radio" name="mtState" id="mtOpen" value="open" aria-label="Open">
+              <span class="mc-ad-choice-body">
+                <span class="mc-ad-choice-head">
+                  <span class="mc-admin-pill mc-ad-pill--open">Open</span>
+                </span>
+                <span class="mc-ad-choice-blurb">
+                  Everybody sees the site. This is the state to be in.
+                </span>
+              </span>
+            </label>
+
+            <label class="mc-ad-choice" for="mtClosed">
+              <input type="radio" name="mtState" id="mtClosed" value="closed" aria-label="Closed for maintenance">
+              <span class="mc-ad-choice-body">
+                <span class="mc-ad-choice-head">
+                  <span class="mc-admin-pill mc-ad-pill--closed">Closed</span>
+                </span>
+                <span class="mc-ad-choice-blurb">
+                  Readers get the message below instead of the page they asked
+                  for. Somebody looking up a symptom will not find it.
+                </span>
+              </span>
+            </label>
+          </fieldset>
+
+          <label class="mc-auth-label" for="mtMessage">What the closed site says</label>
+          <div class="mc-auth-field">
+            <textarea id="mtMessage" maxlength="300" rows="3"
+                      placeholder="MedCare is being updated. Please check back shortly."></textarea>
+          </div>
+          <p class="mc-ad-count"><span id="mtMessageCount">0</span>/300 · Plain words. A
+             reader who has arrived here is looking for health information and
+             has just been told they cannot have it; tell them when to come back.</p>
+
+          <label class="mc-ad-check" for="mtEmergency">
+            <input type="checkbox" id="mtEmergency" aria-label="Keep the emergency numbers reachable">
+            <span>
+              <strong>Keep the emergency numbers reachable</strong>
+              <span class="mc-ad-check-blurb">
+                Leaves emergency-contacts.html served while everything else is
+                closed. A site that hides the ambulance number in order to
+                install an update has failed at the one thing it exists for.
+              </span>
+            </span>
+          </label>
+
+          <div class="mc-ad-warn mc-ad-warn--stop" id="mtEmergencyWarn" hidden>
+            <i class="bi bi-exclamation-octagon"></i>
+            <span>
+              With this unticked, somebody who opens MedCare during an
+              emergency gets the maintenance message and no phone number.
+              Leave it ticked unless the emergency page itself is the thing
+              being fixed.
+            </span>
+          </div>
+
+          <div class="mc-ad-preview" id="mtPreview" hidden>
+            <p class="mc-ad-preview-label">What a reader will see</p>
+            <div class="mc-curtain-demo">
+              <div class="mc-curtain-ico"><i class="bi bi-tools"></i></div>
+              <h3>MedCare is closed for maintenance</h3>
+              <p id="mtPreviewMessage"></p>
+              <p class="mc-curtain-emergency" id="mtPreviewEmergency">
+                In an emergency, the phone numbers are still here.
+              </p>
+            </div>
+          </div>
+
+          <div class="mc-ad-actions">
+            <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="mtReset" disabled>
+              Undo changes
+            </button>
+            <button type="submit" class="mc-auth-btn" id="mtSave" disabled>Save</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ---------- The banner ---------- -->
+      <div class="mc-admin-card">
+        <h2>Site-wide notice</h2>
+        <p class="mc-admin-hint">
+          A strip of text above everything, on every page, while the site is
+          open. It is for “the hospital list is being rechecked this week”,
+          not for medical advice — nothing a reader should act on belongs in
+          a banner they cannot come back to.
+        </p>
+
+        <form id="ntForm" novalidate>
+          <label class="mc-ad-check" for="ntEnabled">
+            <input type="checkbox" id="ntEnabled" aria-label="Show the notice">
+            <span>
+              <strong>Show the notice</strong>
+              <span class="mc-ad-check-blurb">
+                Off by default. A banner that is always there stops being read
+                within a week.
+              </span>
+            </span>
+          </label>
+
+          <label class="mc-auth-label" for="ntTone">Tone</label>
+          <select class="mc-ad-select" id="ntTone">
+            <option value="info">Information — grey, for something worth knowing</option>
+            <option value="warning">Warning — amber, for something being wrong</option>
+          </select>
+
+          <label class="mc-auth-label" for="ntText" style="margin-top:1.1rem">Text</label>
+          <div class="mc-auth-field">
+            <textarea id="ntText" maxlength="200" rows="2"
+                      placeholder="The hospital list is being rechecked this week."></textarea>
+          </div>
+          <p class="mc-ad-count"><span id="ntTextCount">0</span>/200 · One sentence.
+             It has to fit on a phone without pushing the page down.</p>
+
+          <div class="mc-ad-preview" id="ntPreview" hidden>
+            <p class="mc-ad-preview-label">What a reader will see</p>
+            <div class="mc-site-notice" id="ntPreviewBar">
+              <i class="bi bi-info-circle"></i>
+              <span id="ntPreviewText"></span>
+            </div>
+          </div>
+
+          <div class="mc-ad-actions">
+            <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="ntReset" disabled>
+              Undo changes
+            </button>
+            <button type="submit" class="mc-auth-btn" id="ntSave" disabled>Save</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ---------- The honest limits ---------- -->
+      <div class="mc-admin-card">
+        <h2>What closing the site does, and does not do</h2>
+        <ul class="mc-ad-limits">
+          <li>
+            <i class="bi bi-eye-slash"></i>
+            <div>
+              <strong>It is a curtain, not a lock.</strong>
+              The pages stop being shown in the browser. The rows behind them
+              stay exactly as readable through the API as they were an hour
+              ago, because the policies that decide that have not changed and
+              should not. Close the site to stop people reading a page that is
+              half-rewritten — never to hide something that must not be seen.
+            </div>
+          </li>
+          <li>
+            <i class="bi bi-hourglass-split"></i>
+            <div>
+              <strong>It arrives a moment after the page does.</strong>
+              The setting is fetched by the reader’s browser, so on a first
+              visit the real page can flash up before the curtain covers it.
+              A repeat visit within the same session covers first and checks
+              after. Neither is instant, and neither is meant to be.
+            </div>
+          </li>
+          <li>
+            <i class="bi bi-person-check"></i>
+            <div>
+              <strong>Staff are not shut out.</strong>
+              Editors and admins see the site as normal, with a bar saying it
+              is closed to everyone else. The admin and editor areas are never
+              curtained at all — otherwise turning this on would lock you out
+              of turning it off.
+            </div>
+          </li>
+          <li>
+            <i class="bi bi-database"></i>
+            <div>
+              <strong>Nothing here pauses the database.</strong>
+              Editors can still publish while the site is closed, and what
+              they publish is what readers will find when it opens.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

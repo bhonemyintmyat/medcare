@@ -162,6 +162,18 @@ html.mc-guard-pending body::after {
 }
 .mc-admin-burger:focus-visible { outline: 2px solid var(--mc-primary); outline-offset: 2px; }
 
+/* ---- The drawer backdrop ----
+   It only ever appears below 992px, where the sidebar becomes an
+   off-canvas panel, and the rules that make it an overlay live in the
+   media query at the foot of this file. It still has to be hidden HERE,
+   outside the query, because on a wide screen it is otherwise a plain
+   static div — and a plain div that is a child of .mc-admin-shell is a
+   grid item. It takes the first column, pushes the sidebar into the
+   second and the content column onto a new row, where minmax(0, 1fr)
+   sizes it to 248px. Empty and invisible, it was still costing the whole
+   layout its width. */
+.mc-admin-backdrop { display: none; }
+
 /* ---- Content column ---- */
 .mc-admin-main { min-width: 0; display: flex; flex-direction: column; }
 .mc-admin-content { padding: 1.6rem; display: flex; flex-direction: column; gap: 1.25rem; }
@@ -211,9 +223,9 @@ html.mc-guard-pending body::after {
 
 
 /* ===================== 4. Small shared pieces ===================== */
-/* Who last touched a row, and when. emergency.html shows this on every
-   row because the brief asks for it there; the other tables use it too,
-   since the question is the same one everywhere. */
+/* Who last touched a row, and when. Used by the users table and by the
+   settings screens, where "who turned this on" is the first question
+   anybody asks. */
 .mc-touched {
   font-size: .78rem; color: var(--mc-muted);
   display: inline-flex; align-items: center; gap: .35rem; flex-wrap: wrap;
@@ -221,18 +233,21 @@ html.mc-guard-pending body::after {
 .mc-touched b { font-weight: 600; color: var(--mc-text); }
 
 /* A field whose value has to be typed twice before it is believed.
-   emergency.html uses it for phone numbers. */
+   maintenance.html uses it for the words that close the public site. */
 .mc-confirm-field { border-left: 3px solid var(--mc-danger); padding-left: .85rem; }
 .mc-confirm-field .mc-auth-label { color: var(--mc-danger-700); }
 
-/* Status of a piece of content, in the workflow sense. */
+/* Status of a piece of content, in the workflow sense. The admin area
+   does not edit content, but housekeeping lists it — a row with no
+   owner reads differently when it is published than when it is a draft.
+
+   The report statuses that used to sit here (open, resolved, dismissed)
+   are gone with the reports inbox: the editor desk styles those through
+   .mc-report-status in styles.css. */
 .mc-status { text-transform: capitalize; }
 .mc-status--draft     { background: var(--mc-bg);        border-color: var(--mc-border); color: var(--mc-muted); }
 .mc-status--pending   { background: var(--mc-amber-50);  border-color: #fde68a;          color: var(--mc-amber); }
 .mc-status--published { background: var(--mc-green-50);  border-color: #bbf7d0;          color: #15803d; }
-.mc-status--open      { background: var(--mc-amber-50);  border-color: #fde68a;          color: var(--mc-amber); }
-.mc-status--resolved  { background: var(--mc-green-50);  border-color: #bbf7d0;          color: #15803d; }
-.mc-status--dismissed { background: var(--mc-bg);        border-color: var(--mc-border); color: var(--mc-muted); }
 
 
 /* ===================== 5. Narrow screens ===================== */
@@ -260,6 +275,274 @@ html.mc-guard-pending body::after {
   .mc-admin-content { padding: 1rem; }
 }
 
+/* ===================== 5. Users and permissions =====================
+   The two People screens. Everything above is shell and state; this is
+   the furniture those two pages put inside it. The account table itself
+   is NOT here — .mc-people* lives in styles.css, where the old admin
+   dashboard left it, and both are better for there being one of it. */
+
+/* ---------- Row buttons ----------
+   Small enough to sit inside a table row without setting its height.
+   Named for where they are rather than what they do, because the same
+   pair serves Details and Role. */
+.mc-ad-rowbtn { font-size: .85rem; padding: .42rem .95rem; white-space: nowrap; }
+
+/* ---------- "What this page will not do" ---------- */
+.mc-ad-limits { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
+.mc-ad-limits li { display: flex; gap: .9rem; align-items: flex-start; }
+.mc-ad-limits .bi {
+  flex-shrink: 0; width: 34px; height: 34px; border-radius: 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--mc-bg); color: var(--mc-muted); font-size: .95rem;
+}
+.mc-ad-limits div { font-size: .9rem; line-height: 1.6; color: var(--mc-muted); }
+.mc-ad-limits strong { color: var(--mc-text); display: block; }
+.mc-ad-limits code, .mc-ad-by, .mc-ad-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85em;
+}
+
+/* ---------- The account detail panel ---------- */
+.mc-ad-panel { max-width: 560px; text-align: left; }
+.mc-ad-panel h2, .mc-ad-panel .mc-modal-sub { text-align: left; }
+.mc-ad-panel .mc-modal-actions { justify-content: flex-end; }
+
+.mc-ad-def { margin: 0 0 1.1rem; }
+.mc-ad-def-row {
+  display: grid; grid-template-columns: 11rem minmax(0, 1fr);
+  gap: .6rem; padding: .55rem 0; border-bottom: 1px solid var(--mc-border);
+}
+.mc-ad-def-row:last-child { border-bottom: none; }
+.mc-ad-def dt { font-size: .82rem; font-weight: 600; color: var(--mc-muted); }
+.mc-ad-def dd { margin: 0; font-size: .92rem; color: var(--mc-text); overflow-wrap: anywhere; }
+
+.mc-ad-note {
+  font-size: .82rem; line-height: 1.55; color: var(--mc-muted);
+  background: var(--mc-bg); border-radius: 10px; padding: .7rem .9rem; margin: 0 0 1.2rem;
+}
+.mc-ad-note-tight { margin-bottom: 1.2rem; }
+
+@media (max-width: 560px) {
+  .mc-ad-def-row { grid-template-columns: minmax(0, 1fr); gap: .15rem; }
+}
+
+/* ---------- Granting a role ----------
+   Two columns on a wide screen: who, then what. They stack in that same
+   order on a narrow one, which is the order the decision is made in. */
+.mc-ad-grant {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 1.5rem; align-items: start;
+}
+@media (max-width: 900px) { .mc-ad-grant { grid-template-columns: minmax(0, 1fr); } }
+
+.mc-ad-results { margin-top: .9rem; display: flex; flex-direction: column; gap: .4rem; }
+.mc-ad-result {
+  display: flex; align-items: center; gap: .75rem; width: 100%; text-align: left;
+  background: #fff; border: 1px solid var(--mc-border); border-radius: 12px;
+  padding: .6rem .8rem; cursor: pointer; font: inherit; color: var(--mc-text);
+  transition: border-color .15s, background .15s;
+}
+.mc-ad-result:hover { border-color: var(--mc-primary); background: var(--mc-primary-50); }
+.mc-ad-result:focus-visible { outline: 2px solid var(--mc-primary); outline-offset: 2px; }
+.mc-ad-result.is-chosen { border-color: var(--mc-primary); background: var(--mc-primary-50); }
+.mc-ad-result-body { min-width: 0; flex: 1; display: flex; flex-direction: column; }
+.mc-ad-result-name { font-weight: 600; font-size: .93rem; overflow-wrap: anywhere; }
+.mc-ad-result-sub { font-size: .78rem; color: var(--mc-muted); overflow-wrap: anywhere; }
+.mc-ad-more { margin: .4rem 0 0; }
+
+.mc-ad-grant-form {
+  background: var(--mc-bg); border: 1px solid var(--mc-border);
+  border-radius: 16px; padding: 1.2rem 1.25rem;
+}
+.mc-ad-grant-form .mc-state { padding: 1.9rem 1rem; }
+
+.mc-ad-chosen { margin-bottom: 1.1rem; }
+.mc-ad-chosen-name {
+  font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.05rem;
+  color: var(--mc-text); overflow-wrap: anywhere;
+}
+.mc-ad-chosen-sub {
+  font-size: .8rem; color: var(--mc-muted); margin-top: .15rem;
+  display: flex; flex-wrap: wrap; gap: .5rem; overflow-wrap: anywhere;
+}
+
+/* ---------- A choice between named options ----------
+   Radios rather than a dropdown, on every screen that offers one of
+   these. A dropdown shows one option and hides the consequences of the
+   others; the whole point of these screens is that the person sees what
+   they are choosing between. Used by the role picker and by the
+   open/closed switch on maintenance.html. */
+.mc-ad-choices { border: none; margin: 0 0 1rem; padding: 0; display: grid; gap: .5rem; }
+.mc-ad-choices legend { float: left; width: 100%; margin-bottom: .5rem; }
+
+.mc-ad-choice {
+  display: flex; gap: .75rem; align-items: flex-start; cursor: pointer;
+  background: #fff; border: 1px solid var(--mc-border); border-radius: 12px;
+  padding: .75rem .85rem; margin: 0; transition: border-color .15s, box-shadow .15s;
+}
+.mc-ad-choice:hover { border-color: var(--mc-primary); }
+.mc-ad-choice.is-picked { border-color: var(--mc-primary); box-shadow: 0 0 0 3px var(--mc-primary-50); }
+.mc-ad-choice.is-locked { cursor: not-allowed; opacity: .65; }
+.mc-ad-choice:focus-within { outline: 2px solid var(--mc-primary); outline-offset: 2px; }
+.mc-ad-choice input { margin-top: .25rem; accent-color: var(--mc-primary); }
+.mc-ad-choice-body { min-width: 0; }
+.mc-ad-choice-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.mc-ad-choice-now {
+  font-size: .68rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+  color: var(--mc-muted);
+}
+.mc-ad-choice-blurb {
+  display: block; font-size: .82rem; line-height: 1.5; color: var(--mc-muted); margin-top: .3rem;
+}
+
+/* ---------- Warnings ----------
+   Amber says "know what you are doing"; red says "this is refused".
+   Two different messages, so two different colours. */
+.mc-ad-warn {
+  display: flex; gap: .7rem; align-items: flex-start;
+  font-size: .85rem; line-height: 1.55;
+  background: var(--mc-amber-50); border: 1px solid #fde68a; color: #78350f;
+  border-radius: 12px; padding: .75rem .9rem; margin: 0 0 1rem;
+}
+.mc-ad-warn .bi { flex-shrink: 0; margin-top: .1rem; }
+.mc-ad-warn--stop {
+  background: var(--mc-danger-50); border-color: #fecaca; color: var(--mc-danger-700);
+}
+
+.mc-ad-actions { display: flex; gap: .6rem; justify-content: flex-end; flex-wrap: wrap; }
+
+/* ---------- Who holds each role ---------- */
+.mc-ad-holders {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem;
+}
+.mc-ad-holders h3 {
+  font-size: .95rem; font-weight: 600; margin: 0 0 .7rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.mc-ad-holder-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+.mc-ad-holder {
+  display: flex; flex-direction: column; width: 100%; text-align: left;
+  background: var(--mc-bg); border: 1px solid var(--mc-border); border-radius: 10px;
+  padding: .55rem .75rem; cursor: pointer; font: inherit; color: var(--mc-text);
+}
+.mc-ad-holder:hover { border-color: var(--mc-primary); background: var(--mc-primary-50); }
+.mc-ad-holder:focus-visible { outline: 2px solid var(--mc-primary); outline-offset: 2px; }
+.mc-ad-holder-name { font-weight: 600; font-size: .9rem; overflow-wrap: anywhere; }
+.mc-ad-holder-sub { font-size: .77rem; color: var(--mc-muted); overflow-wrap: anywhere; }
+.mc-ad-holder-none { font-size: .87rem; color: var(--mc-muted); margin: 0; }
+.mc-ad-readers { margin: 1.2rem 0 0; }
+
+/* ---------- The capability matrix ---------- */
+.mc-ad-matrix-wrap { overflow-x: auto; }
+.mc-ad-matrix { width: 100%; border-collapse: collapse; min-width: 560px; }
+.mc-ad-matrix thead th {
+  font-size: .72rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--mc-muted); border-bottom: 1px solid var(--mc-border);
+  padding: 0 .6rem .6rem; text-align: center;
+}
+.mc-ad-matrix thead th:first-child { text-align: left; }
+.mc-ad-matrix tbody th {
+  text-align: left; font-weight: 500; padding: .7rem .6rem;
+  border-bottom: 1px solid var(--mc-border); width: 55%;
+}
+.mc-ad-matrix td {
+  text-align: center; padding: .7rem .6rem; border-bottom: 1px solid var(--mc-border);
+}
+.mc-ad-what { display: block; font-size: .9rem; color: var(--mc-text); }
+.mc-ad-by { display: block; color: var(--mc-muted); margin-top: .2rem; overflow-wrap: anywhere; }
+.mc-ad-yes { color: var(--mc-green); }
+.mc-ad-no  { color: var(--mc-border); }
+
+.mc-ad-group th {
+  font-family: 'Poppins', sans-serif; font-size: .8rem; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase; color: var(--mc-muted);
+  background: var(--mc-bg); padding: .5rem .6rem; border-bottom: 1px solid var(--mc-border);
+}
+/* A capability nobody has. Printed, not omitted: a blank row reads as an
+   oversight, and these three are decisions. */
+.mc-ad-nobody th, .mc-ad-nobody td { background: var(--mc-bg); }
+.mc-ad-nobody .mc-ad-what { color: var(--mc-muted); }
+
+
+/* ===================== 6. Maintenance =====================
+   The open/closed switch reuses .mc-ad-choice above. What is new here
+   is the status card, the two form pieces styles.css has no version of
+   (a checkbox with an explanation, a bare select), and the previews.
+
+   The previews deliberately use the REAL public classes — .mc-curtain-*
+   and .mc-site-notice, both in styles.css — inside a framed box. A
+   preview drawn from its own copy of the styles is a preview of the
+   copy, and the first time the two drift the screen starts lying about
+   what a reader will see. */
+
+/* ---------- Is the site up ---------- */
+.mc-ad-status {
+  display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+  border-left-width: 4px; border-left-style: solid;
+}
+.mc-ad-status-body { display: flex; gap: 1rem; align-items: flex-start; flex: 1; min-width: 15rem; }
+.mc-ad-status h2 { margin: 0 0 .25rem; font-size: 1.1rem; }
+.mc-ad-status-sub { font-size: .9rem; line-height: 1.55; color: var(--mc-muted); margin: 0 0 .35rem; }
+.mc-ad-status-sub strong { color: var(--mc-danger-700); }
+.mc-ad-status-ico {
+  width: 44px; height: 44px; border-radius: 13px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 1.25rem;
+}
+.mc-ad-status--open { border-left-color: var(--mc-green); }
+.mc-ad-status--open .mc-ad-status-ico { background: var(--mc-green-50); color: var(--mc-green); }
+.mc-ad-status--closed { border-left-color: var(--mc-danger); }
+.mc-ad-status--closed .mc-ad-status-ico { background: var(--mc-danger-50); color: var(--mc-danger-700); }
+
+.mc-ad-pill--open   { background: var(--mc-green-50);  border-color: #bbf7d0; color: #15803d; }
+.mc-ad-pill--closed { background: var(--mc-danger-50); border-color: #fecaca; color: var(--mc-danger-700); }
+
+/* ---------- Form pieces ---------- */
+.mc-ad-count { font-size: .8rem; color: var(--mc-muted); line-height: 1.5; margin: -.85rem 0 1.2rem; }
+
+.mc-ad-check {
+  display: flex; gap: .75rem; align-items: flex-start; cursor: pointer;
+  background: #fff; border: 1px solid var(--mc-border); border-radius: 12px;
+  padding: .8rem .9rem; margin: 0 0 1.1rem;
+}
+.mc-ad-check:hover { border-color: var(--mc-primary); }
+.mc-ad-check:focus-within { outline: 2px solid var(--mc-primary); outline-offset: 2px; }
+.mc-ad-check input { margin-top: .25rem; accent-color: var(--mc-primary); }
+.mc-ad-check strong { display: block; font-size: .93rem; color: var(--mc-text); }
+.mc-ad-check-blurb {
+  display: block; font-size: .82rem; line-height: 1.5; color: var(--mc-muted); margin-top: .25rem;
+}
+
+.mc-ad-select {
+  width: 100%; border: 1px solid var(--mc-border); border-radius: 12px; background: #fff;
+  font: inherit; font-size: .95rem; color: var(--mc-text); padding: .7rem .9rem;
+  margin: 0 0 1.15rem; cursor: pointer;
+}
+.mc-ad-select:focus { outline: 2px solid var(--mc-primary); outline-offset: -1px; border-color: var(--mc-primary); }
+
+/* ---------- Previews ---------- */
+.mc-ad-preview {
+  border: 1px dashed var(--mc-border); border-radius: 14px;
+  padding: .9rem; margin: 0 0 1.2rem; background: var(--mc-bg);
+}
+.mc-ad-preview-label {
+  font-size: .72rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--mc-muted); margin: 0 0 .7rem;
+}
+/* The curtain at a size that fits in a card. Its children are the real
+   public classes; only the frame is admin-only. */
+.mc-curtain-demo {
+  background: #fff; border: 1px solid var(--mc-border); border-radius: 12px;
+  padding: 1.6rem 1.2rem; text-align: center;
+}
+.mc-curtain-demo h3 {
+  font-family: 'Poppins', sans-serif; font-size: 1.05rem; font-weight: 700;
+  margin: 0 0 .5rem; color: var(--mc-text);
+}
+.mc-curtain-demo p { font-size: .9rem; line-height: 1.6; color: var(--mc-muted); margin: 0 auto; max-width: 26rem; }
+.mc-curtain-demo .mc-curtain-ico { width: 44px; height: 44px; font-size: 1.25rem; margin-bottom: .8rem; }
+.mc-ad-preview .mc-site-notice { border-radius: 10px; }
+
+
 @media (prefers-reduced-motion: reduce) {
   .mc-admin-side { transition: none; }
+  .mc-ad-result, .mc-ad-choice { transition: none; }
 }

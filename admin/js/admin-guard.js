@@ -7,6 +7,7 @@
      <script src="../auth.js" defer></script>
      <script src="../script.js" defer></script>
      <script src="js/admin-guard.js" defer></script>
+     <script src="js/admin-shell.js" defer></script>
      <script src="js/admin-users.js" defer></script>     <- the page's own
 
    ------------------------------------------------------------
@@ -22,13 +23,18 @@
    refuses them is Row Level Security, in Postgres, after the JWT has
    been verified, on every single request:
 
-     profiles   "Admins can read all profiles"  -> my_role() = 'admin'
-                "Admins can change roles"       -> + the guard_profile_role
-                                                   trigger, which also
-                                                   refuses self-demotion
-     reports    "Admins read every report"      -> my_role() = 'admin'
-     content    editors reach their own rows; admins reach all; the
-                public reaches status = 'published' and nothing else
+     profiles       "Admins can read all profiles"  -> my_role() = 'admin'
+                    "Admins can change roles"       -> + the guard_profile_role
+                                                       trigger, which also
+                                                       refuses self-demotion
+     site_settings  "Admins write site settings"    -> my_role() = 'admin';
+                    everyone else reads, because the public site has to
+                    know whether it is in maintenance mode
+
+   The content tables are not in that list, and that is the point: this
+   area administers the site and the people on it, not the medicine. The
+   health tables answer to the editor desk, and an admin's reach into
+   them is limited to deciding who holds the editor role.
 
    Delete this file and an ordinary account still sees an empty page and
    is still refused every write. That is the test worth running, and it

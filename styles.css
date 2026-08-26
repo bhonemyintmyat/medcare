@@ -761,3 +761,48 @@
      field inside it needs anything of its own. */
   .mc-modal-panel .mc-auth-field input{width:100%}
   .mc-people-mail{font-size:.8rem;color:var(--mc-muted);margin-top:.1rem;overflow-wrap:anywhere}
+
+  /* ==================================================================
+     Site state — the maintenance curtain and the site-wide notice
+     ------------------------------------------------------------------
+     Written by admin/maintenance.html into site_settings; drawn by the
+     last block of script.js, on every public page. These live here
+     rather than in admin.css because the reader is who sees them, and
+     the admin preview reuses these same classes so that what the screen
+     shows and what the site does cannot drift apart.
+     ================================================================== */
+
+  /* The banner. Above everything, quiet by default: the amber version is
+     for something being wrong, and if both looked urgent neither would. */
+  .mc-site-notice{display:flex;align-items:flex-start;gap:.6rem;background:var(--mc-text);color:#fff;font-size:.88rem;line-height:1.5;padding:.6rem 1rem}
+  .mc-site-notice .bi{flex-shrink:0;margin-top:.1rem;opacity:.9}
+  .mc-site-notice--warning{background:var(--mc-amber-50);color:#78350f;border-bottom:1px solid #fde68a}
+  .mc-site-notice--warning .bi{color:var(--mc-amber);opacity:1}
+
+  /* The curtain. position:fixed over the whole viewport rather than a
+     replacement of <body>: the page underneath is left intact, so
+     removing this element — which is what happens when the reader turns
+     out to be staff — puts the site back with nothing to re-render. */
+  .mc-curtain{position:fixed;inset:0;z-index:3000;background:var(--mc-bg);display:flex;align-items:center;justify-content:center;padding:1.5rem;overflow-y:auto}
+  .mc-curtain-panel{max-width:34rem;text-align:center;font-family:'Inter',system-ui,sans-serif}
+  .mc-curtain-ico{width:58px;height:58px;border-radius:17px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 1.1rem}
+  .mc-curtain-panel h1{font-family:'Poppins',system-ui,sans-serif;font-size:1.5rem;font-weight:700;margin:0 0 .7rem;color:var(--mc-text)}
+  .mc-curtain-panel p{color:var(--mc-muted);font-size:1rem;line-height:1.65;margin:0 auto 1rem;max-width:28rem}
+  /* The one thing on a closed site somebody may urgently need. Styled to
+     be found by a frightened person at a glance, not to be tasteful. */
+  .mc-curtain-emergency{display:block;margin-top:1.4rem}
+  .mc-curtain-emergency .mc-auth-btn{margin-top:.6rem}
+  .mc-curtain-sign{display:block;margin-top:1.6rem;font-size:.82rem;color:var(--mc-muted)}
+
+  /* What staff see instead of the curtain: the site, plus a reminder
+     that nobody else can see it. Sticky rather than fixed so it scrolls
+     with the page it is describing. */
+  .mc-curtain-staff{position:sticky;top:0;z-index:1200;display:flex;align-items:center;gap:.6rem;background:var(--mc-danger-700);color:#fff;font-size:.85rem;line-height:1.45;padding:.55rem 1rem}
+  .mc-curtain-staff .bi{flex-shrink:0}
+  .mc-curtain-staff a{color:#fff;text-decoration:underline}
+  .mc-curtain-staff a:hover{color:#fff}
+
+  @media (max-width:575.98px){
+    .mc-curtain-panel h1{font-size:1.25rem}
+    .mc-curtain-panel p{font-size:.94rem}
+  }

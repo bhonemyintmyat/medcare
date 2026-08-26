@@ -2534,6 +2534,36 @@
     'Display names stop at 60 characters.': 'ပြသမည့်အမည်သည် စာလုံး ၆၀ ထက် မပိုရပါ။',
     'Display name changes are not switched on for this site yet.': 'ဤဝဘ်ဆိုက်တွင် ပြသမည့်အမည် ပြောင်းခြင်းကို မဖွင့်ရသေးပါ။',
     'The account could not be created. Please try again.': 'အကောင့် ဖန်တီး၍ မရပါ။ ထပ်စမ်းကြည့်ပါ။',
+
+    /* --- admin area: shell, navigation and the guard ------------
+       Every visible string in admin/. Page-specific ones are added as
+       each page is built. Role VALUES stay English, as everywhere else. */
+    'Overview': 'အနှစ်ချုပ်',
+    'People': 'အသုံးပြုသူများ',
+    'Users and roles': 'အသုံးပြုသူများနှင့် ရာထူးများ',
+    'Content': 'အကြောင်းအရာ',
+    'Diseases, articles, hospitals': 'ရောဂါများ၊ ဆောင်းပါးများ၊ ဆေးရုံများ',
+    'Moderation': 'စိစစ်ရေး',
+    'Reports': 'တိုင်ကြားချက်များ',
+    'You': 'သင်',
+    'Your profile': 'သင့်ပရိုဖိုင်',
+    'Back to MedCare': 'MedCare သို့ ပြန်သွားရန်',
+    'Show admin sections': 'အက်ဒမင် မီနူး ပြရန်',
+    'Hide admin sections': 'အက်ဒမင် မီနူး ဖျောက်ရန်',
+    'Everything an admin can reach, in one place.': 'အက်ဒမင် တစ်ဦး လက်လှမ်းမီသည့် အရာအားလုံး တစ်နေရာတည်းတွင်။',
+    'Everything here is enforced by the database, not by this page.': 'ဤနေရာရှိ အရာအားလုံးကို ဤစာမျက်နှာက မဟုတ်ဘဲ ဒေတာဘေ့စ်က စိစစ်သည်။',
+    'These screens decide what to show you. Row Level Security decides what anyone is allowed to do — including you, and including anyone who opens this page with the guard deleted.': 'ဤစာမျက်နှာများက သင့်ကို ဘာပြရမည်ကိုသာ ဆုံးဖြတ်သည်။ မည်သူ ဘာလုပ်ခွင့် ရှိသည်ကို Row Level Security က ဆုံးဖြတ်သည် — သင်လည်း အပါအဝင်၊ ကာကွယ်မှုကို ဖျက်ပြီး ဤစာမျက်နှာကို ဖွင့်သူလည်း အပါအဝင် ဖြစ်သည်။',
+    'Who has an account, and what each of them may do. Role changes are confirmed by name before they are saved.': 'မည်သူ့တွင် အကောင့် ရှိသည်၊ တစ်ဦးချင်းစီ ဘာလုပ်နိုင်သည်ကို ကြည့်ရန်။ ရာထူး ပြောင်းလဲမှုကို မသိမ်းမီ အမည်ဖြင့် အတည်ပြုခိုင်းသည်။',
+    'Diseases, articles and hospitals. Drafts stay invisible to the public until they are published.': 'ရောဂါများ၊ ဆောင်းပါးများနှင့် ဆေးရုံများ။ မူကြမ်းများကို ထုတ်ဝေသည်အထိ အများပြည်သူ မမြင်ရပါ။',
+    'Ambulance, fire, police, poison control. A wrong number here is the worst thing this site can print, so each one is typed twice.': 'လူနာတင်ယာဉ်၊ မီးသတ်၊ ရဲနှင့် အဆိပ်ဖြေဌာန။ ဤနေရာတွင် နံပါတ် မှားခြင်းသည် ဤဝဘ်ဆိုက် ဖော်ပြနိုင်သည့် အဆိုးဆုံး အမှား ဖြစ်သဖြင့် တစ်ခုစီကို နှစ်ကြိမ် ရိုက်ခိုင်းသည်။',
+    'What readers have flagged as wrong. Resolving or dismissing one needs a note saying why.': 'ဖတ်ရှုသူများက မှားနေသည်ဟု ထောက်ပြထားသည်များ။ ဖြေရှင်းခြင်း သို့မဟုတ် ပယ်ဖျက်ခြင်းအတွက် အကြောင်းပြချက် မှတ်ချက် လိုအပ်သည်။',
+    'Your display name, your language, and your password.': 'သင့်ပြသမည့်အမည်၊ သင့်ဘာသာစကားနှင့် သင့်စကားဝှက်။',
+    'What is not here': 'ဤနေရာတွင် မပါဝင်သည်များ',
+    'No traffic charts, no visitor counts, no activity feed. This site does not record what anyone searched for or which disease page they opened — that is identifiable health data, and the way to keep it private is not to collect it. There is nothing to chart, and that is the intended state rather than a missing feature.': 'အသွားအလာ ဇယားများ၊ လာရောက်သူ အရေအတွက်များ၊ လှုပ်ရှားမှု မှတ်တမ်းများ မပါပါ။ ဤဝဘ်ဆိုက်သည် မည်သူက ဘာရှာဖွေသည်၊ မည်သည့် ရောဂါ စာမျက်နှာကို ဖွင့်ကြည့်သည်ကို မမှတ်တမ်းတင်ပါ — ၎င်းသည် တစ်ဦးချင်း ဖော်ထုတ်နိုင်သော ကျန်းမာရေး အချက်အလက် ဖြစ်ပြီး ကာကွယ်ရန် အကောင်းဆုံး နည်းလမ်းမှာ မစုဆောင်းခြင်း ဖြစ်သည်။ ထို့ကြောင့် ဇယားဆွဲစရာ မရှိခြင်းသည် ချို့ယွင်းချက် မဟုတ်ဘဲ ရည်ရွယ်ချက် ဖြစ်သည်။',
+    'Admin area unavailable': 'အက်ဒမင် နေရာကို မရနိုင်ပါ',
+    'This site is not connected to its database. See the console for details.': 'ဤဝဘ်ဆိုက်သည် ဒေတာဘေ့စ်နှင့် မချိတ်ဆက်ထားပါ။ အသေးစိတ်ကို console တွင် ကြည့်ပါ။',
+    'Could not check your permissions': 'သင့်ခွင့်ပြုချက်များကို စစ်ဆေး၍ မရပါ',
+    'The database did not answer. Check your connection and reload the page.': 'ဒေတာဘေ့စ်မှ အဖြေ မရပါ။ ချိတ်ဆက်မှုကို စစ်ဆေးပြီး စာမျက်နှာကို ပြန်ဖွင့်ပါ။',
   };
 
   var LANGS = { en: null, my: MY };
@@ -2664,6 +2694,327 @@
   var saved = 'en';
   try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) { /* ignore */ }
   applyLang(saved);
+
+  /* ==================================================================
+     The dictionary above, but editable
+     ------------------------------------------------------------------
+     MY is the shipped translation. It works, and it means a wrong
+     Burmese sentence needs a developer, a commit and a deploy to fix —
+     which is why some of them have been wrong for a while.
+
+     public.translations is the same dictionary in the database, keyed by
+     the same thing: the English source string. editor/translations.html
+     writes to it. Everything below layers that table over the literal.
+
+     The order matters and it is the file that loses. A key present in
+     both takes the database's value, because that is the one somebody
+     went and corrected. A key present only in the file keeps working, so
+     an empty table changes nothing, and so does an unreachable one — the
+     failure mode of this whole feature is "the translation is as good as
+     it was yesterday", which is the only acceptable one for text a
+     reader is relying on.
+
+     Nothing here touches English. `en` has no dictionary by design.
+     ================================================================== */
+
+  /* What the editor screen lists. Handing over the live object rather
+     than a copy is deliberate: merge() writes into the same one applyLang
+     reads, so a saved string takes effect on the next switch without a
+     reload. The screen only reads it. */
+  window.MedCareI18n = {
+    LANG_KEY: LANG_KEY,
+
+    // Every key the site can translate, in the order they are written.
+    keys: function () { return Object.keys(MY); },
+
+    // What the shipped file says, before any database override.
+    fromFile: function (key) {
+      return Object.prototype.hasOwnProperty.call(MY, key) ? MY[key] : null;
+    },
+
+    current: function () { return currentLang; },
+
+    /* rows: [{ en, my }]. A row with an empty `my` is a key somebody has
+       started and not finished; it must NOT overwrite the file's value
+       with a blank, or filling in half a form would take Burmese off the
+       page. Ignored here, and flagged as unfinished on the editor
+       screen. */
+    merge: function (rows) {
+      var changed = 0;
+      (rows || []).forEach(function (row) {
+        if (!row || !row.en) { return; }
+        var value = row.my == null ? '' : String(row.my).trim();
+        if (!value) { return; }
+        if (MY[row.en] === value) { return; }
+        MY[row.en] = value;
+        changed++;
+      });
+      // Re-run only if the page is actually showing Burmese and
+      // something moved. In English this is a no-op the reader would
+      // still pay a full DOM walk for.
+      if (changed && currentLang !== 'en') { applyLang(currentLang); }
+      return changed;
+    }
+  };
+
+  /* Fetched once per page load, after first paint, and never awaited by
+     anything. If it is slow the page is already correct; if it fails the
+     page stays correct. `translations` is world-readable, so this runs
+     for signed-out visitors too — the whole point is that a fix reaches
+     readers, not just staff. */
+  (function loadTranslationOverrides() {
+    var db = window.supabaseClient;
+    if (!db) { return; }
+
+    db.from('translations').select('en, my')
+      .then(function (res) {
+        if (res.error) {
+          /* The commonest cause by far is supabase_editor.sql not having
+             been run yet, which is a perfectly fine state for this site
+             to be in. Logged, not surfaced: a reader is not owed a
+             message about a table they have never heard of. */
+          console.info('[MedCare] Translation overrides unavailable; using the built-in dictionary.',
+                       res.error.message);
+          return;
+        }
+        window.MedCareI18n.merge(res.data);
+      })
+      .catch(function () { /* offline; the built-in dictionary stands */ });
+  })();
+
+
+  /* ==================================================================
+     Site state — the maintenance curtain and the site-wide notice
+     ------------------------------------------------------------------
+     Reads site_settings, keys 'maintenance' and 'notice', written by
+     admin/maintenance.html. Both rows are world-readable on purpose: a
+     visitor who is not signed in is exactly the visitor who needs to be
+     told the site is closed.
+
+     WHAT THIS IS. A curtain. It stops the PAGES being shown; it does not
+     stop the data being read, because the policies that decide that have
+     not changed and should not. Anybody who wants what is behind it can
+     still ask the API. That is the right trade — maintenance mode exists
+     so a reader does not act on a page that is half-rewritten, not to
+     keep a secret — but it means nothing that must not be seen may ever
+     be protected by this.
+
+     IT FAILS OPEN. No database, no table, no network, a malformed row:
+     every one of those leaves the site exactly as it was. A health site
+     that hides itself because a fetch timed out has done more harm than
+     the stale page it was trying to prevent, and "closed" is a state
+     this code will only ever enter on a direct answer from the database
+     saying so.
+
+     WHERE IT NEVER RUNS. /admin/ and /editor/, which have guards of
+     their own, and login.html. Curtaining the admin area would mean
+     turning maintenance mode on locks you out of turning it off;
+     curtaining the login page would mean the staff who are exempt from
+     the curtain cannot sign in to become exempt.
+     ================================================================== */
+  (function siteState() {
+    var path = window.location.pathname;
+    if (/\/(admin|editor)\//.test(path)) { return; }
+
+    var file  = (path.split('/').pop() || 'index.html').toLowerCase();
+    var depth = path.indexOf('/diseases/') !== -1 ? '../' : '';
+
+    var EMERGENCY_PAGE = 'emergency-contacts.html';
+    var ALWAYS_OPEN    = ['login.html'];
+    var CACHE_KEY      = 'mc-site-state';
+
+    var state     = null;    // what the database last said, or null for "open"
+    var role      = null;    // once auth.js has answered
+    var roleKnown = false;
+
+    /* Cached for one session so a second page load covers first and
+       checks after, rather than flashing the site at somebody who has
+       already been told it is closed. sessionStorage, not localStorage:
+       a stale "closed" that outlives the browser tab would be a worse
+       bug than the flash it prevents. */
+    function readCache() {
+      try {
+        var raw = window.sessionStorage.getItem(CACHE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) { return null; }
+    }
+    function writeCache(value) {
+      try { window.sessionStorage.setItem(CACHE_KEY, JSON.stringify(value)); }
+      catch (e) { /* private mode, or full: the fetch still decides */ }
+    }
+
+    function bar(id, className, iconClass, text, link) {
+      var el = document.getElementById(id);
+      if (!el) {
+        el = document.createElement('div');
+        el.id = id;
+        document.body.insertBefore(el, document.body.firstChild);
+      }
+      el.className = className;
+      el.setAttribute('role', 'status');
+      el.innerHTML = '<i class="bi ' + iconClass + '" aria-hidden="true"></i><span></span>';
+      // textContent, never innerHTML: this string was typed into a form
+      // by an admin, and an admin typing into a form is not a reason to
+      // trust a string with the rest of the page.
+      el.querySelector('span').textContent = text;
+      if (link) {
+        var a = document.createElement('a');
+        a.href = link.href;
+        a.textContent = link.text;
+        a.style.marginLeft = '.5rem';
+        el.querySelector('span').appendChild(a);
+      }
+      return el;
+    }
+
+    function drop(id) {
+      var el = document.getElementById(id);
+      if (el) { el.remove(); }
+    }
+
+    /* ---------- The notice ---------- */
+    function renderNotice(n) {
+      var text = n && n.enabled ? String(n.text || '').trim() : '';
+      if (!text) { drop('mcSiteNotice'); return; }
+      bar('mcSiteNotice',
+          'mc-site-notice' + (n.tone === 'warning' ? ' mc-site-notice--warning' : ''),
+          n.tone === 'warning' ? 'bi-exclamation-triangle' : 'bi-info-circle',
+          text);
+    }
+
+    /* ---------- The curtain ---------- */
+    function renderCurtain(m) {
+      var closed = !!(m && m.enabled);
+
+      if (!closed) {
+        drop('mcCurtain');
+        drop('mcCurtainStaff');
+        drop('mcMaintenanceBar');
+        document.body.style.overflow = '';
+        return;
+      }
+
+      var message = String(m.message || '').trim() ||
+                    'MedCare is being updated. Please check back shortly.';
+      var emergencyOk = m.allow_emergency !== false;
+
+      /* Staff see the site, and a bar saying nobody else can. Until
+         auth.js answers, roleKnown is false and everybody is treated as
+         a reader — the curtain goes up first and comes down a moment
+         later for the people it does not apply to. That order is
+         deliberate: the reader is the one it exists for. */
+      var staff = roleKnown && (role === 'editor' || role === 'admin');
+
+      var exempt = ALWAYS_OPEN.indexOf(file) !== -1 ||
+                   (file === EMERGENCY_PAGE && emergencyOk);
+
+      if (staff || exempt) {
+        drop('mcCurtain');
+        document.body.style.overflow = '';
+
+        if (staff) {
+          drop('mcMaintenanceBar');
+          bar('mcCurtainStaff', 'mc-curtain-staff', 'bi-cone-striped',
+              'This site is closed to the public. You can see it because you are signed in as staff.',
+              role === 'admin'
+                ? { href: depth + 'admin/maintenance.html', text: 'Reopen it' }
+                : null);
+        } else {
+          drop('mcCurtainStaff');
+          bar('mcMaintenanceBar', 'mc-site-notice mc-site-notice--warning', 'bi-cone-striped',
+              file === EMERGENCY_PAGE
+                ? 'The rest of MedCare is closed for maintenance. These numbers are still here.'
+                : message);
+        }
+        return;
+      }
+
+      drop('mcCurtainStaff');
+      drop('mcMaintenanceBar');
+
+      var el = document.getElementById('mcCurtain');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'mcCurtain';
+        el.className = 'mc-curtain';
+        el.setAttribute('role', 'alertdialog');
+        el.setAttribute('aria-modal', 'true');
+        el.setAttribute('aria-labelledby', 'mcCurtainTitle');
+        el.innerHTML =
+          '<div class="mc-curtain-panel">' +
+            '<div class="mc-curtain-ico"><i class="bi bi-tools" aria-hidden="true"></i></div>' +
+            '<h1 id="mcCurtainTitle">MedCare is closed for maintenance</h1>' +
+            '<p data-message></p>' +
+            '<span class="mc-curtain-emergency" data-emergency hidden>' +
+              'If this is an emergency, the phone numbers are still here.' +
+              '<a class="mc-auth-btn" href="' + depth + EMERGENCY_PAGE + '">Emergency numbers</a>' +
+            '</span>' +
+            '<span class="mc-curtain-sign">You are seeing this because the site is being updated.</span>' +
+          '</div>';
+        document.body.appendChild(el);
+      }
+
+      el.querySelector('[data-message]').textContent = message;
+      el.querySelector('[data-emergency]').hidden = !emergencyOk;
+
+      // The page underneath is left intact and merely covered, so that
+      // taking the curtain away — which is what happens the moment a
+      // staff session is confirmed — puts the site back with nothing to
+      // re-render. Its scrollbar is the only thing that has to go.
+      document.body.style.overflow = 'hidden';
+    }
+
+    function render() {
+      renderNotice(state && state.notice);
+      renderCurtain(state && state.maintenance);
+    }
+
+    // Cover first, check after.
+    state = readCache();
+    if (state) { render(); }
+
+    var db = window.supabaseClient;
+    if (db) {
+      db.from('site_settings').select('key,value').in('key', ['maintenance', 'notice'])
+        .then(function (res) {
+          if (res.error) {
+            /* Commonest cause by far is supabase_admin_scope.sql not
+               having been run, which is a perfectly fine state for this
+               site to be in. Logged, not surfaced: a reader is not owed
+               a message about a table they have never heard of. */
+            console.info('[MedCare] Site settings unavailable; the site stays open.',
+                         res.error.message);
+            state = null;
+            writeCache(null);
+            render();
+            return;
+          }
+          var next = { maintenance: null, notice: null };
+          (res.data || []).forEach(function (row) { next[row.key] = row.value; });
+          state = next;
+          writeCache(next);
+          render();
+        })
+        .catch(function () {
+          // Offline. Fail open, and drop the cache so the next page load
+          // does not put a curtain up on the strength of an old answer.
+          state = null;
+          writeCache(null);
+          render();
+        });
+    } else {
+      state = null;
+      render();
+    }
+
+    if (window.MedCareAuth && window.MedCareAuth.ready) {
+      window.MedCareAuth.ready.then(function () {
+        role = window.MedCareAuth.getRole();
+        roleKnown = true;
+        render();
+      });
+    }
+  })();
 
 })();
 

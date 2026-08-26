@@ -2514,6 +2514,45 @@
     'Password should be at least 6 characters.': 'စကားဝှက်သည် အနည်းဆုံး စာလုံး ၆ လုံး ရှိရမည်။',
     'Unable to validate email address: invalid format': 'အီးမေးလ် လိပ်စာ ပုံစံ မမှန်ပါ။',
 
+    /* --- a forgotten password, and the way back in ----------------
+       Two pages' worth: the recovery mode of the sign-in form, and
+       reset-password.html at the far end of the emailed link. */
+    'Forgot your password?': 'စကားဝှက် မေ့နေပါသလား။',
+    'Back to sign in': 'ဝင်ရောက်ရန် စာမျက်နှာသို့ ပြန်သွားရန်',
+    'Send a recovery link': 'ပြန်လည်ရယူရန် လင့်ခ် ပို့ရန်',
+    'Sending…': 'ပို့နေသည်…',
+    'Enter the address on your account. We will email a link that lets you pick a new password. It works once, and it expires within the hour.': 'သင့်အကောင့်၏ အီးမေးလ် လိပ်စာကို ထည့်ပါ။ စကားဝှက်အသစ် ရွေးနိုင်သည့် လင့်ခ်တစ်ခုကို အီးမေးလ်ဖြင့် ပို့ပေးမည်။ ၎င်းကို တစ်ကြိမ်သာ သုံးနိုင်ပြီး တစ်နာရီအတွင်း သက်တမ်းကုန်သည်။',
+    'Enter the email address on your account.': 'သင့်အကောင့်၏ အီးမေးလ် လိပ်စာကို ထည့်ပါ။',
+    'If that address has an account, a recovery link is on its way. Open it and you can choose a new password.': 'ထိုလိပ်စာဖြင့် အကောင့် ရှိပါက ပြန်လည်ရယူရန် လင့်ခ်ကို ပို့လိုက်ပါပြီ။ ၎င်းကို ဖွင့်ပြီး စကားဝှက်အသစ် ရွေးနိုင်သည်။',
+    'A recovery link was requested very recently. Wait a minute, then try again.': 'ပြန်လည်ရယူရန် လင့်ခ်ကို ခုနကလေးတင် တောင်းခံထားသည်။ တစ်မိနစ်ခန့် စောင့်ပြီးမှ ထပ်စမ်းပါ။',
+
+    'Choose a new password': 'စကားဝှက်အသစ် ရွေးရန်',
+    'You reached this page from a recovery email. Set a password here and you are signed straight back in.': 'ပြန်လည်ရယူရန် အီးမေးလ်မှတစ်ဆင့် ဤစာမျက်နှာသို့ ရောက်လာခြင်း ဖြစ်သည်။ ဤနေရာတွင် စကားဝှက် သတ်မှတ်လိုက်လျှင် ချက်ချင်း ပြန်ဝင်ရောက်ပြီး ဖြစ်မည်။',
+    'New password': 'စကားဝှက်အသစ်',
+    'Checking your link': 'သင့်လင့်ခ်ကို စစ်ဆေးနေသည်',
+    'Set a new password': 'စကားဝှက်အသစ် သတ်မှတ်ရန်',
+    'Confirm new password': 'စကားဝှက်အသစ် အတည်ပြုရန်',
+    'Typed twice so a slip cannot lock you out again.': 'အမှားတစ်ခုကြောင့် ထပ်မံ ပိတ်မိမသွားစေရန် နှစ်ကြိမ် ရိုက်ခိုင်းခြင်း ဖြစ်သည်။',
+    'Save new password': 'စကားဝှက်အသစ် သိမ်းရန်',
+    'Saving…': 'သိမ်းနေသည်…',
+    'This link cannot be used': 'ဤလင့်ခ်ကို သုံး၍ မရပါ',
+    'Recovery links expire, and each one works only once. Ask for a fresh link and open the newest email.': 'ပြန်လည်ရယူရန် လင့်ခ်များသည် သက်တမ်းကုန်တတ်ပြီး တစ်ခုလျှင် တစ်ကြိမ်သာ အလုပ်လုပ်သည်။ လင့်ခ်အသစ် တောင်းပြီး နောက်ဆုံးရ အီးမေးလ်ကို ဖွင့်ပါ။',
+    'Password changed': 'စကားဝှက် ပြောင်းလဲပြီးပါပြီ',
+    'You are signed in on this device with the new password.': 'ဤစက်ပစ္စည်းတွင် စကားဝှက်အသစ်ဖြင့် ဝင်ရောက်ထားပြီး ဖြစ်သည်။',
+    'Your account': 'သင့်အကောင့်',
+    'Changing a password does not change your role.': 'စကားဝှက် ပြောင်းခြင်းသည် သင့်ရာထူးကို မပြောင်းလဲစေပါ။',
+    'Editor and admin roles are granted by a site administrator in the database, and a recovery link cannot touch them.': 'အယ်ဒီတာနှင့် အက်ဒမင် ရာထူးများကို ဒေတာဘေ့စ်ထဲတွင် ဝဘ်ဆိုက် စီမံသူက ပေးအပ်ပြီး ပြန်လည်ရယူရန် လင့်ခ်က ၎င်းတို့ကို မထိရောက်နိုင်ပါ။',
+
+    'That recovery link has expired. Links last about an hour — ask for a new one and open the newest email.': 'ဤပြန်လည်ရယူရန် လင့်ခ် သက်တမ်းကုန်သွားပြီ။ လင့်ခ်များသည် တစ်နာရီခန့်သာ ခံသည် — အသစ်တစ်ခု တောင်းပြီး နောက်ဆုံးရ အီးမေးလ်ကို ဖွင့်ပါ။',
+    'That recovery link is not valid any more. Each one works only once, so ask for a fresh link.': 'ဤပြန်လည်ရယူရန် လင့်ခ်ကို သုံး၍ မရတော့ပါ။ တစ်ခုလျှင် တစ်ကြိမ်သာ အလုပ်လုပ်သောကြောင့် လင့်ခ်အသစ် တောင်းပါ။',
+    'That recovery link could not be used. Ask for a fresh one.': 'ဤပြန်လည်ရယူရန် လင့်ခ်ကို သုံး၍ မရပါ။ အသစ်တစ်ခု တောင်းပါ။',
+    'Open this page from the link in your recovery email. Reaching it any other way leaves nothing to check.': 'ဤစာမျက်နှာကို ပြန်လည်ရယူရန် အီးမေးလ်ထဲရှိ လင့်ခ်မှတစ်ဆင့် ဖွင့်ပါ။ အခြားနည်းဖြင့် ရောက်လာလျှင် စစ်ဆေးစရာ မရှိပါ။',
+    'Password recovery is unavailable because this site is not connected to its database.': 'ဤဝဘ်ဆိုက်သည် ဒေတာဘေ့စ်နှင့် မချိတ်ဆက်ထားသောကြောင့် စကားဝှက် ပြန်လည်ရယူ၍ မရပါ။',
+    'Could not reach the server to check this link. Check your connection and open the link again.': 'ဤလင့်ခ်ကို စစ်ဆေးရန် ဆာဗာသို့ မရောက်ပါ။ ချိတ်ဆက်မှုကို စစ်ဆေးပြီး လင့်ခ်ကို ပြန်ဖွင့်ပါ။',
+    'That is the password you already had. Choose a different one.': 'ဤစကားဝှက်မှာ ယခင်က သုံးနေသည့် စကားဝှက် ဖြစ်သည်။ အခြားတစ်ခု ရွေးပါ။',
+    'The recovery link has expired while this page was open. Ask for a new one.': 'ဤစာမျက်နှာ ဖွင့်ထားစဉ်အတွင်း ပြန်လည်ရယူရန် လင့်ခ် သက်တမ်းကုန်သွားပြီ။ အသစ်တစ်ခု တောင်းပါ။',
+    'The password could not be changed. Please try again.': 'စကားဝှက်ကို ပြောင်း၍ မရပါ။ ထပ်စမ်းကြည့်ပါ။',
+
     /* --- changing your own display name ---------------------------
        The menu is now every signed-in visitor's account control, so the
        role words below are the ones it shows as a subtitle. */

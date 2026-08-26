@@ -204,6 +204,41 @@
       return db.auth.signInWithPassword({ email: email, password: password });
     },
 
+    /* ---------- Forgetting a password, and getting back in ----------
+
+       Two halves of one trip. sendRecovery() asks Supabase to mail a
+       one-time link; that link lands on reset-password.html, where the
+       token in the URL becomes a short-lived session and updatePassword()
+       writes the new password against it.
+
+       redirectTo is resolved against whatever page is asking rather than
+       written out as a domain, so the same file works from a localhost
+       server and from the real site. Supabase only honours a redirect it
+       recognises, so wherever this is served from has to be listed under
+       Authentication -> URL Configuration in the dashboard, and
+       reset-password.html has to be reachable there.
+
+       Note what sendRecovery does NOT report: whether the address has an
+       account. Supabase answers the same way either way, and that is the
+       point — a truthful answer would turn the form into a way of asking
+       whether a given person has an account on a health site. */
+    recoveryRedirect: function () {
+      return new URL('reset-password.html', window.location.href).href;
+    },
+
+    sendRecovery: function (email) {
+      return db.auth.resetPasswordForEmail(email, { redirectTo: api.recoveryRedirect() });
+    },
+
+    /* Sets a new password for whoever the CURRENT session belongs to.
+       There is no id argument and no old-password argument for the same
+       reason setDisplayName has none: the account comes from the verified
+       token. Clicking the emailed link is what proves the mailbox, and
+       the session it grants is what authorises this write. */
+    updatePassword: function (password) {
+      return db.auth.updateUser({ password: password });
+    },
+
     signOut: function () {
       return db.auth.signOut().then(function (res) {
         writeCachedRole(null);

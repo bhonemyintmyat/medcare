@@ -70,6 +70,13 @@
           hint: 'A Bootstrap Icons name. The preview beside the field is what a reader will see.' },
         { name: 'href', label: 'Page link', type: 'text', required: true, max: 200,
           placeholder: 'diseases/dengue.html' },
+        { name: 'cover_image', label: 'Cover image', type: 'image', max: 400,
+          hint: 'Drag one in, or choose from the library. It heads the page.' },
+        { name: 'body', label: 'The page itself', type: 'richtext', max: 20000,
+          placeholder: 'What it is, how it spreads, what to do…',
+          hint: 'The long-form text. Headings, lists and links only; how it looks is ' +
+                'decided by the page, not here.' },
+        { name: 'body_my', label: 'The page itself (Burmese)', type: 'richtext', max: 24000, my: true },
         { name: 'source_url', label: 'Source', type: 'url', max: 400,
           placeholder: 'https://www.who.int/…',
           hint: 'WHO or Myanmar Ministry of Health only. The database refuses anything else.' }
@@ -96,7 +103,13 @@
         { name: 'href', label: 'Page link', type: 'text', required: true, max: 200,
           placeholder: 'sleep.html' },
         { name: 'thumb', label: 'Thumbnail', type: 'image', max: 400,
-          hint: 'Pick from the media library, or paste a path. Leave empty and the card shows its category colour.' },
+          hint: 'The small image on the article card. Leave empty and the card shows its category colour.' },
+        { name: 'cover_image', label: 'Cover image', type: 'image', max: 400,
+          hint: 'The wide image at the top of the article itself. Often the thumbnail again, larger.' },
+        { name: 'body', label: 'The article', type: 'richtext', max: 20000,
+          placeholder: 'Write the article here…',
+          hint: 'Headings, lists and links only; how it looks is decided by the page.' },
+        { name: 'body_my', label: 'The article (Burmese)', type: 'richtext', max: 24000, my: true },
         { name: 'byline', label: 'Byline', type: 'text', max: 120 },
         { name: 'byline_my', label: 'Byline (Burmese)', type: 'text', max: 160, my: true },
         { name: 'source_url', label: 'Source', type: 'url', max: 400,
@@ -300,6 +313,68 @@
 
   function sourceLooksApproved(url) {
     return !url || APPROVED_SOURCE.test(url.trim());
+  }
+
+  /* ---------------- Images in the content bucket ----------------
+     One bucket, `content-images`, public to read and writable by staff.
+     These live here rather than in editor-media.js because there are now
+     two places that put a file into it: the media library, and the
+     cover-image dropzone on the entry form. Two copies of a size limit
+     is how you end up with a file the form accepts and the library
+     rejects, and nobody able to say which number is the real one. */
+  var IMAGE_BUCKET = 'content-images';
+  var IMAGE_TYPES  = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
+  var MAX_IMAGE_BYTES = 3 * 1024 * 1024;
+
+  function imageUrl(name) {
+    return db.storage.from(IMAGE_BUCKET).getPublicUrl(name).data.publicUrl;
+  }
+
+  /* Storage paths are URLs. A file called "sleep copy.jpg" becomes
+     "sleep%20copy.jpg" in every href that references it, which works
+     until somebody hand-types the path into a field and leaves the space
+     in. Renaming on the way in costs nothing.
+
+     The timestamp is not for uniqueness alone - it is so that uploading a
+     second "hypertension.jpg" does not silently overwrite the first.
+     Overwriting is what the library's Replace button is for, and it
+     should be a decision. */
+  function safeImageName(original) {
+    var dot  = original.lastIndexOf('.');
+    var stem = (dot === -1 ? original : original.slice(0, dot))
+                 .toLowerCase()
+                 .replace(/[^a-z0-9]+/g, '-')
+                 .replace(/^-+|-+$/g, '')
+                 .slice(0, 60) || 'image';
+    var ext  = (dot === -1 ? 'jpg' : original.slice(dot + 1)).toLowerCase().replace(/[^a-z0-9]/g, '');
+    return stem + '-' + Date.now().toString(36) + '.' + ext;
+  }
+
+  function rejectImage(file) {
+    if (IMAGE_TYPES.indexOf(file.type) === -1) {
+      return 'That is a ' + (file.type || 'file of unknown type') +
+             '. Images have to be JPEG, PNG, WebP or AVIF.';
+    }
+    if (file.size > MAX_IMAGE_BYTES) {
+      return 'That file is ' + (file.size / 1024 / 1024).toFixed(1) +
+             ' MB. The limit is 3 MB - resize it and try again.';
+    }
+    return null;
+  }
+
+  /* Resolves to { name, url } or rejects with a reason already written
+     for a person. Callers show it; they do not have to interpret it. */
+  function uploadImage(file) {
+    var bad = rejectImage(file);
+    if (bad) { return Promise.reject(new Error(bad)); }
+
+    var name = safeImageName(file.name);
+    return db.storage.from(IMAGE_BUCKET).upload(name, file, {
+      cacheControl: '3600', upsert: false
+    }).then(function (res) {
+      if (res.error) { throw res.error; }
+      return { name: name, url: imageUrl(name) };
+    });
   }
 
   /* Supabase hands back Postgres's own words, which are precise and
@@ -530,6 +605,14 @@
     loadNames: loadNames,
     describeError: describeError,
     sourceLooksApproved: sourceLooksApproved,
+
+    IMAGE_BUCKET: IMAGE_BUCKET,
+    IMAGE_TYPES: IMAGE_TYPES,
+    MAX_IMAGE_BYTES: MAX_IMAGE_BYTES,
+    imageUrl: imageUrl,
+    safeImageName: safeImageName,
+    rejectImage: rejectImage,
+    uploadImage: uploadImage,
 
     listRows: listRows,
     getRow: getRow,

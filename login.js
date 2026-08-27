@@ -64,6 +64,15 @@
     if (/rate limit|only request this after|too many requests/i.test(text)) {
       return 'A recovery link was requested very recently. Wait a minute, then try again.';
     }
+    /* A 500 from /recover: Supabase found the account, minted the token,
+       and then could not post the letter. In the auth log it reads
+       `535 "Authentication credentials invalid"` — the mail server
+       rejecting the project's SMTP username and password. Whatever the
+       cause, it is ours and not theirs, and the raw server sentence is
+       no help to somebody who just wants back into their account. */
+    if (/error sending|unexpected_failure/i.test(text)) {
+      return 'The recovery email could not be sent. That is a fault on our side, not yours — please try again shortly.';
+    }
     return text || 'That did not work. Please try again.';
   }
 

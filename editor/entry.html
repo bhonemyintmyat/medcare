@@ -24,7 +24,14 @@
 <script src="../script.js" defer></script>
 <script src="js/editor-guard.js" defer></script>
 <script src="../admin/js/admin-shell.js" defer></script>
+<!-- The allowlist. Shared with the reader side, so what is stored and
+     what is shown are cleaned by the same rules. -->
+<script src="../sanitize-html.js" defer></script>
 <script src="js/editor-api.js" defer></script>
+<!-- Wraps Quill, which it fetches from the CDN only when a body
+     field is actually on the form. Must load before editor-entry.js,
+     which asks it to build the editors. -->
+<script src="js/editor-richtext.js" defer></script>
 <script src="js/editor-entry.js" defer></script>
 </head>
 <body>

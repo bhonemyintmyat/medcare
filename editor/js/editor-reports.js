@@ -52,6 +52,23 @@
      reportable thing needs no migration. This is the map from that text
      to something this area can open. Anything not in it still shows in
      the queue — it just has no link. */
+  /* The four values report.js offers and reports_category_check allows,
+     turned back into words. A value not in this map is shown as-is
+     rather than hidden: if the constraint is ever widened and this map
+     is not, an editor should see the raw value, not a blank pill. */
+  var CATEGORIES = {
+    inaccuracy:  'Medical inaccuracy',
+    typo:        'Typo',
+    broken_link: 'Broken link',
+    other:       'Other'
+  };
+
+  function categoryPill(value) {
+    var key = String(value || 'other');
+    return '<span class="mc-admin-pill mc-report-cat mc-report-cat--' + ed.esc(key) + '">' +
+             ed.esc(CATEGORIES[key] || key) + '</span>';
+  }
+
   var TARGETS = {
     disease:  'disease',
     diseases: 'disease',
@@ -144,7 +161,13 @@
 
              '<div class="mc-report-row-head">' +
                '<span class="mc-report-item">' + targetHtml(row) + '</span>' +
-               ed.statusPill(row.status === 'dismissed' ? 'dismissed' : row.status) +
+               // What kind of problem, before how far along it is: the
+               // first decides who should pick the report up, the second
+               // only says whether anyone has yet.
+               '<span class="mc-report-pills">' +
+                 categoryPill(row.category) +
+                 ed.statusPill(row.status === 'dismissed' ? 'dismissed' : row.status) +
+               '</span>' +
              '</div>' +
 
              '<div class="mc-report-reason">' + ed.esc(row.reason) + '</div>' +
@@ -202,6 +225,9 @@
       if (!q) { return true; }
       return String(row.reason || '').toLowerCase().indexOf(q) !== -1 ||
              String(row.detail || '').toLowerCase().indexOf(q) !== -1 ||
+             // Typing "typo" or "broken" should find them, and the label
+             // is what the editor can see to type.
+             String(CATEGORIES[row.category] || row.category || '').toLowerCase().indexOf(q) !== -1 ||
              String(row.resolution_note || '').toLowerCase().indexOf(q) !== -1;
     });
   }

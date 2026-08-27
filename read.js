@@ -249,6 +249,30 @@
        decided by CSS from html[lang] - already set before this row
        arrived. The prose itself is inside .mc-noi18n, which the site's
        phrase pass skips on purpose. */
+
+    /* ---------- Tell the rest of the page what it is looking at ----------
+       report.js needs the same three facts this function already has —
+       which table, which id, what it is called — and it must not offer a
+       "Report error" button on a page that turned out to be missing or
+       failed to load. Announcing here, at the end of a successful render,
+       is exactly that condition: nothing is published unless something
+       was drawn.
+
+       Both a property and an event, because the two listeners arrive at
+       different times. A script loaded after this one has already missed
+       the event and reads the property; one loaded before it is waiting
+       on the event. Setting the property first means a handler firing
+       synchronously off the event can read it either way. */
+    window.MedCarePage = {
+      kind: kindName,
+      table: kind.table,
+      id: Number(id),
+      title: titleEn,
+      titleMy: titleMy
+    };
+    document.dispatchEvent(new CustomEvent('medcare:page-rendered', {
+      detail: window.MedCarePage
+    }));
   }
 
   /* ---------- Getting the row ---------- */

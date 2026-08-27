@@ -667,9 +667,65 @@
   .mc-modal-msg--error{background:var(--mc-danger-50);border:1px solid #fecaca;color:var(--mc-danger-700)}
   .mc-modal-msg--ok{background:var(--mc-green-50);border:1px solid #bbf7d0;color:#15803d}
   .mc-modal-actions{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+  /* A field that shows rather than asks. Same box as an editable one so
+     the form reads as one thing, minus the affordances that would invite
+     typing: no focus ring on the wrapper, muted text, default cursor. */
+  .mc-auth-field--static{background:var(--mc-bg)}
+  .mc-auth-field--static:focus-within{border-color:var(--mc-border);box-shadow:none}
+  .mc-auth-field--static input{color:var(--mc-muted);font-weight:500;cursor:default;text-overflow:ellipsis}
+
+  /* Category radios. The native input is kept in the accessibility tree
+     and kept focusable — it is only made invisible — so arrow keys, the
+     radio-group role and label clicks all still work. .mc-radio-mark is
+     the dot that gets drawn instead. */
+  .mc-radio-group{border:none;padding:0;margin:0 0 1.15rem;text-align:left}
+  .mc-radio-group legend{float:none;width:auto;padding:0;font-size:.88rem}
+  .mc-radio{display:flex;align-items:flex-start;gap:.7rem;background:#fff;border:1px solid var(--mc-border);border-radius:12px;padding:.7rem .9rem;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s,background .15s}
+  .mc-radio:last-child{margin-bottom:0}
+  .mc-radio:hover{border-color:var(--mc-primary);background:var(--mc-primary-50)}
+  .mc-radio input{position:absolute;opacity:0;width:0;height:0;margin:0}
+  .mc-radio-mark{flex-shrink:0;width:18px;height:18px;margin-top:.12rem;border-radius:50%;border:2px solid var(--mc-border);background:#fff;position:relative;transition:border-color .15s}
+  .mc-radio-mark::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--mc-primary);transform:scale(0);transition:transform .15s ease-out}
+  .mc-radio input:checked~.mc-radio-mark{border-color:var(--mc-primary)}
+  .mc-radio input:checked~.mc-radio-mark::after{transform:scale(1)}
+  .mc-radio:has(input:checked){border-color:var(--mc-primary);background:var(--mc-primary-50)}
+  /* :has() is widely supported now but not everywhere; without it the
+     selected row simply keeps the plain card background and the dot is
+     still filled, which is legible on its own. */
+  .mc-radio input:focus-visible~.mc-radio-mark{outline:2px solid var(--mc-primary);outline-offset:2px}
+  .mc-radio-text{display:flex;flex-direction:column;gap:.12rem;min-width:0}
+  .mc-radio-label{font-size:.94rem;font-weight:600;color:var(--mc-text);line-height:1.35}
+  .mc-radio-hint{font-size:.8rem;color:var(--mc-muted);line-height:1.45}
+
+  /* ===================== Toast ===================== */
+  /* Above .mc-modal (1080), because the report modal closes itself as the
+     toast arrives and the two overlap for a frame. */
+  .mc-toast-wrap{position:fixed;z-index:1090;right:1.25rem;bottom:1.25rem;display:flex;flex-direction:column;gap:.6rem;pointer-events:none;max-width:min(380px,calc(100vw - 2.5rem))}
+  .mc-toast{display:flex;align-items:flex-start;gap:.7rem;background:#fff;border:1px solid var(--mc-border);border-left:4px solid var(--mc-primary);border-radius:14px;box-shadow:var(--mc-shadow-lg);padding:.85rem 1rem;pointer-events:auto;opacity:0;transform:translateY(12px);transition:opacity .26s ease-out,transform .26s cubic-bezier(.16,1,.3,1)}
+  .mc-toast.is-in{opacity:1;transform:none}
+  .mc-toast-ico{flex-shrink:0;color:var(--mc-green);font-size:1.15rem;line-height:1.3}
+  .mc-toast-text{margin:0;font-size:.92rem;line-height:1.5;color:var(--mc-text)}
+  .mc-toast-x{flex-shrink:0;width:26px;height:26px;margin:-.15rem -.25rem 0 auto;border:none;background:transparent;color:var(--mc-muted);border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.72rem}
+  .mc-toast-x:hover{background:var(--mc-bg);color:var(--mc-text)}
+  .mc-toast-x:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
+
   @media (max-width:575.98px){
     .mc-report{flex-direction:column;align-items:flex-start}
     .mc-modal-panel{padding:1.6rem 1.25rem 1.4rem}
+    /* Bottom sheet rather than a corner card: at this width a corner
+       card is most of the row anyway, and centring it avoids a toast
+       that looks accidentally offset. */
+    .mc-toast-wrap{left:.75rem;right:.75rem;bottom:.75rem;max-width:none}
+  }
+
+  /* Reduced motion: the toast still appears and still leaves, it just
+     does not slide. Removing the transition entirely (rather than
+     shortening it) is why report.js does not rely on transitionend
+     alone to clean up. */
+  @media (prefers-reduced-motion:reduce){
+    .mc-toast{transition:none;transform:none}
+    .mc-radio-mark::after{transition:none}
+    .mc-modal-panel{animation:none}
   }
 
   /* ===================== Reader reports queue (editor tool) ===================== */
@@ -683,6 +739,14 @@
   .mc-report-item .bi{color:var(--mc-primary-600)}
   .mc-report-status--new{background:var(--mc-amber-50);border-color:#fde68a;color:var(--mc-amber)}
   .mc-report-status--reviewed{background:var(--mc-green-50);border-color:#bbf7d0;color:#15803d}
+  .mc-report-pills{display:inline-flex;align-items:center;gap:.35rem;flex-wrap:wrap}
+  /* Category first, coloured by how much it matters. A medical
+     inaccuracy and a typo are both worth fixing, but only one of them is
+     worth interrupting a clinician for, and the queue should say so
+     before anyone reads the prose. */
+  .mc-report-cat--inaccuracy{background:var(--mc-danger-50);border-color:#fecaca;color:var(--mc-danger-700)}
+  .mc-report-cat--broken_link{background:var(--mc-amber-50);border-color:#fde68a;color:var(--mc-amber)}
+  .mc-report-cat--typo,.mc-report-cat--other{background:var(--mc-bg);border-color:var(--mc-border);color:var(--mc-muted)}
   .mc-report-reason{font-size:.93rem;line-height:1.6;color:var(--mc-text);background:var(--mc-bg);border-radius:10px;padding:.7rem .9rem;margin-bottom:.7rem;white-space:pre-wrap;overflow-wrap:anywhere}
   .mc-report-foot{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
   .mc-report-meta{font-size:.8rem;color:var(--mc-muted);display:inline-flex;align-items:center;gap:.35rem;flex-wrap:wrap}

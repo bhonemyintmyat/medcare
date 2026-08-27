@@ -631,7 +631,7 @@
       });
       dGrid.innerHTML = filtered.map(function (d) {
         return '<div class="col-md-6 col-lg-4">' +
-          '<a href="' + (d.href || 'common-diseases.html') + '" class="mc-disease">' +
+          '<a href="' + pageHref('disease', d, 'common-diseases.html') + '" class="mc-disease">' +
           '<div class="mc-disease-icon"><i class="bi ' + d.icon + '"></i></div>' +
           '<span class="mc-disease-tag">' + esc(d.tag) + '</span>' +
           '<h3>' + esc(d.name) + '</h3>' +
@@ -736,6 +736,31 @@
     loadDiseases();
   }
 
+  /* ---------- Where a row's page lives ----------
+     A row has two possible pages and this is the one place that decides
+     between them:
+
+       body written in the editor  ->  read.html renders it
+       href to a file in the repo  ->  that file, as it always was
+
+     Body wins when there is one. The ten articles and ten diseases that
+     shipped as hand-written files have no body, so they keep opening the
+     pages they always did; anything written in the editor from now on
+     gets the reader. Nothing had to be migrated for that to be true.
+
+     The href is escaped here rather than at the call sites. It is
+     editor-supplied and it goes straight into an attribute, which is
+     exactly the shape of bug that gets missed when each caller is
+     trusted to remember. */
+  var pageHref = function (kind, row, fallback) {
+    var hasBody = (row.body && String(row.body).trim()) ||
+                  (row.body_my && String(row.body_my).trim());
+    if (hasBody && row.id != null) {
+      return 'read.html?type=' + kind + '&id=' + encodeURIComponent(row.id);
+    }
+    return esc(row.href || fallback);
+  };
+
   /* ---------- Health articles listing (articles.html) ----------
      Each article lives in its own page and carries both languages, so the cards
      link straight to the file and render both titles behind .mc-en / .mc-my. */
@@ -820,7 +845,7 @@
   var myArticleCard = function (a) {
     var c = myCat(a.cat);
     return '<div class="col-md-6 col-lg-4">' +
-      '<a href="' + esc(a.href) + '" class="mc-article d-block text-decoration-none text-reset">' +
+      '<a href="' + pageHref('article', a, 'articles.html') + '" class="mc-article d-block text-decoration-none text-reset">' +
       '<div class="mc-article-thumb"><img src="' + esc(a.thumb) + '" alt="">' +
       '<span class="badge-cat">' + bi(c.en, c.my) + '</span></div>' +
       '<div class="mc-article-body">' +
@@ -874,6 +899,59 @@
       mySearch.addEventListener('input', function (e) { myState.query = e.target.value; renderMyArticles(); });
     }
     renderMyArticles();
+
+    /* ---------- The same list, from the table ----------
+       myArticles above is the list this page shipped with, and it is now
+       a FALLBACK rather than the source. The ten rows in the `articles`
+       table are the same ten articles - supabase_seed_articles.sql put
+       them there - so until somebody writes an eleventh, both lists say
+       the same thing and swapping one for the other changes nothing a
+       reader can see.
+
+       It has to come from the table, though, or an article written in
+       the editor is published into a listing that cannot show it: the
+       page would render, and no link would ever reach it.
+
+       Drawn AFTER the shipped list has already rendered, so a slow
+       database delays nothing. If the request fails the page keeps the
+       list it drew, which is the right failure for a health site - ten
+       articles that are slightly stale beat an error where the articles
+       were. */
+    var myDb = window.supabaseClient;
+    if (myDb) {
+      myDb.from('articles')
+        .select('*')
+        .eq('status', 'published')
+        .order('id')
+        .then(function (res) {
+          if (res.error) { throw res.error; }
+          var rows = res.data || [];
+          if (!rows.length) { return; }   // keep what is on screen
+
+          myArticles = rows.map(function (r) {
+            return {
+              id: r.id,
+              href: r.href,
+              body: r.body,
+              body_my: r.body_my,
+              cat: r.cat,
+              thumb: r.thumb || r.cover_image || '',
+              title: r.title || '',
+              titleMy: r.title_my || r.title || '',
+              excerpt: r.excerpt || '',
+              excerptMy: r.excerpt_my || r.excerpt || '',
+              by: r.byline || 'MedCare editorial team',
+              byMy: r.byline_my || r.byline || 'MedCare တည်းဖြတ်အဖွဲ့'
+            };
+          });
+          renderMyArticles();
+        })
+        .catch(function (err) {
+          // Deliberately quiet on the page. The reader already has a
+          // working list; this is for whoever is looking at a console.
+          console.error('[MedCare] Could not refresh articles from Supabase:', err);
+        });
+    }
   }
 
   /* ---------- Editor's picks (index.html) ----------
@@ -2672,6 +2750,13 @@
     if (tag === 'SCRIPT' || tag === 'STYLE') { return; }
     // The switcher itself always shows both languages verbatim.
     if (node.classList && node.classList.contains('mc-langbar')) { return; }
+    /* Long-form content written in the editor. This walk is a phrase
+       dictionary for the SITE's own wording - buttons, headings, the
+       chrome - and running it over an article is how a sentence in the
+       middle of a medical page silently becomes a different sentence
+       because it happened to match a key. Article text carries its own
+       translation in body_my; it does not need this one. */
+    if (node.classList && node.classList.contains('mc-noi18n')) { return; }
     swapAttrs(node);
     for (var child = node.firstChild; child; child = child.nextSibling) { walk(child); }
   }

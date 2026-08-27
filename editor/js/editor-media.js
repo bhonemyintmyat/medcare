@@ -34,9 +34,13 @@
   var db    = window.supabaseClient;
   if (!guard || !ed) { return; }
 
-  var BUCKET   = 'content-images';
-  var MAX_BYTES = 3 * 1024 * 1024;
-  var TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
+  /* The bucket name, the size limit, the accepted types, the renaming
+     rule and the upload itself all live in editor-api.js now, because
+     the entry form's cover-image dropzone puts files in the same bucket.
+     Kept as local aliases so the rest of this file reads as it did. */
+  var BUCKET    = ed.IMAGE_BUCKET;
+  var MAX_BYTES = ed.MAX_IMAGE_BYTES;
+  var TYPES     = ed.IMAGE_TYPES;
 
   var hostEl     = document.getElementById('mediaHost');
   var msgEl      = document.getElementById('mediaMsg');
@@ -63,38 +67,12 @@
       : (bytes / 1024 / 1024).toFixed(1) + ' MB';
   }
 
-  /* ---------- Names ----------
-     Storage paths are URLs. A file called "sleep copy.jpg" becomes
-     "sleep%20copy.jpg" in every href that references it, which works
-     until somebody hand-types the path into the thumbnail field and
-     leaves the space in. Renaming on the way in costs nothing and the
-     class of bug it removes is one nobody enjoys tracking down.
-
-     The timestamp is not for uniqueness alone — it is so that uploading
-     a second "hypertension.jpg" does not silently overwrite the first.
-     Overwriting is what Replace is for, and it should be a decision. */
-  function safeName(original) {
-    var dot  = original.lastIndexOf('.');
-    var stem = (dot === -1 ? original : original.slice(0, dot))
-                 .toLowerCase()
-                 .replace(/[^a-z0-9]+/g, '-')
-                 .replace(/^-+|-+$/g, '')
-                 .slice(0, 60) || 'image';
-    var ext  = (dot === -1 ? 'jpg' : original.slice(dot + 1)).toLowerCase().replace(/[^a-z0-9]/g, '');
-    return stem + '-' + Date.now().toString(36) + '.' + ext;
-  }
-
-  function rejectReason(file) {
-    if (TYPES.indexOf(file.type) === -1) {
-      return 'That is a ' + (file.type || 'file of unknown type') +
-             '. Images have to be JPEG, PNG, WebP or AVIF.';
-    }
-    if (file.size > MAX_BYTES) {
-      return 'That file is ' + (file.size / 1024 / 1024).toFixed(1) +
-             ' MB. The limit is 3 MB — resize it and try again.';
-    }
-    return null;
-  }
+  /* Both of these moved to editor-api.js when the entry form grew a
+     dropzone of its own - see the note above. The comments explaining
+     WHY names are rewritten and why the timestamp is there went with
+     them. */
+  var safeName     = ed.safeImageName;
+  var rejectReason = ed.rejectImage;
 
   /* Storage's JS client does not report upload progress, so the bar is
      an indeterminate one dressed as a determinate one: it moves while

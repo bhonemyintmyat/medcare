@@ -59,6 +59,12 @@
   var row   = null;     // what the database last told us this row is
   var dirty = false;
 
+  /* field name -> the handle MedCareRichText.create() resolves to. Quill
+     is fetched on demand, so between build() and that promise settling
+     there is a real window in which a body field has no editor behind
+     it. valueOf() below is written for that window. */
+  var richtexts = {};
+
   /* True while build() is laying the form out. wire() finishes by calling
      its own input handler once, to set the character counters and the
      icon preview from the starting values — and without this flag that
@@ -109,21 +115,47 @@
                    'style="font-size:.94rem;cursor:pointer">' + ed.esc(field.label) + '</label>' +
                '</div>';
 
+      /* The host Quill mounts into. Deliberately NOT an input: the value
+         lives in the Quill instance, and valueOf() knows to ask the
+         handle rather than read .value off this element. It keeps the
+         f_<name> id so control() and the error/label plumbing that
+         everything else uses still find it. */
+      case 'richtext':
+        return '<div class="mc-ed-rt" data-rt="' + field.name + '">' +
+                 '<div class="mc-ed-rt-loading" data-rt-loading>' +
+                   '<i class="bi bi-hourglass-split"></i> Loading the editor…' +
+                 '</div>' +
+                 '<div id="' + fieldId(field) + '" class="mc-ed-rt-host"></div>' +
+               '</div>';
+
+      /* An image field is a text input with a dropzone wrapped round it.
+         The input keeps the f_<name> id and stays the single source of
+         truth, so valueOf(), validate() and the read-only lock all work
+         on it unchanged - the dropzone and the library picker are two
+         ways of typing into the same box. Pasting a path still works,
+         which matters when somebody has a URL and no file. */
       case 'image':
-        return '<div class="mc-ed-thumb-row">' +
-                 '<div>' +
+        return '<div class="mc-ed-drop" data-drop="' + field.name + '">' +
+                 '<div class="mc-ed-drop-zone" data-drop-zone tabindex="0" role="button" ' +
+                      'aria-label="Drop an image here, or press Enter to choose a file">' +
+                   '<span class="mc-ed-drop-preview" data-drop-preview>' +
+                     '<i class="bi bi-image"></i>' +
+                   '</span>' +
+                   '<span class="mc-ed-drop-words">' +
+                     '<b data-drop-title>Drag an image here</b>' +
+                     '<small data-drop-sub>or choose a file. JPEG, PNG, WebP or AVIF, up to 3 MB.</small>' +
+                   '</span>' +
+                   '<input type="file" hidden data-drop-input ' +
+                     'accept="image/jpeg,image/png,image/webp,image/avif">' +
+                 '</div>' +
+                 '<div class="mc-ed-drop-bar" data-drop-bar hidden><span></span></div>' +
+                 '<p class="mc-ed-error" data-drop-error hidden></p>' +
+                 '<div class="mc-ed-drop-path">' +
                    '<div class="mc-auth-field"><input type="text" ' + common +
                      ' value="' + ed.esc(value) + '" autocomplete="off"></div>' +
-                   '<div style="display:flex;gap:.4rem;margin-top:.5rem;flex-wrap:wrap">' +
-                     '<button type="button" class="mc-auth-btn mc-auth-btn--ghost" data-pick="' +
-                       field.name + '" style="font-size:.84rem;padding:.35rem .9rem">' +
-                       '<i class="bi bi-images"></i> Choose from the library</button>' +
-                     '<a class="mc-auth-btn mc-auth-btn--ghost" href="media.html" target="_blank" ' +
-                       'style="font-size:.84rem;padding:.35rem .9rem">Upload a new one</a>' +
-                   '</div>' +
+                   '<button type="button" class="mc-auth-btn mc-auth-btn--ghost" data-pick="' +
+                     field.name + '"><i class="bi bi-images"></i> Library</button>' +
                  '</div>' +
-                 '<span class="mc-ed-thumb" data-thumb="' + field.name + '">' +
-                   '<i class="bi bi-image"></i></span>' +
                '</div>';
 
       default:
@@ -209,6 +241,8 @@
     }
 
     building = true;
+    // The old handles point at elements that are about to be replaced.
+    richtexts = {};
     hostEl.innerHTML = html;
     cfg.fields.forEach(wire);
     refreshIcon();
@@ -224,6 +258,18 @@
   function control(name) { return hostEl.querySelector('#f_' + name); }
 
   function valueOf(field) {
+    /* Asked of the Quill handle, not of the DOM. And if the handle is
+       not there yet - the library is still downloading, or failed to -
+       the answer is what the row already held, NEVER ''. Returning empty
+       here would let a quick Save silently wipe an article that is
+       merely not on screen yet. */
+    if (field.type === 'richtext') {
+      var rt = richtexts[field.name];
+      if (!rt) { return row && row[field.name] != null ? row[field.name] : null; }
+      var html = rt.getHTML();
+      return html === '' ? null : html;
+    }
+
     var el = control(field.name);
     if (!el) { return null; }
     if (field.type === 'checkbox') { return el.checked; }
@@ -248,9 +294,16 @@
     if (field.required && (value === '' || value === null || value === undefined)) {
       return 'This one is needed.';
     }
-    if (field.max && value && String(value).length > field.max) {
-      return 'Too long by ' + (String(value).length - field.max) +
-             ' character' + (String(value).length - field.max === 1 ? '' : 's') + '.';
+    /* A body is measured in what a reader sees. Counting its markup
+       would make a bolded word cost seventeen characters and turn the
+       limit into a lottery. */
+    var measured = field.type === 'richtext' && value
+      ? window.MedCareRichText.textOf(value)
+      : value;
+
+    if (field.max && measured && String(measured).length > field.max) {
+      var over = String(measured).length - field.max;
+      return 'Too long by ' + over + ' character' + (over === 1 ? '' : 's') + '.';
     }
     if (field.type === 'url' && value && !ed.sourceLooksApproved(value)) {
       return 'Sources have to be WHO (who.int) or the Myanmar Ministry of Health ' +
@@ -302,8 +355,14 @@
      ================================================================ */
 
   function wire(field) {
+    // Its value does not live in an input, so none of the plumbing
+    // below applies to it.
+    if (field.type === 'richtext') { wireRichText(field); return; }
+
     var el = control(field.name);
     if (!el) { return; }
+
+    if (field.type === 'image') { wireDropzone(field); }
 
     var counter = hostEl.querySelector('[data-field="' + field.name + '"] [data-chars]');
     var confirmBox = hostEl.querySelector('[data-confirm-for="' + field.name + '"]');
@@ -382,11 +441,166 @@
     preview.parentNode.classList.toggle('is-empty', !name);
   }
 
+  /* ================================================================
+     The body editor
+     ================================================================ */
+
+  /* One Quill per body field, created after the library arrives. The
+     handle goes into `richtexts` so valueOf() can reach it; until then
+     the loading strip stands in its place, because an empty grey box
+     that will become an editor in 400ms reads as a broken form. */
+  function wireRichText(field) {
+    var host = control(field.name);
+    var wrap = hostEl.querySelector('[data-rt="' + field.name + '"]');
+    if (!host || !wrap || !window.MedCareRichText) { return; }
+
+    var loadingEl = wrap.querySelector('[data-rt-loading]');
+    var counter   = hostEl.querySelector('[data-field="' + field.name + '"] [data-chars]');
+
+    function count() {
+      if (!counter || !field.max) { return; }
+      var rt = richtexts[field.name];
+      var len = rt ? rt.getText().length : 0;
+      // Counted in words a reader sees, not in markup. <strong> is not
+      // something anybody budgets for.
+      if (len > field.max) {
+        counter.textContent = (len - field.max) + ' over';
+        counter.setAttribute('data-over', 'true');
+        counter.removeAttribute('data-near');
+      } else if (len > field.max * 0.85) {
+        counter.textContent = (field.max - len) + ' left';
+        counter.setAttribute('data-near', 'true');
+        counter.removeAttribute('data-over');
+      } else {
+        counter.textContent = '';
+        counter.removeAttribute('data-near');
+        counter.removeAttribute('data-over');
+      }
+    }
+
+    window.MedCareRichText.create(host, {
+      placeholder: field.placeholder || 'Write the article here…',
+      onChange: function () { markDirty(); count(); },
+
+      /* The toolbar's image button borrows the same library picker the
+         cover-image field uses, so there is one way to choose an image
+         on this screen rather than two that behave differently. */
+      onImage: function (insert) {
+        openLibrary(function (url) { insert(url); });
+      }
+    }).then(function (handle) {
+      richtexts[field.name] = handle;
+      if (loadingEl) { loadingEl.remove(); }
+      handle.setHTML(row && row[field.name] != null ? row[field.name] : '');
+      handle.setEnabled(!isLocked());
+      count();
+    }).catch(function (err) {
+      /* A body field that will not load is not a reason to lose the rest
+         of the form, but it must not look like an empty article either -
+         valueOf() keeps returning the stored value, and this says why
+         the box is not there. */
+      if (loadingEl) {
+        loadingEl.className = 'mc-ed-error';
+        loadingEl.removeAttribute('hidden');
+        loadingEl.textContent = err && err.message
+          ? err.message
+          : 'The text editor could not be loaded. Your existing text is safe and will not be overwritten.';
+      }
+    });
+  }
+
+  /* ================================================================
+     The cover-image dropzone
+     ================================================================ */
+
+  /* Drag a file on, or click to choose one. Either way it goes to the
+     same bucket the media library uses, through the same size and type
+     checks - see the note on those helpers in editor-api.js - and the
+     resulting path is typed into the field's own text input, which
+     remains the single source of truth. */
+  function wireDropzone(field) {
+    var wrap = hostEl.querySelector('[data-drop="' + field.name + '"]');
+    var input = control(field.name);
+    if (!wrap || !input) { return; }
+
+    var zone    = wrap.querySelector('[data-drop-zone]');
+    var fileIn  = wrap.querySelector('[data-drop-input]');
+    var bar     = wrap.querySelector('[data-drop-bar]');
+    var errEl   = wrap.querySelector('[data-drop-error]');
+    var titleEl = wrap.querySelector('[data-drop-title]');
+
+    function say(text) {
+      if (!errEl) { return; }
+      errEl.hidden = !text;
+      errEl.textContent = text || '';
+    }
+
+    function busy(on) {
+      if (bar) { bar.hidden = !on; }
+      zone.classList.toggle('is-busy', !!on);
+      if (titleEl) { titleEl.textContent = on ? 'Uploading…' : 'Drag an image here'; }
+    }
+
+    function take(file) {
+      if (!file) { return; }
+      if (isLocked()) { say('This page is live, so its image cannot be changed here.'); return; }
+
+      say(null);
+      busy(true);
+      ed.uploadImage(file)
+        .then(function (res) {
+          busy(false);
+          /* The bucket returns an absolute URL. Stored as-is rather than
+             trimmed to a path, because the reader pages and this form sit
+             at different depths and a relative path would have to mean
+             something different in each. */
+          input.value = res.url;
+          markDirty();
+          refreshThumbs();
+          showError(field, null);
+        })
+        .catch(function (err) {
+          busy(false);
+          // uploadImage rejects with a sentence already written for a
+          // person when the file is the problem; anything else is the
+          // network or the bucket.
+          say(err && err.message ? err.message : ed.describeError(err, 'the image library'));
+        });
+    }
+
+    ['dragenter', 'dragover'].forEach(function (evt) {
+      zone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        if (!isLocked()) { zone.classList.add('is-over'); }
+      });
+    });
+    ['dragleave', 'drop'].forEach(function (evt) {
+      zone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        zone.classList.remove('is-over');
+      });
+    });
+    zone.addEventListener('drop', function (e) {
+      take(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]);
+    });
+
+    zone.addEventListener('click', function () { if (!isLocked()) { fileIn.click(); } });
+    zone.addEventListener('keydown', function (e) {
+      // The zone is a div with role=button, so it has to answer to the
+      // keys a real button would.
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zone.click(); }
+    });
+    fileIn.addEventListener('change', function () {
+      take(fileIn.files[0]);
+      fileIn.value = '';        // so choosing the same file twice fires again
+    });
+  }
+
   function refreshThumbs() {
     cfg.fields.forEach(function (field) {
       if (field.type !== 'image') { return; }
       var el = control(field.name);
-      var box = hostEl.querySelector('[data-thumb="' + field.name + '"]');
+      var box = hostEl.querySelector('[data-drop="' + field.name + '"] [data-drop-preview]');
       if (!el || !box) { return; }
       var src = el.value.trim();
       if (src) {
@@ -411,7 +625,22 @@
     if (btn) { pickImage(btn.getAttribute('data-pick')); }
   });
 
+  /* Writes the chosen address into a field. The library itself does not
+     know about fields - see openLibrary() below - because the body
+     editor's image button needs the same picker and has no field to
+     write to. */
   function pickImage(fieldName) {
+    openLibrary(function (url) {
+      control(fieldName).value = url;
+      markDirty();
+      refreshThumbs();
+    });
+  }
+
+  /* onPick(url) is called with the public address of whatever was
+     chosen, and the dialog closes itself. Called with nothing if the
+     person cancels - the callback simply never runs. */
+  function openLibrary(onPick) {
     var host = document.createElement('div');
     host.className = 'mc-modal is-open';
     host.innerHTML =
@@ -429,10 +658,9 @@
       if (e.target.closest('[data-close]')) { host.remove(); return; }
       var tile = e.target.closest('[data-path]');
       if (tile) {
-        control(fieldName).value = tile.getAttribute('data-path');
-        markDirty();
-        refreshThumbs();
+        var url = tile.getAttribute('data-path');
         host.remove();
+        onPick(url);
       }
     });
 
@@ -497,8 +725,15 @@
      came here to read the page as much as to change it, and a form that
      vanishes when you lack write access is harder to work with than one
      that is visibly locked. */
+  /* Asked by the dropzone and the body editor as well as by applyLock(),
+     both of which are wired before or after it runs and need the same
+     answer. */
+  function isLocked() {
+    return !!(row && !ed.canEditNow(row.status, guard.isAdmin()));
+  }
+
   function applyLock() {
-    var locked = row && !ed.canEditNow(row.status, guard.isAdmin());
+    var locked = isLocked();
 
     lockEl.hidden = !locked;
     saveBtn.hidden = !!locked;
@@ -511,6 +746,20 @@
          otherwise stay clickable, offering to change a row that cannot
          be saved. */
       el.disabled = !!locked;
+    });
+
+    /* Quill is not an input and ignores `disabled`; it has to be told.
+       Any body editor still downloading picks this up instead when its
+       promise settles - see wireRichText(). */
+    Object.keys(richtexts).forEach(function (name) {
+      richtexts[name].setEnabled(!locked);
+    });
+
+    /* The dropzone is a div, so it too would stay droppable. take()
+       re-checks isLocked() as well, because a file can be dropped
+       between a status change and this running. */
+    hostEl.querySelectorAll('[data-drop-zone]').forEach(function (zone) {
+      zone.classList.toggle('is-locked', !!locked);
     });
   }
 
@@ -636,7 +885,14 @@
     var bad = validate(false);
     if (bad) {
       var el = control(bad.name);
-      if (el) { el.focus(); el.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
+      if (el) {
+        // A body field's control is the div Quill mounted into, and a
+        // div does not take focus. Ask the editor instead, or the form
+        // scrolls to the problem and leaves the cursor elsewhere.
+        var rt = richtexts[bad.name];
+        if (rt) { rt.focus(); } else { el.focus(); }
+        el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
       ed.message(msgEl, 'error', 'Some fields need another look before this can be saved.');
       return;
     }

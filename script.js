@@ -2525,6 +2525,7 @@
     'Enter the email address on your account.': 'သင့်အကောင့်၏ အီးမေးလ် လိပ်စာကို ထည့်ပါ။',
     'If that address has an account, a recovery link is on its way. Open it and you can choose a new password.': 'ထိုလိပ်စာဖြင့် အကောင့် ရှိပါက ပြန်လည်ရယူရန် လင့်ခ်ကို ပို့လိုက်ပါပြီ။ ၎င်းကို ဖွင့်ပြီး စကားဝှက်အသစ် ရွေးနိုင်သည်။',
     'A recovery link was requested very recently. Wait a minute, then try again.': 'ပြန်လည်ရယူရန် လင့်ခ်ကို ခုနကလေးတင် တောင်းခံထားသည်။ တစ်မိနစ်ခန့် စောင့်ပြီးမှ ထပ်စမ်းပါ။',
+    'The recovery email could not be sent. That is a fault on our side, not yours — please try again shortly.': 'ပြန်လည်ရယူရန် အီးမေးလ်ကို ပို့၍ မရပါ။ ၎င်းသည် သင့်ဘက်မှ အမှား မဟုတ်ဘဲ ကျွန်ုပ်တို့ဘက်မှ ချွတ်ယွင်းချက် ဖြစ်သည် — ခဏနေ ထပ်စမ်းကြည့်ပါ။',
 
     'Choose a new password': 'စကားဝှက်အသစ် ရွေးရန်',
     'You reached this page from a recovery email. Set a password here and you are signed straight back in.': 'ပြန်လည်ရယူရန် အီးမေးလ်မှတစ်ဆင့် ဤစာမျက်နှာသို့ ရောက်လာခြင်း ဖြစ်သည်။ ဤနေရာတွင် စကားဝှက် သတ်မှတ်လိုက်လျှင် ချက်ချင်း ပြန်ဝင်ရောက်ပြီး ဖြစ်မည်။',

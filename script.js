@@ -704,10 +704,21 @@
         return;
       }
 
-      // .order('id') matters: without an explicit order, Postgres makes no
-      // promise about row order, so the cards could shuffle between loads.
+      /* .eq('status', 'published') is not redundant with RLS, and it is
+         the same guard the articles listing carries. The public policy
+         serves published rows only, but the STAFF policy serves every
+         row - so without this, an editor or admin who opens this public
+         page sees draft disease cards a signed-out reader never would,
+         and clicks through to a page the public cannot reach. This is a
+         public listing; it shows what the public sees, whoever is
+         looking.
+
+         .order('id') matters too: without an explicit order Postgres
+         makes no promise about row order, so the cards could shuffle
+         between loads. */
       db.from('diseases')
         .select('*')
+        .eq('status', 'published')
         .order('id')
         .then(function (res) {
           // supabase-js does NOT throw on a database error — it resolves with

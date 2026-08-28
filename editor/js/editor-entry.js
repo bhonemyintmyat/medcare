@@ -56,6 +56,23 @@
   var lockText   = document.getElementById('entryLockedText');
   var unlockBtn  = document.getElementById('entryUnlock');
 
+  // The reported issue, when this page was opened from the queue.
+  var reportId    = params.get('report');
+  var reportRow   = null;
+  var repEl       = document.getElementById('entryReport');
+  var repCatEl    = document.getElementById('entryReportCat');
+  var repReasonEl = document.getElementById('entryReportReason');
+  var repDetailEl = document.getElementById('entryReportDetail');
+  var repMetaEl   = document.getElementById('entryReportMeta');
+  var repNoteEl   = document.getElementById('entryReportNote');
+  var repErrEl    = document.getElementById('entryReportNoteError');
+  var repCloseEl  = document.getElementById('entryReportClose');
+  var resolveBtn  = document.getElementById('entrySaveResolve');
+
+  // Where imported body text came from, when it was imported.
+  var importedEl     = document.getElementById('entryImported');
+  var importedTextEl = document.getElementById('entryImportedText');
+
   var row   = null;     // what the database last told us this row is
   var dirty = false;
 
@@ -494,6 +511,41 @@
       handle.setHTML(row && row[field.name] != null ? row[field.name] : '');
       handle.setEnabled(!isLocked());
       count();
+
+      /* ---------- Nothing in the row, but a page on disk ----------
+         Every article and disease here still lives as a hand-written
+         file, with the row holding only the card and an `href`. So an
+         empty `body` is the normal case rather than the exception, and
+         showing an empty box for a page that plainly has words on it
+         makes the editor look broken for exactly the twenty entries
+         that already exist. Read them back instead.
+
+         Three conditions, and all of them matter:
+
+           row && row.href   there is a page to read
+           stored is empty   an import NEVER overwrites stored text
+           getText() empty   still true when the download lands, because
+                             a slow fetch must not wipe out a sentence
+                             somebody typed while waiting for it
+
+         Filled through setHTML, which Quill applies silently, so the
+         form does not come up already claiming unsaved changes. The
+         note says the text is not saved until Save is pressed - which
+         is the honest description of what has happened. */
+      var stored = row && row[field.name];
+      if (!window.MedCareImport || !row || !row.href) { return; }
+      if (stored && String(stored).trim()) { return; }
+
+      window.MedCareImport.fromPage(row.href).then(function (found) {
+        if (!found) { return; }
+        var html = field.my ? found.my : found.en;
+        if (!html || !window.MedCareSanitize.textOf(html)) { return; }
+        if (handle.getText()) { return; }
+
+        handle.setHTML(html);
+        count();
+        noteImported(row.href);
+      });
     }).catch(function (err) {
       /* A body field that will not load is not a reason to lose the rest
          of the form, but it must not look like an empty article either -
@@ -867,11 +919,165 @@
   }
 
   /* ================================================================
+     Where the body text came from
+     ================================================================ */
+
+  /* Said once, however many body fields were filled. Two notes for the
+     English and the Burmese of the same page would be two ways of saying
+     the same sentence. */
+  function noteImported(href) {
+    if (!importedEl || !importedEl.hidden) { return; }
+    importedTextEl.innerHTML =
+      'The text below was read out of <b>' + ed.esc(href) + '</b>, the page this ' +
+      'entry points at. <b>Nothing is saved yet.</b> Check it, then press Save to ' +
+      'move it into the database - after that the reader page is served from here ' +
+      'rather than from the file.';
+    importedEl.hidden = false;
+  }
+
+  /* ================================================================
+     The reported issue
+     ================================================================ */
+
+  /* Loaded on its own rather than with the entry: a report that cannot
+     be read is not a reason to refuse to open the page it is about. The
+     staff select policy is what allows this at all - an editor matches
+     "Staff read every report", a plain account would see nothing. */
+  function loadReport() {
+    if (!reportId || !/^\d+$/.test(String(reportId)) || !repEl) { return; }
+
+    db.from('reports').select('*').eq('id', reportId).maybeSingle()
+      .then(function (res) {
+        if (res.error) { throw res.error; }
+        if (!res.data) { return; }
+        reportRow = res.data;
+        drawReport();
+      })
+      .catch(function (err) {
+        console.warn('[MedCare] Could not load report #' + reportId + ':', err);
+      });
+  }
+
+  var CATEGORY_LABELS = {
+    inaccuracy:  'Medical inaccuracy',
+    typo:        'Typo',
+    broken_link: 'Broken link',
+    other:       'Other'
+  };
+
+  function drawReport() {
+    var r = reportRow;
+    var closed = r.status !== 'open';
+
+    repCatEl.textContent = CATEGORY_LABELS[r.category] || r.category || 'Other';
+    repCatEl.className = 'mc-admin-pill mc-report-cat mc-report-cat--' + (r.category || 'other');
+
+    // Reader-supplied. textContent, never innerHTML.
+    repReasonEl.textContent = r.reason || '';
+    if (r.detail) {
+      repDetailEl.textContent = r.detail;
+      repDetailEl.hidden = false;
+    }
+
+    repMetaEl.textContent = closed
+      ? 'Filed ' + ed.when(r.created_at) + ' · already ' +
+        (r.status === 'dismissed' ? 'rejected' : 'resolved')
+      : 'Filed ' + ed.when(r.created_at) + ' · still open';
+
+    /* An already-closed report is left on screen rather than hidden. The
+       editor followed a link to it and deserves to be told what happened
+       to it, and the note somebody wrote is the most useful thing on the
+       page for whoever arrives second. */
+    if (closed) {
+      repEl.classList.add('is-resolved');
+      repNoteEl.value = r.resolution_note || '';
+      repNoteEl.disabled = true;
+      repNoteEl.previousElementSibling.textContent = 'What was done about it';
+      resolveBtn.hidden = true;
+    } else {
+      resolveBtn.hidden = false;
+    }
+
+    repEl.hidden = false;
+  }
+
+  /* Bootstrap's alert CSS is loaded here; its JS bundle is not, so
+     data-bs-dismiss would silently do nothing. */
+  if (repCloseEl) {
+    repCloseEl.addEventListener('click', function () { repEl.hidden = true; });
+  }
+
+  /* The note is required, and that is a deliberate cost. The queue is
+     small and the temptation to clear it with a row of clicks is real; a
+     sentence is what makes somebody decide rather than tidy. It is also
+     the only record of what was done - see the header of
+     editor-reports.js, which asks for the same thing at the same
+     moment. */
+  function reportNoteOk() {
+    var note = repNoteEl.value.trim();
+    if (note.length >= 4) {
+      repErrEl.hidden = true;
+      return note;
+    }
+    repErrEl.textContent = 'Say what you did about it before closing the report.';
+    repErrEl.hidden = false;
+    repEl.hidden = false;
+    repNoteEl.focus();
+    repNoteEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    return null;
+  }
+
+  /* status and resolution_note are the only two columns `authenticated`
+     holds an UPDATE grant on, so this payload is not a matter of
+     tidiness - adding a third would fail the whole statement before RLS
+     was consulted. resolved_by and resolved_at are set by a trigger from
+     the verified token, which is why they are absent and why they cannot
+     be made to lie.
+
+     .select() is what tells success from a silent refusal: an account
+     without the staff role gets 200 and an EMPTY array, because the
+     grant let the statement run and RLS then matched no rows. */
+  function closeReport(note) {
+    return db.from('reports')
+      .update({ status: 'resolved', resolution_note: note })
+      .eq('id', reportRow.id)
+      .select()
+      .then(function (res) {
+        if (res.error) { throw res.error; }
+        if (!res.data || !res.data.length) {
+          throw new Error('The database did not permit that change.');
+        }
+        reportRow = res.data[0];
+        drawReport();
+        return reportRow;
+      });
+  }
+
+  /* ================================================================
      Saving
      ================================================================ */
 
   formEl.addEventListener('submit', function (e) {
     e.preventDefault();
+
+    /* Which button was pressed. Both are type=submit on the same form so
+       there is one save path; only what happens after it differs.
+       e.submitter is not in older Safari, and the fallback of "a report
+       is attached, so they must have meant resolve" would be wrong - it
+       would resolve on a plain Save. Falling back to NOT resolving is
+       the safe direction: the worst case is an editor pressing the
+       button again. */
+    var alsoResolve = !!(e.submitter && e.submitter.id === 'entrySaveResolve') &&
+                      !!reportRow && reportRow.status === 'open';
+
+    /* Checked before the row is saved, not after. Refusing the note when
+       the entry is already written would leave the editor looking at a
+       saved page and an error about something else. */
+    var note = null;
+    if (alsoResolve) {
+      note = reportNoteOk();
+      if (!note) { return; }
+    }
 
     /* The fields are disabled and the button is gone, so this should be
        unreachable on a live row. Checked anyway: a form can still be
@@ -916,7 +1122,8 @@
            exists rather than a blank form — pressing Save twice on a new
            entry should not make two of it. pushState, because this IS a
            different place: the entry has become a thing with an address. */
-        window.history.replaceState(null, '', 'entry.html?type=' + type + '&id=' + id);
+        window.history.replaceState(null, '', 'entry.html?type=' + type + '&id=' + id +
+          (reportId ? '&report=' + encodeURIComponent(reportId) : ''));
         headingEl.textContent = cfg.label;
         ed.message(msgEl, 'ok',
           'Saved as a draft. It is not on the public site until somebody publishes it.');
@@ -933,6 +1140,27 @@
          row the database now holds. */
       build(row);      // build() ends by marking the form clean
 
+      /* The page is saved. Only now is the report closed, and in this
+         order on purpose: a report marked resolved against a correction
+         that failed to save is a lie in the audit trail, and the next
+         person reads that trail to decide whether to trust the page. */
+      if (alsoResolve) {
+        return closeReport(note).then(function () {
+          ed.message(msgEl, 'ok', 'Saved, and the report is closed.');
+        }, function (err) {
+          /* Caught here rather than falling through to the handler
+             below, which would say the entry could not be saved. It
+             was saved — that already happened and it stands. Only the
+             report is still open, and saying anything else would put
+             the editor to work redoing an edit that is already in the
+             database. */
+          console.error('[MedCare] Could not close report #' + reportRow.id + ':', err);
+          ed.message(msgEl, 'error',
+            'Your changes are saved, but the report could not be closed. ' +
+            'Try the button again, or close it from the reports queue.');
+        });
+      }
+
     }).catch(function (err) {
       saveBtn.disabled = false;
       ed.message(msgEl, 'error', ed.describeError(err, 'this ' + cfg.label.toLowerCase()));
@@ -944,6 +1172,8 @@
      ================================================================ */
 
   guard.ready.then(function () {
+    loadReport();
+
     if (!id) {
       headingEl.textContent = 'New ' + cfg.label.toLowerCase();
       subEl.textContent = 'It saves as a draft. Nobody outside the team sees it until it is published.';

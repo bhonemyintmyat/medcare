@@ -573,3 +573,61 @@ a.mc-ed-stat:hover { border-color: var(--mc-primary); box-shadow: var(--mc-shado
 .mc-ed-limits li:last-child { border-bottom: none; }
 .mc-ed-limits .bi { color: var(--mc-muted); margin-top: .18rem; flex-shrink: 0; }
 .mc-ed-limits b { color: var(--mc-text); font-weight: 600; }
+
+
+/* ===================== A report, on the page it is about =====================
+   Bootstrap's .alert gives the box its shape and .btn-close its icon;
+   the palette is the dashboard's own so it does not read as a control
+   from a different product. Amber rather than red: a report is something
+   to look at, not something that has gone wrong. */
+.mc-ed-report-alert {
+  position: relative;
+  background: var(--mc-amber-50);
+  border: 1px solid #fde68a;
+  border-left: 4px solid #f59e0b;
+  border-radius: 14px;
+  padding: 1rem 2.8rem 1.1rem 1.2rem;
+  margin: 0 0 1.5rem;
+  color: #78350f;
+}
+.mc-ed-report-alert-head {
+  display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+  font-weight: 600; font-size: .95rem; margin-bottom: .6rem;
+}
+.mc-ed-report-alert-head .bi { color: var(--mc-amber); }
+
+/* The reader's own words, on white so they read as a quotation rather
+   than as the dashboard talking. */
+.mc-ed-report-alert-reason,
+.mc-ed-report-alert-detail {
+  background: #fff; border: 1px solid #fde68a; border-radius: 10px;
+  padding: .7rem .9rem; margin: 0 0 .55rem;
+  color: var(--mc-text); font-size: .93rem; line-height: 1.6;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.mc-ed-report-alert-meta { font-size: .8rem; color: #92400e; margin: 0 0 .9rem; }
+.mc-ed-report-alert .mc-auth-label { color: #78350f; }
+.mc-ed-report-alert textarea {
+  width: 100%; border: 1px solid #fde68a; border-radius: 10px;
+  padding: .55rem .75rem; font: inherit; font-size: .92rem;
+  background: #fff; color: var(--mc-text); resize: vertical;
+}
+.mc-ed-report-alert textarea:focus {
+  outline: 2px solid var(--mc-primary); outline-offset: -1px; border-color: var(--mc-primary);
+}
+.mc-ed-report-alert .btn-close { position: absolute; top: .85rem; right: .85rem; }
+
+/* The report is closed and the box is still on screen: it stops being an
+   instruction and becomes a record of what was done. */
+.mc-ed-report-alert.is-resolved {
+  background: var(--mc-green-50); border-color: #bbf7d0; border-left-color: var(--mc-green); color: #14532d;
+}
+.mc-ed-report-alert.is-resolved .mc-ed-report-alert-head .bi { color: var(--mc-green); }
+.mc-ed-report-alert.is-resolved .mc-ed-report-alert-reason,
+.mc-ed-report-alert.is-resolved .mc-ed-report-alert-detail { border-color: #bbf7d0; }
+.mc-ed-report-alert.is-resolved .mc-ed-report-alert-meta { color: #15803d; }
+
+/* Where the body text came from, when it was read out of the
+   hand-written page rather than out of the row. */
+.mc-ed-imported { align-items: flex-start; }
+.mc-ed-imported b { font-weight: 600; }

@@ -148,7 +148,10 @@
 
     return '<span class="mc-ed-report-target">' +
              '<i class="bi ' + ed.TYPES[type].icon + '"></i> ' +
-             '<a href="entry.html?type=' + type + '&id=' + row.target_id + '">' +
+             // &report= is what makes the edit page show the complaint
+             // and offer to close it in the same click.
+             '<a href="entry.html?type=' + type + '&id=' + row.target_id +
+                 '&report=' + row.id + '">' +
                ed.esc(hit.title) + '</a> ' +
              ed.statusPill(hit.status) +
            '</span>';

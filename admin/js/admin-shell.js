@@ -44,6 +44,39 @@
     });
   }
 
+  /* ---------- The other way out ----------
+     Staff own their accounts as much as readers do, and the control
+     that lets a reader close theirs hangs off the navbar — which
+     neither of these areas has. Without this, an editor would have to
+     leave their desk, find a public page and open a menu there to do
+     something about their own account, which reads less like a design
+     than like an oversight.
+
+     Injected rather than added to eleven HTML files, for the same
+     reason the account menu is injected into the public ones. The
+     dialog itself lives in auth.js: one wording, one confirmation, one
+     list of what a deletion takes, wherever it is opened from. */
+  (function addLeaveForGood() {
+    var foot = document.querySelector('.mc-admin-side-foot');
+    var auth = window.MedCareAuth;
+    if (!foot || !auth || !auth.openDeleteAccountDialog) { return; }
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.id = 'adminDeleteAccount';
+    btn.className = 'mc-admin-side-danger';
+    btn.innerHTML =
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+        'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<circle cx="10.2" cy="8.4" r="3.4"></circle>' +
+        '<path d="M4 20a6.2 6.2 0 0 1 10.6-4.4"></path>' +
+        '<path d="M16.4 16.4l4.2 4.2M20.6 16.4l-4.2 4.2"></path>' +
+      '</svg><span>Delete your account</span>';
+
+    btn.addEventListener('click', function () { auth.openDeleteAccountDialog(); });
+    foot.appendChild(btn);
+  })();
+
   /* ---------- Which page is this ----------
      Set here rather than hard-coded into each file: a page carrying its
      own aria-current is one more chance to point at the wrong link

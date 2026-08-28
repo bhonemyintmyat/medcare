@@ -123,8 +123,28 @@ html.mc-guard-pending body::after {
 }
 .mc-admin-nav a[aria-current="page"] svg { color: var(--mc-primary-600); }
 
-/* The one link that leaves the admin area. */
+/* The two ways out of the admin area: back to the site, and out of the
+   site altogether. */
 .mc-admin-side-foot { margin-top: auto; padding: .85rem .75rem 1.1rem; }
+
+/* Quiet until it is pointed at. It sits under "Back to MedCare", which
+   is the one people actually want, and it is the only irreversible
+   control in the sidebar — so it is styled as text rather than as a
+   button, and only turns red on approach. A permanently red button in
+   a footer somebody's cursor passes over all day stops being read. */
+.mc-admin-side-danger {
+  display: flex; align-items: center; justify-content: center; gap: .45rem;
+  width: 100%; margin-top: .5rem; padding: .55rem .9rem;
+  background: transparent; border: 1px solid transparent; border-radius: 10px;
+  font-family: inherit; font-size: .86rem; font-weight: 500;
+  color: var(--mc-muted); cursor: pointer;
+  transition: color .12s, background .12s, border-color .12s;
+}
+.mc-admin-side-danger:hover {
+  color: var(--mc-danger-700); background: var(--mc-danger-50); border-color: #fecaca;
+}
+.mc-admin-side-danger:focus-visible { outline: 2px solid var(--mc-danger); outline-offset: 2px; }
+.mc-admin-side-danger svg { flex-shrink: 0; }
 
 /* ---- Topbar ---- */
 .mc-admin-top {
@@ -286,6 +306,20 @@ html.mc-guard-pending body::after {
    Named for where they are rather than what they do, because the same
    pair serves Details and Role. */
 .mc-ad-rowbtn { font-size: .85rem; padding: .42rem .95rem; white-space: nowrap; }
+
+/* The delete button in a row. A ghost button that is red rather than a
+   filled red one: it sits at the end of every line of a list people
+   scroll, and the loudest control on the screen should not be the one
+   with nothing behind it. It is still the only red thing in the row. */
+.mc-ad-rowbtn--danger { color: var(--mc-danger); border-color: #fecaca; }
+.mc-ad-rowbtn--danger:hover {
+  background: var(--mc-danger-50); color: var(--mc-danger-700); border-color: var(--mc-danger);
+}
+.mc-ad-rowbtn--danger:focus-visible { outline-color: var(--mc-danger); }
+/* Your own row. Shown and explained rather than removed — a gap where
+   everyone else has a button reads as a bug, and the reason is short. */
+.mc-ad-rowbtn--danger:disabled { color: var(--mc-muted); border-color: var(--mc-border); background: #fff; }
+.mc-ad-rowbtn--danger:disabled:hover { background: #fff; color: var(--mc-muted); border-color: var(--mc-border); }
 
 /* ---------- "What this page will not do" ---------- */
 .mc-ad-limits { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }

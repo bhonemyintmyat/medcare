@@ -56,13 +56,20 @@
     if (/profiles_display_name_len/i.test(text)) {
       return 'Display names stop at 60 characters.';
     }
+    if (/email.not.confirmed/i.test(text)) {
+      return 'Your email address has not been confirmed yet. Open the link in the confirmation email we sent you, then sign in.';
+    }
     if (/Database error saving new user/i.test(text)) {
       return 'The account could not be created. Please try again.';
     }
-    // Supabase throttles recovery mail per address and per address block,
-    // and says so in several wordings.
     if (/rate limit|only request this after|too many requests/i.test(text)) {
-      return 'A recovery link was requested very recently. Wait a minute, then try again.';
+      if (mode === 'signup') {
+        return 'Too many signup attempts. Wait a few minutes before trying again. If you already created an account, check your email for a confirmation link and sign in instead.';
+      }
+      if (mode === 'recover') {
+        return 'A recovery link was requested very recently. Wait a minute, then try again.';
+      }
+      return 'Too many attempts. Wait a minute, then try again.';
     }
     /* A 500 from /recover: Supabase found the account, minted the token,
        and then could not post the letter. In the auth log it reads
@@ -266,6 +273,35 @@
     message('Sign-in is unavailable because Supabase is not configured.');
     return;
   }
+
+  /* ---------- Arriving here straight from a deletion ----------
+     Somebody who has just closed their account is sent to this page,
+     from whichever part of the site they were on. It is the right
+     landing spot for an odd reason: it is also the create-account page,
+     so it is the one screen that can tell them their account is gone
+     and, in the same breath, offer them a new one without pretending
+     the old one might come back.
+
+     The notice is taken from the tab rather than from the URL — see
+     DELETED_FLAG_KEY in auth.js — and taking it clears it, so a reload
+     is not a second announcement. It is read BEFORE the session check
+     below, because that check will run showForm() and clear the
+     message strip on its way past. */
+  (function announceDeletion() {
+    if (!auth.takeDeletionNotice) { return; }   // older auth.js
+    var name = auth.takeDeletionNotice();
+    if (!name) { return; }
+
+    showForm();
+    setMode('signin');
+    message(
+      (name === '1' ? 'Your account' : '“' + name + '”') +
+      ' has been deleted. MedCare no longer holds your email address, your ' +
+      'password or your saved items, and nothing here can bring the account ' +
+      'back. You are welcome to read the site without one, or to create a new one.',
+      'ok'
+    );
+  })();
 
   auth.onChange(function (user, role) {
     if (user) { showSignedIn(user, role); }

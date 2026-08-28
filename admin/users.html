@@ -221,22 +221,37 @@
       <div class="mc-admin-card">
         <h2>What this page will not do, and why</h2>
         <p class="mc-admin-hint">
-          Three things you would expect to find here are missing on purpose
-          rather than by omission. Each is a real limit of a site with no
-          server of its own, and knowing where they actually live is faster
-          than hunting for a button that was never built.
+          Four things you would expect to find here are missing on purpose
+          rather than by omission. Some are real limits of a site with no
+          server of its own; one is a limit of the act itself. Knowing which
+          is which is faster than hunting for a button that was never built.
         </p>
         <ul class="mc-ad-limits">
           <li>
-            <i class="bi bi-person-x"></i>
+            <i class="bi bi-person-plus"></i>
             <div>
-              <strong>Create or delete an account.</strong>
-              Both need Supabase’s <code>auth.admin</code> API, which only
+              <strong>Create an account for somebody else.</strong>
+              That needs Supabase’s <code>auth.admin</code> API, which only
               answers to the <code>service_role</code> key. That key can read
               and rewrite every table past every policy, so it belongs on a
               server or in nobody’s hands — never in a page anyone can open
-              with DevTools. Do these in the Supabase dashboard, under
-              Authentication → Users.
+              with DevTools. Do it in the Supabase dashboard, under
+              Authentication → Users — and note that creating an account for
+              somebody means choosing their password for them, which is
+              rarely the kindest way to get them onto the site. Signup is.
+            </div>
+          </li>
+          <li>
+            <i class="bi bi-arrow-counterclockwise"></i>
+            <div>
+              <strong>Undo a deletion.</strong>
+              Deleting an account <em>is</em> here now — the Delete button on
+              each row — and it is the one action in the admin area with
+              nothing behind it. No archive, no draft, no thirty-day window.
+              The row goes, the sign-in goes, and their saved items go with
+              it. What stays is everything they wrote for the site, with the
+              author line blank. The dialog asks you to type the account’s
+              name for exactly this reason.
             </div>
           </li>
           <li>

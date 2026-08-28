@@ -130,6 +130,12 @@
       user: false, editor: false, admin: false,
       by: 'guard_profile_role refuses it — nobody, including an admin',
       nobody: true },
+    { what: 'Delete their own account',
+      user: true, editor: true, admin: true,
+      by: 'delete_own_account() — supabase_account_deletion.sql §1. Refused only for the last admin' },
+    { what: 'Delete somebody else’s account',
+      user: false, editor: false, admin: true,
+      by: 'delete_account() — §2 checks my_role() = admin, and refuses the caller’s own id' },
 
     { group: 'The site itself' },
     { what: 'Read site settings (maintenance, notices)',
@@ -138,7 +144,7 @@
     { what: 'Turn maintenance mode on, edit the legal pages',
       user: false, editor: false, admin: true,
       by: '"Admins write/change site settings" — supabase_admin_scope.sql §2' },
-    { what: 'Create or delete an account',
+    { what: 'Create an account for somebody else',
       user: false, editor: false, admin: false,
       by: 'auth.admin — needs the service_role key, which is not in this browser',
       nobody: true }
@@ -215,6 +221,36 @@
     if (/role_change_forbidden/.test(msg)) {
       return 'The database refused it: only an admin may change a role. ' +
              'If you are an admin, your session may have expired — reload and try again.';
+    }
+    if (/delete_self_forbidden/.test(msg)) {
+      return 'The database refused it: an admin cannot delete their own account from ' +
+             'the accounts list. Use “Delete your account” at the foot of the sidebar.';
+    }
+    if (/delete_forbidden/.test(msg)) {
+      return 'The database refused it: only an admin may delete somebody else’s account. ' +
+             'If you are an admin, your session may have expired — reload and try again.';
+    }
+    if (/last_admin_forbidden/.test(msg)) {
+      return 'The database refused it: that is the only admin account, and the site ' +
+             'would be left with nobody who can run it. Promote somebody else first.';
+    }
+    if (/account_not_found/.test(msg)) {
+      return 'No account has that id any more. Somebody may have deleted it already — ' +
+             'press Refresh to see the list as it stands.';
+    }
+    if (/permission denied for table users/i.test(msg)) {
+      return 'The database accepted the request but is not allowed to carry it out. ' +
+             'Run supabase_account_deletion.sql as postgres — its first section says why.';
+    }
+    if (code === 'PGRST202') {
+      return 'That function is not deployed yet. Run supabase_account_deletion.sql in the ' +
+             'Supabase SQL editor.';
+    }
+    // PostgREST refusing the token itself, worded for whoever wrote the
+    // token rather than for the admin reading the message strip.
+    if (code === 'PGRST301') {
+      return 'Your session is no longer valid, so nothing was changed. ' +
+             'Reload the page and sign in again.';
     }
     if (code === '42501' || /row-level security|permission denied/i.test(msg)) {
       return 'The database refused ' + noun + '. Your account may not have the rights, ' +
@@ -311,6 +347,28 @@
 
   function clearDisplayName(id) {
     return writeProfile(id, { display_name: null }, 'id,display_name');
+  }
+
+  /* Deleting somebody else's account.
+
+     Not writeProfile(). Not a DELETE at all from this browser: DELETE on
+     profiles is revoked from `authenticated`, and profiles is the wrong
+     table anyway — the row that matters is in auth.users, which this key
+     cannot see, let alone touch. What goes over the wire is a request to
+     a named function that holds the privilege itself and checks the
+     caller before using it. supabase_account_deletion.sql §2 is the
+     whole of the rule set; nothing here re-states it.
+
+     One deliberate difference from every other write in this file: no
+     empty-result check. An RLS refusal is silence, which is why
+     writeProfile has to look for it — a function refusal is an
+     exception, and it arrives with the reason written on it. */
+  function deleteAccount(id) {
+    return db.rpc('delete_account', { target_id: id })
+      .then(function (res) {
+        if (res.error) { throw res.error; }
+        return res.data;      // the name the site used to call them
+      });
   }
 
   /* Names for a set of ids, for the "last changed by" lines. One request
@@ -579,6 +637,7 @@
     writeProfile: writeProfile,
     setRole: setRole,
     clearDisplayName: clearDisplayName,
+    deleteAccount: deleteAccount,
     loadNames: loadNames,
 
     SETTING_DEFAULTS: DEFAULTS,

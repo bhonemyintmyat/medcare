@@ -79,6 +79,12 @@
     '.mc-toast-wrap',
     '.mc-lang-note',    // "this page is in English only"
     '.mc-breadcrumb',
+    /* The disease pages print a standing label above their accordion —
+       <p class="mc-section-label">Learn more</p>. It is a signpost for
+       the widget underneath it, not a sentence about the condition, and
+       once the accordion is flattened into headings it is a stray line
+       of prose that says nothing. All twelve carry it. */
+    '.mc-section-label',
     'script', 'style', 'noscript',
     'form', 'iframe'
   ];

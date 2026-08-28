@@ -23,7 +23,13 @@
 <script src="read.js" defer></script>
 <!-- After read.js: it announces the row it drew, and report.js only
      offers the button once something was actually rendered. -->
+<!-- Which row this page is. One lookup, shared by the two scripts
+     below that both need it. Must load before either. -->
+<script src="page-target.js" defer></script>
 <script src="report.js" defer></script>
+<!-- "Edit this page", for staff only. Needs auth.js and
+     page-target.js, both above. -->
+<script src="edit-link.js" defer></script>
 </head>
 <body>
 

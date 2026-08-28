@@ -647,6 +647,19 @@
   .mc-report-btn:hover{background:var(--mc-danger-50);border-color:var(--mc-danger);color:var(--mc-danger-700)}
   .mc-report-btn:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
 
+  /* "Edit this page" — staff only, injected by edit-link.js beside the
+     report button. Teal rather than the report button's neutral-to-red:
+     the two sit side by side and they are opposite actions. Reporting is
+     asking somebody else to look; editing is doing it yourself. */
+  .mc-edit-link{display:inline-flex;align-items:center;gap:.45rem;background:var(--mc-primary);border:1px solid var(--mc-primary);color:#fff;font-family:inherit;font-weight:600;font-size:.9rem;border-radius:10px;padding:.55rem 1.1rem;text-decoration:none;white-space:nowrap;transition:background .15s,border-color .15s}
+  .mc-edit-link:hover{background:var(--mc-primary-600);border-color:var(--mc-primary-600);color:#fff}
+  .mc-edit-link:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
+  /* The wrapper is space-between, so a third child would strand the two
+     buttons at opposite ends. Letting the text take the slack groups
+     them together on the right, which is where a pair of actions goes. */
+  .mc-report.has-edit{gap:.7rem}
+  .mc-report.has-edit .mc-report-text{flex:1 1 14rem}
+
   /* Lightweight modal (Bootstrap's JS bundle is not loaded on this site) */
   .mc-modal{position:fixed;inset:0;z-index:1080;display:none;align-items:center;justify-content:center;padding:1.25rem}
   .mc-modal.is-open{display:flex}
@@ -711,6 +724,7 @@
 
   @media (max-width:575.98px){
     .mc-report{flex-direction:column;align-items:flex-start}
+    .mc-report.has-edit .mc-report-text{flex:1 1 auto}
     .mc-modal-panel{padding:1.6rem 1.25rem 1.4rem}
     /* Bottom sheet rather than a corner card: at this width a corner
        card is most of the row anyway, and centring it avoids a toast

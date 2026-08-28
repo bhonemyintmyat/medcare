@@ -4,15 +4,29 @@
    admin-api.js.
 
    The account directory. It answers "who is on this site", and it makes
-   exactly one write: clearing a display name that should not be on the
-   page. Granting a role is deliberately not here — that is
-   permissions.html, and the row's Role button walks you there with the
-   account already chosen.
+   two writes: clearing a display name that should not be on the page,
+   and deleting an account. Granting a role is deliberately not here —
+   that is permissions.html, and the row's Role button walks you there
+   with the account already chosen.
 
    The split is not tidiness. Reading a list of names and changing what
    somebody is allowed to do are different acts, and putting the second
    one inside the first is how it gets done absent-mindedly while
    scrolling.
+
+   WHY DELETION IS HERE AND ROLES ARE NOT, WHICH LOOKS BACKWARDS.
+   A role change is a decision about the site — who should be trusted
+   with what — and it wants the screen that shows every role at once. A
+   deletion is a fact about one person: they are leaving, or they should
+   never have been here. That fact is read off this list, and the list
+   is where an admin already is when they learn it. Sending them to a
+   third screen to act on it would not add a moment's thought; the
+   confirm-by-name dialog is what adds that, and it travels with the
+   button.
+
+   The database still refuses two things this page cannot: an admin
+   deleting their own account from here, and anything at all from a
+   non-admin. See supabase_account_deletion.sql §2.
    ============================================================ */
 
 (function () {
@@ -158,6 +172,15 @@
                   'data-act="details">Details</button>' +
           '<a class="mc-auth-btn mc-ad-rowbtn" href="permissions.html?user=' +
              encodeURIComponent(p.id) + '">Role</a>' +
+          /* Disabled on your own row rather than missing from it. The
+             database refuses this case anyway (delete_self_forbidden),
+             so the disabled attribute is a label for a rule, not the
+             rule — deleting it from DevTools changes nothing. */
+          '<button type="button" class="mc-auth-btn mc-auth-btn--ghost mc-ad-rowbtn ' +
+                  'mc-ad-rowbtn--danger" data-act="delete"' +
+                  (isMe ? ' disabled title="Delete your own account from the foot of ' +
+                          'the sidebar, not from this list."' : '') +
+                  '>Delete</button>' +
         '</div>' +
       '</td>' +
     '</tr>';
@@ -225,6 +248,13 @@
             : '') +
           '<a class="mc-auth-btn" href="permissions.html?user=' + encodeURIComponent(p.id) + '">' +
             'Change role</a>' +
+          /* The same action as the row's Delete, offered again where an
+             admin has just finished reading who this actually is. That
+             is the moment the decision is best made, and making them
+             close the panel to reach the button would move it. */
+          (p.id === myId ? '' :
+            '<button type="button" class="mc-auth-btn mc-auth-btn--danger" data-delete>' +
+              'Delete account</button>') +
         '</div>' +
       '</div>';
 
@@ -246,6 +276,11 @@
       if (e.target.closest('[data-clear]')) {
         close();
         clearName(p);
+        return;
+      }
+      if (e.target.closest('[data-delete]')) {
+        close();
+        removeAccount(p);
       }
     });
   }
@@ -298,14 +333,100 @@
   }
 
   /* ---------------------------------------------------------------
+     THE OTHER WRITE: DELETING AN ACCOUNT
+     ---------------------------------------------------------------
+     This is the only thing either admin screen does that no admin can
+     put back. Three things stand in front of it, and they are three
+     different things rather than three copies of "are you sure":
+
+       1. The dialog says what a deletion takes and what it leaves.
+          Most of the surprise in deleting an account is not that the
+          account goes — it is finding out afterwards that something
+          else went with it, or that something else did not.
+
+       2. It asks for the account's name to be typed. That is aimed at
+          the mistake this screen actually produces: acting on the row
+          above or below the one you meant. A wrong row cannot survive
+          having its name typed out. It is not aimed at a determined
+          admin, who can of course read the name and type it.
+
+       3. The last-admin refusal, which lives in the database and is
+          not repeated here as a check. It cannot fire on this path —
+          an admin calling delete_account() is themselves an admin, so
+          one always remains — and writing a guard for an unreachable
+          case would only invite somebody to trust it later.
+
+     What is NOT here: a soft delete, an "are you really sure" second
+     dialog, or a grace period. A grace period is the honest way to make
+     this recoverable, and it is a different feature: it needs a
+     scheduled job, a "closing soon" state on the profile, and a way
+     back in for somebody who has changed their mind. Half of it —
+     hiding the row and deleting it anyway — would be worse than this.
+     --------------------------------------------------------------- */
+
+  function removeAccount(p) {
+    // Re-checked at the moment of acting, not only when the row was
+    // drawn: the list may have been refreshed since, and this is the
+    // one action where a stale answer cannot be taken back.
+    if (p.id === myId) { return; }
+
+    var name = api.accountLabel(p);
+    var role = api.ROLES[p.role] || api.ROLES.user;
+
+    // What an admin most needs to know before pressing this is which
+    // kind of account it is. Deleting a reader loses a reader; deleting
+    // an editor unsigns everything they wrote.
+    var consequence = (p.role === 'user')
+      ? 'Their saved diseases and articles go too. Reports they filed stay, ' +
+        'without their name on them.'
+      : 'Everything they wrote stays on the site, unsigned — the medical guidance ' +
+        'does not leave with them. Their saved items and their ' + role.label.toLowerCase() +
+        ' rights go.';
+
+    api.confirmByName({
+      title: 'Delete this account?',
+      body: name + ' will be removed from MedCare: their email, their password and ' +
+            'their profile. They will not be able to sign in again, and nothing on ' +
+            'this site can undo it. ' + consequence,
+      expect: name,
+      go: 'Delete the account',
+      icon: 'bi-person-x'
+    }).then(function (yes) {
+      if (!yes) { return; }
+
+      api.message(msgEl, 'ok', '');
+
+      return api.deleteAccount(p.id)
+        .then(function () {
+          // Drop it from the rows in hand rather than reloading. The
+          // stats are counted from this same array, so the table and
+          // the four numbers above it cannot disagree about who is left.
+          accounts = accounts.filter(function (row) { return row.id !== p.id; });
+          renderStats();
+          render();
+          api.message(msgEl, 'ok',
+            name + ' has been deleted. Anything they wrote is still on the site, ' +
+            'with the author line blank.');
+        })
+        .catch(function (err) {
+          console.error('[MedCare] Could not delete the account:', err);
+          api.message(msgEl, 'error',
+            api.describeError(err, 'deleting ' + name + '’s account'));
+        });
+    });
+  }
+
+  /* ---------------------------------------------------------------
      WIRING
      --------------------------------------------------------------- */
 
   bodyEl.addEventListener('click', function (e) {
-    var btn = e.target.closest('[data-act="details"]');
-    if (!btn) { return; }
+    var btn = e.target.closest('[data-act]');
+    if (!btn || btn.disabled) { return; }
     var p = accountFor(btn);
-    if (p) { openDetails(p); }
+    if (!p) { return; }
+    if (btn.getAttribute('data-act') === 'details') { openDetails(p); }
+    if (btn.getAttribute('data-act') === 'delete')  { removeAccount(p); }
   });
 
   filtersEl.addEventListener('click', function (e) {

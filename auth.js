@@ -28,6 +28,14 @@
 
   var ROLE_CACHE_KEY = 'mc-role';
 
+  /* A one-shot note from a deletion to the page it lands on. See
+     forgetSession() and openDeleteAccountDialog() for why it is a
+     stored flag rather than a ?deleted=1 on the URL: the deletion has
+     TWO redirects racing it on staff pages, and only one of them is
+     ours. Both end at login.html, so the message has to be attached to
+     the tab rather than to a link. Read and cleared by login.js. */
+  var DELETED_FLAG_KEY = 'mc-account-deleted';
+
   var state = {
     user: null,     // the signed-in account, or null
     role: null,     // 'user' | 'editor' | 'admin', or null when signed out
@@ -51,6 +59,14 @@
       if (role) { sessionStorage.setItem(ROLE_CACHE_KEY, role); }
       else { sessionStorage.removeItem(ROLE_CACHE_KEY); }
     } catch (e) { /* private mode */ }
+  }
+
+  /* Both halves in this file, both wrapped: private mode throws on the
+     way in as readily as on the way out, and a browser that will not
+     carry the note must still let the deletion finish. Losing the
+     message is a worse page; losing the deletion is a worse bug. */
+  function flagDeleted(name) {
+    try { sessionStorage.setItem(DELETED_FLAG_KEY, name || '1'); } catch (e) { /* private mode */ }
   }
 
   var db = window.supabaseClient;
@@ -99,6 +115,15 @@
   // newer one: sign out while the role query is in flight and the answer
   // that comes back belongs to an account that is no longer here.
   var applyToken = 0;
+
+  /* Escaping, at module scope because two things need it now: the navbar
+     menu, and the delete dialog that has to be reachable from pages the
+     navbar was never built on. */
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
 
   function applySession(session) {
     var mine = ++applyToken;
@@ -244,8 +269,314 @@
         writeCachedRole(null);
         return res;
       });
+    },
+
+    /* ---------- Leaving for good ----------
+
+       Deletes THIS account. No id argument here either, and for the
+       same reason setDisplayName has none: the database takes the
+       person from the verified token, so there is no field on the call
+       to point at somebody else's row.
+
+       supabase_account_deletion.sql holds the rules — the one refusal
+       (the last admin cannot leave the site without an admin) and the
+       full list of what the cascade takes and what it leaves standing.
+       Nothing on this side re-implements any of it; the interface asks,
+       and Postgres answers.
+
+       Resolves with the name the site used to call them, so the
+       confirmation can say goodbye to a person rather than to an id. */
+    deleteOwnAccount: function () {
+      return db.rpc('delete_own_account').then(function (res) {
+        if (res.error) { throw res.error; }
+        var name = res.data;
+
+        /* The note is written HERE, between the deletion succeeding and
+           the session being cleared, and the order is the whole point.
+           Clearing the session fires SIGNED_OUT, and on a guarded page
+           admin-guard.js answers that by starting a navigation. Writing
+           the note afterwards would be a write racing a page that is
+           already on its way out. */
+        flagDeleted(name);
+
+        return forgetSession().then(function () { return name; });
+      });
+    },
+
+    /* Opens the confirm-and-delete dialog. Public because the navbar is
+       not the only place it is needed: staff spend their day in
+       admin/ and editor/, which have their own chrome and no navbar,
+       and "you may delete your account, but only from a page you are
+       not on" is not a policy anybody meant to write. */
+    openDeleteAccountDialog: null,  // assigned below, once it is defined
+
+    /* The other end of the note a deletion leaves on the tab. Reading it
+       clears it, so a reload of login.html does not keep announcing a
+       deletion that happened ten minutes ago. Returns the name the site
+       used to call them, or null when nothing was left. */
+    takeDeletionNotice: function () {
+      var name = null;
+      try {
+        name = sessionStorage.getItem(DELETED_FLAG_KEY);
+        sessionStorage.removeItem(DELETED_FLAG_KEY);
+      } catch (e) { /* private mode */ }
+      return name;
     }
   };
+
+  /* The tokens in this browser outlive the account by up to an hour. An
+     access token is a signed statement, not a lookup, so nothing
+     revokes one that has already been handed out — clearing them here
+     is the browser's half of the deletion.
+
+     `scope: 'local'` rather than a full sign-out: the server-side
+     session died with the row, and asking Supabase to end a session
+     that no longer exists returns an error about nothing. That error
+     would otherwise be the only thing a successful deletion ever
+     reported. Either outcome runs the same teardown, because a failed
+     sign-out must not leave a deleted account with a header still
+     greeting it by name. */
+  function forgetSession() {
+    writeCachedRole(null);
+
+    function done() {
+      state.user = null;
+      state.role = null;
+      state.profile = null;
+      state.ready = true;
+      notify();
+      return null;
+    }
+
+    if (!db || !db.auth) { return Promise.resolve(done()); }
+    return db.auth.signOut({ scope: 'local' }).then(done, done);
+  }
+
+  /* ---------- "Delete your account" ----------
+     One dialog, built on first use and reused, living here rather than
+     inside the navbar menu so every area of the site can open it.
+
+     It asks for the email address on the account. That is not a second
+     factor and is not treated as one — the session already proves who
+     this is. It is there because the session cannot prove that the
+     person meant it, and this is the only action on the site with
+     nothing behind it: no archive, no draft, no undo, no admin who can
+     put it back. Typing fifteen characters is the smallest honest
+     obstacle, and it is deliberately the account's OWN email rather
+     than a word like DELETE, which can be typed without reading.
+
+     Comparison is trimmed and lower-cased. Anything stricter punishes
+     the right answer for its capitals — same rule as the admin area's
+     confirm-by-name dialog. */
+  var killModal = null;
+
+  function deleteMessage(text, kind) {
+    var el = document.getElementById('mcKillMsg');
+    if (!el) { return; }
+    if (!text) { el.style.display = 'none'; el.textContent = ''; return; }
+    el.textContent = text;
+    el.className = 'mc-modal-msg mc-modal-msg--' + (kind || 'error');
+    el.style.display = 'block';
+  }
+
+  /* The database answers in error codes. This turns the ones this
+     dialog can actually provoke into sentences that say what to do. */
+  function explainDelete(err) {
+    var text = String((err && err.message) || '');
+    if (/last_admin_forbidden/i.test(text)) {
+      return 'You are the only admin. Make somebody else an admin first — otherwise ' +
+             'nobody would be able to run the site after you go.';
+    }
+    if (/not_signed_in/i.test(text)) {
+      return 'You have been signed out. Sign in again and try once more.';
+    }
+    /* PGRST301 is PostgREST refusing the token itself — expired, or from
+       a project this key does not belong to. It arrives worded for
+       whoever wrote the token ("No suitable key or wrong key type"),
+       which is nobody who is reading this dialog. */
+    if (err && err.code === 'PGRST301') {
+      return 'Your session is no longer valid, so nothing was deleted. ' +
+             'Sign in again and try once more.';
+    }
+    if (/permission denied for table users/i.test(text)) {
+      return 'The database can accept the request but is not allowed to carry it out. ' +
+             'Run supabase_account_deletion.sql as postgres — its first section explains why.';
+    }
+    if (err && err.code === 'PGRST202') {
+      // The function is not deployed yet.
+      return 'Account deletion is not switched on for this site yet. ' +
+             'Run supabase_account_deletion.sql in the Supabase SQL editor.';
+    }
+    if (/Failed to fetch|NetworkError/i.test(text)) {
+      return 'Could not reach the database. Check your connection — nothing was deleted.';
+    }
+    return text || 'Something went wrong, and your account has not been deleted.';
+  }
+
+  /* Both the goes/stays list and the final screen are written in plain
+     terms because this is the last thing somebody reads before an
+     irreversible act, and it should not be the first place they learn
+     that their bookmarks were included. */
+  function killListHtml(isStaff) {
+    var rows = [
+      ['goes',  'bi-x-circle-fill',    '<strong>Your name, email and password</strong> are erased. ' +
+                                       'You cannot sign in again, and this cannot be undone.'],
+      ['goes',  'bi-x-circle-fill',    '<strong>Your saved diseases and articles</strong> go with them.'],
+      ['stays', 'bi-check-circle-fill','<strong>Reports you filed stay</strong>, with your name taken off. ' +
+                                       'A wrong page is still wrong after you leave.']
+    ];
+    if (isStaff) {
+      rows.push(['stays', 'bi-check-circle-fill',
+        '<strong>Pages you wrote stay on the site</strong>, unsigned. The medical ' +
+        'guidance does not leave with the person who wrote it.']);
+    }
+    return '<ul class="mc-modal-list">' + rows.map(function (r) {
+      return '<li><i class="bi ' + r[1] + ' mc-' + r[0] + '"></i><span>' + r[2] + '</span></li>';
+    }).join('') + '</ul>';
+  }
+
+  function buildDeleteDialog() {
+    killModal = document.createElement('div');
+    killModal.className = 'mc-modal';
+    killModal.setAttribute('role', 'dialog');
+    killModal.setAttribute('aria-modal', 'true');
+    killModal.setAttribute('aria-labelledby', 'mcKillTitle');
+    document.body.appendChild(killModal);
+
+    killModal.addEventListener('click', function (e) {
+      if (e.target.closest('[data-close]')) { closeDeleteDialog(); }
+    });
+    document.addEventListener('keydown', function (e) {
+      if ((e.key === 'Escape' || e.key === 'Esc') &&
+          killModal.classList.contains('is-open')) {
+        closeDeleteDialog();
+      }
+    });
+  }
+
+  function closeDeleteDialog() {
+    if (killModal) { killModal.classList.remove('is-open'); }
+    var trigger = document.getElementById('mcMenuTrigger');
+    if (trigger) { trigger.focus(); }
+  }
+
+  function openDeleteAccountDialog() {
+    var user = state.user;
+    if (!user) { return; }
+
+    if (!killModal) { buildDeleteDialog(); }
+
+    // Close the navbar menu behind it, where there is one, so the
+    // dialog is the only thing open.
+    var panel = document.getElementById('mcMenuPanel');
+    var trigger = document.getElementById('mcMenuTrigger');
+    if (panel) { panel.classList.remove('is-open'); }
+    if (trigger) { trigger.setAttribute('aria-expanded', 'false'); }
+
+    var email = user.email || '';
+    var isStaff = state.role === 'editor' || state.role === 'admin';
+
+    killModal.innerHTML =
+      '<div class="mc-modal-backdrop" data-close></div>' +
+      '<div class="mc-modal-panel">' +
+        '<button type="button" class="mc-modal-x" data-close aria-label="Close">' +
+          '<i class="bi bi-x-lg"></i></button>' +
+        '<div class="mc-modal-ico mc-modal-ico--danger"><i class="bi bi-person-x"></i></div>' +
+        '<h2 id="mcKillTitle">Delete your account?</h2>' +
+        '<p class="mc-modal-sub">' +
+          'This closes <strong>' + esc(api.displayName()) + '</strong> for good. ' +
+          'There is no way to bring it back — not from this page, and not by asking an admin.' +
+        '</p>' +
+        killListHtml(isStaff) +
+        '<form id="mcKillForm" novalidate>' +
+          '<label class="mc-auth-label" for="mcKillInput">' +
+            'Type <strong>' + esc(email) + '</strong> to confirm' +
+          '</label>' +
+          '<div class="mc-auth-field">' +
+            '<input type="text" id="mcKillInput" autocomplete="off" spellcheck="false" ' +
+                   'autocapitalize="off" inputmode="email" style="padding-left:.9rem">' +
+          '</div>' +
+          '<div class="mc-modal-msg" id="mcKillMsg" role="status" aria-live="polite" style="display:none"></div>' +
+          /* Cancel first here, unlike the rename dialog, and matching the
+             admin area's confirm-by-name. In a dialog whose other button
+             cannot be undone, the safe one should be the one a cursor
+             moving left to right reaches first. Enter still confirms:
+             the submit button is the form's default, and it is disabled
+             until the email matches. */
+          '<div class="mc-modal-actions">' +
+            '<button type="button" class="mc-auth-btn mc-auth-btn--ghost" data-close>Cancel</button>' +
+            '<button type="submit" class="mc-auth-btn mc-auth-btn--danger" id="mcKillGo" disabled>' +
+              'Delete my account</button>' +
+          '</div>' +
+        '</form>' +
+      '</div>';
+
+    var input = document.getElementById('mcKillInput');
+    var go    = document.getElementById('mcKillGo');
+
+    function matches() {
+      return input.value.trim().toLowerCase() === email.trim().toLowerCase();
+    }
+
+    input.addEventListener('input', function () {
+      go.disabled = !matches();
+      deleteMessage('');
+    });
+
+    document.getElementById('mcKillForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!matches()) {
+        deleteMessage('That is not the email address on this account.');
+        input.focus();
+        return;
+      }
+
+      go.disabled = true;
+      go.textContent = 'Deleting…';
+      deleteMessage('');
+
+      api.deleteOwnAccount()
+        .then(function () {
+          /* Nothing is shown in the dialog on success, on purpose. The
+             page behind it belongs to an account that no longer exists,
+             and on a guarded page it is ALREADY being replaced: the
+             sign-out inside deleteOwnAccount fires SIGNED_OUT, and
+             admin-guard.js answers that by sending the browser to the
+             sign-in screen. A congratulations panel here would be a
+             panel that the admin area gets to see for a quarter of a
+             second and the public site gets to see for ever.
+
+             So the note is left on the tab — deleteOwnAccount has
+             already done that — and the same destination is chosen
+             deliberately. Whichever redirect wins, the page that loads
+             is login.html, and login.js is what says goodbye. */
+          killModal.classList.remove('is-open');
+          window.location.replace(loginUrl());
+        })
+        .catch(function (err) {
+          console.error('[MedCare] Could not delete the account:', err);
+          go.disabled = false;
+          go.textContent = 'Delete my account';
+          deleteMessage(explainDelete(err));
+        });
+    });
+
+    killModal.classList.add('is-open');
+    input.focus();
+  }
+
+  /* Where login.html is from wherever this is running. The navbar menu
+     works this out for itself with the same trick, but it only ever has
+     to cope with /diseases/; this can be called from /admin/ and
+     /editor/ too. Not root-absolute like admin-guard.js's copy — that
+     one assumes the site is served from a domain root, and this file is
+     also loaded by pages opened from a subfolder. */
+  function loginUrl() {
+    var dir = window.location.pathname.replace(/[^/]*$/, '');
+    return (/\/(diseases|admin|editor)\/$/.test(dir) ? '../' : '') + 'login.html';
+  }
+
+  api.openDeleteAccountDialog = openDeleteAccountDialog;
 
   window.MedCareAuth = api;
 
@@ -359,6 +690,11 @@
       rename:    '<path d="M12 20.4a8.4 8.4 0 1 0 0-16.8 8.4 8.4 0 0 0 0 16.8z"></path>' +
                  '<circle cx="12" cy="10" r="2.8"></circle>' +
                  '<path d="M6.6 18.6a6.2 6.2 0 0 1 10.8 0"></path>',
+      // A person with a cross, not a wastebasket. A bin says "throw the
+      // thing away"; this is about an account, and the account is a person.
+      erase:     '<circle cx="10.2" cy="8.4" r="3.4"></circle>' +
+                 '<path d="M4 20a6.2 6.2 0 0 1 10.6-4.4"></path>' +
+                 '<path d="M16.4 16.4l4.2 4.2M20.6 16.4l-4.2 4.2"></path>',
       caret:     '<path d="M6 9.5l6 6 6-6"></path>'
     };
 
@@ -463,6 +799,13 @@
             '<button type="button" class="mc-menu-item mc-menu-item--danger" role="menuitem" ' +
                     'tabindex="-1" id="mcSignOut">' + svg('signout', 18) +
               '<span>Secure Log Out</span></button>' +
+            /* Below signing out, and in the same group, because they are
+               the two ways of leaving and one of them is permanent.
+               Every role gets it: an editor and an admin own their
+               account exactly as much as a reader owns theirs. */
+            '<button type="button" class="mc-menu-item mc-menu-item--danger" role="menuitem" ' +
+                    'tabindex="-1" id="mcDeleteAccount">' + svg('erase', 18) +
+              '<span>Delete your account</span></button>' +
           '</div>' +
         '</div>' +
       '</div>';
@@ -699,6 +1042,11 @@
         if (rename) {
           rename.addEventListener('click', function () { openRenameDialog(); });
         }
+
+        var kill = document.getElementById('mcDeleteAccount');
+        if (kill) {
+          kill.addEventListener('click', function () { openDeleteAccountDialog(); });
+        }
       } else if (here !== 'login.html') {
         wrap.innerHTML = '<a class="mc-account-btn" href="' + depth + 'login.html">Sign in</a>';
       } else {
@@ -706,11 +1054,8 @@
       }
     }
 
-    function esc(s) {
-      return String(s == null ? '' : s)
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
+    // esc() is the one at the top of this file now: the delete dialog
+    // needs it too, and it lives outside this function.
 
     api.onChange(render);
     render();

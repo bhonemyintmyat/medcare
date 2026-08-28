@@ -40,7 +40,8 @@
 
   var db   = window.supabaseClient;
   var auth = window.MedCareAuth;
-  if (!db) { return; }
+  var page = window.MedCarePageTarget;
+  if (!db || !page) { return; }
 
   /* ---------- The categories ----------
      Declared once. The `value` half must match the check constraint in
@@ -82,87 +83,19 @@
      1. WORKING OUT WHAT THIS PAGE IS
      ============================================================ */
 
-  /* read.html — read.js publishes the row it drew. Both the property and
-     the event are read, because script order decides which one arrives:
-     if read.js finished first the event is already gone and the property
-     is there; if it has not finished yet the property is absent and the
-     event is coming. Checking both means this file does not care which
-     <script> tag comes first. */
-  function fromReader() {
-    function accept(page) {
-      if (!page || !page.id) { return false; }
-      target = {
-        targetType: page.kind === 'disease' ? 'disease' : 'article',
-        id: page.id,
-        title: page.title || ''
-      };
-      mount();
-      return true;
-    }
-    if (accept(window.MedCarePage)) { return; }
-    document.addEventListener('medcare:page-rendered', function (e) {
-      if (!target) { accept(e.detail); }
-    });
-  }
+  /* Asked and answered in page-target.js. This used to be eighty lines
+     here — the URL-to-row lookup for a hand-written page, and the
+     handshake with read.js for a rendered one — and then edit-link.js
+     needed exactly the same answer on exactly the same pages. Two
+     copies would have meant the same select twice on every article.
 
-  /* A hand-written page — there is no slug router here: each article and
-     each condition is its own file, and the `href` column holds exactly
-     the path a listing would link to. So the page identifies itself by
-     its own URL and looks up the matching row to get the numeric id that
-     reports needs.
-
-     The two tables store that path at different depths, because that is
-     where the files actually sit:
-
-       diseases.href   'diseases/tb.html'      -> last TWO segments
-       articles.href   'healthyfood.html'      -> last ONE segment
-
-     Reading the segments from the END rather than from the site root is
-     what keeps this working if the site is ever served from a subfolder
-     (github.io/medcare/, say) — nothing here depends on the pathname
-     starting where the deployment happens to start. */
-  function fromStaticPage() {
-    var parts = window.location.pathname.split('/').filter(Boolean);
-    var file  = parts.length ? parts[parts.length - 1] : '';
-
-    // read.html is the other branch's page, and a directory index is not
-    // an article. Neither should trigger a lookup.
-    if (!/\.html?$/i.test(file)) { return false; }
-    if (file.toLowerCase() === 'read.html') { return false; }
-
-    var inDiseases = parts.length >= 2 && parts[parts.length - 2] === 'diseases';
-    var spec = inDiseases
-      ? { table: 'diseases', titleCol: 'name',  targetType: 'disease',
-          href: parts.slice(-2).join('/') }
-      : { table: 'articles', titleCol: 'title', targetType: 'article',
-          href: file };
-
-    db.from(spec.table).select('id,' + spec.titleCol)
-      .eq('href', spec.href).maybeSingle()
-      .then(function (res) {
-        if (res.error) { throw res.error; }
-        if (!res.data) {
-          // Page not in the table yet — offer nothing rather than a
-          // button that cannot work. Reports point at a row by id, and
-          // there is no id to point at.
-          console.warn('[MedCare] No ' + spec.table + ' row for "' + spec.href +
-                       '"; report button not shown.');
-          return;
-        }
-        target = {
-          targetType: spec.targetType,
-          id: res.data.id,
-          title: res.data[spec.titleCol]
-        };
-        mount();
-      })
-      .catch(function (err) {
-        console.error('[MedCare] Could not identify this page:', err);
-      });
-    return true;
-  }
-
-  if (!fromStaticPage()) { fromReader(); }
+     Resolves to null on a page with no row behind it, which is most of
+     the site: there is nothing to report on, so no button appears. */
+  page.ready.then(function (t) {
+    if (!t) { return; }
+    target = { targetType: t.kind, id: t.id, title: t.title };
+    mount();
+  });
 
   /* ============================================================
      2. THE BUTTON

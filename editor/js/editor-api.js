@@ -58,8 +58,17 @@
       fields: [
         { name: 'name', label: 'Name', type: 'text', required: true, max: 120,
           hint: 'As a reader would say it. "Dengue fever", not "Dengue (DENV)".' },
+        /* Each Burmese field sits immediately after the English it
+           translates, which is what puts the two side by side on the
+           form — a translation is written while looking at what it
+           translates. Neither is required: a condition with no Burmese
+           name yet falls back to the English on the card rather than
+           blocking the row from being saved at all. */
+        { name: 'name_my', label: 'Name (Burmese)', type: 'text', max: 160, my: true,
+          hint: 'Leave empty and readers in Burmese see the English name.' },
         { name: 'desc', label: 'Short description', type: 'textarea', required: true, max: 400,
           hint: 'One or two plain sentences for the card. No jargon, no numbers a reader cannot act on.' },
+        { name: 'desc_my', label: 'Short description (Burmese)', type: 'textarea', max: 500, my: true },
         { name: 'tag', label: 'Tag', type: 'select', required: true,
           options: ['Chronic', 'Infectious', 'Respiratory', 'Maternal'],
           hint: 'The single word printed on the card.' },

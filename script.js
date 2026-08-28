@@ -624,18 +624,32 @@
       var q = dState.query.trim().toLowerCase();
       var cat = dState.category;
       var filtered = diseases.filter(function (d) {
-        var hay = (d.name + ' ' + d.desc).toLowerCase();
+        /* Searched across both languages regardless of which one is on
+           screen. Somebody reading the Burmese page may still know the
+           condition by its English name, and the reverse is true for a
+           name that has no common English form. */
+        var hay = [d.name, d.desc, d.name_my, d.desc_my]
+                    .filter(Boolean).join(' ').toLowerCase();
         var nameMatch = !q || hay.indexOf(q) !== -1;
         var catMatch = cat === 'all' || d.cat.split(' ').indexOf(cat) !== -1;
         return nameMatch && catMatch;
       });
       dGrid.innerHTML = filtered.map(function (d) {
+        /* Both languages ship in the markup and CSS reveals the one
+           html[lang] selects, the same way the article cards do. The
+           fallback is to the English rather than to an empty element:
+           an untranslated card should read as English, not as a card
+           with no name on it. */
+        var nameMy = d.name_my || d.name;
+        var descMy = d.desc_my || d.desc;
         return '<div class="col-md-6 col-lg-4">' +
           '<a href="' + pageHref('disease', d, 'common-diseases.html') + '" class="mc-disease">' +
           '<div class="mc-disease-icon"><i class="bi ' + d.icon + '"></i></div>' +
           '<span class="mc-disease-tag">' + esc(d.tag) + '</span>' +
-          '<h3>' + esc(d.name) + '</h3>' +
-          '<p>' + esc(d.desc) + '</p>' +
+          '<h3 class="mc-en">' + esc(d.name) + '</h3>' +
+          '<h3 class="mc-my">' + esc(nameMy) + '</h3>' +
+          '<p class="mc-en">' + esc(d.desc) + '</p>' +
+          '<p class="mc-my">' + esc(descMy) + '</p>' +
           '<span class="mc-disease-more">Learn more <i class="bi bi-arrow-right"></i></span>' +
           '</a></div>';
       }).join('');

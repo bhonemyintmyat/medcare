@@ -32,6 +32,10 @@
      field is actually on the form. Must load before editor-entry.js,
      which asks it to build the editors. -->
 <script src="js/editor-richtext.js" defer></script>
+<!-- Reads a hand-written page back into the body editor when the row
+     points at one and has no body of its own. Before editor-entry.js,
+     which asks it for the text. -->
+<script src="js/editor-import.js" defer></script>
 <script src="js/editor-entry.js" defer></script>
 </head>
 <body>
@@ -146,6 +150,42 @@
 
       <p class="mc-admin-msg" id="entryMsg" hidden></p>
 
+      <!-- A reader's report, shown only when this page was opened from the
+           queue as entry.html?type=article&id=4&report=16. Everything in
+           it is filled by editor-entry.js; it stays hidden otherwise.
+
+           Bootstrap's alert CSS is loaded on this site but its JS bundle
+           is not, so .btn-close is styling only and the dismissal is
+           wired by hand in editor-entry.js. -->
+      <div class="alert alert-dismissible mc-ed-report-alert" id="entryReport" role="alert" hidden>
+
+        <div class="mc-ed-report-alert-head">
+          <i class="bi bi-flag-fill"></i>
+          <span>A reader reported this page</span>
+          <span class="mc-admin-pill mc-report-cat" id="entryReportCat"></span>
+        </div>
+
+        <!-- Reader-supplied text. Written with textContent, never as markup. -->
+        <p class="mc-ed-report-alert-reason" id="entryReportReason"></p>
+        <p class="mc-ed-report-alert-detail" id="entryReportDetail" hidden></p>
+        <p class="mc-ed-report-alert-meta" id="entryReportMeta"></p>
+
+        <label class="mc-auth-label" for="entryReportNote">What did you do about it?</label>
+        <textarea id="entryReportNote" rows="2" maxlength="500"
+                  placeholder="Corrected the dose in the second paragraph."></textarea>
+        <p class="mc-ed-error" id="entryReportNoteError" hidden></p>
+
+        <button type="button" class="btn-close" id="entryReportClose" aria-label="Dismiss"></button>
+      </div>
+
+      <!-- Says where the body text came from when it was read out of the
+           hand-written page rather than out of the row. Hidden unless
+           that actually happened. -->
+      <div class="mc-admin-note mc-ed-imported" id="entryImported" hidden>
+        <i class="bi bi-file-earmark-arrow-down"></i>
+        <div id="entryImportedText"></div>
+      </div>
+
       <!-- Where this row is in the workflow, and the ways out of it.
            Hidden until a saved row exists: an entry that has never been
            saved has no status to move between. -->
@@ -190,6 +230,15 @@
               <i class="bi bi-dot"></i> Unsaved changes
             </span>
             <div class="mc-ed-actions-right">
+              <!-- Secondary, and before Save so the primary action stays
+                   last. Both submit the form and the handler reads
+                   event.submitter, so there is one save path rather than
+                   two that can drift apart. Shown only when a report is
+                   attached to this page. -->
+              <button type="submit" class="mc-auth-btn mc-auth-btn--ghost"
+                      id="entrySaveResolve" hidden>
+                <i class="bi bi-flag"></i> Save and Resolve Report
+              </button>
               <button type="submit" class="mc-auth-btn" id="entrySave">
                 <i class="bi bi-check-lg"></i> Save
               </button>

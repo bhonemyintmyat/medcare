@@ -54,7 +54,7 @@
     disease: {
       table: 'diseases',
       title: 'name',
-      titleMy: null,          // diseases carry no Burmese name column
+      titleMy: 'name_my',     // null until somebody writes one; bi() falls back
       label: 'cat',
       tag: 'tag',
       icon: 'bi-virus',

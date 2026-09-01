@@ -771,18 +771,12 @@
 
     /* What each role finds in the menu. Everyone gets the last two
        groups — a name to change and a way out — so the menu is now the
-       account control for readers as much as for admins.
-
-       Items that have no page yet are shown, disabled and labelled,
-       rather than hidden: the menu is also the plan. */
+       account control for readers as much as for admins. */
     function menuItems(role) {
       if (role === 'admin') {
         return [
           { label: 'Admin Dashboard', icon: 'dashboard', href: depth + 'admin.html',
             current: here === 'admin.html' },
-          { label: 'System Settings', icon: 'settings', soon: true },
-          { label: 'Security &amp; MFA', icon: 'security', soon: true },
-          { label: 'Audit Logs', icon: 'logs', soon: true },
           { label: 'Manage Staff', icon: 'staff', href: depth + 'admin.html#people' }
         ];
       }
@@ -812,12 +806,7 @@
 
     function menuMarkup(name, role) {
       var rows = menuItems(role).map(function (it) {
-        var inner = svg(it.icon, 18) + '<span>' + it.label + '</span>' +
-          (it.soon ? '<span class="mc-menu-soon">Soon</span>' : '');
-        if (it.soon) {
-          return '<span class="mc-menu-item" role="menuitem" tabindex="-1" aria-disabled="true">' +
-            inner + '</span>';
-        }
+        var inner = svg(it.icon, 18) + '<span>' + it.label + '</span>';
         return '<a class="mc-menu-item' + (it.current ? ' is-current' : '') + '" role="menuitem" ' +
           'tabindex="-1" href="' + it.href + '"' +
           (it.current ? ' aria-current="page"' : '') + '>' + inner + '</a>';

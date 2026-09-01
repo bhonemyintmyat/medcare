@@ -884,7 +884,6 @@
   .mc-menu-item--danger svg{color:currentColor}
   .mc-menu-item--danger:hover{background:var(--mc-danger-50);color:var(--mc-danger-700)}
   .mc-menu-item--danger:disabled{opacity:.6;cursor:default}
-  .mc-menu-soon{margin-left:auto;font-size:.66rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#94a3b8;background:var(--mc-bg);border:1px solid var(--mc-border);border-radius:999px;padding:.1rem .42rem}
 
   @media (max-width:991.98px){
     /* Inside the collapsed navbar the panel is just another block, so the

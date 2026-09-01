@@ -573,7 +573,176 @@
     });
   }
 
+  /* ---------- adding staff by invitation ----------
+     The browser cannot create an account: that needs the service_role
+     key, which never leaves the server. So this does not create anyone.
+     It asks the `invite-staff` Edge Function to, and that function does
+     three things the page is not allowed to: it checks the caller really
+     is an admin against their stored row, it calls Supabase's admin API
+     to send an invitation email, and it writes the chosen role — a
+     column no client may set. functions.invoke carries the admin's own
+     access token, which is what the function checks.
+
+     The invited person is created immediately, unconfirmed, so they
+     appear in the list below the moment this returns. What is still
+     missing is their password, which only they can set, from the link
+     in the email — accept-invite.html. */
+  var addBtn = document.getElementById('addStaffBtn');
+
+  // Staff are editors and admins; readers sign themselves up, so they
+  // are not offered here. blurb is shown under the select.
+  var STAFF_ROLES = [
+    { value: 'editor', label: 'Editor', blurb: 'Can change what the site says about illness.' },
+    { value: 'admin',  label: 'Admin',  blurb: 'Everything an editor can do, plus roles, deletion and the site’s state.' }
+  ];
+
+  function explainInvite(code, detail) {
+    switch (code) {
+      case 'not_admin':
+        return 'Your account is not an admin any more, so it cannot invite staff. Reload and check.';
+      case 'not_signed_in':
+        return 'Your session has expired. Reload the page and sign in again.';
+      case 'already_exists':
+        return 'Someone already has an account with that email. Find them in the list to change their role.';
+      case 'bad_email':
+        return 'That email address does not look right. Check it and try again.';
+      case 'bad_role':
+        return 'Choose a role for the new member of staff.';
+      case 'role_assign_failed':
+        return 'The invitation was sent, but their role could not be set. Set it from the list once they appear.';
+      case 'invite_failed':
+        if (detail && /redirect|not allowed|url/i.test(detail)) {
+          return 'The invite could not be sent: this site’s address is not on Supabase’s allowed-redirect ' +
+                 'list yet. Add accept-invite.html under Authentication → URL Configuration, then try again.';
+        }
+        if (detail && /smtp|mail|send/i.test(detail)) {
+          return 'The account was made but the email could not be sent — check the SMTP settings in Supabase. ' +
+                 'The invitee can still be reached with a fresh invite once mail works.';
+        }
+        return 'The invitation could not be sent. ' + (detail || 'Please try again.');
+      default:
+        return detail || 'The invitation could not be sent. Please try again.';
+    }
+  }
+
+  function openStaffDialog() {
+    var roleOptions = STAFF_ROLES.map(function (r) {
+      return '<option value="' + r.value + '">' + r.label + '</option>';
+    }).join('');
+
+    var d = openDialog(
+      '<div class="mc-modal-backdrop" data-close></div>' +
+      '<div class="mc-modal-panel" role="dialog" aria-modal="true" aria-labelledby="mcStaffTitle">' +
+        '<button type="button" class="mc-modal-x" data-close aria-label="Cancel">' +
+          '<i class="bi bi-x-lg"></i></button>' +
+        '<div class="mc-modal-ico mc-modal-ico--ok"><i class="bi bi-person-plus"></i></div>' +
+        '<h2 id="mcStaffTitle">Add new staff</h2>' +
+        '<p class="mc-modal-sub">They are emailed an invitation and choose their own password — ' +
+          'you never set it. The account appears in the list straight away, with the role you pick.</p>' +
+        '<form id="mcStaffForm" novalidate style="text-align:left">' +
+          '<label class="mc-auth-label" for="mcStaffFull">Full name</label>' +
+          '<div class="mc-auth-field"><i class="bi bi-person"></i>' +
+            '<input id="mcStaffFull" type="text" autocomplete="off" maxlength="80" placeholder="Kyaw Kyaw"></div>' +
+
+          '<label class="mc-auth-label" for="mcStaffDisplay">Display name <span style="font-weight:400;color:var(--mc-muted)">(optional)</span></label>' +
+          '<div class="mc-auth-field"><i class="bi bi-person-badge"></i>' +
+            '<input id="mcStaffDisplay" type="text" autocomplete="off" maxlength="60" placeholder="What the site calls them"></div>' +
+
+          '<label class="mc-auth-label" for="mcStaffRole">Role</label>' +
+          '<div class="mc-auth-field"><i class="bi bi-shield-check"></i>' +
+            '<select id="mcStaffRole" class="mc-role-select" style="flex:1;background:transparent;border:none;padding:.7rem .9rem .7rem 2.5rem">' +
+              roleOptions + '</select></div>' +
+          '<p class="mc-auth-hint" id="mcStaffRoleBlurb" style="margin:-.6rem 0 1rem">' + STAFF_ROLES[0].blurb + '</p>' +
+
+          '<label class="mc-auth-label" for="mcStaffEmail">Email address</label>' +
+          '<div class="mc-auth-field"><i class="bi bi-envelope"></i>' +
+            '<input id="mcStaffEmail" type="email" autocomplete="off" placeholder="them@example.com"></div>' +
+
+          '<div class="mc-modal-msg mc-modal-msg--error" id="mcStaffErr" style="display:none"></div>' +
+          '<div class="mc-modal-actions">' +
+            '<button type="button" class="mc-auth-btn mc-auth-btn--ghost" data-close>Cancel</button>' +
+            '<button type="submit" class="mc-auth-btn" id="mcStaffGo">Send invitation</button>' +
+          '</div>' +
+        '</form>' +
+      '</div>');
+
+    var form    = d.host.querySelector('#mcStaffForm');
+    var fullEl  = d.host.querySelector('#mcStaffFull');
+    var dispEl  = d.host.querySelector('#mcStaffDisplay');
+    var roleEl  = d.host.querySelector('#mcStaffRole');
+    var blurbEl = d.host.querySelector('#mcStaffRoleBlurb');
+    var emailEl = d.host.querySelector('#mcStaffEmail');
+    var errEl   = d.host.querySelector('#mcStaffErr');
+    var goBtn   = d.host.querySelector('#mcStaffGo');
+    fullEl.focus();
+
+    function onKey(e) { if (e.key === 'Escape' || e.key === 'Esc') { finish(); } }
+    document.addEventListener('keydown', onKey);
+    function finish() { document.removeEventListener('keydown', onKey); d.close(); }
+
+    function staffErr(text) {
+      if (!text) { errEl.style.display = 'none'; errEl.textContent = ''; return; }
+      errEl.textContent = text;
+      errEl.style.display = 'block';
+    }
+
+    roleEl.addEventListener('change', function () {
+      var r = STAFF_ROLES.filter(function (x) { return x.value === roleEl.value; })[0];
+      blurbEl.textContent = r ? r.blurb : '';
+    });
+
+    d.host.addEventListener('click', function (e) {
+      if (e.target.closest('[data-close]')) { finish(); }
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var fullName = fullEl.value.trim();
+      var display  = dispEl.value.trim();
+      var role     = roleEl.value;
+      var email    = emailEl.value.trim();
+
+      if (!fullName) { staffErr('Give the new member of staff a full name.'); fullEl.focus(); return; }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { staffErr('That email address does not look right.'); emailEl.focus(); return; }
+      if (role !== 'editor' && role !== 'admin') { staffErr('Choose a role.'); roleEl.focus(); return; }
+
+      staffErr('');
+      goBtn.disabled = true;
+      goBtn.textContent = 'Sending…';
+
+      var redirectTo = new URL('accept-invite.html', window.location.href).href;
+
+      db.functions.invoke('invite-staff', {
+        body: { full_name: fullName, display_name: display || null, role: role, email: email, redirectTo: redirectTo }
+      }).then(function (res) {
+        if (res.error) {
+          var ctx = res.error.context;
+          if (ctx && typeof ctx.json === 'function') {
+            return ctx.json().then(function (b) {
+              throw { code: (b && b.error), detail: (b && b.detail) };
+            }, function () {
+              throw { code: null, detail: res.error.message };
+            });
+          }
+          throw { code: null, detail: res.error.message };
+        }
+        // Sent. Show it on the card, and refresh so the pending account
+        // (created unconfirmed by the invite) drops into the list.
+        finish();
+        message('Invitation sent to ' + email + '. They appear below as ' + role +
+                ' now, and can sign in once they set a password from the email.', 'ok');
+        loadPeople();
+      }).catch(function (err) {
+        console.error('[MedCare] Could not invite staff:', err);
+        staffErr(explainInvite(err && err.code, err && err.detail));
+        goBtn.disabled = false;
+        goBtn.textContent = 'Send invitation';
+      });
+    });
+  }
+
   /* ---------- wiring ---------- */
+  if (addBtn) { addBtn.addEventListener('click', openStaffDialog); }
   bodyEl.addEventListener('change', onTableChange);
   bodyEl.addEventListener('click', onTableClick);
   filtersEl.addEventListener('click', onFilterClick);

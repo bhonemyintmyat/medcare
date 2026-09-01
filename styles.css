@@ -829,6 +829,12 @@
   .mc-people-id{font-size:.74rem;color:var(--mc-muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
   .mc-people-you{font-size:.68rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;background:var(--mc-primary-50);border:1px solid #ccfbf1;color:var(--mc-primary-600);border-radius:999px;padding:.1rem .45rem;margin-left:.4rem}
   .mc-people-when{font-size:.82rem;color:var(--mc-muted);white-space:nowrap}
+  /* The per-row Delete: a ghost button that says danger in its colour
+     rather than filling with it, so a table of them does not read as a
+     wall of red. Disabled on the admin's own row. */
+  .mc-people-delete{color:var(--mc-danger-700);white-space:nowrap}
+  .mc-people-delete:hover:not(:disabled){background:var(--mc-danger-50);border-color:var(--mc-danger-600)}
+  .mc-people-delete:disabled{opacity:.55;cursor:default}
   .mc-people-actions{display:flex;gap:.4rem;align-items:center;justify-content:flex-end}
   .mc-role-select{border:1px solid var(--mc-border);border-radius:9px;background:#fff;font:inherit;font-size:.88rem;color:var(--mc-text);padding:.4rem .6rem;cursor:pointer}
   .mc-role-select:focus{outline:2px solid var(--mc-primary);outline-offset:-1px}

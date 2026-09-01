@@ -101,6 +101,39 @@
   // Turns a Supabase error into something a human can act on.
   function explain(err) {
     if (!err) { return 'Something went wrong.'; }
+    var msg = err.message || '';
+
+    // The named refusals from supabase_account_deletion.sql. These come
+    // back as exceptions with the code written on them, so they are the
+    // reason a deletion did not happen and are worth saying in full.
+    if (/delete_self_forbidden/.test(msg)) {
+      return 'An admin cannot delete their own account from this list. ' +
+             'Use “Delete your account” in the account menu, top right.';
+    }
+    if (/delete_forbidden/.test(msg)) {
+      return 'The database refused it: only an admin may delete somebody else’s account. ' +
+             'Your session may have expired — reload and try again.';
+    }
+    if (/last_admin_forbidden/.test(msg)) {
+      return 'That is the only admin account, and the site would be left with nobody who ' +
+             'can run it. Promote somebody else to admin first.';
+    }
+    if (/account_not_found/.test(msg)) {
+      return 'No account has that id any more — it may have been deleted already. ' +
+             'Press Refresh to see the list as it stands.';
+    }
+    if (/permission denied for table users/i.test(msg)) {
+      return 'The database accepted the request but is not allowed to carry it out. ' +
+             'Run supabase_account_deletion.sql as postgres — its first section says why.';
+    }
+    if (err.code === 'PGRST202') {
+      return 'Account deletion is not switched on for this site yet. ' +
+             'Run supabase_account_deletion.sql in the Supabase SQL editor.';
+    }
+    if (err.code === 'PGRST301') {
+      return 'Your session is no longer valid, so nothing was deleted. Reload and sign in again.';
+    }
+
     if (err.code === '42501') {
       // RLS or the column grant refusing the write — the policies working.
       return 'The database refused this change: your account does not have permission (RLS).';
@@ -111,7 +144,7 @@
     if (err.code === '23514') {
       return 'That is not a valid role. Allowed values are user, editor, and admin.';
     }
-    return err.message || 'Something went wrong.';
+    return msg || 'Something went wrong.';
   }
 
   function fullDate(iso) {
@@ -181,7 +214,7 @@
      profile — Postgres filters the rest out before the response is
      built, so there is nothing to leak. */
   function loadPeople() {
-    bodyEl.innerHTML = '<tr><td colspan="3"><div class="mc-admin-loading">Loading accounts…</div></td></tr>';
+    bodyEl.innerHTML = '<tr><td colspan="4"><div class="mc-admin-loading">Loading accounts…</div></td></tr>';
 
     select('id,email,display_name,full_name,role,created_at')
       .catch(function (err) {
@@ -254,7 +287,7 @@
     countEl.textContent = rows.length;
 
     if (!rows.length) {
-      bodyEl.innerHTML = '<tr><td colspan="3"><div class="mc-admin-loading">' +
+      bodyEl.innerHTML = '<tr><td colspan="4"><div class="mc-admin-loading">' +
         (people.length ? 'No account matches this filter.' : 'No accounts yet.') +
         '</div></td></tr>';
       return;
@@ -279,13 +312,23 @@
           mail +
           '<div class="mc-people-id">' + esc(p.id) + '</div>' +
         '</td>' +
-        '<td class="mc-people-when">' + esc(fullDate(p.created_at)) + '</td>' +
         '<td>' +
           '<div class="mc-people-actions">' +
             '<span class="mc-admin-pill mc-account-role--' + esc(p.role) + '" data-current>' + esc(p.role) + '</span>' +
             '<select class="mc-role-select" aria-label="Role for ' + name + '">' + options + '</select>' +
             '<button type="button" class="mc-auth-btn mc-people-save" hidden>Save</button>' +
           '</div>' +
+        '</td>' +
+        '<td class="mc-people-when">' + esc(fullDate(p.created_at)) + '</td>' +
+        '<td style="text-align:right">' +
+          // Disabled on your own row rather than absent from it. The
+          // database refuses this case too (delete_self_forbidden), so
+          // the attribute is a label for a rule, not the rule itself.
+          '<button type="button" class="mc-auth-btn mc-auth-btn--ghost mc-people-delete" ' +
+                  'data-act="delete"' +
+                  (isMe ? ' disabled title="Delete your own account from the account menu, ' +
+                          'not from this list."' : '') +
+                  '>Delete</button>' +
         '</td>' +
       '</tr>';
     }).join('');
@@ -311,6 +354,14 @@
   }
 
   function onTableClick(e) {
+    var del = e.target.closest('.mc-people-delete');
+    if (del) {
+      if (del.disabled) { return; }
+      var drow = rowFor(del);
+      if (drow) { removeAccount(drow.record); }
+      return;
+    }
+
     var btn = e.target.closest('.mc-people-save');
     if (!btn) { return; }
     var row = rowFor(btn);
@@ -384,6 +435,142 @@
       b.classList.toggle('is-active', b === chip);
     });
     render();
+  }
+
+  /* ---------- deleting an account ----------
+     The one action on this card that no admin can put back. It goes
+     through delete_account() in supabase_account_deletion.sql, which is
+     where the real rules live: only an admin may call it, never on their
+     own id, and a wrong id is reported rather than silently "done". This
+     side does not re-implement any of that — it asks, and Postgres
+     answers. What stands in front of the click is the confirm-by-name
+     dialog below, aimed at the mistake this list actually produces:
+     acting on the row above or below the one you meant. */
+  function removeAccount(p) {
+    // Re-checked at the moment of acting, not only when the row was drawn.
+    if (p.id === myId) { return; }
+
+    var name = label(p);
+    var consequence = (p.role === 'user')
+      ? 'Their saved diseases and articles go too. Reports they filed stay, ' +
+        'without their name on them.'
+      : 'Everything they wrote stays on the site, unsigned — the medical guidance ' +
+        'does not leave with them. Their saved items and their ' + p.role + ' rights go.';
+
+    confirmByName({
+      title: 'Delete this account?',
+      body: name + ' will be removed from MedCare: their email, their password and ' +
+            'their profile. They will not be able to sign in again, and nothing on ' +
+            'this site can undo it. ' + consequence,
+      expect: name,
+      go: 'Delete the account'
+    }).then(function (yes) {
+      if (!yes) { return; }
+      msgEl.style.display = 'none';
+
+      db.rpc('delete_account', { target_id: p.id })
+        .then(function (res) {
+          if (res.error) { throw res.error; }
+          // Drop it from the rows in hand rather than reloading, so the
+          // table and the tiles counted from the same array agree.
+          people = people.filter(function (row) { return row.id !== p.id; });
+          statsFromPeople(people);
+          render();
+          message(name + ' has been deleted. Anything they wrote is still on the site, ' +
+                  'with the author line blank.', 'ok');
+        })
+        .catch(function (err) {
+          console.error('[MedCare] Could not delete the account:', err);
+          message(explain(err));
+        });
+    });
+  }
+
+  /* ---------- the confirm-by-name dialog ----------
+     Ported compact from admin/js/admin-api.js, built on the .mc-modal /
+     .mc-auth-field classes this page already loads. Typing the name is
+     not a second factor — the same admin could type it without reading —
+     it is there to make the WRONG row expensive. Comparison is trimmed
+     and case-insensitive so the right answer is not punished for its
+     capitals. */
+  function openDialog(html) {
+    var opener = document.activeElement;
+    var host = document.createElement('div');
+    host.className = 'mc-modal is-open';
+    host.innerHTML = html;
+    document.body.appendChild(host);
+    return {
+      host: host,
+      close: function () {
+        host.remove();
+        if (opener && opener.focus) { opener.focus(); }
+      }
+    };
+  }
+
+  function confirmByName(opts) {
+    var expect = String(opts.expect || '').trim();
+    var d = openDialog(
+      '<div class="mc-modal-backdrop" data-close></div>' +
+      '<div class="mc-modal-panel" role="dialog" aria-modal="true" aria-labelledby="mcNameTitle">' +
+        '<button type="button" class="mc-modal-x" data-close aria-label="Cancel">' +
+          '<i class="bi bi-x-lg"></i></button>' +
+        '<div class="mc-modal-ico mc-modal-ico--danger"><i class="bi bi-person-x"></i></div>' +
+        '<h2 id="mcNameTitle">' + esc(opts.title) + '</h2>' +
+        '<p class="mc-modal-sub">' + esc(opts.body) + '</p>' +
+        '<div class="mc-modal-msg mc-modal-msg--error" data-err style="display:none"></div>' +
+        '<label class="mc-auth-label" for="mcNameInput">Type <strong>' + esc(expect) +
+          '</strong> to confirm</label>' +
+        '<div class="mc-auth-field">' +
+          '<i class="bi bi-input-cursor-text"></i>' +
+          '<input id="mcNameInput" type="text" autocomplete="off" spellcheck="false" data-input>' +
+        '</div>' +
+        '<div class="mc-modal-actions">' +
+          '<button type="button" class="mc-auth-btn mc-auth-btn--ghost" data-close>Cancel</button>' +
+          '<button type="button" class="mc-auth-btn mc-auth-btn--danger" data-go disabled>' +
+            esc(opts.go || 'Delete') + '</button>' +
+        '</div>' +
+      '</div>');
+
+    var input = d.host.querySelector('[data-input]');
+    var goBtn = d.host.querySelector('[data-go]');
+    var errEl = d.host.querySelector('[data-err]');
+    input.focus();
+
+    function matches() {
+      return input.value.trim().toLowerCase() === expect.toLowerCase();
+    }
+    input.addEventListener('input', function () {
+      goBtn.disabled = !matches();
+      errEl.style.display = 'none';
+    });
+
+    return new Promise(function (resolve) {
+      function onKey(e) {
+        if (e.key === 'Escape' || e.key === 'Esc') { finish(false); }
+      }
+      document.addEventListener('keydown', onKey);
+      function finish(answer) {
+        document.removeEventListener('keydown', onKey);
+        d.close();
+        resolve(answer);
+      }
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && matches()) { finish(true); }
+      });
+      d.host.addEventListener('click', function (e) {
+        if (e.target.closest('[data-go]')) {
+          if (!matches()) {
+            errEl.textContent = 'That is not the name on the account. Check you have the right row.';
+            errEl.style.display = 'block';
+            return;
+          }
+          finish(true);
+          return;
+        }
+        if (e.target.closest('[data-close]')) { finish(false); }
+      });
+    });
   }
 
   /* ---------- wiring ---------- */

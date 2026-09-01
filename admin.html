@@ -147,17 +147,31 @@
           </a>
         </div>
 
-        <!-- ---------- People and roles ---------- -->
-        <!-- id: the account menu's "Manage Staff" links straight here. -->
+        <!-- ---------- People, roles and accounts ---------- -->
+        <!-- id: the account menu's "Manage Staff" links straight here. This
+             is the Accounts card from admin/users.html, driven by this
+             page's own admin.js rather than the admin/ subsystem — same
+             list, same role editing, and the same per-row Delete. -->
         <div class="mc-admin-card" id="people">
           <div class="mc-admin-listhead">
-            <h2>People and roles <span class="mc-admin-count" id="peopleCount">0</span></h2>
-            <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="peopleRefresh">Refresh</button>
+            <h2>Accounts <span class="mc-admin-count" id="peopleCount">0</span></h2>
+            <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="peopleRefresh">
+              <i class="bi bi-arrow-clockwise"></i> Refresh</button>
           </div>
 
+          <p class="mc-admin-hint">
+            This list exists because of one policy — “Admins can read all
+            profiles”. Signed in as anyone else, the same query returns exactly
+            one row: their own. Nothing on this page filters that; Postgres does
+            it before the answer is sent. Changing a role writes to
+            <code>profiles.role</code>, which the database allows only because
+            your own row says <code>admin</code>.
+          </p>
+
           <div class="mc-people-tools">
+            <label class="visually-hidden" for="peopleSearch">Search accounts</label>
             <input type="search" class="mc-people-search" id="peopleSearch"
-                   placeholder="Filter by email, role, or id" aria-label="Filter accounts">
+                   placeholder="Search by name, email, role or id" autocomplete="off">
             <div class="mc-admin-filters" id="peopleFilters" role="group" aria-label="Filter by role">
               <button type="button" class="mc-chip is-active" data-role="all">All</button>
               <button type="button" class="mc-chip" data-role="admin">Admins</button>
@@ -171,21 +185,16 @@
               <thead>
                 <tr>
                   <th scope="col">Account</th>
-                  <th scope="col">Joined</th>
-                  <th scope="col" style="text-align:right">Role</th>
+                  <th scope="col">Role</th>
+                  <th scope="col" class="mc-people-when">Joined</th>
+                  <th scope="col" style="text-align:right"><span class="visually-hidden">Actions</span></th>
                 </tr>
               </thead>
               <tbody id="peopleBody">
-                <tr><td colspan="3"><div class="mc-admin-loading">Loading accounts…</div></td></tr>
+                <tr><td colspan="4"><div class="mc-admin-loading">Loading accounts…</div></td></tr>
               </tbody>
             </table>
           </div>
-
-          <p class="mc-admin-hint" style="margin:1.1rem 0 0">
-            Changing a role here writes to <code>profiles.role</code>. The database
-            allows it only because your own row says <code>admin</code> — the same
-            request from an editor is refused by RLS, not by this page.
-          </p>
         </div>
 
       </div>

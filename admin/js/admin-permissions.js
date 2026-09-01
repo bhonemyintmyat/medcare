@@ -94,7 +94,7 @@
     var rows = accounts;
     if (q) {
       rows = accounts.filter(function (p) {
-        return [p.display_name, p.full_name, p.username, p.email, p.role, p.id]
+        return [p.display_name, p.full_name, p.email, p.role, p.id]
           .some(function (v) { return String(v || '').toLowerCase().indexOf(q) !== -1; });
       });
     }

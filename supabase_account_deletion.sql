@@ -116,6 +116,25 @@ $$;
 -- ============================================================
 -- 1. DELETING YOUR OWN ACCOUNT
 -- ============================================================
+-- A NOTE ON THE NAME THIS RETURNS, which is also the note for section 2.
+-- Both functions used to coalesce over p.username, and profiles has had
+-- no such column since supabase_display_name.sql renamed it. plpgsql
+-- parses a statement the first time it runs and not before, so the two
+-- functions deployed clean, passed every check in section 4, and then
+-- raised `column p.username does not exist` at the one moment anybody
+-- would ever find out -- after the guards had passed, one line short of
+-- the delete.
+--
+-- Whether it fails depends on which files have been re-run, which is the
+-- worst kind of dependency to leave lying around: supabase_profile_fields
+-- .sql is superseded but still adds the column back with `add column if
+-- not exists`, and running it makes both functions work again by
+-- accident. That happened once already, mid-repair -- the column and
+-- profiles_username_lower_idx both reappeared between the failing test
+-- and the fix. The reference goes either way. The rename is the whole
+-- story: display_name IS the old username, so the fossil was asking
+-- twice for the same thing and then, when the schema is in the state
+-- supabase_display_name.sql leaves it in, for nothing at all.
 -- Every signed-in person, whatever their role. A reader, an editor and
 -- an admin all leave the same way, through the same door, and the door
 -- takes no id argument — the account comes from the verified token, so
@@ -216,7 +235,7 @@ begin
   end if;
 
   select p.role,
-         coalesce(p.display_name, p.full_name, p.username, p.email, 'your account')
+         coalesce(p.display_name, p.full_name, p.email, 'your account')
     into my_role, gone_by
     from public.profiles p
    where p.id = uid;
@@ -325,7 +344,7 @@ begin
             hint = 'Delete your own account from your account menu, not from the accounts list.';
   end if;
 
-  select coalesce(p.display_name, p.full_name, p.username, p.email, 'that account')
+  select coalesce(p.display_name, p.full_name, p.email, 'that account')
     into gone_by
     from public.profiles p
    where p.id = target_id;

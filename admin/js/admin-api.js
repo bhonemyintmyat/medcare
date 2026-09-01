@@ -184,7 +184,7 @@
      type nothing would confirm everything. */
   function accountLabel(p) {
     if (!p) { return 'Unknown account'; }
-    return p.display_name || p.full_name || p.username || p.email ||
+    return p.display_name || p.full_name || p.email ||
            ('Account ' + String(p.id || '').slice(0, 8));
   }
 
@@ -297,7 +297,13 @@
      3. TALKING TO profiles
      ================================================================ */
 
-  var FULL_COLUMNS = 'id,email,display_name,full_name,username,role,locale,created_at';
+  /* No `username`. supabase_display_name.sql renamed that column to
+     display_name and dropped everything around it, so asking for it here
+     is asking PostgREST for a column the schema is supposed to be rid of.
+     It costs more than a dead name: a 42703 sends loadAccounts down the
+     fallback below, and the whole table renders by id with no name, no
+     email and a banner about a migration that has in fact been run. */
+  var FULL_COLUMNS = 'id,email,display_name,full_name,role,locale,created_at';
   var BARE_COLUMNS = 'id,role,created_at';
 
   /* "Admins can read all profiles" is what makes this return more than

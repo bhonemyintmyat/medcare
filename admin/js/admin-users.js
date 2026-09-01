@@ -118,7 +118,7 @@
     return accounts.filter(function (p) {
       if (roleFilter !== 'all' && p.role !== roleFilter) { return false; }
       if (!q) { return true; }
-      return [p.display_name, p.full_name, p.username, p.email, p.role, p.id]
+      return [p.display_name, p.full_name, p.email, p.role, p.id]
         .some(function (v) {
           return String(v || '').toLowerCase().indexOf(q) !== -1;
         });
@@ -228,7 +228,6 @@
         '<dl class="mc-ad-def">' +
           detailRow('Display name', p.display_name) +
           detailRow('Name at signup', p.full_name) +
-          detailRow('Username', p.username) +
           detailRow('Email', p.email) +
           detailRow('Language', p.locale === 'my' ? 'Burmese' : (p.locale === 'en' ? 'English' : 'Follows the switcher')) +
           detailRow('Joined', api.whenExact(p.created_at)) +

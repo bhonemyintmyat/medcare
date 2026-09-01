@@ -733,6 +733,11 @@
                  '<path d="M3.6 20a5.6 5.6 0 0 1 11.2 0"></path>' +
                  '<path d="M16.2 5.6a3 3 0 0 1 0 5.8"></path>' +
                  '<path d="M18.2 20a5.7 5.7 0 0 0-2.4-4.5"></path>',
+      // One person, not two: "Manage Users" is the accounts list, where
+      // each row is a single account. `staff` is the team, drawn as a
+      // pair, so the two people-items do not wear the same glyph.
+      users:     '<circle cx="12" cy="8" r="3.4"></circle>' +
+                 '<path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path>',
       signout:   '<path d="M12 4.2H6.6a2.2 2.2 0 0 0-2.2 2.2v11.2a2.2 2.2 0 0 0 2.2 2.2H12"></path>' +
                  '<path d="M15.6 16.4l4.4-4.4-4.4-4.4"></path><path d="M20 12H9.4"></path>',
       desk:      '<rect x="3.4" y="4.4" width="17.2" height="12" rx="2"></rect>' +
@@ -777,6 +782,8 @@
         return [
           { label: 'Admin Dashboard', icon: 'dashboard', href: depth + 'admin.html',
             current: here === 'admin.html' },
+          { label: 'Manage Users', icon: 'users', href: depth + 'admin/users.html',
+            current: window.location.pathname.indexOf('/admin/users.html') !== -1 },
           { label: 'Manage Staff', icon: 'staff', href: depth + 'admin.html#people' }
         ];
       }

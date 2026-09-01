@@ -6,9 +6,9 @@
    Three things live here, and they are here because the alternative is
    the same answer written slightly differently on five screens:
 
-     1. TYPES — what a disease, an article and a hospital ARE: their
-        table, their columns, and which of those columns a person fills
-        in. The list page, the form page and the desk all read this, so
+     1. TYPES — what a disease, an article, a hospital and a pharmacy
+        ARE: their table, their columns, and which of those columns a
+        person fills in. The list page, the form page and the desk all read this, so
         adding a field is one edit in one object.
 
      2. The workflow — which status may become which, and what the
@@ -152,6 +152,42 @@
           placeholder: 'Mon–Fri 8:00–17:00' },
         { name: 'er', label: 'Has a 24-hour emergency room', type: 'checkbox',
           hint: 'This is the "24h ER" filter on hospitals.html. Only tick it if you have checked.' }
+      ],
+      columns: ['name', 'type', 'township']
+    },
+
+    /* Pharmacies are hospitals' twin: a directory row with no page
+       behind it, so no `href` either. What differs is the two service
+       flags, which are the filters pharmacy.html offers in place of the
+       single 24h ER tick on hospitals.html. */
+    pharmacy: {
+      table: 'pharmacies',
+      label: 'Pharmacy',
+      plural: 'Pharmacies',
+      icon: 'bi-capsule',
+      titleField: 'name',
+      subField: 'township',
+      fields: [
+        { name: 'name', label: 'Name', type: 'text', required: true, max: 160,
+          hint: 'Include the branch if it is one of a chain — "City Mart Pharmacy — Junction City".' },
+        { name: 'type', label: 'Type', type: 'select', required: true,
+          options: [
+            { value: 'chain',       text: 'Chain pharmacy' },
+            { value: 'independent', text: 'Independent' },
+            { value: 'hospital',    text: 'Hospital pharmacy' },
+            { value: 'clinic',      text: 'Clinic pharmacy' }
+          ] },
+        { name: 'township', label: 'Township', type: 'text', required: true, max: 120,
+          hint: 'Spelled the way the township filter on pharmacy.html spells it, or it will not group.' },
+        { name: 'address', label: 'Address', type: 'textarea', required: true, max: 400 },
+        { name: 'phone', label: 'Phone', type: 'tel', max: 60, confirm: true,
+          hint: 'Typed twice. Somebody rings this to ask whether a medicine is in stock before they travel for it.' },
+        { name: 'hours', label: 'Opening hours', type: 'text', max: 120,
+          placeholder: 'Daily, 9:00–21:00' },
+        { name: 'open24', label: 'Open 24 hours', type: 'checkbox',
+          hint: 'The "Open 24 hours" filter on pharmacy.html. Only tick it if you have checked.' },
+        { name: 'delivery', label: 'Delivers to your home', type: 'checkbox',
+          hint: 'The "Home delivery" filter on pharmacy.html.' }
       ],
       columns: ['name', 'type', 'township']
     }

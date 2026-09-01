@@ -78,7 +78,7 @@
      any single cell is one grep away from being settled. */
   var CAPABILITIES = [
     { group: 'The public site' },
-    { what: 'Read published diseases, articles and hospitals',
+    { what: 'Read published diseases, articles, hospitals and pharmacies',
       user: true, editor: true, admin: true,
       by: '"Public reads published …" — supabase_admin_schema.sql' },
     { what: 'Read emergency numbers',
@@ -89,7 +89,7 @@
       by: '"Staff read every …" — my_role() in (editor, admin)' },
 
     { group: 'Health content' },
-    { what: 'Write and publish diseases, articles, hospitals',
+    { what: 'Write and publish diseases, articles, hospitals, pharmacies',
       user: false, editor: true, admin: true,
       by: '"Editors update …" — supabase_editor.sql §2' },
     { what: 'Correct and add emergency numbers',

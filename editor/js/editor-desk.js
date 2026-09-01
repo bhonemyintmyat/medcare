@@ -173,8 +173,8 @@
         '<div class="mc-state mc-state--empty">' +
           '<span class="mc-state-ico"><i class="bi bi-pencil"></i></span>' +
           '<h2>Nothing here yet</h2>' +
-          '<p>Once there are diseases, articles or hospitals in the database, the ' +
-             'ones you touched most recently appear here.</p>' +
+          '<p>Once there are diseases, articles, hospitals or pharmacies in ' +
+             'the database, the ones you touched most recently appear here.</p>' +
           '<a class="mc-auth-btn" href="entry.html?type=disease">Write the first one</a>' +
         '</div>';
       return;

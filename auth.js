@@ -278,6 +278,12 @@
        person from the verified token, so there is no field on the call
        to point at somebody else's row.
 
+       The one argument is that account's own password, and it is SENT
+       rather than checked here: this browser has no hash to check it
+       against. delete_own_account() compares it with the one GoTrue
+       stored, and refuses the whole call when they differ — so a script
+       that skips the dialog below gains nothing by skipping it.
+
        supabase_account_deletion.sql holds the rules — the one refusal
        (the last admin cannot leave the site without an admin) and the
        full list of what the cascade takes and what it leaves standing.
@@ -286,8 +292,8 @@
 
        Resolves with the name the site used to call them, so the
        confirmation can say goodbye to a person rather than to an id. */
-    deleteOwnAccount: function () {
-      return db.rpc('delete_own_account').then(function (res) {
+    deleteOwnAccount: function (password) {
+      return db.rpc('delete_own_account', { confirm_password: password }).then(function (res) {
         if (res.error) { throw res.error; }
         var name = res.data;
 
@@ -356,18 +362,25 @@
      One dialog, built on first use and reused, living here rather than
      inside the navbar menu so every area of the site can open it.
 
-     It asks for the email address on the account. That is not a second
-     factor and is not treated as one — the session already proves who
-     this is. It is there because the session cannot prove that the
-     person meant it, and this is the only action on the site with
-     nothing behind it: no archive, no draft, no undo, no admin who can
-     put it back. Typing fifteen characters is the smallest honest
-     obstacle, and it is deliberately the account's OWN email rather
-     than a word like DELETE, which can be typed without reading.
+     It asks for the account's password. That is not a second factor and
+     is not treated as one — the session already proves who this is, and
+     whoever holds the session can usually read the password out of the
+     browser that saved it. It is there because the session cannot prove
+     that the person MEANT it, and this is the only action on the site
+     with nothing behind it: no archive, no draft, no undo, no admin who
+     can put it back.
 
-     Comparison is trimmed and lower-cased. Anything stricter punishes
-     the right answer for its capitals — same rule as the admin area's
-     confirm-by-name dialog. */
+     It used to ask for the email address, which was sitting on the
+     screen behind the dialog and could be copied by somebody who did
+     not know it. A password cannot be read off the page — and, the part
+     this file could not offer on its own, it is checked in the database
+     rather than here, so it stands in front of anything that skips this
+     dialog and calls delete_own_account() directly too.
+
+     Nothing is compared in this file any more. The field is only
+     checked for being non-empty, to save an empty submit a round trip;
+     the verdict that counts comes back from Postgres, which is the side
+     holding the hash. */
   var killModal = null;
 
   function deleteMessage(text, kind) {
@@ -383,6 +396,17 @@
      dialog can actually provoke into sentences that say what to do. */
   function explainDelete(err) {
     var text = String((err && err.message) || '');
+    if (/wrong_password/i.test(text)) {
+      return 'That is not the password for this account. Nothing has been deleted.';
+    }
+    /* Cannot happen while signup is the only way in, and it is answered
+       anyway rather than falling through to "something went wrong",
+       which is what an account signed up through a future magic link
+       would otherwise be told. */
+    if (/no_password_set/i.test(text)) {
+      return 'This account has no password to confirm with. Set one from ' +
+             '“Forgot your password?” on the sign-in screen, then come back here.';
+    }
     if (/last_admin_forbidden/i.test(text)) {
       return 'You are the only admin. Make somebody else an admin first — otherwise ' +
              'nobody would be able to run the site after you go.';
@@ -490,11 +514,19 @@
         killListHtml(isStaff) +
         '<form id="mcKillForm" novalidate>' +
           '<label class="mc-auth-label" for="mcKillInput">' +
-            'Type <strong>' + esc(email) + '</strong> to confirm' +
+            'Type the password for <strong>' + esc(email) + '</strong> to confirm' +
           '</label>' +
           '<div class="mc-auth-field">' +
-            '<input type="text" id="mcKillInput" autocomplete="off" spellcheck="false" ' +
-                   'autocapitalize="off" inputmode="email" style="padding-left:.9rem">' +
+            '<i class="bi bi-lock"></i>' +
+            /* autocomplete="off", not "current-password": a password
+               manager filling this in would be handing back the very
+               proof the field is here to ask for. Browsers honour that
+               unevenly, which is why the danger button is still a
+               deliberate second act. */
+            '<input type="password" id="mcKillInput" autocomplete="off" spellcheck="false" ' +
+                   'autocapitalize="off" placeholder="Your password">' +
+            '<button type="button" class="mc-auth-reveal" id="mcKillReveal" ' +
+                    'aria-label="Show password"><i class="bi bi-eye"></i></button>' +
           '</div>' +
           '<div class="mc-modal-msg" id="mcKillMsg" role="status" aria-live="polite" style="display:none"></div>' +
           /* Cancel first here, unlike the rename dialog, and matching the
@@ -502,7 +534,7 @@
              cannot be undone, the safe one should be the one a cursor
              moving left to right reaches first. Enter still confirms:
              the submit button is the form's default, and it is disabled
-             until the email matches. */
+             until the password field has something in it. */
           '<div class="mc-modal-actions">' +
             '<button type="button" class="mc-auth-btn mc-auth-btn--ghost" data-close>Cancel</button>' +
             '<button type="submit" class="mc-auth-btn mc-auth-btn--danger" id="mcKillGo" disabled>' +
@@ -511,22 +543,32 @@
         '</form>' +
       '</div>';
 
-    var input = document.getElementById('mcKillInput');
-    var go    = document.getElementById('mcKillGo');
+    var input  = document.getElementById('mcKillInput');
+    var go     = document.getElementById('mcKillGo');
+    var reveal = document.getElementById('mcKillReveal');
 
-    function matches() {
-      return input.value.trim().toLowerCase() === email.trim().toLowerCase();
-    }
+    /* Same toggle as the sign-in and reset screens. It matters a little
+       more here: this is the one password field with nothing to compare
+       against on the client, so a typo comes back as a refusal from the
+       database rather than as a mismatch under the cursor. */
+    reveal.addEventListener('click', function () {
+      var shown = input.type === 'text';
+      input.type = shown ? 'password' : 'text';
+      reveal.setAttribute('aria-label', shown ? 'Show password' : 'Hide password');
+      reveal.innerHTML = shown ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+      input.focus();
+    });
 
     input.addEventListener('input', function () {
-      go.disabled = !matches();
+      go.disabled = !input.value;
       deleteMessage('');
     });
 
     document.getElementById('mcKillForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      if (!matches()) {
-        deleteMessage('That is not the email address on this account.');
+      var password = input.value;
+      if (!password) {
+        deleteMessage('Type the password for this account to confirm.');
         input.focus();
         return;
       }
@@ -535,7 +577,7 @@
       go.textContent = 'Deleting…';
       deleteMessage('');
 
-      api.deleteOwnAccount()
+      api.deleteOwnAccount(password)
         .then(function () {
           /* Nothing is shown in the dialog on success, on purpose. The
              page behind it belongs to an account that no longer exists,
@@ -555,9 +597,21 @@
         })
         .catch(function (err) {
           console.error('[MedCare] Could not delete the account:', err);
-          go.disabled = false;
           go.textContent = 'Delete my account';
           deleteMessage(explainDelete(err));
+
+          /* A refused password empties the field and puts the button
+             back out of reach, so the next attempt is a fresh one and
+             not a nudge at the same wrong word. Every other failure
+             here — a dead session, an unreachable database — is not the
+             typing's fault, so it keeps what was typed. */
+          if (/wrong_password/i.test(String((err && err.message) || ''))) {
+            input.value = '';
+            go.disabled = true;
+          } else {
+            go.disabled = false;
+          }
+          input.focus();
         });
     });
 

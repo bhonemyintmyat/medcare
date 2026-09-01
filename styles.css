@@ -906,7 +906,12 @@
   #people{scroll-margin-top:88px}
   /* The rename dialog reuses .mc-modal from the report flow; only the
      field inside it needs anything of its own. */
-  .mc-modal-panel .mc-auth-field input{width:100%}
+  .mc-modal-panel .mc-auth-field input{width:100%;min-width:0}
+  /* The delete-account dialog puts a reveal button beside that input, the
+     way the sign-in screen does. There the input sizes itself; here it is
+     already claiming the full width, so the button has to be told to keep
+     its own and the input to be allowed to give some back. */
+  .mc-modal-panel .mc-auth-reveal{flex:none}
   .mc-people-mail{font-size:.8rem;color:var(--mc-muted);margin-top:.1rem;overflow-wrap:anywhere}
 
   /* ==================================================================

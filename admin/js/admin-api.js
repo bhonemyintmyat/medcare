@@ -132,7 +132,7 @@
       nobody: true },
     { what: 'Delete their own account',
       user: true, editor: true, admin: true,
-      by: 'delete_own_account() — supabase_account_deletion.sql §1. Refused only for the last admin' },
+      by: 'delete_own_account(password) — supabase_account_deletion.sql §1. Needs their own password retyped; refused only for the last admin' },
     { what: 'Delete somebody else’s account',
       user: false, editor: false, admin: true,
       by: 'delete_account() — §2 checks my_role() = admin, and refuses the caller’s own id' },

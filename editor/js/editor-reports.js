@@ -75,7 +75,9 @@
     article:  'article',
     articles: 'article',
     hospital: 'hospital',
-    hospitals: 'hospital'
+    hospitals: 'hospital',
+    pharmacy: 'pharmacy',
+    pharmacies: 'pharmacy'
   };
 
   var state = {

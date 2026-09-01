@@ -540,9 +540,15 @@
     er: false
   }
 ];
+  /* Two different kinds of filter live in one list. General, specialist
+     and clinic are what a place IS — exactly one of them is true of any
+     row, and hospitals_type_check allows nothing else. "Emergency / ER"
+     is a property a place of any type can also have. matchesType() below
+     is where that difference is spent. */
   var typeMeta = [
     { id: 'general', label: 'General' },
     { id: 'specialist', label: 'Specialist' },
+    { id: 'clinic', label: 'Clinic' },
     { id: 'emergency', label: 'Emergency / ER' }
   ];
   var pharmacies = [
@@ -557,11 +563,27 @@
     { name: 'Sein Gay Har Pharmacy', type: 'chain', township: 'Dagon', address: 'Pyay Rd, Dagon', phone: '01-379155', hours: 'Open 24 hours', open24: true, delivery: true },
     { name: 'Thukha Drug Store', type: 'independent', township: 'Mayangone', address: 'Insein Rd, Mayangone', phone: '01-9669042', hours: 'Daily, 8:00–20:00', open24: false, delivery: false }
   ];
+  /* `covers` is here because one chip does not always mean one value in
+     the column. A pharmacy inside a clinic and one inside a hospital are
+     the same thing to somebody choosing where to go — attached to a
+     medical facility rather than standing on its own — so they share a
+     filter. The column still tells them apart, and the card still prints
+     which of the two it is; it is only the filter that groups them. */
   var pharmTypeMeta = [
-    { id: 'chain', label: 'Chain pharmacy' },
-    { id: 'independent', label: 'Independent' },
-    { id: 'hospital', label: 'Hospital pharmacy' }
+    { id: 'chain',       label: 'Chain pharmacy',            covers: ['chain'] },
+    { id: 'independent', label: 'Independent',               covers: ['independent'] },
+    { id: 'hospital',    label: 'Hospital or clinic pharmacy', covers: ['hospital', 'clinic'] }
   ];
+
+  /* Which chip owns a row's type. A type with no chip — one added to the
+     database before this list learns about it — returns null and is left
+     out of every count rather than silently landing in the first chip. */
+  function pharmChipFor(type) {
+    var hit = pharmTypeMeta.filter(function (tm) {
+      return tm.covers.indexOf(type) !== -1;
+    })[0];
+    return hit ? hit.id : null;
+  }
   var pharmServiceMeta = [
     { id: 'open24', label: 'Open 24 hours' },
     { id: 'delivery', label: 'Home delivery' }
@@ -577,9 +599,70 @@
     return new URLSearchParams(window.location.search).get(name) || '';
   }
 
-  // Townships are needed on the home page (menu) and the hospitals page (select).
-  var townValues = hospitals.map(function (h) { return h.township; })
-    .filter(function (v, i, a) { return a.indexOf(v) === i; }).sort();
+  // Townships are needed on the home page (menu) and the hospitals page
+  // (select). Recomputed rather than fixed, because `hospitals` below is
+  // replaced by what the table says as soon as it answers.
+  function townshipsOf(list) {
+    return list.map(function (x) { return x.township; })
+      .filter(function (v, i, a) { return a.indexOf(v) === i; }).sort();
+  }
+  var townValues = townshipsOf(hospitals);
+
+  /* ---------- A directory, from its table ----------
+     hospitals.html and pharmacy.html each shipped with a hard-coded list
+     and each now takes the published rows from its table instead. Same
+     shape as the articles listing further down, for the same reasons:
+
+       * The list HAS to come from the table, or a hospital added in the
+         editor is published into a page that cannot show it.
+
+       * The shipped array stays as the fallback and is drawn first, so a
+         slow database delays nothing and a failed request leaves the
+         reader with the list they already had. For a page somebody opens
+         to find a phone number, a slightly stale directory beats an
+         error where the directory was.
+
+       * .eq('status', 'published') is not redundant with RLS. The public
+         policy serves published rows only, but the STAFF policy serves
+         every row — so without this, an editor or an admin reading the
+         public page would see draft entries a signed-out reader never
+         would. This is a public listing; it shows what the public sees,
+         whoever is looking.
+
+       * .order('id') because Postgres promises no order without it, and
+         a directory that reshuffles between loads is one you cannot scan
+         twice.
+
+     `map` turns a row into the shape the page's render function already
+     expects, so nothing below this had to learn about columns. */
+  function loadDirectory(table, map, apply) {
+    var db = window.supabaseClient;
+    // supabase.js sets this to null when the library or the keys are
+    // missing; it already logged why. The shipped list stands.
+    if (!db) { return; }
+
+    db.from(table)
+      .select('*')
+      .eq('status', 'published')
+      .order('id')
+      .then(function (res) {
+        // supabase-js does NOT throw on a database error — it resolves
+        // with { data, error }. A missing table or a blocking policy
+        // shows up here, not in .catch().
+        if (res.error) { throw res.error; }
+        var rows = res.data || [];
+        // An empty table is far more likely to be a migration that has
+        // not been run than a country with no hospitals in it. Keep what
+        // is on screen.
+        if (!rows.length) { return; }
+        apply(rows.map(map));
+      })
+      .catch(function (err) {
+        // Deliberately quiet on the page. The reader has a working list;
+        // this is for whoever is looking at a console.
+        console.error('[MedCare] Could not refresh ' + table + ' from Supabase:', err);
+      });
+  }
 
   /* ---------- Home: image slider ---------- */
   var slider = document.querySelector('.slider');
@@ -998,7 +1081,7 @@
     var hState = {
       query: param('q'),
       township: param('town') || 'all',
-      types: { general: true, specialist: true, emergency: true }
+      types: { general: true, specialist: true, clinic: true, emergency: true }
     };
     var hSearch = byId('hospSearch');
     var hTownship = byId('hospTownship');
@@ -1007,31 +1090,59 @@
     var hWord = byId('hospWord');
     var hEmpty = byId('hospEmpty');
 
-    hTownship.innerHTML = '<option value="all">All townships</option>' +
-      townValues.map(function (t) { return '<option value="' + esc(t) + '">' + esc(t) + '</option>'; }).join('');
-    // Only honor ?town= if it matches a real township.
-    if (townValues.indexOf(hState.township) === -1) { hState.township = 'all'; }
-    hTownship.value = hState.township;
+    /* The sidebar is built FROM the data — the townships in the select and
+       the number beside each type are both counted off the list. So both
+       are functions rather than a run of statements: when the table
+       answers and the list changes underneath them, they are built again
+       rather than left describing the list that shipped. */
+    var buildTownships = function () {
+      hTownship.innerHTML = '<option value="all">All townships</option>' +
+        townValues.map(function (t) { return '<option value="' + esc(t) + '">' + esc(t) + '</option>'; }).join('');
+      // Only honor ?town= if it matches a real township.
+      if (townValues.indexOf(hState.township) === -1) { hState.township = 'all'; }
+      hTownship.value = hState.township;
+    };
+    buildTownships();
+
     if (hSearch) { hSearch.value = hState.query; }
 
     hTownship.addEventListener('change', function (e) { hState.township = e.target.value; renderHospitals(); });
 
-    typeMeta.forEach(function (tm) {
-      var count = tm.id === 'emergency'
-        ? hospitals.filter(function (h) { return h.er; }).length
-        : hospitals.filter(function (h) { return h.type === tm.id; }).length;
-      var label = document.createElement('label');
-      label.className = 'mc-check';
-      label.innerHTML = '<input type="checkbox" checked><span>' + esc(tm.label) + '</span><span class="cnt">' + count + '</span>';
-      var input = label.querySelector('input');
-      input.setAttribute('data-type', tm.id);
-      input.addEventListener('change', function () { hState.types[tm.id] = input.checked; renderHospitals(); });
-      hTypes.appendChild(label);
-    });
+    var buildTypes = function () {
+      hTypes.innerHTML = '';
+      typeMeta.forEach(function (tm) {
+        var count = tm.id === 'emergency'
+          ? hospitals.filter(function (h) { return h.er; }).length
+          : hospitals.filter(function (h) { return h.type === tm.id; }).length;
+        var label = document.createElement('label');
+        label.className = 'mc-check';
+        label.innerHTML = '<input type="checkbox"><span>' + esc(tm.label) + '</span><span class="cnt">' + count + '</span>';
+        var input = label.querySelector('input');
+        input.setAttribute('data-type', tm.id);
+        // Read back from the state, not hard-coded checked: a rebuild
+        // happens after the reader may already have unticked something,
+        // and silently re-ticking it would change what they are looking
+        // at without them touching anything.
+        input.checked = !!hState.types[tm.id];
+        input.addEventListener('change', function () { hState.types[tm.id] = input.checked; renderHospitals(); });
+        hTypes.appendChild(label);
+      });
+    };
+    buildTypes();
 
+    /* PLACE_TYPES is the guard that keeps the two kinds of filter apart.
+       Without it this would be `t[h.type]`, and a row whose type column
+       ever read 'emergency' would be matched by the ER tickbox instead of
+       by a type of its own.
+
+       The OR is deliberate and is how this page has always behaved:
+       unticking Specialist still leaves a specialist hospital with an ER
+       on screen, because somebody filtering for an emergency room is
+       asking a question about the room, not about the building. */
+    var PLACE_TYPES = { general: true, specialist: true, clinic: true };
     var matchesType = function (h) {
       var t = hState.types;
-      var baseOK = (h.type === 'general' && t.general) || (h.type === 'specialist' && t.specialist);
+      var baseOK = PLACE_TYPES[h.type] === true && t[h.type] === true;
       var erOK = t.emergency && h.er;
       return baseOK || erOK;
     };
@@ -1045,7 +1156,7 @@
         var searchOK = !q || hay.indexOf(q) !== -1;
         return townOK && typeOK && searchOK;
       });
-      var typeLabelMap = { general: 'General', specialist: 'Specialist' };
+      var typeLabelMap = { general: 'General', specialist: 'Specialist', clinic: 'Clinic' };
       hList.innerHTML = filtered.map(function (h) {
         var tel = 'tel:' + h.phone.replace(/[^0-9+]/g, '');
         var maps = 'https://www.google.com/maps/search/?api=1&query=' +
@@ -1077,7 +1188,7 @@
     var clearHospitals = function () {
       hState.query = '';
       hState.township = 'all';
-      hState.types = { general: true, specialist: true, emergency: true };
+      hState.types = { general: true, specialist: true, clinic: true, emergency: true };
       if (hSearch) { hSearch.value = ''; }
       hTownship.value = 'all';
       Array.prototype.forEach.call(hTypes.querySelectorAll('input'), function (i) { i.checked = true; });
@@ -1087,6 +1198,32 @@
     byId('hospResetBtn').addEventListener('click', clearHospitals);
 
     renderHospitals();
+
+    /* Now the real list. `phone` is nullable in the table and most rows
+       have no number; the shipped array wrote 'N/A' for those, and the
+       card markup below calls .replace() on it, so the coalesce is what
+       keeps a null out of a method call. */
+    loadDirectory('hospitals', function (r) {
+      return {
+        id: r.id,
+        name: r.name,
+        type: r.type,
+        township: r.township,
+        address: r.address || '',
+        phone: r.phone || 'N/A',
+        hours: r.hours || '',
+        er: !!r.er
+      };
+    }, function (rows) {
+      hospitals = rows;
+      townValues = townshipsOf(hospitals);
+      buildTownships();
+      buildTypes();
+      renderHospitals();
+      // The home page's town dropdown is drawn from the same list. It is
+      // not on this page, so this is a no-op here; it matters on index.
+      renderTownMenu();
+    });
   }
 
   /* ---------- Find a Pharmacy page ---------- */
@@ -1107,50 +1244,72 @@
     var pWord = byId('pharmWord');
     var pEmpty = byId('pharmEmpty');
 
-    var pharmTowns = pharmacies.map(function (p) { return p.township; })
-      .filter(function (v, i, a) { return a.indexOf(v) === i; }).sort();
+    /* Same three counted-off-the-data controls as the hospitals sidebar,
+       and functions for the same reason: the table's answer replaces the
+       list they describe. See the note there. */
+    var buildPharmTownships = function () {
+      var pharmTowns = townshipsOf(pharmacies);
+      pTownship.innerHTML = '<option value="all">All townships</option>' +
+        pharmTowns.map(function (t) { return '<option value="' + esc(t) + '">' + esc(t) + '</option>'; }).join('');
+      if (pharmTowns.indexOf(pState.township) === -1) { pState.township = 'all'; }
+      pTownship.value = pState.township;
+    };
+    buildPharmTownships();
 
-    pTownship.innerHTML = '<option value="all">All townships</option>' +
-      pharmTowns.map(function (t) { return '<option value="' + esc(t) + '">' + esc(t) + '</option>'; }).join('');
-    if (pharmTowns.indexOf(pState.township) === -1) { pState.township = 'all'; }
-    pTownship.value = pState.township;
     if (pSearch) { pSearch.value = pState.query; }
     pTownship.addEventListener('change', function (e) { pState.township = e.target.value; renderPharmacies(); });
 
-    pharmTypeMeta.forEach(function (tm) {
-      var count = pharmacies.filter(function (p) { return p.type === tm.id; }).length;
-      var label = document.createElement('label');
-      label.className = 'mc-check';
-      label.innerHTML = '<input type="checkbox" checked><span>' + esc(tm.label) + '</span><span class="cnt">' + count + '</span>';
-      var input = label.querySelector('input');
-      input.setAttribute('data-type', tm.id);
-      input.addEventListener('change', function () { pState.types[tm.id] = input.checked; renderPharmacies(); });
-      pTypes.appendChild(label);
-    });
+    var buildPharmTypes = function () {
+      pTypes.innerHTML = '';
+      pharmTypeMeta.forEach(function (tm) {
+        var count = pharmacies.filter(function (p) { return pharmChipFor(p.type) === tm.id; }).length;
+        var label = document.createElement('label');
+        label.className = 'mc-check';
+        label.innerHTML = '<input type="checkbox"><span>' + esc(tm.label) + '</span><span class="cnt">' + count + '</span>';
+        var input = label.querySelector('input');
+        input.setAttribute('data-type', tm.id);
+        input.checked = !!pState.types[tm.id];
+        input.addEventListener('change', function () { pState.types[tm.id] = input.checked; renderPharmacies(); });
+        pTypes.appendChild(label);
+      });
+    };
+    buildPharmTypes();
 
-    pharmServiceMeta.forEach(function (sm) {
-      var count = pharmacies.filter(function (p) { return p[sm.id]; }).length;
-      var label = document.createElement('label');
-      label.className = 'mc-check';
-      label.innerHTML = '<input type="checkbox"><span>' + esc(sm.label) + '</span><span class="cnt">' + count + '</span>';
-      var input = label.querySelector('input');
-      input.setAttribute('data-service', sm.id);
-      input.checked = !!pState.services[sm.id];
-      input.addEventListener('change', function () { pState.services[sm.id] = input.checked; renderPharmacies(); });
-      pServices.appendChild(label);
-    });
+    var buildPharmServices = function () {
+      pServices.innerHTML = '';
+      pharmServiceMeta.forEach(function (sm) {
+        var count = pharmacies.filter(function (p) { return p[sm.id]; }).length;
+        var label = document.createElement('label');
+        label.className = 'mc-check';
+        label.innerHTML = '<input type="checkbox"><span>' + esc(sm.label) + '</span><span class="cnt">' + count + '</span>';
+        var input = label.querySelector('input');
+        input.setAttribute('data-service', sm.id);
+        input.checked = !!pState.services[sm.id];
+        input.addEventListener('change', function () { pState.services[sm.id] = input.checked; renderPharmacies(); });
+        pServices.appendChild(label);
+      });
+    };
+    buildPharmServices();
 
     var renderPharmacies = function () {
       var q = pState.query.trim().toLowerCase();
       var filtered = pharmacies.filter(function (p) {
         var townOK = pState.township === 'all' || p.township === pState.township;
-        var typeOK = !!pState.types[p.type];
+        var typeOK = !!pState.types[pharmChipFor(p.type)];
         var svcOK = (!pState.services.open24 || p.open24) && (!pState.services.delivery || p.delivery);
         var hay = (p.name + ' ' + p.township + ' ' + p.address).toLowerCase();
         var searchOK = !q || hay.indexOf(q) !== -1;
         return townOK && typeOK && svcOK && searchOK;
       });
-      var pharmTypeLabel = { chain: 'Chain pharmacy', independent: 'Independent', hospital: 'Hospital pharmacy' };
+      // The card names the row exactly, even though the filter groups the
+      // last two: "Hospital pharmacy" and "Clinic pharmacy" are different
+      // places to walk to.
+      var pharmTypeLabel = {
+        chain: 'Chain pharmacy',
+        independent: 'Independent',
+        hospital: 'Hospital pharmacy',
+        clinic: 'Clinic pharmacy'
+      };
       pList.innerHTML = filtered.map(function (p) {
         var tel = 'tel:' + p.phone.replace(/[^0-9+]/g, '');
         var maps = 'https://www.google.com/maps/search/?api=1&query=' +
@@ -1198,6 +1357,27 @@
     byId('pharmResetBtn').addEventListener('click', clearPharmacies);
 
     renderPharmacies();
+
+    // And the real list. Same nullable `phone` as hospitals.
+    loadDirectory('pharmacies', function (r) {
+      return {
+        id: r.id,
+        name: r.name,
+        type: r.type,
+        township: r.township,
+        address: r.address || '',
+        phone: r.phone || 'N/A',
+        hours: r.hours || '',
+        open24: !!r.open24,
+        delivery: !!r.delivery
+      };
+    }, function (rows) {
+      pharmacies = rows;
+      buildPharmTownships();
+      buildPharmTypes();
+      buildPharmServices();
+      renderPharmacies();
+    });
   }
 
   /* ---------- Home: search shortcuts (navigate to the real pages) ---------- */
@@ -1228,16 +1408,36 @@
   }
 
   /* ---------- Home: town dropdown ---------- */
-  // Build the menu from the real townships so each entry links to the
-  // hospitals page pre-filtered for that town.
-  var townMenu = document.querySelector('.mc-town-menu');
-  if (townMenu) {
+  /* Built from the real townships so each entry links to the hospitals
+     page pre-filtered for that town — which means it is the hospitals
+     list again, in menu form, and it goes stale the moment that list
+     stops being the shipped array.
+
+     A function declaration, not a var: the hospitals loader calls this
+     after the table answers, and that call is written above this line.
+     Hoisting is what makes that legal, and it is worth one sentence of
+     explanation rather than moving working code around it. */
+  function renderTownMenu() {
+    var townMenu = document.querySelector('.mc-town-menu');
+    if (!townMenu) { return; }
     townMenu.innerHTML = '<li><h6 class="dropdown-header">Filter by town</h6></li>' +
       '<li><a class="dropdown-item" data-town="all" href="hospitals.html"><i class="bi bi-pin-map me-2"></i>All towns</a></li>' +
       townValues.map(function (t) {
         return '<li><a class="dropdown-item" data-town="' + esc(t) + '" href="hospitals.html?town=' + encodeURIComponent(t) + '">' +
           '<i class="bi bi-pin-map me-2"></i>' + esc(t) + '</a></li>';
       }).join('');
+  }
+  renderTownMenu();
+
+  /* The menu lives on the home page, where the hospitals list is never
+     loaded, so it would otherwise show only the townships that shipped.
+     One query, and only where the menu actually is. */
+  if (document.querySelector('.mc-town-menu')) {
+    loadDirectory('hospitals', function (r) { return { township: r.township }; },
+      function (rows) {
+        townValues = townshipsOf(rows);
+        renderTownMenu();
+      });
   }
 
   /* ---------- Native dropdown / collapse / accordion (replaces the Bootstrap JS bundle) ---------- */
@@ -1452,6 +1652,7 @@
     'Hospital type': 'ဆေးရုံအမျိုးအစား',
     'General': 'အထွေထွေ',
     'Specialist': 'အထူးကု',
+    'Clinic': 'ဆေးခန်း',
     'Emergency / ER': 'အရေးပေါ်ဌာန',
     'Search by hospital name or area…': 'ဆေးရုံအမည် သို့မဟုတ် ဒေသဖြင့် ရှာရန်…',
     'hospitals': 'ဆေးရုံများ',
@@ -1493,6 +1694,8 @@
       'ရန်ကုန်မြို့နယ်များရှိ ဆေးဆိုင်များ။ ၂၄ နာရီဖွင့်သော သို့မဟုတ် အိမ်အရောက်ပို့ဆောင်ပေးသော ဆိုင်များကို စစ်ထုတ်ရှာနိုင်ပါသည်။',
     'Pharmacy type': 'ဆေးဆိုင်အမျိုးအစား',
     'Chain pharmacy': 'ဆိုင်ခွဲများရှိ ဆေးဆိုင်',
+    'Clinic pharmacy': 'ဆေးခန်းဆေးဆိုင်',
+    'Hospital or clinic pharmacy': 'ဆေးရုံ သို့မဟုတ် ဆေးခန်း ဆေးဆိုင်',
     'Independent': 'ကိုယ်ပိုင်ဆေးဆိုင်',
     'Hospital pharmacy': 'ဆေးရုံဆေးဆိုင်',
     'Services': 'ဝန်ဆောင်မှုများ',

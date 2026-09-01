@@ -1,7 +1,7 @@
 /* ============================================================
    MedCare — the content list (editor/content.html)
 
-   One list, three kinds of thing. Which kind is in the URL rather than
+   One list, four kinds of thing. Which kind is in the URL rather than
    in a variable, so a tab is a real link: the back button works, a
    bookmark works, and "send me the pending articles" is a URL somebody
    can paste.
@@ -44,12 +44,15 @@
 
   /* ---------- The chrome this page has to fix ----------
      admin-shell.js marks the current nav item by comparing file names,
-     and this area has two links to the same file with different query
-     strings. Left alone, "Diseases and articles" and "Hospitals" would
-     both light up. It runs before this file, so correcting it here is
+     and this area has three links to the same file with different query
+     strings. Left alone, "Diseases and articles", "Hospitals" and
+     "Pharmacies" would all light up. It runs before this file, so correcting it here is
      one pass rather than a special case inside the shared shell. */
   (function markNav() {
-    var here = 'content.html?type=' + (type === 'hospital' ? 'hospital' : 'disease');
+    /* Diseases and articles share one nav item; hospitals and pharmacies
+       each have their own. Anything else falls back to the first. */
+    var NAV_TYPE = { hospital: 'hospital', pharmacy: 'pharmacy' };
+    var here = 'content.html?type=' + (NAV_TYPE[type] || 'disease');
     document.querySelectorAll('.mc-admin-nav a').forEach(function (a) {
       var href = a.getAttribute('href');
       if (href.indexOf('content.html') === 0) {
@@ -62,7 +65,7 @@
   /* Carry the status filter across when you switch kind. Somebody
      clearing the pending queue wants the next tab's pending queue, not
      its whole table — that is the difference between this page being a
-     review queue and being three separate lists.
+     review queue and being four separate lists.
 
      Re-run whenever the filter changes, or the hrefs go stale and the
      first tab click undoes the filter the person just set. Each tab's
@@ -109,13 +112,13 @@
     });
   }
 
-  /* The other two tabs' totals. Cheap head-only counts, because all this
+  /* The other tabs' totals. Cheap head-only counts, because all this
      needs is the number in the pill.
 
      They follow the status filter rather than always showing the table
      total, and that is what makes this page usable as a review queue: an
      admin who filters to pending sees at a glance that the work is three
-     articles and no hospitals, instead of clicking every tab to find out.
+     articles and no pharmacies, instead of clicking every tab to find out.
      Recounted whenever the filter changes, for the same reason. */
   function countTabs() {
     Object.keys(ed.TYPES).forEach(function (t) {
@@ -124,7 +127,7 @@
 
       /* The current tab is already loaded in full; no need to ask again.
          Counted by status only, NOT through visible() — the search box
-         must not change these numbers, or the two tabs that cannot be
+         must not change these numbers, or the tabs that cannot be
          searched from here would silently disagree with this one. */
       if (t === type) {
         pill.textContent = state.status

@@ -795,6 +795,7 @@
   /* Stat tiles */
   .mc-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin:0 0 1.5rem}
   .mc-stat{background:#fff;border:1px solid var(--mc-border);border-radius:16px;box-shadow:var(--mc-shadow);padding:1.15rem 1.25rem;display:flex;align-items:flex-start;gap:.9rem}
+  .mc-stat:hover{border-color:var(--mc-primary);transform:translateY(-2px);box-shadow:var(--mc-shadow-lg);text-decoration:none;color:inherit}
   .mc-stat-ico{width:42px;height:42px;border-radius:12px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0}
   .mc-stat--warn .mc-stat-ico{background:var(--mc-amber-50);color:var(--mc-amber)}
   .mc-stat--ok .mc-stat-ico{background:var(--mc-green-50);color:var(--mc-green)}

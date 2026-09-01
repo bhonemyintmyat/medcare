@@ -2,7 +2,21 @@
 -- MedCare — full name and username on profiles
 -- Run in: Supabase dashboard -> SQL Editor -> New query -> Run
 -- Run AFTER supabase_auth.sql, supabase_rls.sql and supabase_admin.sql.
--- Safe to re-run.
+--
+-- DO NOT RE-RUN THIS FILE ON ITS OWN. It used to say "safe to re-run",
+-- and on a fresh database it is. On this one it is not, because
+-- supabase_display_name.sql has since renamed `username` to
+-- `display_name` and dropped everything around it. Running this file
+-- alone puts all of it back: the column, profiles_username_lower_idx,
+-- and a handle_new_user() that inserts into a username column the rest
+-- of the schema no longer has.
+--
+-- That is not theory. It happened, and it took two things down at once:
+-- delete_own_account() and delete_account() started failing one line
+-- short of the delete, and once the resurrected column was dropped
+-- again the restored trigger broke SIGNUP until handle_new_user was put
+-- back. If you run this, run supabase_display_name.sql immediately
+-- after, every time.
 --
 -- SUPERSEDED IN PART by supabase_display_name.sql, which renames
 -- `username` to `display_name` and drops every rule about its shape and

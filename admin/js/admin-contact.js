@@ -6,20 +6,23 @@
    One setting, one form, one row: site_settings, key 'footer.contact'.
    What reads it is contact.js, on the public Contact us page.
 
-       { email:  'someone@gmail.com',
+       { email:  'someone@example.com',
          phones: [ { label: 'Office line', number: '+95 …', hint: '' } ] }
 
    ------------------------------------------------------------
-   WHY THE ADDRESS MUST BE A GMAIL ONE
+   WHAT IS CHECKED ABOUT THE ADDRESS, AND WHAT IS NOT
 
-   Because that is the mailbox the team actually opens. The rule is
-   enforced here, on the way in, and again in contact.js on the way out,
-   for the ordinary reason that this screen is not the only way a row
-   can change — anybody with the database console open is another.
+   That it looks like an address. That is all this can know, and it is
+   worth being honest about how little it is: no test in a browser can
+   tell whether mail sent there reaches a person. A sending domain, an
+   alias nobody forwards, a mailbox at its quota — all of them pass.
 
-   A refusal, not a warning: an address saved into a contact page is
-   read by somebody who then waits for a reply, and a typo that sends
-   their message nowhere costs them more than it costs us to retype it.
+   So the rule is enforced as a refusal, here on the way in and again in
+   contact.js on the way out, and the screen says in as many words that
+   the real test is sending a message to it and getting a reply. An
+   address on a contact page is read by somebody who then waits, and a
+   typo that sends their message nowhere costs them more than it costs
+   us to retype it.
 
    ------------------------------------------------------------
    WHY AN EMPTY ROW IS ALLOWED
@@ -73,8 +76,8 @@
      that one exists because a row is a row whoever wrote it.
      --------------------------------------------------------------- */
 
-  function isGmail(value) {
-    return /^[A-Za-z0-9._%+-]+@gmail\.com$/i.test(String(value || '').trim());
+  function isAddress(value) {
+    return /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(String(value || '').trim());
   }
 
   /* Spacing and dashes are the admin's to choose — they are what a
@@ -250,7 +253,7 @@
      ---------------------------------------------------------------
      Deliberately built from the same classes contact.html uses, and
      deliberately showing only what would survive the save: a number
-     with no digits in it, or an address that is not a Gmail one, is
+     with no digits in it, or an address that is not an address, is
      absent from the preview before it is refused by the Save. Seeing it
      missing is a faster explanation than reading one.
      --------------------------------------------------------------- */
@@ -270,7 +273,7 @@
   function renderPreview(next) {
     var html = '';
 
-    if (isGmail(next.email)) {
+    if (isAddress(next.email)) {
       html += previewCard('bi-envelope-fill', 'Email', next.email.trim(),
         'Questions about the site, corrections to a page, or anything else for the team.');
     }
@@ -292,7 +295,7 @@
       ? 'Four is the most the page shows.'
       : 'Up to ' + MAX_PHONES + '.';
 
-    var usable = (isGmail(next.email) ? 1 : 0) +
+    var usable = (isAddress(next.email) ? 1 : 0) +
                  next.phones.filter(function (r) { return dialable(r.number); }).length;
     emptyWarn.hidden = usable > 0;
 
@@ -311,11 +314,11 @@
   function save() {
     var next = readForm();
 
-    if (next.email && !isGmail(next.email)) {
+    if (next.email && !isAddress(next.email)) {
       api.message(msgEl, 'error',
-        'That is not a Gmail address. The Contact us page offers this one address ' +
-        'and nothing else, so it has to be the mailbox somebody actually opens — ' +
-        'name@gmail.com.');
+        'That does not look like an email address. The Contact us page offers ' +
+        'this one address and nothing else, so it has to be the mailbox somebody ' +
+        'actually opens — name@example.com.');
       emailEl.focus();
       return;
     }

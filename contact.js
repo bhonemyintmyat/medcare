@@ -4,7 +4,7 @@
    One row: site_settings, key 'footer.contact', written by
    admin/contact.html. Shape:
 
-       { email: 'someone@gmail.com',
+       { email: 'someone@example.com',
          phones: [ { label: 'Office line', number: '+95 9 …', hint: '' } ] }
 
    WHY THIS FILE EXISTS AT ALL. A phone number that changes needs an
@@ -37,13 +37,16 @@
 
   var MAX_PHONES = 4;
 
-  /* The address has to be a Gmail one: that is the only mailbox the team
-     actually reads, and it is the rule admin/contact.html enforces on
-     the way in. Checked again here because the way in is not the only
-     way a row can change — anybody with the database open can edit it. */
-  function gmail(value) {
+  /* An address has to look like one before it is printed as a way of
+     reaching anybody. Deliberately shallow: this catches the empty row
+     and the half-typed one, and it cannot tell whether mail sent there
+     arrives — no regular expression can, and the only test that counts
+     is somebody sending a message and getting a reply. Checked here as
+     well as in admin/contact.html because the admin screen is not the
+     only way a row can change. */
+  function address(value) {
     var v = String(value == null ? '' : value).trim();
-    return /^[A-Za-z0-9._%+-]+@gmail\.com$/i.test(v) ? v : '';
+    return /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(v) ? v : '';
   }
 
   /* What is displayed keeps the admin's spacing and dashes; what is
@@ -93,9 +96,9 @@
   function render(value) {
     var cards = [];
 
-    var address = gmail(value.email);
-    if (address) {
-      cards.push(card('mailto:' + address, 'bi-envelope-fill', 'Email', address,
+    var email = address(value.email);
+    if (email) {
+      cards.push(card('mailto:' + email, 'bi-envelope-fill', 'Email', email,
         'Questions about the site, corrections to a page, or anything else for the team.'));
     }
 

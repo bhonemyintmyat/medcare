@@ -415,7 +415,7 @@
   var DEFAULTS = {
     maintenance: { enabled: false, message: '', allow_emergency: true },
     notice:      { enabled: false, tone: 'info', text: '' },
-    /* The Contact us page: one Gmail address and up to four numbers.
+    /* The Contact us page: one email address and up to four numbers.
        `phones` is a list rather than the single `phone` the key was
        first seeded with — admin-contact.js carries an old `phone`
        forward into it, so neither shape is lost. */

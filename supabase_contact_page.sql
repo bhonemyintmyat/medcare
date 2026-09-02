@@ -16,7 +16,7 @@
 --
 -- and the page that finally reads it needs
 --
---     { "email": "…@gmail.com",
+--     { "email": "someone@example.com",
 --       "phones": [ { "label": "Office line",
 --                     "number": "+95 …",
 --                     "hint":   "Monday to Friday, 9am to 5pm" } ] }
@@ -40,12 +40,14 @@
 -- this migration is entitled to remove. Delete that field by hand once
 -- you have looked at it.
 --
--- THE ADDRESS MUST BE A GMAIL ONE. That rule is not in the database. It
--- is enforced by admin/contact.html on the way in and by contact.js on
--- the way out, because it is a rule about which mailbox the team opens,
--- not about what the column may hold — and a check constraint here would
--- fail a save at the last possible moment with a message nobody in the
--- admin area could turn into a sentence.
+-- THE ADDRESS IS ONLY CHECKED FOR SHAPE, and not here. Whether it looks
+-- like an address is decided by admin/contact.html on the way in and by
+-- contact.js on the way out; whether mail sent there reaches a person is
+-- decided by nothing in this repository, and the only test that counts
+-- is somebody sending a message to it and getting a reply. A check
+-- constraint here would add nothing to the first and could not help with
+-- the second, while failing a save at the last possible moment with a
+-- message nobody in the admin area could turn into a sentence.
 -- ============================================================
 
 

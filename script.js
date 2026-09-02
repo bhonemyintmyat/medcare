@@ -669,13 +669,63 @@
   if (slider) {
     var slides = slider.querySelectorAll('li');
     if (slides.length) {
+      var SLIDE_INTERVAL = 5000; // auto-advance pace (ms)
       var activeSlide = 0;
-      slides[activeSlide].classList.add('active');
-      setInterval(function () {
-        slides[activeSlide].classList.remove('active');
-        activeSlide = (activeSlide + 1) % slides.length;
-        slides[activeSlide].classList.add('active');
-      }, 3500);
+      var timer = null;
+
+      // Build indicator dots (one per slide)
+      var dotsWrap = slider.querySelector('.slider-dots');
+      var dots = [];
+      if (dotsWrap) {
+        Array.prototype.forEach.call(slides, function (_, i) {
+          var dot = document.createElement('button');
+          dot.type = 'button';
+          dot.setAttribute('role', 'tab');
+          dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+          dot.addEventListener('click', function () { goTo(i); });
+          dotsWrap.appendChild(dot);
+          dots.push(dot);
+        });
+      }
+
+      function render() {
+        Array.prototype.forEach.call(slides, function (li, i) {
+          li.classList.toggle('active', i === activeSlide);
+        });
+        dots.forEach(function (dot, i) {
+          dot.classList.toggle('active', i === activeSlide);
+          dot.setAttribute('aria-selected', i === activeSlide ? 'true' : 'false');
+        });
+      }
+
+      function goTo(i) {
+        activeSlide = (i + slides.length) % slides.length;
+        render();
+        restart(); // reset the timer so a manual move gets a full interval
+      }
+
+      function next() { goTo(activeSlide + 1); }
+      function prev() { goTo(activeSlide - 1); }
+
+      function start() {
+        if (slides.length > 1) timer = setInterval(next, SLIDE_INTERVAL);
+      }
+      function stop() {
+        if (timer) { clearInterval(timer); timer = null; }
+      }
+      function restart() { stop(); start(); }
+
+      var prevBtn = slider.querySelector('.slider-arrow--prev');
+      var nextBtn = slider.querySelector('.slider-arrow--next');
+      if (prevBtn) prevBtn.addEventListener('click', prev);
+      if (nextBtn) nextBtn.addEventListener('click', next);
+
+      // Pause while hovered so users can read the current slide
+      slider.addEventListener('mouseenter', stop);
+      slider.addEventListener('mouseleave', start);
+
+      render();
+      start();
     }
   }
 

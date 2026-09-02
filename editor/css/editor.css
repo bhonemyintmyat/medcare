@@ -13,6 +13,7 @@
      4. the media library
      5. the translations table
      6. the report queue
+     7. the sidebar foot buttons
 
    Deliberately reused rather than restated: .mc-admin-card, .mc-admin-msg,
    .mc-admin-note, .mc-admin-hint, .mc-admin-pill, .mc-auth-btn,
@@ -639,3 +640,33 @@ a.mc-ed-stat:hover { border-color: var(--mc-primary); box-shadow: var(--mc-shado
    hand-written page rather than out of the row. */
 .mc-ed-imported { align-items: flex-start; }
 .mc-ed-imported b { font-weight: 600; }
+
+
+/* ===================== 7. Sidebar foot ===================== */
+
+/* Both ways out of the editor desk, given a colour instead of the quiet
+   treatment admin.css gives them. Scoped to this file, which only the
+   editor pages load, so the admin sidebar keeps its own styling.
+
+   Green for "Back to MedCare" — the ordinary way out, and the one most
+   cursors in this footer are heading for. Red for the deletion, which
+   is the only irreversible control on the page and is now labelled as
+   such at rest rather than only on hover. */
+.mc-admin-side-foot .mc-auth-btn--ghost {
+  background: var(--mc-green); border-color: var(--mc-green); color: #fff;
+}
+.mc-admin-side-foot .mc-auth-btn--ghost:hover {
+  background: #15803d; border-color: #15803d; color: #fff;
+}
+.mc-admin-side-foot .mc-auth-btn--ghost:focus-visible {
+  outline: 2px solid var(--mc-green); outline-offset: 2px;
+}
+
+.mc-admin-side-danger {
+  background: var(--mc-danger); border-color: var(--mc-danger); color: #fff;
+  font-weight: 600;
+}
+.mc-admin-side-danger:hover {
+  background: var(--mc-danger-600); border-color: var(--mc-danger-600); color: #fff;
+}
+.mc-admin-side-danger svg { color: #fff; }

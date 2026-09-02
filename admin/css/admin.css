@@ -250,6 +250,9 @@ html.mc-guard-pending body::after {
   font-size: .78rem; color: var(--mc-muted);
   display: inline-flex; align-items: center; gap: .35rem; flex-wrap: wrap;
 }
+/* As .mc-ad-warn[hidden] above: the display here beats [hidden], and
+   entry.html hides this line until there is something to say. */
+.mc-touched[hidden] { display: none; }
 .mc-touched b { font-weight: 600; color: var(--mc-text); }
 
 /* A field whose value has to be typed twice before it is believed.

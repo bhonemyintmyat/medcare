@@ -82,6 +82,9 @@
   border-radius: 12px; padding: .9rem 1rem;
   margin-bottom: 1.2rem;
 }
+/* Same as above, and visible even when empty: this one has a background,
+   a border and padding, so an unlocked row drew a blank amber box. */
+.mc-ed-locked[hidden] { display: none; }
 .mc-ed-locked .bi { color: var(--mc-amber); font-size: 1.05rem; margin-top: .1rem; }
 .mc-ed-locked p  { margin: 0 0 .7rem; font-size: .88rem; color: #78350f; line-height: 1.55; }
 .mc-ed-locked p:last-child { margin-bottom: 0; }
@@ -211,6 +214,11 @@
   display: flex; align-items: flex-start; gap: .4rem;
   font-size: .82rem; color: var(--mc-danger-700); margin: .4rem 0 0;
 }
+/* `display: flex` beats the browser's own [hidden] rule. It matters most
+   here: the field editor hides a resolved message without clearing its
+   text, so without this the editor is still being told a field is wrong
+   after they have fixed it. Same fix as .mc-ed-dirty[hidden] below. */
+.mc-ed-error[hidden] { display: none; }
 .mc-ed-error .bi { margin-top: .1rem; }
 
 /* An English field and its Burmese partner, side by side rather than

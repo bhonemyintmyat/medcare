@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Roles and permissions — MedCare</title>
+<title>Contact details — MedCare</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -22,7 +22,7 @@
 <script src="js/admin-guard.js" defer></script>
 <script src="js/admin-shell.js" defer></script>
 <script src="js/admin-api.js" defer></script>
-<script src="js/admin-permissions.js" defer></script>
+<script src="js/admin-contact.js" defer></script>
 </head>
 <body>
 
@@ -127,8 +127,8 @@
         <i class="bi bi-list"></i>
       </button>
       <div>
-        <h1>Roles and permissions</h1>
-        <p class="mc-admin-top-sub">What each role may do, and who holds it.</p>
+        <h1>Contact details</h1>
+        <p class="mc-admin-top-sub">The address and the numbers on the Contact us page.</p>
       </div>
       <div class="mc-admin-top-right">
         <span class="mc-admin-who">
@@ -141,100 +141,111 @@
 
     <main class="mc-admin-content">
 
-      <p class="mc-admin-msg" id="permMsg" hidden></p>
+      <p class="mc-admin-msg" id="ctMsg" hidden></p>
 
-      <div class="mc-admin-note">
-        <i class="bi bi-exclamation-triangle"></i>
-        <div>
-          <strong>Granting the editor role is the most consequential thing on this site.</strong>
-          An editor writes and publishes what the site says about illness — what
-          a symptom means, when to go to hospital, which emergency number to
-          call. Give it to somebody whose medical judgement you would follow
-          yourself, not to somebody who needs to fix a typo.
-        </div>
-      </div>
-
-      <!-- ---------- The write ---------- -->
       <div class="mc-admin-card">
-        <h2>Change somebody’s role</h2>
+        <h2>What a reader sees</h2>
         <p class="mc-admin-hint">
-          Find the account, pick the role, confirm by typing their name. The
-          change takes effect on their next page load; until then the database
-          refuses the work anyway, whatever their browser thinks it is allowed
-          to draw.
+          These are the only two ways to reach the team that
+          <a href="../contact.html" target="_blank" rel="noopener">contact.html</a>
+          offers: one email address and up to four phone numbers. There is no
+          contact form on that page and nothing is collected from a reader
+          there, so what is typed below is the whole of it.
         </p>
 
-        <div class="mc-ad-grant">
-          <div>
-            <label class="mc-auth-label" for="permSearch">Account</label>
-            <input class="mc-people-search" id="permSearch" type="search"
-                   placeholder="Search by name, email or id" autocomplete="off"
-                   aria-describedby="permResultsHint">
-            <p class="mc-admin-hint" id="permResultsHint" style="margin:.5rem 0 0">
-              Start typing, or pick from the list.
-            </p>
-            <div class="mc-ad-results" id="permResults">
-              <div class="mc-skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
+        <form id="ctForm" novalidate>
+
+          <!-- ---------- The address ---------- -->
+          <label class="mc-auth-label" for="ctEmail">Email address</label>
+          <div class="mc-auth-field">
+            <input type="email" id="ctEmail" inputmode="email" autocomplete="off"
+                   spellcheck="false" maxlength="120"
+                   placeholder="medcare.example@gmail.com">
+          </div>
+          <p class="mc-ad-count">
+            A Gmail address, because that is the mailbox the team actually
+            reads. Anything else is refused rather than quietly saved — a
+            contact page pointing at an inbox nobody opens is worse than one
+            with no address at all.
+          </p>
+
+          <!-- ---------- The numbers ----------
+               Drawn by admin-contact.js from the saved row, because the
+               count varies. Empty rows are ignored on save, so a number is
+               removed by clearing it or by pressing Remove. -->
+          <label class="mc-auth-label" for="ctPhones">Phone numbers</label>
+          <div id="ctPhones" class="mc-ad-phones"></div>
+
+          <div class="mc-ad-phone-add">
+            <button type="button" class="mc-auth-btn mc-auth-btn--ghost mc-ad-rowbtn" id="ctAdd">
+              <i class="bi bi-plus-lg"></i> Add a number
+            </button>
+            <span class="mc-ad-count" id="ctAddHint">Up to 4.</span>
+          </div>
+
+          <div class="mc-ad-warn" id="ctEmptyWarn" hidden>
+            <i class="bi bi-exclamation-triangle"></i>
+            <span>
+              With no address and no number saved, the Contact us page keeps
+              the details written into the file it was published with. Nobody
+              lands on a blank page — but the details a reader is given are
+              then whatever was last deployed, not what is on this screen.
+            </span>
+          </div>
+
+          <!-- The preview uses the REAL public classes from styles.css, in a
+               framed box. A preview drawn from its own copy of the styling is
+               a preview of the copy. -->
+          <div class="mc-ad-preview" id="ctPreview" hidden>
+            <p class="mc-ad-preview-label">What a reader will see</p>
+            <div class="mc-contact-list" id="ctPreviewList"></div>
+          </div>
+
+          <div class="mc-ad-actions">
+            <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="ctReset" disabled>
+              Undo changes
+            </button>
+            <button type="submit" class="mc-auth-btn" id="ctSave" disabled>Save</button>
+          </div>
+        </form>
+
+        <p id="ctTouched"></p>
+      </div>
+
+      <div class="mc-admin-card">
+        <h2>What this screen will not do</h2>
+        <ul class="mc-ad-limits">
+          <li>
+            <i class="bi bi-telephone-x"></i>
+            <div>
+              <strong>It does not touch the emergency numbers</strong>
+              192, 191, 199 and the helplines on
+              <a href="../emergency-contacts.html" target="_blank" rel="noopener">emergency-contacts.html</a>
+              are health content. They are corrected in the
+              <a href="../editor/index.html">editor area</a>, by the people
+              qualified to be sure they are right.
             </div>
-          </div>
-
-          <div class="mc-ad-grant-form" id="permForm">
-            <div class="mc-state mc-state--empty" id="permEmpty">
-              <span class="mc-state-ico"><i class="bi bi-person-check"></i></span>
-              <h2>No account chosen</h2>
-              <p>Pick somebody on the left and their current role appears here.</p>
+          </li>
+          <li>
+            <i class="bi bi-chat-left-text"></i>
+            <div>
+              <strong>It does not add a contact form</strong>
+              A form would mean receiving whatever a frightened person types
+              about their own health into a database this site has no reason
+              to hold it in. An address and a number are enough.
             </div>
-            <div id="permChosen" hidden></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ---------- Who holds what ---------- -->
-      <div class="mc-admin-card">
-        <h2>Who holds each role</h2>
-        <p class="mc-admin-hint">
-          The two lists worth checking now and then. An account that no longer
-          needs the role is the commonest way a site ends up with more people
-          able to change it than anybody remembers.
-        </p>
-        <div id="permHolders">
-          <div class="mc-skeleton" aria-hidden="true"><span></span><span></span></div>
-        </div>
-      </div>
-
-      <!-- ---------- The matrix ---------- -->
-      <div class="mc-admin-card">
-        <h2>What each role may do</h2>
-        <p class="mc-admin-hint">
-          Every row names the policy or grant that enforces it, so any single
-          cell can be checked against the database rather than believed.
-        </p>
-
-        <div class="mc-admin-note mc-ad-note-tight">
-          <i class="bi bi-pencil"></i>
-          <div>
-            <strong>This table is written down, not read from the database.</strong>
-            Nothing in the browser can list the RLS policies — that needs
-            <code>pg_policies</code>, which no anon key may read. So this is a
-            description maintained by hand in <code>admin-api.js</code>, and it
-            goes stale the moment somebody edits a policy without editing it.
-            When the two disagree, the database is right and this is a bug.
-          </div>
-        </div>
-
-        <div class="mc-ad-matrix-wrap">
-          <table class="mc-ad-matrix" id="permMatrix">
-            <thead>
-              <tr>
-                <th scope="col">Can</th>
-                <th scope="col">Reader</th>
-                <th scope="col">Editor</th>
-                <th scope="col">Admin</th>
-              </tr>
-            </thead>
-            <tbody id="permMatrixBody"></tbody>
-          </table>
-        </div>
+          </li>
+          <li>
+            <i class="bi bi-eye"></i>
+            <div>
+              <strong>It is public the moment it is saved</strong>
+              <code>site_settings</code> is world-readable, including to
+              visitors who are not signed in — that is how the Contact us page
+              reads it. Never put a personal mobile here that should not be on
+              a public page.
+            </div>
+          </li>
+        </ul>
       </div>
 
     </main>

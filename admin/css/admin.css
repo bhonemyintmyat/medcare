@@ -580,3 +580,40 @@ html.mc-guard-pending body::after {
   .mc-admin-side { transition: none; }
   .mc-ad-result, .mc-ad-choice { transition: none; }
 }
+
+
+/* ===================== 7. Contact details =====================
+   admin/contact.html. One email field and a short list of phone rows,
+   plus a preview that uses the REAL public classes — .mc-contact-* in
+   styles.css — for the same reason the maintenance preview does: a
+   preview drawn from its own copy of the styling is a preview of the
+   copy. */
+
+.mc-ad-phones { display: grid; gap: .9rem; margin: 0 0 .9rem; }
+
+/* A row is a card rather than a bare line: three fields and a Remove
+   button that belong to the same number need a visible edge, or the
+   second row's label reads as the first row's footnote. */
+.mc-ad-phone {
+  background: var(--mc-bg); border: 1px solid var(--mc-border);
+  border-radius: 12px; padding: .9rem 1rem .95rem;
+}
+.mc-ad-phone-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: .8rem; }
+.mc-ad-phone .mc-auth-label { margin-top: 0; }
+.mc-ad-phone .mc-auth-label span { font-weight: 400; color: var(--mc-muted); }
+.mc-ad-phone-foot { display: flex; align-items: flex-end; gap: .8rem; margin-top: .6rem; }
+.mc-ad-phone-hint { flex: 1; min-width: 0; }
+.mc-ad-phone-none { margin: 0; }
+.mc-ad-phone-add { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; margin: 0 0 1rem; }
+.mc-ad-phone-add .mc-ad-count { margin: 0; }
+
+/* The preview's cards are spans, not links — there is nothing to open
+   from inside a form — so the hover state the public page has would be
+   a lie about what this box does. */
+.mc-ad-preview .mc-contact-list { margin: 0; }
+.mc-ad-preview .mc-contact-card:hover { transform: none; border-color: var(--mc-border); box-shadow: var(--mc-shadow); }
+
+@media (max-width: 575.98px) {
+  .mc-ad-phone-grid { grid-template-columns: 1fr; }
+  .mc-ad-phone-foot { flex-direction: column; align-items: stretch; }
+}

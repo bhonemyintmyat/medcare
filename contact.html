@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact Us — MedCare</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
+<script src="supabase.js" defer></script>
+<script src="auth.js" defer></script>
+<script src="script.js" defer></script>
+<script src="contact.js" defer></script>
+</head>
+<body>
+
+<!-- ===================== Navbar ===================== -->
+<nav class="navbar navbar-expand-lg mc-nav">
+  <div class="container">
+    <a class="navbar-brand" href="index.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mcNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="mcNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="common-diseases.html">Common diseases</a></li>
+        <li class="nav-item"><a class="nav-link" href="hospitals.html">Find Hospitals</a></li>
+        <li class="nav-item"><a class="nav-link" href="emergency-contacts.html">Emergency</a></li>
+        <li class="nav-item"><a class="nav-link" href="pharmacy.html">Pharmacy</a></li>
+      </ul>
+      <a href="emergency-contacts.html" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== Contact ===================== -->
+<main>
+  <section class="mc-page-head">
+    <div class="container">
+      <div class="mc-breadcrumb">
+        <a href="index.html"><i class="bi bi-house"></i> Home</a>
+        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+        <span>Contact us</span>
+      </div>
+      <h1>Contact Us</h1>
+      <p class="intro">Two ways to reach the MedCare team: send an email, or call. There is no contact form on this page, and nothing about you is collected here.</p>
+    </div>
+  </section>
+
+  <section class="mc-detail-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+          <!-- First on the page. Somebody in trouble must not have to
+               read past an office phone number to find the ambulance. -->
+          <div class="mc-callout">
+            <span class="ico"><i class="bi bi-exclamation-triangle-fill"></i></span>
+            <div>
+              <h3>This is not an emergency line</h3>
+              <p>Nobody watches this inbox or this phone around the clock, and no one can be diagnosed or treated by email. In a medical emergency, call 192 for an ambulance.</p>
+              <p style="margin:0"><a href="emergency-contacts.html">Emergency contacts</a></p>
+            </div>
+          </div>
+
+          <!-- ---------- The details ----------
+               What is written here is the fallback, and it is what a
+               reader sees if the database is unreachable or has never
+               been seeded. contact.js replaces it with site_settings key
+               'footer.contact' when that row answers, so an admin can
+               correct a number on admin/contact.html without a deploy.
+
+               These are PLACEHOLDERS. Set the real address and numbers
+               on admin/contact.html, then bring them back here so the
+               offline copy is right too. -->
+          <div class="mc-contact-list" id="contactList">
+            <a class="mc-contact-card" href="mailto:medcare.myanmar@gmail.com">
+              <span class="mc-contact-ico"><i class="bi bi-envelope-fill"></i></span>
+              <span class="body">
+                <span class="label">Email</span>
+                <span class="value">medcare.myanmar@gmail.com</span>
+                <span class="hint">Questions about the site, corrections to a page, or anything else for the team.</span>
+              </span>
+              <i class="bi bi-arrow-right arr"></i>
+            </a>
+
+            <a class="mc-contact-card" href="tel:+95912345678">
+              <span class="mc-contact-ico"><i class="bi bi-telephone-fill"></i></span>
+              <span class="body">
+                <span class="label">Office line</span>
+                <span class="value">+95 9 123 456 78</span>
+                <span class="hint">Monday to Friday, 9am to 5pm.</span>
+              </span>
+              <i class="bi bi-arrow-right arr"></i>
+            </a>
+          </div>
+
+          <p class="mc-contact-note">Tap a number to call it, or the address to open your mail app.</p>
+
+          <div class="mc-callout mc-callout--info">
+            <span class="ico"><i class="bi bi-shield-check"></i></span>
+            <div>
+              <h3>What we can help with</h3>
+              <p>Anything about the website: a page that looks wrong, a hospital or pharmacy whose details have changed, a broken link, or a problem using the site with a screen reader or on a slow connection.</p>
+              <p style="margin:0">We do not give medical advice by email or on the phone, and we cannot read test results, book appointments, or say which medicine to take. For that you need a doctor — the <a href="hospitals.html">hospital list</a> and the <a href="pharmacy.html">pharmacy list</a> are there to help you find one.</p>
+            </div>
+          </div>
+
+          <div class="mc-article-prose">
+            <h2 class="mc-article-h2">Something wrong on a page</h2>
+            <p>Every disease and article page carries a <strong>Report inaccuracy</strong> link at the bottom. That reaches the editors with the page already attached, which is faster and more exact than an email describing it. Email is the right choice for everything else.</p>
+
+            <h2 class="mc-article-h2">Privacy</h2>
+            <p>Writing to us is not anonymous: your email address, or your phone number, arrives with your message, and the reply goes back to it. Nothing else about you is stored, and what you send is not added to any profile or passed to anybody outside the team. The <a href="privacy.html">privacy policy</a> covers the rest.</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== Footer ===================== -->
+<footer class="mc-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4 brand-block">
+        <a class="navbar-brand mb-3 d-inline-flex" href="index.html" style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);gap:.55rem;align-items:center">
+          <span style="width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center"><i class="bi bi-heart-pulse-fill"></i></span>MedCare
+        </a>
+        <p>Trusted, plain-language health information reviewed by licensed medical professionals. Free for everyone, everywhere.</p>
+      </div>
+      <div class="col-6 col-md-3 col-lg-2">
+        <h5>About</h5>
+        <ul><li><a href="editor.html">Our editorial team</a></li><li><a href="contact.html">Contact us</a></li></ul>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <h5>Legal</h5>
+        <ul><li><a href="terms.html">Terms of use</a></li><li><a href="privacy.html">Privacy policy</a></li><li><a href="cookies.html">Cookie settings</a></li></ul>
+      </div>
+    </div>
+    <div class="mc-disclaimer">
+      <span class="note"><i class="bi bi-info-circle"></i> Information only — not a substitute for professional medical advice, diagnosis, or treatment.</span>
+      <span>© 2026 MedCare. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

@@ -3,16 +3,14 @@
 
   /* ---------- Data ---------- */
 
-  // Live disease list. Starts EMPTY and is filled in at runtime by
-  // loadDiseases() from the Supabase `diseases` table. Because the fetch is
-  // asynchronous, any code reading this must cope with it being [] at first.
-  var diseases = [];
-
-  // BACKUP of the original hard-coded list. Nothing reads this any more — it
-  // is kept on purpose so the data is not lost while Supabase beds in.
-  // To go back to it, either point renderDiseaseList() at `diseasesBackup`,
-  // or see the one-line fallback note inside loadDiseases().
-  var diseasesBackup = [
+  // The twelve conditions this site shipped with, and what the page draws
+  // before Supabase has answered anything. loadDirectory('diseases', ...)
+  // replaces them with the published rows when those arrive; if that never
+  // happens, the reader keeps these. Same bargain the hospital, pharmacy
+  // and article lists make, and made for the same reason: a stale list of
+  // conditions is worth more to somebody looking up their symptoms than an
+  // apology where the conditions were.
+  var diseases = [
     { name: 'Hypertension', icon: 'bi-heart-pulse', tag: 'Chronic', cat: 'chronic', href: 'diseases/hypertension.html', desc: 'High blood pressure often has no symptoms but raises the risk of stroke and heart disease over time. ' },
     { name: 'Diabetes', icon: 'bi-droplet-half', tag: 'Chronic', cat: 'chronic', href: 'diseases/diabetes.html', desc: 'A long-term condition where blood sugar levels are too high, manageable with diet, exercise, and medication.' },
     { name: 'Asthma', icon: 'bi-lungs', tag: 'Respiratory', cat: 'respiratory',href: 'diseases/asthma.html', desc: 'Airways narrow and swell, causing wheezing and shortness of breath — usually controlled with inhalers.' },
@@ -608,6 +606,42 @@
   }
   var townValues = townshipsOf(hospitals);
 
+  /* ---------- Two ways for a list to be empty ----------
+     Until now there was only one, so every empty state on the site is
+     worded for it: "No hospitals match your filters", and a button that
+     clears them. `hasMigrated` creates the second one — the table
+     answered and said nothing — and under that sentence the same copy
+     tells a reader to undo a filter they never set, below a button that
+     will not help.
+
+     So the heading and the blurb are swapped when the list is empty at
+     source, and the reset button is hidden, because there is nothing to
+     reset. The filter wording is read off the element the page shipped
+     with and put back whenever it applies again, so that copy goes on
+     living in the HTML where it can be edited.
+
+     The blurb the caller passes depends on probeTotal(): "nothing has
+     been published" when the table really is bare, and "none of them are
+     published" when it is not. Only staff ever see the second — see
+     probeTotal() for why.
+
+     Both markups are covered: the disease grid's div/div and the two
+     directories' h3/p. Neither is addressed by index. */
+  function emptyState(el, sourceEmpty, heading, blurb) {
+    if (!el) { return; }
+    var h = el.querySelector('h3') || el.querySelector('.fw-semibold');
+    var p = h && h.nextElementSibling;
+    if (!h || !p) { return; }
+
+    if (!el.mcFilterCopy) { el.mcFilterCopy = [h.textContent, p.textContent]; }
+
+    h.textContent = sourceEmpty ? heading : el.mcFilterCopy[0];
+    p.textContent = sourceEmpty ? blurb   : el.mcFilterCopy[1];
+
+    var reset = el.querySelector('button');
+    if (reset) { reset.style.display = sourceEmpty ? 'none' : ''; }
+  }
+
   /* ---------- A directory, from its table ----------
      hospitals.html and pharmacy.html each shipped with a hard-coded list
      and each now takes the published rows from its table instead. Same
@@ -622,6 +656,20 @@
          to find a phone number, a slightly stale directory beats an
          error where the directory was.
 
+       * WHETHER to fall back is the caller's decision, and it is made on
+         `hasMigrated` rather than on a row count. A request the table
+         answered is the evidence that the table is there; zero rows in
+         an answered request is a real answer and the page shows it as
+         one. Only an unanswered request — no client, an error, a dead
+         network — leaves the shipped array standing, because that is the
+         only case where the site genuinely does not know.
+
+         The old rule was `if (!rows.length) return`, which read an empty
+         table as a migration that had not been run. That is one guess
+         about why a table is empty, and it made deleting the last row of
+         a directory impossible: the page would resurrect the shipped
+         list over the top of the deletion.
+
        * .eq('status', 'published') is not redundant with RLS. The public
          policy serves published rows only, but the STAFF policy serves
          every row — so without this, an editor or an admin reading the
@@ -634,12 +682,23 @@
          twice.
 
      `map` turns a row into the shape the page's render function already
-     expects, so nothing below this had to learn about columns. */
+     expects, so nothing below this had to learn about columns.
+
+     `apply` is called exactly once, always, with (rows, hasMigrated, total):
+
+       hasMigrated === true   the table answered. `rows` is what it said,
+                              empty included. Show it.
+       hasMigrated === false  nothing answered. `rows` is []. Keep the
+                              shipped array; it is all the page has.
+       total                  see probeTotal(). null unless the table
+                              answered with nothing, and null even then
+                              if the probe itself did not answer. */
   function loadDirectory(table, map, apply) {
     var db = window.supabaseClient;
     // supabase.js sets this to null when the library or the keys are
-    // missing; it already logged why. The shipped list stands.
-    if (!db) { return; }
+    // missing; it already logged why. Nothing answered, so nothing is
+    // known, so the shipped list stands.
+    if (!db) { apply([], false, null); return; }
 
     db.from(table)
       .select('*')
@@ -650,18 +709,56 @@
         // with { data, error }. A missing table or a blocking policy
         // shows up here, not in .catch().
         if (res.error) { throw res.error; }
-        var rows = res.data || [];
-        // An empty table is far more likely to be a migration that has
-        // not been run than a country with no hospitals in it. Keep what
-        // is on screen.
-        if (!rows.length) { return; }
-        apply(rows.map(map));
+        // Answered. Zero rows is an answer too — see the note above.
+        var rows = (res.data || []).map(map);
+        // Rows came back, so there is nothing to explain and nothing to
+        // ask. The probe costs a round trip and only ever earns it on a
+        // page that came back blank.
+        if (rows.length) { apply(rows, true, null); return; }
+        probeTotal(db, table, function (total) { apply([], true, total); });
       })
       .catch(function (err) {
-        // Deliberately quiet on the page. The reader has a working list;
-        // this is for whoever is looking at a console.
+        // Deliberately quiet on the page. The reader still has the
+        // shipped list; this is for whoever is looking at a console.
         console.error('[MedCare] Could not refresh ' + table + ' from Supabase:', err);
+        apply([], false, null);
       });
+  }
+
+  /* ---------- Why is it empty ----------
+     The listing above asks for published rows. When that comes back with
+     none, this asks a second question — how many rows are there at all,
+     of any status — and the gap between the two answers is the reason
+     the page is blank.
+
+     WHAT IT CANNOT DO. It cannot tell a blocked read from an empty
+     table. Row Level Security applies to this count exactly as it
+     applies to the listing, so a policy that hides everything hides it
+     from the probe too and both come back zero. Nothing sent with the
+     anon key can get around that, because the anon key is the identity
+     being refused. Detecting THAT needs something whose visibility does
+     not depend on the same policy — a security-definer RPC, or a
+     published number to compare against — which is server work, not a
+     second query.
+
+     WHAT IT DOES DO. The public policy on all four tables is
+     `status = 'published'`, so for a signed-out reader this count and
+     the listing's count are the same number and the answer is always
+     zero. For a signed-in editor or admin, whose policy serves every
+     row, it is the total — and `total > 0` beside an empty listing is
+     precisely "your rows are all still drafts", which is a different
+     sentence from "there is nothing here" and is worth the round trip
+     to the one person who can act on it.
+
+     Its own failure is not the caller's problem: a probe that does not
+     answer reports null and the page says the ordinary thing. */
+  function probeTotal(db, table, done) {
+    db.from(table)
+      .select('id', { count: 'exact', head: true })
+      .then(function (res) {
+        done(res.error || res.count == null ? null : res.count);
+      })
+      .catch(function () { done(null); });
   }
 
   /* ---------- Home: image slider ---------- */
@@ -747,9 +844,14 @@
       b.className = 'mc-chip';
       b.textContent = c.label;
       b.setAttribute('data-cat', c.id);
-      b.addEventListener('click', function () { dState.category = c.id; renderDiseases(); });
+      b.addEventListener('click', function () { dState.category = c.id; renderDiseaseList(); });
       dChips.appendChild(b);
     });
+
+    // How many conditions exist at any status, once the table has come
+    // back with no published ones. null until then, and null for a
+    // signed-out reader — see probeTotal().
+    var dTotal = null;
 
     // Unchanged from before: this is your original search + category filter and
     // card markup, untouched. It only ever runs once the data has arrived.
@@ -788,110 +890,45 @@
       }).join('');
       dCount.textContent = filtered.length;
       dWord.textContent = filtered.length === 1 ? 'condition' : 'conditions';
+      emptyState(dEmpty, diseases.length === 0,
+        'No conditions listed yet',
+        dTotal > 0
+          ? 'Nothing is published yet — ' + dTotal + ' waiting in the editor desk.'
+          : 'Nothing has been published here yet. Please check back.');
       dEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
       Array.prototype.forEach.call(dChips.children, function (b) {
         b.classList.toggle('active', b.getAttribute('data-cat') === cat);
       });
     };
 
-    /* ---------- Loading / error states ----------
-       The array was available the instant the script ran. A fetch is not, so
-       the page now has three possible states instead of one. `dPhase` tracks
-       which one we are in, and renderDiseases() picks the right view. */
-    var dPhase = 'loading';   // 'loading' | 'ready' | 'error'
-
-    // Shows a full-width panel in the grid, reusing the existing empty-state
-    // styling so it matches the rest of the page.
-    var showDiseasePanel = function (html) {
-      dGrid.innerHTML = '<div class="col-12"><div class="mc-empty-simple" style="display:block">' + html + '</div></div>';
-      dEmpty.style.display = 'none';
-      dCount.textContent = '0';
-      dWord.textContent = 'conditions';
-    };
-
-    var showDiseaseLoading = function () {
-      showDiseasePanel(
-        '<div class="spinner-border text-secondary" role="status" style="width:1.75rem;height:1.75rem;border-width:.2em"></div>' +
-        '<div class="fw-semibold" style="color:var(--mc-text);font-size:1rem;margin:.6rem 0 .25rem">Loading conditions…</div>' +
-        '<div>Fetching the latest list.</div>'
-      );
-    };
-
-    var showDiseaseError = function () {
-      showDiseasePanel(
-        '<i class="bi bi-wifi-off"></i>' +
-        '<div class="fw-semibold" style="color:var(--mc-text);font-size:1rem;margin-bottom:.25rem">Could not load conditions</div>' +
-        '<div>Something went wrong fetching the list. Check your connection and try again.</div>' +
-        '<button type="button" class="mc-chip" id="diseaseRetry" style="margin-top:.85rem">Try again</button>'
-      );
-      var retry = byId('diseaseRetry');
-      if (retry) { retry.addEventListener('click', function () { loadDiseases(); }); }
-    };
-
-    // Everything that used to call renderDiseases() still does. It now decides
-    // which of the three views to show, so the chips and the search box behave
-    // sensibly even while the data is still in flight.
-    var renderDiseases = function () {
-      if (dPhase === 'loading') { showDiseaseLoading(); return; }
-      if (dPhase === 'error') { showDiseaseError(); return; }
-      renderDiseaseList();
-    };
-
-    /* ---------- The fetch ---------- */
-    var loadDiseases = function () {
-      dPhase = 'loading';
-      renderDiseases();
-
-      var db = window.supabaseClient;
-      if (!db) {
-        // supabase.js sets this to null when the library or the keys are
-        // missing; it already logged why.
-        dPhase = 'error';
-        renderDiseases();
-        return;
-      }
-
-      /* .eq('status', 'published') is not redundant with RLS, and it is
-         the same guard the articles listing carries. The public policy
-         serves published rows only, but the STAFF policy serves every
-         row - so without this, an editor or admin who opens this public
-         page sees draft disease cards a signed-out reader never would,
-         and clicks through to a page the public cannot reach. This is a
-         public listing; it shows what the public sees, whoever is
-         looking.
-
-         .order('id') matters too: without an explicit order Postgres
-         makes no promise about row order, so the cards could shuffle
-         between loads. */
-      db.from('diseases')
-        .select('*')
-        .eq('status', 'published')
-        .order('id')
-        .then(function (res) {
-          // supabase-js does NOT throw on a database error — it resolves with
-          // { data, error }. A missing table or a blocking RLS policy shows up
-          // here, not in .catch(), so this check has to be explicit.
-          if (res.error) { throw res.error; }
-          diseases = res.data || [];
-          dPhase = 'ready';
-          renderDiseases();
-        })
-        .catch(function (err) {
-          // .catch() handles the other failure mode: the request never
-          // completed at all (offline, DNS, CORS, project paused).
-          console.error('[MedCare] Could not load diseases from Supabase:', err);
-          // To fall back to the old hard-coded list instead of showing an
-          // error, replace the next two lines with:
-          //   diseases = diseasesBackup; dPhase = 'ready';
-          dPhase = 'error';
-          renderDiseases();
-        });
-    };
-
     if (dSearch) {
-      dSearch.addEventListener('input', function (e) { dState.query = e.target.value; renderDiseases(); });
+      dSearch.addEventListener('input', function (e) {
+        dState.query = e.target.value; renderDiseaseList();
+      });
     }
-    loadDiseases();
+
+    // The shipped list, drawn now. There is no loading state to show
+    // because there is no moment at which this page has nothing to say.
+    renderDiseaseList();
+
+    /* Then the real list, over the top of it. Same call the hospitals and
+       the pharmacies make, so the rules are the same rules: published rows
+       only, ordered, and a failure or an empty table leaves what is on
+       screen alone and says so only to the console.
+
+       No mapping. A `diseases` row already carries name, desc, icon, tag,
+       cat and href under those names, and pageHref() sends the ones with a
+       body written in the editor to read.html and the rest to the
+       hand-written page in diseases/. */
+    loadDirectory('diseases', function (r) { return r; }, function (rows, hasMigrated, total) {
+      // Nothing answered: the twelve shipped conditions are all this page
+      // has, and they are already on screen.
+      if (!hasMigrated) { return; }
+      // The table answered. Whatever it said is the list, zero included.
+      diseases = rows;
+      dTotal = total;
+      renderDiseaseList();
+    });
   }
 
   /* ---------- Where a row's page lives ----------
@@ -909,15 +946,21 @@
      The href is escaped here rather than at the call sites. It is
      editor-supplied and it goes straight into an attribute, which is
      exactly the shape of bug that gets missed when each caller is
-     trusted to remember. */
-  var pageHref = function (kind, row, fallback) {
+     trusted to remember.
+
+     A declaration and not a `var pageHref = function`, because the
+     disease grid draws its shipped list the moment the script reaches
+     it — which is above this line. Hoisting is what makes that legal,
+     and esc(), byId() and loadDirectory() above are declarations for
+     the same reason. */
+  function pageHref(kind, row, fallback) {
     var hasBody = (row.body && String(row.body).trim()) ||
                   (row.body_my && String(row.body_my).trim());
     if (hasBody && row.id != null) {
       return 'read.html?type=' + kind + '&id=' + encodeURIComponent(row.id);
     }
     return esc(row.href || fallback);
-  };
+  }
 
   /* ---------- Health articles listing (articles.html) ----------
      Each article lives in its own page and carries both languages, so the cards
@@ -1083,10 +1126,12 @@
         .order('id')
         .then(function (res) {
           if (res.error) { throw res.error; }
-          var rows = res.data || [];
-          if (!rows.length) { return; }   // keep what is on screen
-
-          myArticles = rows.map(function (r) {
+          /* The table answered, so what it said is the list — zero rows
+             included. Same rule loadDirectory() applies to the three
+             directories, and stated there at length: only an unanswered
+             request leaves the shipped array standing, because that is
+             the only case where the page does not know. */
+          myArticles = (res.data || []).map(function (r) {
             return {
               id: r.id,
               href: r.href,
@@ -1128,6 +1173,11 @@
   /* ---------- Find Hospitals page ---------- */
   var hList = byId('hospList');
   if (hList) {
+    // Rows at any status, once the table has answered with no published
+    // ones. null until then, and null for a signed-out reader — see
+    // probeTotal().
+    var hTotal = null;
+
     var hState = {
       query: param('q'),
       township: param('town') || 'all',
@@ -1228,6 +1278,11 @@
       }).join('');
       hCount.textContent = filtered.length;
       hWord.textContent = filtered.length === 1 ? 'hospital' : 'hospitals';
+      emptyState(hEmpty, hospitals.length === 0,
+        'No hospitals listed yet',
+        hTotal > 0
+          ? 'Nothing is published yet — ' + hTotal + ' waiting in the editor desk.'
+          : 'Nothing has been published here yet. For an emergency, the contacts page still works.');
       hEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
     };
 
@@ -1264,8 +1319,10 @@
         hours: r.hours || '',
         er: !!r.er
       };
-    }, function (rows) {
+    }, function (rows, hasMigrated, total) {
+      if (!hasMigrated) { return; }   // shipped list stands; see loadDirectory()
       hospitals = rows;
+      hTotal = total;
       townValues = townshipsOf(hospitals);
       buildTownships();
       buildTypes();
@@ -1279,6 +1336,11 @@
   /* ---------- Find a Pharmacy page ---------- */
   var pList = byId('pharmList');
   if (pList) {
+    // Rows at any status, once the table has answered with no published
+    // ones. null until then, and null for a signed-out reader — see
+    // probeTotal().
+    var pTotal = null;
+
     var pState = {
       query: param('q'),
       township: param('town') || 'all',
@@ -1385,6 +1447,11 @@
       }).join('');
       pCount.textContent = filtered.length;
       pWord.textContent = filtered.length === 1 ? 'pharmacy' : 'pharmacies';
+      emptyState(pEmpty, pharmacies.length === 0,
+        'No pharmacies listed yet',
+        pTotal > 0
+          ? 'Nothing is published yet — ' + pTotal + ' waiting in the editor desk.'
+          : 'Nothing has been published here yet. Please check back.');
       pEmpty.style.display = filtered.length === 0 ? 'block' : 'none';
     };
 
@@ -1421,8 +1488,10 @@
         open24: !!r.open24,
         delivery: !!r.delivery
       };
-    }, function (rows) {
+    }, function (rows, hasMigrated, total) {
+      if (!hasMigrated) { return; }   // shipped list stands; see loadDirectory()
       pharmacies = rows;
+      pTotal = total;
       buildPharmTownships();
       buildPharmTypes();
       buildPharmServices();
@@ -1484,7 +1553,8 @@
      One query, and only where the menu actually is. */
   if (document.querySelector('.mc-town-menu')) {
     loadDirectory('hospitals', function (r) { return { township: r.township }; },
-      function (rows) {
+      function (rows, hasMigrated) {
+        if (!hasMigrated) { return; }   // shipped list stands; see loadDirectory()
         townValues = townshipsOf(rows);
         renderTownMenu();
       });

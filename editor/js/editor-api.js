@@ -42,6 +42,48 @@
        because a translation is edited while looking at its source.
      ================================================================ */
 
+  /* ---------- Where a hospital or a pharmacy is ----------
+     The 44 townships of Yangon Region — the four districts' worth, city
+     and rural, Coco Islands included — because a directory that only
+     offers downtown is a directory that quietly tells whoever is
+     entering a clinic in Htantabin that their township is not a real
+     one.
+
+     SPELLING IS THE WHOLE POINT. `township` is a plain text column and
+     the public filters on hospitals.html and pharmacy.html build
+     themselves by grouping on its exact value, so "Mayangone" and
+     "Mayangon" are two townships to this site and a row spelled the
+     second way is one a reader filtering for the first will never see.
+     These are the spellings already in the seeded rows, extended in the
+     same style — spaced and anglicised — for the townships that had no
+     row yet. Alphabetical, because a person looking for one scans for
+     it rather than knowing which district it is in.
+
+     Hlaing Tharyar is one entry, not the East and West it was split
+     into in 2022: the rows in the table say "Hlaing Tharyar", and an
+     option no existing row can match is worse than a boundary that is
+     one administrative change out of date.
+
+     The list is what the entry form offers and the only thing it
+     offers, so no new row can invent a forty-fifth township. It is
+     still not a constraint on rows that already exist: the column is
+     plain text, the database rejects nothing, and both the filter on
+     content.html and the entry form itself keep whatever spelling a row
+     already holds rather than dropping it. An odd one stays reachable,
+     stays visible as odd, and is fixed by a person who knows which of
+     the 44 it meant. */
+  var TOWNSHIPS = [
+    'Ahlone', 'Bahan', 'Botahtaung', 'Cocokyun', 'Dagon', 'Dagon Seikkan',
+    'Dala', 'Dawbon', 'East Dagon', 'Hlaing', 'Hlaing Tharyar', 'Hmawbi',
+    'Htantabin', 'Insein', 'Kamayut', 'Kawhmu', 'Kayan', 'Kungyangon',
+    'Kyauktada', 'Kyauktan', 'Kyeemyindaing', 'Lanmadaw', 'Latha',
+    'Mayangone', 'Mingala Taungnyunt', 'Mingaladon', 'North Dagon',
+    'North Okkalapa', 'Pabedan', 'Pazundaung', 'Sanchaung',
+    'Seikgyikanaungto', 'Seikkan', 'Shwe Pyi Thar', 'South Dagon',
+    'South Okkalapa', 'Taikkyi', 'Tamwe', 'Thaketa', 'Thanlyin',
+    'Thingangyun', 'Thongwa', 'Twantay', 'Yankin'
+  ];
+
   var TYPES = {
     disease: {
       table: 'diseases',
@@ -135,6 +177,10 @@
       icon: 'bi-hospital',
       titleField: 'name',
       subField: 'township',
+      /* Which column the town filter on content.html narrows by. Its
+         presence is also what puts that filter on the screen at all —
+         diseases and articles have no township and get no dropdown. */
+      townField: 'township',
       fields: [
         { name: 'name', label: 'Name', type: 'text', required: true, max: 160 },
         { name: 'type', label: 'Type', type: 'select', required: true,
@@ -143,8 +189,18 @@
             { value: 'specialist', text: 'Specialist hospital' },
             { value: 'clinic',     text: 'Clinic' }
           ] },
-        { name: 'township', label: 'Township', type: 'text', required: true, max: 120,
-          hint: 'Spelled the way the township filter on hospitals.html spells it, or it will not group.' },
+        /* Chosen, not typed. A township is the one field on this form
+           whose value has to match other rows character for character:
+           hospitals.html builds its filter out of the spellings the
+           rows contain, so "Mayangon" beside "Mayangone" is not a typo
+           there, it is a forty-fifth township with one hospital in it.
+           A list of the 44 is the only version of this field that
+           cannot invent one. See TOWNSHIPS above, and the note in
+           controlHtml() for what happens to a row that already holds a
+           spelling this list does not offer. */
+        { name: 'township', label: 'Township', type: 'select', required: true,
+          options: TOWNSHIPS,
+          hint: 'Yangon Region only. The filter on hospitals.html groups by exactly this.' },
         { name: 'address', label: 'Address', type: 'textarea', required: true, max: 400 },
         { name: 'phone', label: 'Phone', type: 'tel', max: 60, confirm: true,
           hint: 'Typed twice. A wrong number here sends somebody to the wrong place while they are frightened.' },
@@ -167,6 +223,7 @@
       icon: 'bi-capsule',
       titleField: 'name',
       subField: 'township',
+      townField: 'township',
       fields: [
         { name: 'name', label: 'Name', type: 'text', required: true, max: 160,
           hint: 'Include the branch if it is one of a chain — "City Mart Pharmacy — Junction City".' },
@@ -177,8 +234,10 @@
             { value: 'hospital',    text: 'Hospital pharmacy' },
             { value: 'clinic',      text: 'Clinic pharmacy' }
           ] },
-        { name: 'township', label: 'Township', type: 'text', required: true, max: 120,
-          hint: 'Spelled the way the township filter on pharmacy.html spells it, or it will not group.' },
+        // Chosen from the list, for the reason set out on hospitals above.
+        { name: 'township', label: 'Township', type: 'select', required: true,
+          options: TOWNSHIPS,
+          hint: 'Yangon Region only. The filter on pharmacy.html groups by exactly this.' },
         { name: 'address', label: 'Address', type: 'textarea', required: true, max: 400 },
         { name: 'phone', label: 'Phone', type: 'tel', max: 60, confirm: true,
           hint: 'Typed twice. Somebody rings this to ask whether a medicine is in stock before they travel for it.' },
@@ -635,6 +694,7 @@
 
   window.MedCareEditor = {
     TYPES: TYPES,
+    TOWNSHIPS: TOWNSHIPS,
     STATUSES: STATUSES,
     TRANSITIONS: TRANSITIONS,
     movesFrom: movesFrom,

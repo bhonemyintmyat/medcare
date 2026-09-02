@@ -184,6 +184,13 @@
           <input class="mc-ed-search" id="listSearch" type="search"
                  placeholder="Search by name, category or link" autocomplete="off">
 
+          <!-- Hospitals and pharmacies only, and filled in by
+               editor-content.js from MedCareEditor.TOWNSHIPS. Hidden
+               rather than absent so the tools row does not reflow when
+               the script decides. -->
+          <label class="visually-hidden" for="listTown">Filter by township</label>
+          <select class="mc-ed-town" id="listTown" hidden></select>
+
           <div class="mc-ed-filters" id="statusFilters" role="group" aria-label="Filter by status">
             <button type="button" class="mc-chip is-active" data-status="">All</button>
             <button type="button" class="mc-chip" data-status="draft">Draft</button>

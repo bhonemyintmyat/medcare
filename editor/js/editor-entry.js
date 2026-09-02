@@ -99,6 +99,18 @@
 
   function fieldId(field) { return 'f_' + field.name; }
 
+  /* Does this select hold something it cannot offer? True only of a
+     value that is really there: '' is the "Choose…" option, not a
+     spelling that has gone missing. */
+  function offList(field, value) {
+    if (field.type !== 'select' || value === '' || value === null || value === undefined) {
+      return false;
+    }
+    return !(field.options || []).some(function (o) {
+      return String(typeof o === 'string' ? o : o.value) === String(value);
+    });
+  }
+
   function controlHtml(field, value) {
     var common = 'id="' + fieldId(field) + '" name="' + field.name + '"' +
                  (field.max ? ' maxlength="' + (field.max + 40) + '"' : '') +
@@ -113,6 +125,15 @@
         return '<div class="mc-auth-field"><textarea ' + common + ' rows="3">' +
                ed.esc(value) + '</textarea></div>';
 
+      /* A select whose stored value is not one of its options gets that
+         value back as an option of its own, at the top and marked.
+         Townships are why: the field was free text until the list of 44
+         replaced it, so rows exist spelled "Mayangon" where the list
+         says "Mayangone". A plain select would show such a row as
+         "Choose…" and rewrite it to '' or to whatever was picked the
+         next time anybody saved the phone number — an edit nobody made,
+         to a field nobody looked at. Kept instead, and offListNote()
+         says out loud that it wants fixing. */
       case 'select':
         var opts = (field.options || []).map(function (o) {
           var v = typeof o === 'string' ? o : o.value;
@@ -120,8 +141,12 @@
           return '<option value="' + ed.esc(v) + '"' +
                  (String(value) === String(v) ? ' selected' : '') + '>' + ed.esc(t) + '</option>';
         }).join('');
+        var strayOpt = offList(field, value)
+          ? '<option value="' + ed.esc(value) + '" selected>' + ed.esc(value) +
+            ' — not on the list</option>'
+          : '';
         return '<div class="mc-auth-field"><select ' + common + '>' +
-                 '<option value="">Choose…</option>' + opts +
+                 '<option value="">Choose…</option>' + strayOpt + opts +
                '</select></div>';
 
       case 'checkbox':
@@ -212,6 +237,7 @@
              '</div>' +
              controlHtml(field, value) +
              (field.hint ? '<p class="mc-admin-hint">' + ed.esc(field.hint) + '</p>' : '') +
+             (field.type === 'select' ? '<p class="mc-ed-stray" data-stray hidden></p>' : '') +
              '<p class="mc-ed-error" hidden></p>' +
              confirmHtml(field) +
            '</div>';
@@ -355,6 +381,29 @@
     }
   }
 
+  /* Said in amber, not in red, and deliberately not a fieldError: a
+     township spelled the old way is a row to correct, not a row to
+     freeze. Making it an error would gate Save, and the save being
+     gated would be somebody trying to fix a hospital's phone number at
+     eleven at night and being told they may not until they have also
+     decided what "Mayangon" was meant to say. */
+  function offListNote(field) {
+    var wrap = hostEl.querySelector('[data-field="' + field.name + '"]');
+    var p = wrap && wrap.querySelector('[data-stray]');
+    if (!p) { return; }
+
+    var el = control(field.name);
+    var value = el ? el.value : '';
+    if (!offList(field, value)) { p.hidden = true; p.textContent = ''; return; }
+
+    p.innerHTML = '<i class="bi bi-exclamation-triangle"></i><span>' +
+      ed.esc('“' + value + '” is not one of the choices here — an older spelling, most ' +
+             'likely. It is kept, so saving cannot quietly change it, but it will go on ' +
+             'grouping on its own in the public filters until somebody picks the right one.') +
+      '</span>';
+    p.hidden = false;
+  }
+
   function validate(quiet) {
     var firstBad = null;
 
@@ -414,8 +463,9 @@
         }
       }
 
-      if (field.name === 'icon')  { refreshIcon(); }
-      if (field.type === 'image') { refreshThumbs(); }
+      if (field.name === 'icon')   { refreshIcon(); }
+      if (field.type === 'image')  { refreshThumbs(); }
+      if (field.type === 'select') { offListNote(field); }
 
       // Clear a shown error the moment it stops being true, but do not
       // start showing one while somebody is still typing the value.

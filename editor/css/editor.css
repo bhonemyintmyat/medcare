@@ -644,14 +644,24 @@ a.mc-ed-stat:hover { border-color: var(--mc-primary); box-shadow: var(--mc-shado
 
 /* ===================== 7. Sidebar foot ===================== */
 
-/* Both ways out of the editor desk, given a colour instead of the quiet
-   treatment admin.css gives them. Scoped to this file, which only the
-   editor pages load, so the admin sidebar keeps its own styling.
+/* "Back to MedCare" is the only control down here, and it is always
+   here. admin.css gives the sidebar `overflow-y: auto` and pushes this
+   block down with `margin-top: auto`, which on a short viewport — or
+   with the editor's longer nav — means the way out is below the fold
+   of the sidebar's own scroller and you have to go looking for it.
+   Sticking it to the bottom of that scroller keeps it on screen at
+   every scroll position instead: the sections scroll behind it.
 
-   Green for "Back to MedCare" — the ordinary way out, and the one most
-   cursors in this footer are heading for. Red for the deletion, which
-   is the only irreversible control on the page and is now labelled as
-   such at rest rather than only on hover. */
+   Scoped to this file, which only the editor pages load, so the admin
+   sidebar keeps its own arrangement. */
+.mc-admin-side-foot {
+  position: sticky; bottom: 0;
+  background: #fff;
+  border-top: 1px solid var(--mc-border);
+}
+
+/* Green because it is the ordinary way out, and the one most cursors in
+   this footer are heading for. */
 .mc-admin-side-foot .mc-auth-btn--ghost {
   background: var(--mc-green); border-color: var(--mc-green); color: #fff;
 }
@@ -661,12 +671,3 @@ a.mc-ed-stat:hover { border-color: var(--mc-primary); box-shadow: var(--mc-shado
 .mc-admin-side-foot .mc-auth-btn--ghost:focus-visible {
   outline: 2px solid var(--mc-green); outline-offset: 2px;
 }
-
-.mc-admin-side-danger {
-  background: var(--mc-danger); border-color: var(--mc-danger); color: #fff;
-  font-weight: 600;
-}
-.mc-admin-side-danger:hover {
-  background: var(--mc-danger-600); border-color: var(--mc-danger-600); color: #fff;
-}
-.mc-admin-side-danger svg { color: #fff; }

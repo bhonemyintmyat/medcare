@@ -26,6 +26,7 @@
   var msgEl     = document.getElementById('listMsg');
   var countEl   = document.getElementById('listCount');
   var searchEl  = document.getElementById('listSearch');
+  var townEl    = document.getElementById('listTown');
   var filtersEl = document.getElementById('statusFilters');
   var tabsEl    = document.getElementById('typeTabs');
   var newBtn    = document.getElementById('newEntry');
@@ -39,6 +40,7 @@
     rows: [],
     names: {},
     status: params.get('status') || '',
+    town: cfg.townField ? (params.get('town') || '') : '',
     query: ''
   };
 
@@ -76,8 +78,13 @@
       var tabType = a.getAttribute('data-type');
       if (tabType === type) { a.setAttribute('aria-current', 'page'); }
       else { a.removeAttribute('aria-current'); }
+      /* The town carries only to the other tab that has townships.
+         "&town=Insein" on the diseases tab would be a filter that
+         cannot apply, sitting in a URL somebody may go on to paste. */
+      var keepTown = state.town && ed.TYPES[tabType].townField;
       a.setAttribute('href', 'content.html?type=' + tabType +
-        (state.status ? '&status=' + state.status : ''));
+        (state.status ? '&status=' + state.status : '') +
+        (keepTown ? '&town=' + encodeURIComponent(state.town) : ''));
     });
   }
 
@@ -90,6 +97,63 @@
     chip.classList.toggle('is-active', (chip.getAttribute('data-status') || '') === state.status);
   });
 
+  /* ---------- Where it is ----------
+     A hospital list and a pharmacy list are a directory, and the
+     question asked of a directory is "what have we got in Insein". The
+     search box can already answer it — it matches every column, the
+     township among them — but only if the person spells the township
+     the way the row spells it, and it cannot tell them what the choices
+     are. A list of the choices can.
+
+     Two groups, because two different questions are being asked. "In
+     this list" is what the rows actually say, whatever they say,
+     including a spelling that is not in TOWNSHIPS: a row typed as
+     "Mayangon" has to stay reachable, and seeing it sit outside the
+     Yangon group is how somebody notices it wants fixing. The rest of
+     the region follows, so a township with nothing in it yet is still
+     something you can filter to and find empty, rather than something
+     this page quietly denies exists.
+
+     Rebuilt on every load rather than filled in once, for the same
+     reason the public page builds its filter from the data: the used
+     half of it is a description of the rows, and the rows change. */
+  function buildTowns() {
+    if (!townEl || !cfg.townField) { return; }
+
+    var used = [];
+    state.rows.forEach(function (row) {
+      var t = row[cfg.townField];
+      if (t && used.indexOf(t) === -1) { used.push(t); }
+    });
+    used.sort();
+
+    var rest = ed.TOWNSHIPS.filter(function (t) { return used.indexOf(t) === -1; });
+
+    function options(list) {
+      return list.map(function (t) {
+        return '<option value="' + ed.esc(t) + '">' + ed.esc(t) + '</option>';
+      }).join('');
+    }
+
+    townEl.innerHTML =
+      '<option value="">All townships</option>' +
+      (used.length ? '<optgroup label="In this list">' + options(used) + '</optgroup>' : '') +
+      (rest.length ? '<optgroup label="Elsewhere in Yangon">' + options(rest) + '</optgroup>' : '');
+
+    /* A ?town= naming somewhere with no option is dropped, not honoured.
+       Honouring it would leave the select reading "All townships" over a
+       list filtered down to nothing — a screen disagreeing with its own
+       controls, which is worse than losing a filter. */
+    if (state.town && used.indexOf(state.town) === -1 && rest.indexOf(state.town) === -1) {
+      state.town = '';
+      syncUrl();
+      retargetTabs();
+    }
+
+    townEl.value = state.town;
+    townEl.hidden = false;
+  }
+
   /* ---------- Reading ---------- */
 
   function load() {
@@ -99,6 +163,7 @@
       return ed.loadNames(state.rows.map(function (r) { return r.updated_by; }));
     }).then(function (names) {
       state.names = names;
+      buildTowns();
       draw();
       countTabs();
     }).catch(function (err) {
@@ -154,6 +219,10 @@
     var q = state.query.trim().toLowerCase();
     return state.rows.filter(function (row) {
       if (state.status && row.status !== state.status) { return false; }
+      // Exact, not a substring: "Dagon" and "North Dagon" are different
+      // townships, and a filter that returned both would be wrong in the
+      // direction that hides the mistake.
+      if (state.town && row[cfg.townField] !== state.town) { return false; }
       if (!q) { return true; }
       return Object.keys(row).some(function (k) {
         if (k === 'id' || k.slice(-3) === '_by' || k.slice(-3) === '_at') { return false; }
@@ -300,12 +369,15 @@
 
     if (e.target.closest('[data-clear]')) {
       state.status = '';
+      state.town = '';
       state.query = '';
       searchEl.value = '';
+      if (townEl) { townEl.value = ''; }
       filtersEl.querySelectorAll('.mc-chip').forEach(function (c) {
         c.classList.toggle('is-active', !c.getAttribute('data-status'));
       });
       syncUrl();
+      retargetTabs();   // or the tabs keep offering the filter just cleared
       draw();
     }
   });
@@ -328,8 +400,23 @@
      six chip clicks should not be six presses of the back button to
      leave the page. */
   function syncUrl() {
-    var url = 'content.html?type=' + type + (state.status ? '&status=' + state.status : '');
+    var url = 'content.html?type=' + type +
+              (state.status ? '&status=' + state.status : '') +
+              (state.town ? '&town=' + encodeURIComponent(state.town) : '');
     window.history.replaceState(null, '', url);
+  }
+
+  /* No countTabs(): the pills follow the status filter and nothing else.
+     A hospital tab counting only Insein while the pharmacy pill beside
+     it counts everything would be two numbers that cannot be compared,
+     which is the same reason the search box does not touch them. */
+  if (townEl) {
+    townEl.addEventListener('change', function () {
+      state.town = townEl.value;
+      syncUrl();
+      retargetTabs();
+      draw();
+    });
   }
 
   var typing;

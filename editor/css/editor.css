@@ -66,6 +66,21 @@
   padding: .55rem .9rem;
 }
 .mc-ed-search:focus { outline: 2px solid var(--mc-primary); outline-offset: -1px; border-color: var(--mc-primary); }
+
+/* The township filter, on the hospital and pharmacy tabs only. Shaped
+   like the search box beside it because the two are one question asked
+   two ways, but it does not take the row's spare width — the search box
+   grows and this stays the width of a township name, so a tools row
+   that has to wrap wraps in the right place. */
+.mc-ed-town {
+  flex: 0 0 auto; max-width: 100%;
+  border: 1px solid var(--mc-border); border-radius: 10px; background: #fff;
+  font: inherit; font-size: .92rem; color: var(--mc-text);
+  padding: .55rem .8rem; cursor: pointer;
+}
+.mc-ed-town:focus { outline: 2px solid var(--mc-primary); outline-offset: -1px; border-color: var(--mc-primary); }
+/* It starts hidden and the flex row would otherwise lay it out anyway. */
+.mc-ed-town[hidden] { display: none; }
 .mc-ed-filters { display: flex; gap: .35rem; flex-wrap: wrap; }
 .mc-ed-filters .mc-chip { font-size: .82rem; padding: .38rem .8rem; }
 
@@ -221,6 +236,18 @@
    after they have fixed it. Same fix as .mc-ed-dirty[hidden] below. */
 .mc-ed-error[hidden] { display: none; }
 .mc-ed-error .bi { margin-top: .1rem; }
+
+/* A select holding a value its own list does not offer — a township
+   spelled the way it was before the list existed. Amber, because the
+   row saves either way and the form is asking rather than refusing.
+   Same [hidden] override as above, for the same reason: this one is
+   toggled off the moment a real choice is made. */
+.mc-ed-stray {
+  display: flex; align-items: flex-start; gap: .4rem;
+  font-size: .82rem; color: var(--mc-amber); margin: .4rem 0 0;
+}
+.mc-ed-stray[hidden] { display: none; }
+.mc-ed-stray .bi { margin-top: .1rem; }
 
 /* An English field and its Burmese partner, side by side rather than
    twelve fields apart — a translation is written while looking at what

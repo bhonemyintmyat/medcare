@@ -1595,6 +1595,31 @@
       'အချက်အလက်သာဖြစ်ပြီး ဆရာဝန်၏ အကြံဉာဏ်၊ ရောဂါရှာဖွေမှု သို့မဟုတ် ကုသမှုကို အစားထိုးနိုင်ခြင်း မရှိပါ။',
     '© 2026 MedCare. All rights reserved.': '© ၂၀၂၆ MedCare။ မူပိုင်ခွင့်အားလုံး ရယူထားပါသည်။',
 
+    /* --- contact us ---
+       Only the text nodes that stand alone. A sentence with a link in
+       the middle of it arrives here in three pieces, and a dictionary
+       of half-sentences is how a paragraph ends up half-translated. */
+    'Contact Us': 'ဆက်သွယ်ရန်',
+    'Two ways to reach the MedCare team: send an email, or call. There is no contact form on this page, and nothing about you is collected here.':
+      'MedCare အဖွဲ့ကို ဆက်သွယ်ရန် နည်းလမ်းနှစ်ခု — အီးမေးလ်ပို့ခြင်း သို့မဟုတ် ဖုန်းခေါ်ဆိုခြင်း။ ဤစာမျက်နှာတွင် ဖြည့်ရန်ဖောင် မရှိပါ၊ သင့်အကြောင်း မည်သည့်အချက်အလက်မျှ စုဆောင်းခြင်း မရှိပါ။',
+    'This is not an emergency line': 'ဤသည်မှာ အရေးပေါ်ဖုန်းလိုင်း မဟုတ်ပါ',
+    'Nobody watches this inbox or this phone around the clock, and no one can be diagnosed or treated by email. In a medical emergency, call 192 for an ambulance.':
+      'ဤအီးမေးလ်နှင့် ဖုန်းလိုင်းကို ၂၄ နာရီ စောင့်ကြည့်နေသူ မရှိပါ။ အီးမေးလ်ဖြင့် ရောဂါရှာဖွေခြင်း သို့မဟုတ် ကုသခြင်း မပြုနိုင်ပါ။ ဆေးဘက်ဆိုင်ရာ အရေးပေါ်အခြေအနေတွင် လူနာတင်ယာဉ်အတွက် ၁၉၂ ကို ခေါ်ပါ။',
+    'Emergency contacts': 'အရေးပေါ်ဆက်သွယ်ရန်',
+    'Email': 'အီးမေးလ်',
+    'Phone': 'ဖုန်း',
+    'Office line': 'ရုံးဖုန်းလိုင်း',
+    'Questions about the site, corrections to a page, or anything else for the team.':
+      'ဝဘ်ဆိုက်နှင့် ပတ်သက်သော မေးခွန်းများ၊ စာမျက်နှာ ပြင်ဆင်ချက်များ သို့မဟုတ် အဖွဲ့ထံ ပြောလိုသည့် အခြားကိစ္စများအတွက်။',
+    'Monday to Friday, 9am to 5pm.': 'တနင်္လာမှ သောကြာ၊ နံနက် ၉ နာရီမှ ညနေ ၅ နာရီ။',
+    'Tap a number to call it, or the address to open your mail app.':
+      'ဖုန်းနံပါတ်ကို နှိပ်၍ ခေါ်ဆိုနိုင်ပြီး၊ အီးမေးလ်လိပ်စာကို နှိပ်၍ မေးလ်အက်ပ်ကို ဖွင့်နိုင်ပါသည်။',
+    'What we can help with': 'ကျွန်ုပ်တို့ ကူညီပေးနိုင်သည်များ',
+    'Anything about the website: a page that looks wrong, a hospital or pharmacy whose details have changed, a broken link, or a problem using the site with a screen reader or on a slow connection.':
+      'ဝဘ်ဆိုက်နှင့် ပတ်သက်သည့် အရာအားလုံး — မှားနေပုံရသော စာမျက်နှာ၊ အချက်အလက် ပြောင်းလဲသွားသော ဆေးရုံ သို့မဟုတ် ဆေးဆိုင်၊ ပျက်နေသော လင့်ခ်၊ သို့မဟုတ် စခရင်ဖတ်စက်ဖြင့် ဖတ်ရာတွင်နှင့် အင်တာနက်နှေးသည့်အခါ အသုံးပြုရာတွင် ကြုံရသော အခက်အခဲများ။',
+    'Something wrong on a page': 'စာမျက်နှာတစ်ခုတွင် မှားယွင်းမှု တွေ့ပါက',
+    'Privacy': 'ကိုယ်ရေးအချက်အလက်',
+
     /* --- home --- */
     'Find a hospital': 'ဆေးရုံရှာရန်',
     'Towns': 'မြို့နယ်များ',

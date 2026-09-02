@@ -2,10 +2,17 @@
    MedCare — the contact details on contact.html
 
    One row: site_settings, key 'footer.contact', written by
-   admin/contact.html. Shape:
+   admin/contact.html and editor/contact.html. Shape:
 
-       { email: 'someone@example.com',
-         phones: [ { label: 'Office line', number: '+95 9 …', hint: '' } ] }
+       { emails: [ { label: 'General enquiries',
+                     address: 'someone@example.com', hint: '' } ],
+         phones: [ { label: 'Office line',
+                     number: '+95 9 …', hint: '' } ] }
+
+   Up to four of each, drawn addresses first. An older row carrying a
+   single `email` string is still drawn, as one card: a database nobody
+   has saved from since this changed is not a reason to show a reader
+   no way of reaching anybody.
 
    WHY THIS FILE EXISTS AT ALL. A phone number that changes needs an
    admin and five minutes, not a developer and a deploy. Everything else
@@ -35,7 +42,7 @@
   var db   = window.supabaseClient;
   if (!list || !db) { return; }
 
-  var MAX_PHONES = 4;
+  var MAX_EACH = 4;   // per list, the same cap the editing screens hold to
 
   /* An address has to look like one before it is printed as a way of
      reaching anybody. Deliberately shallow: this catches the empty row
@@ -93,23 +100,50 @@
     return a;
   }
 
+  /* One list from the row, trimmed to what the page will draw. What
+     arrives is whatever was in the JSON, which need not be a list at
+     all, and need not hold objects. */
+  function each(rows, fn) {
+    (Array.isArray(rows) ? rows : []).slice(0, MAX_EACH).forEach(function (row) {
+      if (row && typeof row === 'object') { fn(row); }
+    });
+  }
+
+  function labelOf(row, fallback) {
+    return String(row.label == null ? '' : row.label).trim() || fallback;
+  }
+
+  function hintOf(row) {
+    return String(row.hint == null ? '' : row.hint).trim();
+  }
+
   function render(value) {
     var cards = [];
 
-    var email = address(value.email);
-    if (email) {
-      cards.push(card('mailto:' + email, 'bi-envelope-fill', 'Email', email,
-        'Questions about the site, corrections to a page, or anything else for the team.'));
-    }
+    /* Addresses first, then numbers, which is the order the editing
+       screens preview. A row carrying the older single `email` string is
+       drawn as one card, and so is the single `phone` string from the
+       seed before it: a database nobody has saved from since is not a
+       reason to show a reader no way of reaching anybody. Nothing writes
+       either shape back — the screens save lists. */
+    var emails = Array.isArray(value.emails) ? value.emails
+               : (value.email ? [{ label: 'Email', address: value.email }] : []);
+    var phones = Array.isArray(value.phones) ? value.phones
+               : (value.phone ? [{ label: 'Phone', number: value.phone }] : []);
 
-    var phones = Array.isArray(value.phones) ? value.phones : [];
-    phones.slice(0, MAX_PHONES).forEach(function (row) {
-      if (!row || typeof row !== 'object') { return; }
+    each(emails, function (row) {
+      var addr = address(row.address);
+      if (!addr) { return; }
+      cards.push(card('mailto:' + addr, 'bi-envelope-fill', labelOf(row, 'Email'), addr,
+        hintOf(row) ||
+        'Questions about the site, corrections to a page, or anything else for the team.'));
+    });
+
+    each(phones, function (row) {
       var num = phone(row.number);
       if (!num) { return; }
-      var label = String(row.label == null ? '' : row.label).trim() || 'Phone';
-      var hint  = String(row.hint  == null ? '' : row.hint).trim();
-      cards.push(card('tel:' + num.dial, 'bi-telephone-fill', label, num.shown, hint));
+      cards.push(card('tel:' + num.dial, 'bi-telephone-fill',
+                      labelOf(row, 'Phone'), num.shown, hintOf(row)));
     });
 
     /* Nothing usable in the row. The served page stands: it names a way

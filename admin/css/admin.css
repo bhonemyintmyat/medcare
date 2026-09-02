@@ -438,6 +438,10 @@ html.mc-guard-pending body::after {
   border-radius: 12px; padding: .75rem .9rem; margin: 0 0 1rem;
 }
 .mc-ad-warn .bi { flex-shrink: 0; margin-top: .1rem; }
+/* `display: flex` above beats the browser's own [hidden] rule, so a
+   warning that a script has hidden stays on screen. Same fix, and the
+   same reason, as .mc-people-save[hidden] in styles.css. */
+.mc-ad-warn[hidden] { display: none; }
 .mc-ad-warn--stop {
   background: var(--mc-danger-50); border-color: #fecaca; color: var(--mc-danger-700);
 }

@@ -1,10 +1,20 @@
 /* ============================================================
    MedCare — the contact details
-   Loaded by admin/contact.html, after admin-guard.js, admin-shell.js
-   and admin-api.js.
+   Loaded by admin/contact.html AND editor/contact.html, after that
+   area's guard, admin-shell.js and admin-api.js.
 
    One setting, one form, one row: site_settings, key 'footer.contact'.
    What reads it is contact.js, on the public Contact us page.
+
+   TWO AREAS, ONE SCRIPT. Editors keep these details as well as admins:
+   an email address and a phone number on a public page are the same
+   kind of thing as a hospital's, and supabase_contact_editors.sql
+   widens exactly this key to them. Both screens carry the same form and
+   run this file rather than a copy, and it needs nothing to tell them
+   apart — editor-guard.js answers to MedCareAdminGuard too, and
+   admin-api.js's loadNames() returns nothing rather than failing when
+   the reader is an editor with no policy on profiles. The line about
+   who last changed the row simply loses the name.
 
        { email:  'someone@example.com',
          phones: [ { label: 'Office line', number: '+95 …', hint: '' } ] }

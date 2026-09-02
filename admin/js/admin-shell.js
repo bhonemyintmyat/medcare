@@ -45,18 +45,23 @@
   }
 
   /* ---------- The other way out ----------
-     Staff own their accounts as much as readers do, and the control
-     that lets a reader close theirs hangs off the navbar — which
-     neither of these areas has. Without this, an editor would have to
-     leave their desk, find a public page and open a menu there to do
-     something about their own account, which reads less like a design
-     than like an oversight.
+     Admins own their accounts as much as readers do, and the control
+     that lets a reader close theirs hangs off the navbar — which the
+     admin area does not have. Without this, an admin would have to
+     leave the area, find a public page and open a menu there to do
+     something about their own account.
 
-     Injected rather than added to eleven HTML files, for the same
+     Injected rather than added to the admin HTML files, for the same
      reason the account menu is injected into the public ones. The
      dialog itself lives in auth.js: one wording, one confirmation, one
      list of what a deletion takes, wherever it is opened from. */
   (function addLeaveForGood() {
+    // The editor desk does not carry it. Its sidebar foot holds one
+    // control and that control is the way back to the site; an editor
+    // closing their account does it from a public page, where the
+    // account menu already offers the same dialog.
+    if (/\/editor\//.test(window.location.pathname)) { return; }
+
     var foot = document.querySelector('.mc-admin-side-foot');
     var auth = window.MedCareAuth;
     if (!foot || !auth || !auth.openDeleteAccountDialog) { return; }

@@ -144,7 +144,7 @@
     { what: 'Turn maintenance mode on, edit the legal pages',
       user: false, editor: false, admin: true,
       by: '"Admins write/change site settings" — supabase_admin_scope.sql §2' },
-    { what: 'Edit the address and numbers on the Contact us page',
+    { what: 'Edit the addresses and numbers on the Contact us page',
       user: false, editor: true, admin: true,
       by: '"Editors change/create the contact details" — supabase_contact_editors.sql. The policy names key = footer.contact and reaches no other setting' },
     { what: 'Create an account for somebody else',
@@ -418,12 +418,12 @@
   var DEFAULTS = {
     maintenance: { enabled: false, message: '', allow_emergency: true },
     notice:      { enabled: false, tone: 'info', text: '' },
-    /* The Contact us page: one email address and up to four numbers.
-       Edited from admin/contact.html and editor/contact.html both.
-       `phones` is a list rather than the single `phone` the key was
-       first seeded with — admin-contact.js carries an old `phone`
-       forward into it, so neither shape is lost. */
-    'footer.contact': { email: '', phones: [] }
+    /* The Contact us page: up to four email addresses and four numbers.
+       Edited from admin/contact.html and editor/contact.html both. Both
+       are lists rather than the single `email` and `phone` strings the
+       key was seeded with; admin-contact.js carries either older shape
+       forward into them, so nothing typed under an old one is lost. */
+    'footer.contact': { emails: [], phones: [] }
   };
 
   function withDefaults(key, value) {

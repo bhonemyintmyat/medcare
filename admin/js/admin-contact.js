@@ -6,6 +6,11 @@
    One setting, one form, one row: site_settings, key 'footer.contact'.
    What reads it is contact.js, on the public Contact us page.
 
+       { emails: [ { label: 'General enquiries',
+                     address: 'someone@example.com', hint: '' } ],
+         phones: [ { label: 'Office line',
+                     number: '+95 …', hint: '' } ] }
+
    TWO AREAS, ONE SCRIPT. Editors keep these details as well as admins:
    an email address and a phone number on a public page are the same
    kind of thing as a hospital's, and supabase_contact_editors.sql
@@ -16,11 +21,26 @@
    the reader is an editor with no policy on profiles. The line about
    who last changed the row simply loses the name.
 
-       { email:  'someone@example.com',
-         phones: [ { label: 'Office line', number: '+95 …', hint: '' } ] }
+   Both screens must carry BOTH lists. A page with the address list left
+   off would read the whole row, draw half of it, and save the half back
+   over the rest — so a form that is missing a list is refused below
+   rather than driven.
 
    ------------------------------------------------------------
-   WHAT IS CHECKED ABOUT THE ADDRESS, AND WHAT IS NOT
+   TWO LISTS, ONE PIECE OF CODE
+
+   Addresses and numbers behave identically: a label, a value, an
+   optional note, up to four, added and removed the same way. They are
+   built from one description each rather than from two sets of
+   near-identical functions, because near-identical is what stops being
+   identical the first time only one of them gets fixed.
+
+   What genuinely differs is all in the descriptions: what makes a value
+   valid, what the field is called on screen, and which icon the preview
+   card carries.
+
+   ------------------------------------------------------------
+   WHAT IS CHECKED ABOUT AN ADDRESS, AND WHAT IS NOT
 
    That it looks like an address. That is all this can know, and it is
    worth being honest about how little it is: no test in a browser can
@@ -56,10 +76,6 @@
 
   var msgEl     = document.getElementById('ctMsg');
   var form      = document.getElementById('ctForm');
-  var emailEl   = document.getElementById('ctEmail');
-  var phonesEl  = document.getElementById('ctPhones');
-  var addBtn    = document.getElementById('ctAdd');
-  var addHint   = document.getElementById('ctAddHint');
   var emptyWarn = document.getElementById('ctEmptyWarn');
   var preview   = document.getElementById('ctPreview');
   var prevList  = document.getElementById('ctPreviewList');
@@ -68,7 +84,7 @@
   var touchedEl = document.getElementById('ctTouched');
 
   var KEY = 'footer.contact';
-  var MAX_PHONES = 4;
+  var MAX = 4;          // per list, and it is what the public page draws
 
   /* `saved` is what the database last told us; the form is the working
      copy. Everything that decides whether Save is live is a comparison
@@ -82,7 +98,7 @@
      WHAT COUNTS AS VALID
      ---------------------------------------------------------------
      Both tests are also in contact.js. Duplicated knowingly: this one
-     exists to tell an admin what is wrong while they can still fix it,
+     exists to tell somebody what is wrong while they can still fix it,
      that one exists because a row is a row whoever wrote it.
      --------------------------------------------------------------- */
 
@@ -90,10 +106,81 @@
     return /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(String(value || '').trim());
   }
 
-  /* Spacing and dashes are the admin's to choose — they are what a
-     reader sees. Only the digits decide whether it is a number at all. */
+  /* Spacing and dashes are theirs to choose — they are what a reader
+     sees. Only the digits decide whether it is a number at all. */
   function dialable(value) {
     return String(value || '').replace(/\D/g, '').length >= 3;
+  }
+
+  /* ---------------------------------------------------------------
+     THE TWO LISTS
+     ---------------------------------------------------------------
+     `field` is the name the value is stored under, so the shape written
+     to the database stays readable from here: an email carries
+     `address`, a phone carries `number`.
+     --------------------------------------------------------------- */
+
+  var LISTS = [
+    {
+      name:   'emails',
+      field:  'address',
+      hostId: 'ctEmails',
+      addId:  'ctEmailAdd',
+      hintId: 'ctEmailAddHint',
+      idBase: 'ctEmail',
+      legend: 'Address',
+      hintLegend: 'What it is for <span>(optional)</span>',
+      labelPlaceholder: 'General enquiries',
+      valuePlaceholder: 'someone@example.com',
+      hintPlaceholder:  'Answered within two working days',
+      inputAttrs: 'type="email" inputmode="email" spellcheck="false" maxlength="120"',
+      defaultLabel: 'Email',
+      icon: 'bi-envelope-fill',
+      removeLabel: 'Remove this address',
+      none: 'No email address. The Contact us page will offer the phone numbers alone.',
+      valid: isAddress,
+      complain:
+        'That does not look like an email address. Every address here is one a ' +
+        'reader may write to and then wait for an answer, so a row with nothing ' +
+        'to send to is refused rather than saved — name@example.com.'
+    },
+    {
+      name:   'phones',
+      field:  'number',
+      hostId: 'ctPhones',
+      addId:  'ctPhoneAdd',
+      hintId: 'ctPhoneAddHint',
+      idBase: 'ctPhone',
+      legend: 'Number',
+      hintLegend: 'When it is answered <span>(optional)</span>',
+      labelPlaceholder: 'Office line',
+      valuePlaceholder: '+95 9 123 456 78',
+      hintPlaceholder:  'Monday to Friday, 9am to 5pm',
+      inputAttrs: 'inputmode="tel" spellcheck="false" maxlength="32"',
+      defaultLabel: 'Phone',
+      icon: 'bi-telephone-fill',
+      removeLabel: 'Remove this number',
+      none: 'No phone number. The Contact us page will offer the email addresses alone.',
+      valid: dialable,
+      complain:
+        'One of the numbers has nothing to dial in it. Fill it in, or press ' +
+        'Remove on that row — a card that does nothing when it is tapped is ' +
+        'worse than no card.'
+    }
+  ];
+
+  LISTS.forEach(function (list) {
+    list.host    = document.getElementById(list.hostId);
+    list.addBtn  = document.getElementById(list.addId);
+    list.addHint = document.getElementById(list.hintId);
+  });
+
+  var incomplete = LISTS.filter(function (l) { return !l.host || !l.addBtn || !l.addHint; });
+  if (!form || incomplete.length) {
+    console.error('[MedCare] The contact form is missing part of itself; this screen is ' +
+                  'not wired up rather than half-wired.',
+                  incomplete.map(function (l) { return l.name; }));
+    return;
   }
 
   /* ---------------------------------------------------------------
@@ -120,39 +207,48 @@
       });
   }
 
-  /* A row from the database, or from an older seed with a single
-     `phone` string in it, becomes the shape this screen edits. Nothing
-     is thrown away silently: an old `phone` is carried forward as the
-     first number rather than being dropped on the first save. */
+  /* A row from the database becomes the shape this screen edits,
+     whatever shape it arrives in. Two older ones are carried forward
+     rather than dropped on the first save: a single `email` string, from
+     when the page offered exactly one, and a single `phone` string from
+     the seed before that. Neither is written back — saving normalises
+     the row — so this is the only place that needs to know they existed. */
   function normalise(value) {
     var v = (value && typeof value === 'object') ? value : {};
-    var phones = [];
+    var out = {};
 
-    if (Array.isArray(v.phones)) {
-      v.phones.forEach(function (row) {
-        if (!row || typeof row !== 'object') { return; }
-        phones.push({
-          label:  String(row.label  == null ? '' : row.label).trim(),
-          number: String(row.number == null ? '' : row.number).trim(),
-          hint:   String(row.hint   == null ? '' : row.hint).trim()
+    LISTS.forEach(function (list) {
+      var rows = [];
+      if (Array.isArray(v[list.name])) {
+        v[list.name].forEach(function (row) {
+          if (!row || typeof row !== 'object') { return; }
+          rows.push({
+            label: String(row.label == null ? '' : row.label).trim(),
+            value: String(row[list.field] == null ? '' : row[list.field]).trim(),
+            hint:  String(row.hint == null ? '' : row.hint).trim()
+          });
         });
-      });
-    } else if (v.phone) {
-      phones.push({ label: 'Phone', number: String(v.phone).trim(), hint: '' });
+      }
+      out[list.name] = rows.slice(0, MAX);
+    });
+
+    if (!out.emails.length && v.email) {
+      out.emails.push({ label: 'Email', value: String(v.email).trim(), hint: '' });
+    }
+    if (!out.phones.length && v.phone) {
+      out.phones.push({ label: 'Phone', value: String(v.phone).trim(), hint: '' });
     }
 
-    return {
-      email:  String(v.email == null ? '' : v.email).trim(),
-      phones: phones.slice(0, MAX_PHONES)
-    };
+    return out;
   }
 
   function disableForm() {
-    [emailEl, addBtn, saveBtn, resetBtn].forEach(function (el) {
-      if (el) { el.disabled = true; }
-    });
-    Array.prototype.forEach.call(phonesEl.querySelectorAll('input, button'), function (el) {
-      el.disabled = true;
+    [saveBtn, resetBtn].forEach(function (el) { if (el) { el.disabled = true; } });
+    LISTS.forEach(function (list) {
+      list.addBtn.disabled = true;
+      Array.prototype.forEach.call(list.host.querySelectorAll('input, button'), function (el) {
+        el.disabled = true;
+      });
     });
   }
 
@@ -172,58 +268,61 @@
      THE FORM
      --------------------------------------------------------------- */
 
-  function phoneRow(row, i) {
+  function rowEl(list, row, i) {
     var wrap = document.createElement('div');
     wrap.className = 'mc-ad-phone';
     wrap.innerHTML =
       '<div class="mc-ad-phone-grid">' +
         '<div>' +
-          '<label class="mc-auth-label" for="ctLabel' + i + '">What it is</label>' +
+          '<label class="mc-auth-label" for="' + list.idBase + 'Label' + i + '">What it is</label>' +
           '<div class="mc-auth-field">' +
-            '<input id="ctLabel' + i + '" data-label maxlength="40" autocomplete="off" ' +
-                   'placeholder="Office line">' +
+            '<input id="' + list.idBase + 'Label' + i + '" data-label maxlength="40" ' +
+                   'autocomplete="off" placeholder="' + list.labelPlaceholder + '">' +
           '</div>' +
         '</div>' +
         '<div>' +
-          '<label class="mc-auth-label" for="ctNumber' + i + '">Number</label>' +
+          '<label class="mc-auth-label" for="' + list.idBase + 'Value' + i + '">' +
+            list.legend +
+          '</label>' +
           '<div class="mc-auth-field">' +
-            '<input id="ctNumber' + i + '" data-number maxlength="32" inputmode="tel" ' +
-                   'autocomplete="off" spellcheck="false" placeholder="+95 9 123 456 78">' +
+            '<input id="' + list.idBase + 'Value' + i + '" data-value ' + list.inputAttrs + ' ' +
+                   'autocomplete="off" placeholder="' + list.valuePlaceholder + '">' +
           '</div>' +
         '</div>' +
       '</div>' +
       '<div class="mc-ad-phone-foot">' +
         '<div class="mc-ad-phone-hint">' +
-          '<label class="mc-auth-label" for="ctHint' + i + '">When it is answered <span>(optional)</span></label>' +
+          '<label class="mc-auth-label" for="' + list.idBase + 'Hint' + i + '">' +
+            list.hintLegend +
+          '</label>' +
           '<div class="mc-auth-field">' +
-            '<input id="ctHint' + i + '" data-hint maxlength="80" autocomplete="off" ' +
-                   'placeholder="Monday to Friday, 9am to 5pm">' +
+            '<input id="' + list.idBase + 'Hint' + i + '" data-hint maxlength="80" ' +
+                   'autocomplete="off" placeholder="' + list.hintPlaceholder + '">' +
           '</div>' +
         '</div>' +
         '<button type="button" class="mc-auth-btn mc-auth-btn--ghost mc-ad-rowbtn mc-ad-rowbtn--danger" ' +
-                'data-remove aria-label="Remove this number">Remove</button>' +
+                'data-remove aria-label="' + list.removeLabel + '">Remove</button>' +
       '</div>';
 
-    wrap.querySelector('[data-label]').value  = row.label;
-    wrap.querySelector('[data-number]').value = row.number;
-    wrap.querySelector('[data-hint]').value   = row.hint;
+    wrap.querySelector('[data-label]').value = row.label;
+    wrap.querySelector('[data-value]').value = row.value;
+    wrap.querySelector('[data-hint]').value  = row.hint;
     return wrap;
   }
 
-  function drawPhones(list) {
-    phonesEl.textContent = '';
-    list.forEach(function (row, i) { phonesEl.appendChild(phoneRow(row, i)); });
-    if (!list.length) {
+  function draw(list, rows) {
+    list.host.textContent = '';
+    rows.forEach(function (row, i) { list.host.appendChild(rowEl(list, row, i)); });
+    if (!rows.length) {
       var none = document.createElement('p');
       none.className = 'mc-ad-count mc-ad-phone-none';
-      none.textContent = 'No phone number. The Contact us page will offer the email address alone.';
-      phonesEl.appendChild(none);
+      none.textContent = list.none;
+      list.host.appendChild(none);
     }
   }
 
   function fillForm() {
-    emailEl.value = saved.email;
-    drawPhones(saved.phones);
+    LISTS.forEach(function (list) { draw(list, saved[list.name]); });
     sync();
   }
 
@@ -231,31 +330,35 @@
      built from: a blank row somebody has just added and not yet typed
      into is still a row, and rebuilding the list from readForm() below
      would delete it under their cursor. */
-  function domRows() {
-    return Array.prototype.map.call(phonesEl.querySelectorAll('.mc-ad-phone'), function (el) {
+  function domRows(list) {
+    return Array.prototype.map.call(list.host.querySelectorAll('.mc-ad-phone'), function (el) {
       return {
-        label:  el.querySelector('[data-label]').value.trim(),
-        number: el.querySelector('[data-number]').value.trim(),
-        hint:   el.querySelector('[data-hint]').value.trim()
+        label: el.querySelector('[data-label]').value.trim(),
+        value: el.querySelector('[data-value]').value.trim(),
+        hint:  el.querySelector('[data-hint]').value.trim()
       };
     });
   }
 
   /* What is on screen, in the shape that gets written. Empty rows are
-     dropped here rather than refused: clearing a number is how a number
-     is removed, and there is nothing to complain about. It also means an
+     dropped here rather than refused: clearing a row is how a detail is
+     removed, and there is nothing to complain about. It also means an
      untouched blank row is not a change, so Save stays quiet until
      something is actually typed. */
   function readForm() {
-    var phones = domRows().filter(function (row) {
-      return row.label || row.number || row.hint;
+    var out = {};
+    LISTS.forEach(function (list) {
+      out[list.name] = domRows(list).filter(function (row) {
+        return row.label || row.value || row.hint;
+      }).slice(0, MAX);
     });
-    return { email: emailEl.value.trim(), phones: phones.slice(0, MAX_PHONES) };
+    return out;
   }
 
   function same(a, b) {
-    return JSON.stringify({ email: a.email, phones: a.phones }) ===
-           JSON.stringify({ email: b.email, phones: b.phones });
+    return LISTS.every(function (list) {
+      return JSON.stringify(a[list.name]) === JSON.stringify(b[list.name]);
+    });
   }
 
   /* ---------------------------------------------------------------
@@ -280,35 +383,35 @@
            '</span>';
   }
 
+  /* Addresses first, then numbers — the same order contact.js draws
+     them in, because a preview that agrees about the content and
+     disagrees about the order is still lying about the page. */
   function renderPreview(next) {
     var html = '';
-
-    if (isAddress(next.email)) {
-      html += previewCard('bi-envelope-fill', 'Email', next.email.trim(),
-        'Questions about the site, corrections to a page, or anything else for the team.');
-    }
-    next.phones.forEach(function (row) {
-      if (!dialable(row.number)) { return; }
-      html += previewCard('bi-telephone-fill', row.label || 'Phone', row.number, row.hint);
+    LISTS.forEach(function (list) {
+      next[list.name].forEach(function (row) {
+        if (!list.valid(row.value)) { return; }
+        html += previewCard(list.icon, row.label || list.defaultLabel, row.value, row.hint);
+      });
     });
-
     preview.hidden = !html;
     prevList.innerHTML = html;
   }
 
   function sync() {
     var next = readForm();
-    var rows = phonesEl.querySelectorAll('.mc-ad-phone').length;
+    var usable = 0;
 
-    addBtn.disabled = busy || rows >= MAX_PHONES;
-    addHint.textContent = rows >= MAX_PHONES
-      ? 'Four is the most the page shows.'
-      : 'Up to ' + MAX_PHONES + '.';
+    LISTS.forEach(function (list) {
+      var rows = list.host.querySelectorAll('.mc-ad-phone').length;
+      list.addBtn.disabled = busy || rows >= MAX;
+      list.addHint.textContent = rows >= MAX
+        ? 'Four is the most the page shows.'
+        : 'Up to ' + MAX + '.';
+      usable += next[list.name].filter(function (row) { return list.valid(row.value); }).length;
+    });
 
-    var usable = (isAddress(next.email) ? 1 : 0) +
-                 next.phones.filter(function (r) { return dialable(r.number); }).length;
     emptyWarn.hidden = usable > 0;
-
     renderPreview(next);
 
     var dirty = !same(next, saved);
@@ -324,35 +427,34 @@
   function save() {
     var next = readForm();
 
-    if (next.email && !isAddress(next.email)) {
-      api.message(msgEl, 'error',
-        'That does not look like an email address. The Contact us page offers ' +
-        'this one address and nothing else, so it has to be the mailbox somebody ' +
-        'actually opens — name@example.com.');
-      emailEl.focus();
-      return;
-    }
-
+    /* The first thing that is wrong, and the field it is in. One at a
+       time rather than a list of complaints: the row is on the screen in
+       front of them, and a form that answers back once is easier to work
+       down than one that answers back four times. */
     var bad = null;
-    next.phones.forEach(function (row, i) {
-      if (bad === null && !dialable(row.number)) { bad = i; }
+    LISTS.forEach(function (list) {
+      if (bad) { return; }
+      next[list.name].forEach(function (row, i) {
+        if (!bad && !list.valid(row.value)) { bad = { list: list, at: i }; }
+      });
     });
-    if (bad !== null) {
-      api.message(msgEl, 'error',
-        'One of the numbers has nothing to dial in it. Fill it in, or press ' +
-        'Remove on that row — a card that does nothing when it is tapped is ' +
-        'worse than no card.');
-      var el = phonesEl.querySelectorAll('.mc-ad-phone')[bad];
-      if (el) { el.querySelector('[data-number]').focus(); }
+    if (bad) {
+      api.message(msgEl, 'error', bad.list.complain);
+      var el = bad.list.host.querySelectorAll('.mc-ad-phone')[bad.at];
+      if (el) { el.querySelector('[data-value]').focus(); }
       return;
     }
 
-    var value = {
-      email: next.email,
-      phones: next.phones.map(function (row) {
-        return { label: row.label || 'Phone', number: row.number, hint: row.hint };
-      })
-    };
+    var value = {};
+    LISTS.forEach(function (list) {
+      value[list.name] = next[list.name].map(function (row) {
+        var out = { label: row.label || list.defaultLabel, hint: row.hint };
+        out[list.field] = row.value;
+        return out;
+      });
+    });
+
+    var anything = value.emails.length || value.phones.length;
 
     busy = true;
     sync();
@@ -368,7 +470,7 @@
           fillForm();
           renderTouched();
           api.message(msgEl, 'ok',
-            value.email || value.phones.length
+            anything
               ? 'Saved. The Contact us page is showing these details now.'
               : 'Saved. The Contact us page has fallen back to the details it was published with.');
         });
@@ -394,27 +496,28 @@
     save();
   });
 
-  addBtn.addEventListener('click', function () {
-    var rows = domRows();
-    if (rows.length >= MAX_PHONES) { return; }
-    rows.push({ label: '', number: '', hint: '' });
-    drawPhones(rows);
-    sync();
-    var last = phonesEl.querySelectorAll('.mc-ad-phone [data-label]');
-    if (last.length) { last[last.length - 1].focus(); }
-  });
+  LISTS.forEach(function (list) {
+    list.addBtn.addEventListener('click', function () {
+      var rows = domRows(list);
+      if (rows.length >= MAX) { return; }
+      rows.push({ label: '', value: '', hint: '' });
+      draw(list, rows);
+      sync();
+      var fields = list.host.querySelectorAll('[data-label]');
+      if (fields.length) { fields[fields.length - 1].focus(); }
+    });
 
-  /* Removing a row redraws the rest from what is on screen, so the ids
-     the labels point at stay in step with the rows they name. */
-  phonesEl.addEventListener('click', function (e) {
-    if (!e.target.closest('[data-remove]')) { return; }
-    var row  = e.target.closest('.mc-ad-phone');
-    var all  = Array.prototype.slice.call(phonesEl.querySelectorAll('.mc-ad-phone'));
-    var gone = all.indexOf(row);
-    var kept = domRows().filter(function (_, i) { return i !== gone; });
-    drawPhones(kept);
-    sync();
-    addBtn.focus();
+    /* Removing a row redraws the rest from what is on screen, so the ids
+       the labels point at stay in step with the rows they name. */
+    list.host.addEventListener('click', function (e) {
+      if (!e.target.closest('[data-remove]')) { return; }
+      var row  = e.target.closest('.mc-ad-phone');
+      var all  = Array.prototype.slice.call(list.host.querySelectorAll('.mc-ad-phone'));
+      var gone = all.indexOf(row);
+      draw(list, domRows(list).filter(function (_, i) { return i !== gone; }));
+      sync();
+      list.addBtn.focus();
+    });
   });
 
   resetBtn.addEventListener('click', function () {

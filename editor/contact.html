@@ -175,25 +175,36 @@
         <p class="mc-admin-hint">
           These are the only two ways to reach the team that
           <a href="../contact.html" target="_blank" rel="noopener">contact.html</a>
-          offers: one email address and up to four phone numbers. There is no
+          offers: up to four email addresses and up to four phone numbers.
+          There is no
           contact form on that page and nothing is collected from a reader
           there, so what is typed below is the whole of it.
         </p>
 
         <form id="ctForm" novalidate>
 
-          <!-- ---------- The address ---------- -->
-          <label class="mc-auth-label" for="ctEmail">Email address</label>
-          <div class="mc-auth-field">
-            <input type="email" id="ctEmail" inputmode="email" autocomplete="off"
-                   spellcheck="false" maxlength="120"
-                   placeholder="someone@example.com">
+          <!-- ---------- The addresses ----------
+               Drawn by admin-contact.js from the saved row, because the
+               count varies. Empty rows are ignored on save, so an address
+               is removed by clearing it or by pressing Remove. -->
+          <label class="mc-auth-label" for="ctEmails">Email addresses</label>
+          <div id="ctEmails" class="mc-ad-phones"></div>
+
+          <div class="mc-ad-phone-add">
+            <button type="button" class="mc-auth-btn mc-auth-btn--ghost mc-ad-rowbtn" id="ctEmailAdd">
+              <i class="bi bi-plus-lg"></i> Add an email
+            </button>
+            <span class="mc-ad-count" id="ctEmailAddHint">Up to 4.</span>
           </div>
+
           <p class="mc-ad-count">
-            The mailbox a reader's message will arrive at. This screen can
-            only check that it looks like an address; whether mail sent there
-            reaches a person is something no form can know, so send a test
-            message to it and wait for a reply before trusting a change. A
+            Every mailbox a reader's message can arrive at. Give each one a
+            label — <em>General enquiries</em>, <em>Corrections</em> — because a
+            page listing four addresses with no word about which is which
+            leaves the reader guessing where their message should go. This
+            screen can only check that an address looks like one; whether mail
+            sent there reaches a person is something no form can know, so send
+            a test message and wait for a reply before trusting a change. A
             contact page pointing at an inbox nobody opens is worse than one
             with no address at all.
           </p>
@@ -206,10 +217,10 @@
           <div id="ctPhones" class="mc-ad-phones"></div>
 
           <div class="mc-ad-phone-add">
-            <button type="button" class="mc-auth-btn mc-auth-btn--ghost mc-ad-rowbtn" id="ctAdd">
+            <button type="button" class="mc-auth-btn mc-auth-btn--ghost mc-ad-rowbtn" id="ctPhoneAdd">
               <i class="bi bi-plus-lg"></i> Add a number
             </button>
-            <span class="mc-ad-count" id="ctAddHint">Up to 4.</span>
+            <span class="mc-ad-count" id="ctPhoneAddHint">Up to 4.</span>
           </div>
 
           <div class="mc-ad-warn" id="ctEmptyWarn" hidden>

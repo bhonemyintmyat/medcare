@@ -21,6 +21,14 @@
 --                     "number": "+95 …",
 --                     "hint":   "Monday to Friday, 9am to 5pm" } ] }
 --
+-- SINCE SUPERSEDED, AND LEFT ALONE. The page now offers up to four
+-- addresses as well as four numbers, so `email` has become an `emails`
+-- list shaped like `phones`. No migration was written for it: the
+-- editing screens carry a single `email` string forward into the list
+-- and save the new shape, contact.js draws either, and a row nobody has
+-- saved from since keeps working. This file still describes what it did
+-- on the day it ran, which is the only thing a migration should say.
+--
 -- Two changes, and the reason for each:
 --
 --   phone -> phones   One office number was an assumption, not a

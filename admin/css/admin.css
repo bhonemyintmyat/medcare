@@ -255,6 +255,79 @@ html.mc-guard-pending body::after {
 }
 
 
+/* ===================== Staff panel (overview) =====================
+   The one live panel on the overview: editors and admins, and the email
+   each is reachable at. .mc-admin-msg--error/--ok live in styles.css;
+   the "column not migrated yet" state is a warning, so its colour is
+   added here beside where the panel that raises it lives. */
+.mc-admin-msg--warn {
+  background: var(--mc-amber-50); border: 1px solid #fde68a; color: #78350f;
+}
+
+.mc-staff-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap; margin: 0 0 .35rem;
+}
+.mc-staff-head h2 {
+  display: flex; align-items: center; gap: .5rem; margin: 0;
+}
+.mc-staff-head h2 .bi { color: var(--mc-primary-600); font-size: 1.05rem; }
+
+.mc-staff-list { list-style: none; margin: .9rem 0 0; padding: 0; }
+
+/* A row per person. The email is the reason the panel exists, so it sits
+   directly under the name at full weight rather than as a faint aside. */
+.mc-staff-row {
+  display: flex; align-items: center; gap: .9rem;
+  padding: .7rem 0; border-top: 1px solid var(--mc-border);
+}
+.mc-staff-row:first-child { border-top: none; }
+
+.mc-staff-avatar {
+  width: 40px; height: 40px; border-radius: 999px; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #14b8a6 0%, var(--mc-primary-600) 100%);
+  color: #fff; font-family: 'Poppins', sans-serif; font-weight: 700;
+  font-size: .9rem; letter-spacing: .02em;
+}
+
+.mc-staff-who { min-width: 0; flex: 1; }
+.mc-staff-name { display: flex; align-items: center; gap: .4rem; font-weight: 600; color: var(--mc-text); }
+/* The name truncates; the "you" badge beside it does not get clipped. */
+.mc-staff-name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mc-staff-name .mc-people-you { flex-shrink: 0; margin-left: 0; }
+.mc-staff-mail {
+  display: inline-block; max-width: 100%;
+  font-size: .87rem; color: var(--mc-primary-600); text-decoration: none;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.mc-staff-mail:hover { text-decoration: underline; }
+.mc-staff-mail--none { color: var(--mc-muted); font-style: italic; }
+.mc-staff-mail--none:hover { text-decoration: none; }
+
+/* The role pill sits at the end of the row, not inline with the name. */
+.mc-staff-row .mc-admin-pill { flex-shrink: 0; }
+
+.mc-staff-empty {
+  padding: .9rem 0; color: var(--mc-muted); font-size: .92rem;
+}
+
+@media (max-width: 480px) {
+  /* The pill drops onto its own line under the name and email, so a long
+     address keeps the full width of the card instead of being squeezed
+     by the pill beside it. A grid does this cleanly: avatar and who on
+     the first row, pill aligned under the who column on the second. */
+  .mc-staff-row {
+    display: grid; grid-template-columns: 40px 1fr;
+    grid-template-areas: "avatar who" ". pill";
+    column-gap: .9rem; row-gap: .3rem; align-items: center;
+  }
+  .mc-staff-avatar { grid-area: avatar; }
+  .mc-staff-who    { grid-area: who; }
+  .mc-staff-row .mc-admin-pill { grid-area: pill; justify-self: start; }
+}
+
+
 /* ===================== 4. Small shared pieces ===================== */
 /* Who last touched a row, and when. Used by the users table and by the
    settings screens, where "who turned this on" is the first question

@@ -21,6 +21,11 @@
 <script src="../script.js" defer></script>
 <script src="js/admin-guard.js" defer></script>
 <script src="js/admin-shell.js" defer></script>
+<!-- The overview's one live panel: the staff and their emails. It reads
+     `profiles`, so it needs the shared admin vocabulary the other data
+     screens use. -->
+<script src="js/admin-api.js" defer></script>
+<script src="js/admin-dashboard.js" defer></script>
 </head>
 <body>
 
@@ -151,6 +156,26 @@
           what anyone is allowed to do — including you, and including
           anyone who opens this page with the guard deleted.
         </div>
+      </div>
+
+      <!-- The one panel on this page that reads from the database:
+           editors and admins, and the address each one is reachable at.
+           admin-dashboard.js fills the list; it starts as a skeleton
+           rather than empty so a slow query does not read as "no staff". -->
+      <div class="mc-admin-card mc-staff-card">
+        <div class="mc-staff-head">
+          <h2><i class="bi bi-people-fill"></i> Staff and their emails</h2>
+          <a class="mc-auth-btn mc-auth-btn--ghost mc-ad-rowbtn" href="users.html">All accounts</a>
+        </div>
+        <p class="mc-admin-hint">
+          The editors and admins who run this site, and where to reach them.
+          Readers are not listed here — they are on the
+          <a href="users.html">accounts</a> screen.
+        </p>
+        <p class="mc-admin-msg" id="staffNote" hidden></p>
+        <ul class="mc-staff-list" id="staffList">
+          <li class="mc-skeleton" aria-hidden="true"><span></span><span></span><span></span></li>
+        </ul>
       </div>
 
       <div class="mc-dash-links">

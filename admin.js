@@ -214,7 +214,7 @@
      profile — Postgres filters the rest out before the response is
      built, so there is nothing to leak. */
   function loadPeople() {
-    bodyEl.innerHTML = '<tr><td colspan="4"><div class="mc-admin-loading">Loading accounts…</div></td></tr>';
+    bodyEl.innerHTML = '<tr><td colspan="5"><div class="mc-admin-loading">Loading accounts…</div></td></tr>';
 
     select('id,email,display_name,full_name,role,created_at')
       .catch(function (err) {
@@ -244,7 +244,7 @@
       })
       .catch(function (err) {
         console.error('[MedCare] Could not load profiles:', err);
-        bodyEl.innerHTML = '<tr><td colspan="3"><div class="mc-admin-loading">' +
+        bodyEl.innerHTML = '<tr><td colspan="5"><div class="mc-admin-loading">' +
           'Could not load accounts.</div></td></tr>';
         message(explain(err));
       });
@@ -287,7 +287,7 @@
     countEl.textContent = rows.length;
 
     if (!rows.length) {
-      bodyEl.innerHTML = '<tr><td colspan="4"><div class="mc-admin-loading">' +
+      bodyEl.innerHTML = '<tr><td colspan="5"><div class="mc-admin-loading">' +
         (people.length ? 'No account matches this filter.' : 'No accounts yet.') +
         '</div></td></tr>';
       return;
@@ -296,10 +296,14 @@
     bodyEl.innerHTML = rows.map(function (p) {
       var isMe = p.id === myId;
       var name = esc(label(p));
-      // The email is a fallback identity, not a second label: it appears
-      // only for accounts that have not picked a display name yet.
-      var mail = (hasEmail && p.email && !(hasNames && p.display_name) && p.email !== label(p))
-        ? '<div class="mc-people-mail">' + esc(p.email) + '</div>' : '';
+
+      /* The email has a column of its own now, so it is a mailto link
+         when we have one and a muted dash when we do not — either the
+         column has not been migrated in yet (hasEmail) or this account
+         simply has none on file. */
+      var emailCell = (hasEmail && p.email)
+        ? '<a class="mc-people-mailcell" href="mailto:' + esc(p.email) + '">' + esc(p.email) + '</a>'
+        : '<span class="mc-people-mailcell mc-people-mailcell--none">—</span>';
 
       var options = ROLES.map(function (r) {
         return '<option value="' + r + '"' + (r === p.role ? ' selected' : '') + '>' + r + '</option>';
@@ -309,18 +313,21 @@
         '<td>' +
           '<div class="mc-people-email">' + name +
             (isMe ? '<span class="mc-people-you">you</span>' : '') + '</div>' +
-          mail +
           '<div class="mc-people-id">' + esc(p.id) + '</div>' +
         '</td>' +
+        '<td>' + emailCell + '</td>' +
         '<td>' +
-          '<div class="mc-people-actions">' +
+          // Left-aligned to line up under the "Role" header, so this is
+          // not .mc-people-actions (which is the right-aligned actions
+          // group used by the delete column and the admin/ subsystem).
+          '<div class="mc-people-role">' +
             '<span class="mc-admin-pill mc-account-role--' + esc(p.role) + '" data-current>' + esc(p.role) + '</span>' +
             '<select class="mc-role-select" aria-label="Role for ' + name + '">' + options + '</select>' +
             '<button type="button" class="mc-auth-btn mc-people-save" hidden>Save</button>' +
           '</div>' +
         '</td>' +
         '<td class="mc-people-when">' + esc(fullDate(p.created_at)) + '</td>' +
-        '<td style="text-align:right">' +
+        '<td class="mc-people-actions-col">' +
           // Disabled on your own row rather than absent from it. The
           // database refuses this case too (delete_self_forbidden), so
           // the attribute is a label for a rule, not the rule itself.

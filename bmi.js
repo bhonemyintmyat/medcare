@@ -1,21 +1,3 @@
-/* ============================================================
-   MedCare — BMI calculator (bmi.html)
-
-   Load after script.js, which draws the language bar this page's
-   bilingual labels rely on:
-
-     <script src="script.js" defer></script>
-     <script src="bmi.js" defer></script>
-
-   No database, no account: a BMI is arithmetic on two numbers the reader
-   types and nothing here is saved or sent anywhere. That is deliberate —
-   height and weight are health data, and the way to keep them private is
-   not to collect them. The result lives in the page and leaves with it.
-
-   The maths is the ordinary BMI formula, kg / m². Everything else is
-   getting height and weight into metres and kilograms from whichever
-   units the reader picked, and naming the band the number falls in.
-   ============================================================ */
 
 (function () {
   'use strict';

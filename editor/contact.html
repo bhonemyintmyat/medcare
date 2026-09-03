@@ -251,53 +251,6 @@
 
         <p id="ctTouched"></p>
       </div>
-
-      <div class="mc-admin-card">
-        <h2>How this differs from everything else here</h2>
-        <ul class="mc-ad-limits">
-          <li>
-            <i class="bi bi-broadcast"></i>
-            <div>
-              <strong>There is no draft, and no review</strong>
-              Every other screen in this area writes a row that waits at
-              pending until an admin publishes it. This one has no such step:
-              Save puts the address and the numbers in front of readers
-              immediately. Read the preview before pressing it.
-            </div>
-          </li>
-          <li>
-            <i class="bi bi-telephone-x"></i>
-            <div>
-              <strong>These are not the emergency numbers</strong>
-              192, 191, 199 and the helplines are
-              <a href="emergency.html">their own screen</a>, and they are what
-              somebody in trouble is looking for. Nothing typed here reaches
-              that page, and an office line does not belong on it.
-            </div>
-          </li>
-          <li>
-            <i class="bi bi-eye"></i>
-            <div>
-              <strong>It is public the moment it is saved</strong>
-              <code>site_settings</code> is world-readable, including to
-              visitors who are not signed in — that is how the Contact us page
-              reads it. Never put a personal mobile here that should not be on
-              a public page.
-            </div>
-          </li>
-          <li>
-            <i class="bi bi-shield-lock"></i>
-            <div>
-              <strong>It is the only setting this area may touch</strong>
-              Maintenance mode, the site-wide notice and the legal pages live
-              in the same table and stay admin-only. The database policy
-              behind this screen names one key and refuses the rest —
-              <code>supabase_contact_editors.sql</code>.
-            </div>
-          </li>
-        </ul>
-      </div>
-
     </main>
   </div>
 </div>

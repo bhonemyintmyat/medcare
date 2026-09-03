@@ -1700,7 +1700,7 @@
     'Search symptoms, conditions, or hospitals…': 'ရောဂါလက္ခဏာ၊ ရောဂါ သို့မဟုတ် ဆေးရုံ ရှာရန်…',
     'Popular:': 'ရေပန်းစားသည်များ −',
     'Explore MedCare': 'MedCare ကို လေ့လာရန်',
-    'Where would you like to start?': 'ဘယ်ကနေ စတင်ချင်ပါသလဲ။',
+    'MedCare Offers The Best Health Information': 'MedCareမှ အကောင်းဆုံး ကျန်းမာရေးအချက်အလက်များကို ရရှိနိုင်သည်။',
     'Four quick ways to find the health information and care you need.':
       'လိုအပ်သော ကျန်းမာရေးအချက်အလက်နှင့် စောင့်ရှောက်မှုကို ရှာဖွေရန် လွယ်ကူသည့် နည်းလမ်းလေးမျိုး။',
     'Health Articles': 'ကျန်းမာရေးဆောင်းပါးများ',
@@ -2486,9 +2486,9 @@
     'People with a poor diet, worm infection, or long-term blood loss.':
       'အာဟာရ ချို့တဲ့သူများ၊ သန်ကောင်ရှိသူများ သို့မဟုတ် ရေရှည် သွေးဆုံးရှုံးနေသူများ။',
     'Eat iron-rich foods: meat, liver, fish, beans, and dark green leafy vegetables.':
-      'သံဓာတ် ကြွယ်ဝသော အစားအစာများ စားပါ − အသား၊ အသည်း၊ ငါး၊ ပဲမျိုးစုံနှင့် အစိမ်းရင့်ရောင် အရွက်များ။',
+      'အသား၊ အသည်း၊ ငါး၊ ပဲမျိုးစုံနှင့် အစိမ်းရင့်ရောင် အရွက်များကဲ့သို့ သံဓာတ် ကြွယ်ဝသော အစားအစာများ စားပါ။',
     'Add vitamin C — a lime, orange, or tomato with meals helps you absorb iron.':
-      'ဗီတာမင် C ဖြည့်ပါ — ထမင်းနှင့်အတူ သံပုရာ၊ လိမ္မော် သို့မဟုတ် ခရမ်းချဉ်သီး စားပါက သံဓာတ် စုပ်ယူမှု ပိုကောင်းသည်။',
+      'ဗီတာမင် C ဖြည့်ပါ။ ထမင်းနှင့်အတူ သံပုရာ၊ လိမ္မော် သို့မဟုတ် ခရမ်းချဉ်သီး စားပါက သံဓာတ် စုပ်ယူမှု ပိုကောင်းသည်။',
     'Take iron tablets for the full period advised, not just until you feel better.':
       'သံဓာတ်ဆေးလုံးများကို နေကောင်းသည်အထိသာမက ညွှန်ကြားထားသည့် ကာလ အပြည့် သောက်ပါ။',
     'Have a blood test in pregnancy and at antenatal visits.':

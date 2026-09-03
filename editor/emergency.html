@@ -144,11 +144,12 @@
         <p class="mc-admin-top-sub">The most consequential rows on the site. Corrections only.</p>
       </div>
       <div class="mc-admin-top-right">
-        <span class="mc-admin-who">
-          <i class="bi bi-pencil-square"></i>
-          <strong id="adminWho">…</strong>
-        </span>
-        <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="adminSignOut">Sign out</button>
+        <!-- The account menu, built by auth.js into this slot: your name
+             and role, the pages your role can reach, a way to rename
+             yourself, and the way out. It replaces the name pill and the
+             Sign out button that used to sit here — one control, and the
+             same one the public pages carry. -->
+        <div data-mc-account></div>
       </div>
     </header>
 

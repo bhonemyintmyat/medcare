@@ -697,16 +697,30 @@
      Injected rather than pasted into 33 HTML files, the same way the
      language bar is built in script.js. */
   function buildNavAccount() {
+    /* Two kinds of host. A public page has a navbar and the menu is
+       appended to it; the staff areas have no navbar at all, and mark
+       the spot in their own topbar with data-mc-account instead. */
+    var slot = document.querySelector('[data-mc-account]');
     var nav = document.querySelector('.mc-nav .navbar-collapse');
-    if (!nav || document.getElementById('mcAccount')) { return; }
+    if ((!slot && !nav) || document.getElementById('mcAccount')) { return; }
 
-    var here = window.location.pathname.split('/').pop() || 'index.html';
-    var depth = window.location.pathname.indexOf('/diseases/') !== -1 ? '../' : '';
+    var path = window.location.pathname;
+    var here = path.split('/').pop() || 'index.html';
+    /* Everything the menu links to sits at the site root, and these are
+       the three folders a page can be one level down in. `atRoot` is
+       what keeps a file name from matching across them: the desk has a
+       reports.html of its own, and it is not the one in the menu. */
+    var depth = /\/(diseases|editor|admin)\//.test(path) ? '../' : '';
+    var atRoot = !depth;
+    var inDesk = path.indexOf('/editor/') !== -1;
 
-    var wrap = document.createElement('div');
+    var wrap = slot;
+    if (!wrap) {
+      wrap = document.createElement('div');
+      wrap.className = 'mc-account';
+      nav.appendChild(wrap);
+    }
     wrap.id = 'mcAccount';
-    wrap.className = 'mc-account';
-    nav.appendChild(wrap);
 
     /* ---------- The account menu (admins) ----------
        An admin's account control is a menu button, not a row of buttons:
@@ -776,7 +790,7 @@
       if (role === 'admin') {
         return [
           { label: 'Admin Dashboard', icon: 'dashboard', href: depth + 'admin.html',
-            current: here === 'admin.html' },
+            current: atRoot && here === 'admin.html' },
           { label: 'Manage Staff', icon: 'staff', href: depth + 'admin.html#people' }
         ];
       }
@@ -786,11 +800,11 @@
              is only the file name, and every area has an index.html, so
              this one is matched on the directory instead. */
           { label: 'Editor desk', icon: 'desk', href: depth + 'editor/index.html',
-            current: window.location.pathname.indexOf('/editor/') !== -1 },
+            current: inDesk },
           { label: 'Manage diseases', icon: 'pencil', href: depth + 'manage-diseases.html',
-            current: here === 'manage-diseases.html' },
+            current: atRoot && here === 'manage-diseases.html' },
           { label: 'Reports inbox', icon: 'inbox', href: depth + 'reports.html',
-            current: here === 'reports.html' }
+            current: atRoot && here === 'reports.html' }
         ];
       }
       // A reader has no tools, which is not the same as having no menu.
@@ -1069,7 +1083,7 @@
            Staff-only links HIDE tools from ordinary users; they do not
            protect them. Each page re-checks, and the RLS policies are
            what refuse the writes. */
-        var deskLink = api.isStaff()
+        var deskLink = api.isStaff() && !inDesk
           ? '<a class="mc-account-btn" href="' + depth + 'editor/index.html">Desk</a>'
           : '';
         wrap.innerHTML = deskLink + menuMarkup(api.displayName(), role);
@@ -1078,6 +1092,11 @@
         var out = document.getElementById('mcSignOut');
         out.addEventListener('click', function () {
           out.disabled = true;
+          /* Inside a guarded area, reloading would only paint the gate
+             on its way to the login page. The guard already knows where
+             someone who has just signed out belongs, so let it say. */
+          var guard = window.MedCareEditorGuard || window.MedCareAdminGuard;
+          if (guard && guard.signOut) { guard.signOut(); return; }
           api.signOut().then(function () { window.location.reload(); });
         });
 

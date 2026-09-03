@@ -25,7 +25,11 @@
   var whoEl   = document.getElementById('adminWho');
   var signOut = document.getElementById('adminSignOut');
 
-  /* ---------- Who you are ---------- */
+  /* ---------- Who you are ----------
+     Both elements are absent on the editor desk, which ends its topbar
+     with the account menu auth.js builds instead: the name is in the
+     trigger and signing out is a row in the panel. The admin area still
+     carries the pill and the button, so this stays. */
   guard.ready.then(function () {
     if (whoEl) {
       whoEl.textContent = guard.displayName();
@@ -56,10 +60,9 @@
      dialog itself lives in auth.js: one wording, one confirmation, one
      list of what a deletion takes, wherever it is opened from. */
   (function addLeaveForGood() {
-    // The editor desk does not carry it. Its sidebar foot holds one
-    // control and that control is the way back to the site; an editor
-    // closing their account does it from a public page, where the
-    // account menu already offers the same dialog.
+    // The editor desk does not need it: its topbar carries the account
+    // menu, and "Delete your account" is already a row in there. Adding
+    // this would be the same dialog twice on one screen.
     if (/\/editor\//.test(window.location.pathname)) { return; }
 
     var foot = document.querySelector('.mc-admin-side-foot');

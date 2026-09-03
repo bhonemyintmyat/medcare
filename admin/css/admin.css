@@ -173,6 +173,19 @@ html.mc-guard-pending body::after {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
+/* ---- The account menu in the topbar ----
+   The desk's topbar ends in the same account menu the public navbar
+   carries: auth.js builds it into [data-mc-account], and .mc-menu* in
+   styles.css does the drawing. Only two things are different here.
+
+   The slot is a plain wrapper rather than .mc-account, whose margin is
+   for sitting at the end of a navbar; here .mc-admin-top-right already
+   spaces it. And the trigger sits in a white topbar, so it needs a
+   ground of its own to read as a button rather than as text. */
+.mc-admin-top-right > [data-mc-account] { display: flex; align-items: center; gap: .7rem; }
+.mc-admin-top-right .mc-menu-trigger { background: var(--mc-bg); }
+.mc-admin-top-right .mc-menu-trigger:hover { background: #fff; }
+
 /* The sidebar toggle, which only exists on narrow screens. */
 .mc-admin-burger {
   display: none;
@@ -296,6 +309,26 @@ html.mc-guard-pending body::after {
   .mc-admin-burger { display: inline-flex; }
   .mc-admin-top { padding: .8rem 1rem; }
   .mc-admin-content { padding: 1rem; }
+
+  /* styles.css unfolds the account menu below this width, because on a
+     public page it is inside a collapsed navbar and the panel is just
+     another block in that stack. In a topbar it is not: the trigger
+     stays a button at the end of the row and the panel stays a
+     dropdown hanging off it, narrow screen or not. */
+  .mc-admin-top-right .mc-menu { width: auto; flex-direction: row; align-items: center; }
+  .mc-admin-top-right .mc-menu-trigger { width: auto; }
+  .mc-admin-top-right .mc-menu-panel {
+    position: absolute; top: calc(100% + 10px); right: 0;
+    width: 304px; max-width: calc(100vw - 2rem); margin-top: 0;
+    box-shadow: var(--mc-shadow-lg); border-radius: 16px;
+  }
+  .mc-admin-top-right .mc-menu-panel::before { display: block; }
+}
+
+/* The name beside the avatar is the first thing worth dropping when the
+   topbar runs out of room: the avatar and the panel both still say it. */
+@media (max-width: 480px) {
+  .mc-admin-top-right .mc-menu-name { display: none; }
 }
 
 /* ===================== 5. Users and permissions =====================

@@ -891,11 +891,20 @@
   .mc-people-search{flex:1;min-width:200px;border:1px solid var(--mc-border);border-radius:10px;background:#fff;font:inherit;font-size:.92rem;color:var(--mc-text);padding:.55rem .9rem}
   .mc-people-search:focus{outline:2px solid var(--mc-primary);outline-offset:-1px;border-color:var(--mc-primary)}
   .mc-people-wrap{overflow-x:auto}
-  .mc-people{width:100%;border-collapse:collapse;font-size:.92rem;min-width:560px}
+  .mc-people{width:100%;border-collapse:collapse;font-size:.92rem;min-width:680px}
   .mc-people th{text-align:left;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--mc-muted);border-bottom:1px solid var(--mc-border);padding:0 .6rem .6rem}
   .mc-people td{border-bottom:1px solid var(--mc-border);padding:.75rem .6rem;vertical-align:middle}
   .mc-people tr:last-child td{border-bottom:none}
+  /* The actions column is the only right-aligned one: its header and its
+     cell both sit at the right edge so they line up over each other. */
+  .mc-people th.mc-people-actions-col,.mc-people td.mc-people-actions-col{text-align:right}
   .mc-people-email{font-weight:600;color:var(--mc-text);overflow-wrap:anywhere}
+  /* The dedicated email column: a mailto link, dropping to a muted dash
+     when there is no address (or the column has not been migrated in). */
+  .mc-people-mailcell{color:var(--mc-primary-600);text-decoration:none;overflow-wrap:anywhere}
+  .mc-people-mailcell:hover{text-decoration:underline}
+  .mc-people-mailcell--none{color:var(--mc-muted)}
+  .mc-people-mailcell--none:hover{text-decoration:none}
   .mc-people-id{font-size:.74rem;color:var(--mc-muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
   .mc-people-you{font-size:.68rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;background:var(--mc-primary-50);border:1px solid #ccfbf1;color:var(--mc-primary-600);border-radius:999px;padding:.1rem .45rem;margin-left:.4rem}
   .mc-people-when{font-size:.82rem;color:var(--mc-muted);white-space:nowrap}
@@ -906,6 +915,9 @@
   .mc-people-delete:hover:not(:disabled){background:var(--mc-danger-50);border-color:var(--mc-danger-600)}
   .mc-people-delete:disabled{opacity:.55;cursor:default}
   .mc-people-actions{display:flex;gap:.4rem;align-items:center;justify-content:flex-end}
+  /* The role controls, left-aligned so they sit under the "Role" header
+     rather than being pushed to the right the way the actions group is. */
+  .mc-people-role{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}
   .mc-role-select{border:1px solid var(--mc-border);border-radius:9px;background:#fff;font:inherit;font-size:.88rem;color:var(--mc-text);padding:.4rem .6rem;cursor:pointer}
   .mc-role-select:focus{outline:2px solid var(--mc-primary);outline-offset:-1px}
   .mc-role-select:disabled{opacity:.55;cursor:default}
@@ -914,8 +926,10 @@
   /* The role pill reuses .mc-account-role--* from the navbar. That block
      sits earlier in this file, so .mc-admin-pill would win on equal
      specificity and grey it out — these two rules put the colour back. */
-  .mc-people-actions .mc-admin-pill.mc-account-role--editor{background:var(--mc-primary-50);border-color:#ccfbf1;color:var(--mc-primary-600)}
-  .mc-people-actions .mc-admin-pill.mc-account-role--admin{background:var(--mc-danger-50);border-color:#fecaca;color:var(--mc-danger-700)}
+  .mc-people-actions .mc-admin-pill.mc-account-role--editor,
+  .mc-people-role .mc-admin-pill.mc-account-role--editor{background:var(--mc-primary-50);border-color:#ccfbf1;color:var(--mc-primary-600)}
+  .mc-people-actions .mc-admin-pill.mc-account-role--admin,
+  .mc-people-role .mc-admin-pill.mc-account-role--admin{background:var(--mc-danger-50);border-color:#fecaca;color:var(--mc-danger-700)}
 
   @media (max-width:575.98px){
     .mc-stat{padding:1rem 1.05rem}

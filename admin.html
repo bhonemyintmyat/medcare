@@ -162,14 +162,6 @@
             </div>
           </div>
 
-          <p class="mc-admin-hint">
-            This list exists because of one policy — “Admins can read all
-            profiles”. Signed in as anyone else, the same query returns exactly
-            one row: their own. Nothing on this page filters that; Postgres does
-            it before the answer is sent. Changing a role writes to
-            <code>profiles.role</code>, which the database allows only because
-            your own row says <code>admin</code>.
-          </p>
 
           <div class="mc-people-tools">
             <label class="visually-hidden" for="peopleSearch">Search accounts</label>

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BMI Calculator — MedCare</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
+<script src="supabase.js" defer></script>
+<script src="auth.js" defer></script>
+<script src="script.js" defer></script>
+<script src="bmi.js" defer></script>
+</head>
+<body>
+
+<!-- ===================== Navbar ===================== -->
+<nav class="navbar navbar-expand-lg mc-nav">
+  <div class="container">
+    <a class="navbar-brand" href="index.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mcNav"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="mcNav">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="common-diseases.html">Common diseases</a></li>
+        <li class="nav-item"><a class="nav-link" href="hospitals.html">Find Hospitals</a></li>
+        <li class="nav-item"><a class="nav-link" href="pharmacy.html">Pharmacy</a></li>
+      </ul>
+      <a href="emergency-contacts.html" class="btn btn-emergency"><i class="bi bi-telephone-fill"></i> Emergency</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== BMI calculator ===================== -->
+<main>
+  <section class="mc-page-head">
+    <div class="container">
+      <div class="mc-breadcrumb">
+        <a href="index.html"><i class="bi bi-house"></i> Home</a>
+        <i class="bi bi-chevron-right" style="font-size:.7rem"></i>
+        <span class="mc-en">BMI calculator</span>
+        <span class="mc-my">BMI တွက်စက်</span>
+      </div>
+      <h1><span class="mc-en">BMI Calculator</span><span class="mc-my">BMI တွက်ချက်ခြင်း</span></h1>
+      <p class="intro mc-en">Body Mass Index is a quick guide to whether your weight is in a healthy range for your height. Enter your details below — nothing is saved or sent anywhere.</p>
+      <p class="intro mc-my">Body Mass Index (BMI) သည် သင့်အရပ်အမြင့်နှင့် ကိုက်ညီသော ကျန်းမာသည့် ကိုယ်အလေးချိန်ဖြစ်မဖြစ် လွယ်ကူစွာ သိရှိနိုင်သည့် ညွှန်ကိန်းတစ်ခုဖြစ်ပါသည်။ အောက်တွင် ဖြည့်စွက်ပါ — မည်သည့်အချက်အလက်မျှ သိမ်းဆည်းခြင်း သို့မဟုတ် ပေးပို့ခြင်း မရှိပါ။</p>
+    </div>
+  </section>
+
+  <section class="mc-diseases">
+    <div class="container">
+      <div class="mc-auth-card mc-bmi-card">
+
+        <form id="bmiForm" novalidate>
+
+          <!-- Date of birth (optional) -->
+          <label class="mc-auth-label" for="dob">
+            <span class="mc-en">Date of birth <span style="font-weight:400;color:var(--mc-muted)">(optional)</span></span>
+            <span class="mc-my">မွေးသက္ကရာဇ် <span style="font-weight:400;color:var(--mc-muted)">(မဖြည့်လည်းရ)</span></span>
+          </label>
+          <div class="mc-auth-field">
+            <i class="bi bi-calendar-event"></i>
+            <input type="date" id="dob">
+          </div>
+
+          <!-- Gender -->
+          <label class="mc-auth-label">
+            <span class="mc-en">Sex</span><span class="mc-my">ကျား / မ</span>
+          </label>
+          <div class="mc-bmi-gender mc-bmi-toggle" style="margin-bottom:1.15rem">
+            <button type="button" class="mc-chip active" data-gender="male" aria-pressed="true">
+              <i class="bi bi-gender-male"></i> <span class="mc-en">Male</span><span class="mc-my">အမျိုးသား</span>
+            </button>
+            <button type="button" class="mc-chip" data-gender="female" aria-pressed="false">
+              <i class="bi bi-gender-female"></i> <span class="mc-en">Female</span><span class="mc-my">အမျိုးသမီး</span>
+            </button>
+          </div>
+
+          <!-- Height -->
+          <div class="mc-bmi-row">
+            <div>
+              <label class="mc-auth-label" for="heightUnit">
+                <span class="mc-en">Height unit</span><span class="mc-my">အရပ်အမြင့် ယူနစ်</span>
+              </label>
+              <select id="heightUnit" class="mc-bmi-select" style="margin-bottom:1.15rem">
+                <option value="ft">Feet &amp; inches (ပေ/လက်မ)</option>
+                <option value="cm">cm (စင်တီမီတာ)</option>
+                <option value="m">m (မီတာ)</option>
+              </select>
+            </div>
+            <div>
+              <label class="mc-auth-label">
+                <span class="mc-en">Height</span><span class="mc-my">အရပ်အမြင့်</span>
+              </label>
+              <div id="ftInContainer" class="mc-bmi-inputs" style="margin-bottom:1.15rem">
+                <input type="number" id="feetInput" class="mc-bmi-select" placeholder="ft (ပေ)" min="0" step="any">
+                <input type="number" id="inchInput" class="mc-bmi-select" placeholder="in (လက်မ)" min="0" max="11" step="any">
+              </div>
+              <div id="singleHeightContainer" style="display:none;margin-bottom:1.15rem">
+                <input type="number" id="heightSingle" class="mc-bmi-select" placeholder="e.g. 170" step="any">
+              </div>
+            </div>
+          </div>
+
+          <!-- Weight -->
+          <label class="mc-auth-label" for="weight">
+            <span class="mc-en">Weight</span><span class="mc-my">ကိုယ်အလေးချိန်</span>
+          </label>
+          <div class="mc-bmi-field" style="margin-bottom:1.15rem">
+            <div class="mc-auth-field">
+              <i class="bi bi-speedometer2"></i>
+              <input type="number" id="weight" placeholder="e.g. 60" step="any" required>
+              <select id="weightUnit" class="mc-bmi-select" aria-label="Weight unit">
+                <option value="kg">kg (ကီလို)</option>
+                <option value="lbs">lbs (ပေါင်)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Weight-loss interest -->
+          <fieldset class="mc-radio-group">
+            <legend class="mc-auth-label">
+              <span class="mc-en">Interested in managing your weight?</span>
+              <span class="mc-my">ကိုယ်အလေးချိန် ထိန်းညှိရန် စိတ်ဝင်စားပါသလား?</span>
+            </legend>
+            <label class="mc-radio">
+              <input type="radio" name="weightLossInterest" value="yes" checked>
+              <span class="mc-radio-mark" aria-hidden="true"></span>
+              <span class="mc-radio-text"><span class="mc-radio-label">
+                <span class="mc-en">Yes</span><span class="mc-my">စိတ်ဝင်စားပါသည်</span>
+              </span></span>
+            </label>
+            <label class="mc-radio">
+              <input type="radio" name="weightLossInterest" value="no">
+              <span class="mc-radio-mark" aria-hidden="true"></span>
+              <span class="mc-radio-text"><span class="mc-radio-label">
+                <span class="mc-en">No</span><span class="mc-my">စိတ်မဝင်စားပါ</span>
+              </span></span>
+            </label>
+          </fieldset>
+
+          <div class="mc-auth-msg" id="bmiMsg" role="status" aria-live="polite" style="display:none"></div>
+
+          <button type="submit" class="mc-auth-btn mc-auth-btn--full">
+            <i class="bi bi-calculator"></i>
+            <span class="mc-en">Calculate</span><span class="mc-my">တွက်ချက်မည်</span>
+          </button>
+        </form>
+
+        <!-- Result -->
+        <div id="bmiResult" class="mc-callout mc-callout--info mc-bmi-result" role="status" aria-live="polite" aria-hidden="true">
+          <div class="mc-en" style="font-size:.85rem;color:var(--mc-muted);font-weight:600;letter-spacing:.03em;text-transform:uppercase">Your BMI</div>
+          <div class="mc-my" style="font-size:.85rem;color:var(--mc-muted);font-weight:600;letter-spacing:.03em;text-transform:uppercase">သင့် BMI</div>
+          <div class="mc-bmi-figure">
+            <span class="mc-bmi-number" id="bmiNumber">0</span>
+            <span class="mc-bmi-unit">kg/m²</span>
+          </div>
+          <div class="mc-bmi-cat" id="bmiCategory">–</div>
+          <p class="mc-bmi-age" id="bmiAge" style="display:none"></p>
+
+          <div class="mc-bmi-scale" aria-hidden="true">
+            <div class="mc-bmi-bands">
+              <span class="b-under"></span><span class="b-normal"></span><span class="b-over"></span><span class="b-obese"></span>
+            </div>
+            <div class="mc-bmi-marker" id="bmiMarker"></div>
+            <div class="mc-bmi-ticks">
+              <span class="mc-bmi-tick" style="left:14%">18.5</span>
+              <span class="mc-bmi-tick" style="left:40%">25</span>
+              <span class="mc-bmi-tick" style="left:60%">30</span>
+            </div>
+          </div>
+
+          <p class="mc-bmi-note">
+            <i class="bi bi-info-circle"></i>
+            <span class="mc-en">BMI is a general guide for adults and does not measure body fat, muscle or overall health. For advice about your weight, speak with a doctor.</span>
+            <span class="mc-my">BMI သည် အရွယ်ရောက်ပြီးသူများအတွက် အထွေထွေ ညွှန်ကိန်းသာဖြစ်ပြီး အဆီ၊ ကြွက်သား သို့မဟုတ် ကျန်းမာရေး အခြေအနေအလုံးစုံကို မတိုင်းတာပါ။ ကိုယ်အလေးချိန်နှင့်ပတ်သက်၍ ဆရာဝန်နှင့် တိုင်ပင်ပါ။</span>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== Footer ===================== -->
+<footer class="mc-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4 brand-block">
+        <a class="navbar-brand mb-3 d-inline-flex" href="index.html" style="font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);gap:.55rem;align-items:center">
+          <span style="width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center"><i class="bi bi-heart-pulse-fill"></i></span>MedCare
+        </a>
+        <p>Trusted, plain-language health information reviewed by licensed medical professionals. Free for everyone, everywhere.</p>
+      </div>
+      <div class="col-6 col-md-3 col-lg-2">
+        <h5>About</h5>
+        <ul><li><a href="editor.html">Our editorial team</a></li><li><a href="contact.html">Contact us</a></li></ul>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <h5>Legal</h5>
+        <ul><li><a href="terms.html">Terms of use</a></li><li><a href="privacy.html">Privacy policy</a></li><li><a href="cookies.html">Cookie settings</a></li></ul>
+      </div>
+    </div>
+    <div class="mc-disclaimer">
+      <span class="note"><i class="bi bi-info-circle"></i> Information only — not a substitute for professional medical advice, diagnosis, or treatment.</span>
+      <span>© 2026 MedCare. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

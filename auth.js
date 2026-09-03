@@ -751,6 +751,7 @@
                  '<path d="M15.6 16.4l4.4-4.4-4.4-4.4"></path><path d="M20 12H9.4"></path>',
       desk:      '<rect x="3.4" y="4.4" width="17.2" height="12" rx="2"></rect>' +
                  '<path d="M8 20h8M12 16.4V20"></path>',
+      bookmark:  '<path d="M6.5 4.5h11a1 1 0 0 1 1 1v14l-6.5-3.6L5.5 19.5v-14a1 1 0 0 1 1-1z"></path>',
       pencil:    '<path d="M16.6 3.9a2 2 0 0 1 2.8 2.8L8.2 17.9l-3.7 1 1-3.7z"></path>' +
                  '<path d="M14.6 5.9l3.5 3.5"></path>',
       inbox:     '<path d="M4 13.5h4l1.2 2.4h5.6L16 13.5h4"></path>' +
@@ -826,6 +827,16 @@
           (it.current ? ' aria-current="page"' : '') + '>' + inner + '</a>';
       }).join('');
 
+      /* Saved items. Every signed-in reader has these, staff included —
+         an editor reads the site too — so it lives outside menuItems(),
+         which is only the role-specific tools. */
+      var savedCurrent = atRoot && here === 'saved.html';
+      var savedLink =
+        '<a class="mc-menu-item' + (savedCurrent ? ' is-current' : '') + '" role="menuitem" ' +
+          'tabindex="-1" href="' + depth + 'saved.html"' +
+          (savedCurrent ? ' aria-current="page"' : '') + '>' +
+          svg('bookmark', 18) + '<span>Saved items</span></a>';
+
       // Every role gets this one, which is the point of it.
       var rename =
         '<button type="button" class="mc-menu-item" role="menuitem" tabindex="-1" ' +
@@ -849,6 +860,8 @@
           '</div>' +
           (rows ? '<div class="mc-menu-sep"></div>' +
                   '<div class="mc-menu-list">' + rows + '</div>' : '') +
+          '<div class="mc-menu-sep"></div>' +
+          '<div class="mc-menu-list">' + savedLink + '</div>' +
           '<div class="mc-menu-sep"></div>' +
           '<div class="mc-menu-list">' + rename + '</div>' +
           '<div class="mc-menu-sep"></div>' +

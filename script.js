@@ -597,6 +597,17 @@
     return new URLSearchParams(window.location.search).get(name) || '';
   }
 
+  /* A "Save" button for a card, drawn by bookmarks.js if it is loaded and
+     the row has a real database id — the shipped fallback rows have none,
+     and there is nothing to bookmark that a foreign key could point at.
+     Returns '' otherwise, so a card without a save button is the normal
+     graceful state rather than a broken one. */
+  function bmBtn(type, id, variant) {
+    return (id != null && window.MedCareBookmarks)
+      ? window.MedCareBookmarks.button(type, id, { variant: variant || 'overlay' })
+      : '';
+  }
+
   // Townships are needed on the home page (menu) and the hospitals page
   // (select). Recomputed rather than fixed, because `hospitals` below is
   // replaced by what the table says as soon as it answers.
@@ -878,6 +889,7 @@
         var nameMy = d.name_my || d.name;
         var descMy = d.desc_my || d.desc;
         return '<div class="col-md-6 col-lg-4">' +
+          '<div class="mc-bm-host">' +
           '<a href="' + pageHref('disease', d, 'common-diseases.html') + '" class="mc-disease">' +
           '<div class="mc-disease-icon"><i class="bi ' + d.icon + '"></i></div>' +
           '<span class="mc-disease-tag">' + esc(d.tag) + '</span>' +
@@ -886,7 +898,9 @@
           '<p class="mc-en">' + esc(d.desc) + '</p>' +
           '<p class="mc-my">' + esc(descMy) + '</p>' +
           '<span class="mc-disease-more">Learn more <i class="bi bi-arrow-right"></i></span>' +
-          '</a></div>';
+          '</a>' +
+          bmBtn('disease', d.id, 'overlay') +
+          '</div></div>';
       }).join('');
       dCount.textContent = filtered.length;
       dWord.textContent = filtered.length === 1 ? 'condition' : 'conditions';
@@ -1046,6 +1060,7 @@
   var myArticleCard = function (a) {
     var c = myCat(a.cat);
     return '<div class="col-md-6 col-lg-4">' +
+      '<div class="mc-bm-host">' +
       '<a href="' + pageHref('article', a, 'articles.html') + '" class="mc-article d-block text-decoration-none text-reset">' +
       '<div class="mc-article-thumb"><img src="' + esc(a.thumb) + '" alt="">' +
       '<span class="badge-cat">' + bi(c.en, c.my) + '</span></div>' +
@@ -1055,7 +1070,9 @@
       '<p class="mc-en">' + esc(a.excerpt) + '</p>' +
       '<p class="mc-my">' + esc(a.excerptMy) + '</p>' +
       '<div class="mc-article-meta"><span>' + bi(a.by, a.byMy) + '</span></div>' +
-      '</div></a></div>';
+      '</div></a>' +
+      bmBtn('article', a.id, 'overlay') +
+      '</div></div>';
   };
 
   var myGrid = byId('myArticleGrid');
@@ -1274,6 +1291,7 @@
           '<div class="mc-hosp-actions">' +
           '<a href="' + tel + '" class="mc-call"><i class="bi bi-telephone-fill"></i> ' + esc(h.phone) + '</a>' +
           '<a href="' + maps + '" class="mc-directions" target="_blank" rel="noopener"><i class="bi bi-map"></i> Directions</a>' +
+          bmBtn('hospital', h.id, 'inline') +
           '</div></article>';
       }).join('');
       hCount.textContent = filtered.length;
@@ -1443,6 +1461,7 @@
           '<div class="mc-hosp-actions">' +
           '<a href="' + tel + '" class="mc-call"><i class="bi bi-telephone-fill"></i> ' + esc(p.phone) + '</a>' +
           '<a href="' + maps + '" class="mc-directions" target="_blank" rel="noopener"><i class="bi bi-map"></i> Directions</a>' +
+          bmBtn('pharmacy', p.id, 'inline') +
           '</div></article>';
       }).join('');
       pCount.textContent = filtered.length;
@@ -1735,6 +1754,16 @@
     'Prevention': 'ကာကွယ်ရေး',
     'Wellness': 'ကျန်းမာသုခ',
     'Health article': 'ကျန်းမာရေးဆောင်းပါး',
+    'Good Posture and Back Pain': 'မှန်ကန်သော ကိုယ်နေဟန်ထားနှင့် ခါးနာခြင်း',
+    'Eating well for a healthier life': 'ကျန်းမာရေးနှင့် ညီညွတ်သော အစားအသောက်များ',
+    'Looking after your eyes in a screen-filled world': 'မျက်စိကျန်းမာရေးအတွက် ဂရုစိုက်သင့်သည့် အချက်များ',
+    'Mouth and dental health': 'ခံတွင်းနှင့် သွားကျန်းမာရေး',
+    'Managing stress and looking after your mental health': 'စိတ်ဖိစီးမှု လျှော့ချခြင်းနှင့် စိတ်ကျန်းမာရေး',
+    'Regular health check-ups': 'ကျန်းမာရေး ပုံမှန်စစ်ဆေးခြင်',
+    'Personal hygiene and preventing infection': 'တစ်ကိုယ်ရည် သန့်ရှင်းရေးနှင့် ရောဂါကာကွယ်ခြင်း',
+    'Physical activity and heart health': 'ကိုယ်လက်လှုပ်ရှားမှုနှင့် နှလုံးကျန်းမာရေး',
+    'Why enough sleep matters': 'လုံလောက်သော အိပ်စက်ချိန်၏ အရေးပါပုံ',
+    'The benefits of drinking enough water': 'ရေလုံလောက်စွာ သောက်သုံးခြင်း၏ အကျိုးကျေးဇူးများ',
     'World Health Organization (WHO)': 'ကမ္ဘာ့ကျန်းမာရေးအဖွဲ့ (WHO)',
     'Ministry of Health, Myanmar': 'ကျန်းမာရေးဝန်ကြီးဌာန၊ မြန်မာနိုင်ငံ',
 
@@ -2689,7 +2718,7 @@
       'ဤဝဘ်ဆိုက်ရှိ အရာအားလုံးသည် အများပြည်သူအတွက် အထွေထွေ အချက်အလက်များသာ ဖြစ်သည်။ ရောဂါရှာဖွေချက်၊ ဆေးညွှန်း သို့မဟုတ် တစ်ဦးချင်း ဆေးပညာ အကြံပြုချက် မဟုတ်ပါ။ သင့်ကို စစ်ဆေးပေးနိုင်သည့် အရည်အချင်းပြည့်မီသော ကျန်းမာရေးဝန်ထမ်းနှင့် တိုင်ပင်ခြင်းအစား အစားထိုး၍ မရပါ။',
     'If you think you are having a medical emergency, do not spend time reading. Go to the nearest hospital or call an ambulance.':
       'အရေးပေါ် ဖြစ်နေသည်ဟု ထင်ပါက စာဖတ်၍ အချိန်မကုန်ပါစေနှင့်။ အနီးဆုံး ဆေးရုံသို့ သွားပါ သို့မဟုတ် လူနာတင်ယာဉ် ခေါ်ပါ။',
-    'Who we are': 'ကျွန်ုပ်တို့ မည်သူများလဲ',
+    'Who we are': 'ကျွန်ုပ်တို့ ဘယ်သူတွေလဲ',
     'MedCare is a student project, built and maintained by a five-person team as coursework. It is offered free of charge, with no advertising and no commercial sponsor. It is not a hospital, a clinic, a pharmacy, or a registered healthcare provider, and no doctor–patient relationship is created by your use of it.':
       'MedCare သည် ကျောင်းသား စီမံကိန်းတစ်ခု ဖြစ်ပြီး ငါးဦးပါ အဖွဲ့တစ်ဖွဲ့မှ သင်တန်းလုပ်ငန်းအဖြစ် တည်ဆောက် ထိန်းသိမ်းထားသည်။ ကြော်ငြာမပါ၊ စီးပွားရေး ကမကထပြုသူ မရှိဘဲ အခမဲ့ ပေးအပ်ထားပါသည်။ ဆေးရုံ၊ ဆေးခန်း၊ ဆေးဆိုင် သို့မဟုတ် မှတ်ပုံတင်ထားသော ကျန်းမာရေး ဝန်ဆောင်မှုပေးသူ မဟုတ်ပါ။ ၎င်းကို အသုံးပြုခြင်းဖြင့် ဆရာဝန်နှင့် လူနာ ဆက်ဆံရေး မဖြစ်ပေါ်ပါ။',
     'Using the site': 'ဝဘ်ဆိုက် အသုံးပြုခြင်း',

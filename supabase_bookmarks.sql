@@ -35,11 +35,13 @@
    bookmark should vanish with its target, automatically.
 
    That is what a foreign key with ON DELETE CASCADE does and what a
-   polymorphic column cannot. So this table uses two real, nullable
-   foreign keys — disease_id and article_id — with a check that exactly
-   one is set. Referential integrity and self-cleanup are worth more here
-   than the extensibility the polymorphic shape buys, and adding a third
-   kind of bookmarkable thing later is one migration, not a redesign.
+   polymorphic column cannot. So this table uses four real, nullable
+   foreign keys — disease_id, article_id, hospital_id and pharmacy_id —
+   with a check that exactly one is set. Referential integrity and
+   self-cleanup are worth more here than the extensibility the
+   polymorphic shape buys, and adding a further kind of bookmarkable
+   thing later is one migration, not a redesign — hospitals and
+   pharmacies were added exactly that way.
 
    Same reasoning, opposite conclusion. The divergence is deliberate; a
    later reader should not "fix" it into matching reports. */
@@ -57,27 +59,47 @@ create table if not exists public.bookmarks (
   user_id     uuid        not null default auth.uid()
                           references auth.users (id) on delete cascade,
 
-  -- The two possible targets. Exactly one is set; the check below enforces
-  -- that. Both cascade, so a hard-deleted disease or article takes its
-  -- bookmarks with it and no dead link is ever left in a saved list.
-  disease_id  bigint      references public.diseases (id) on delete cascade,
-  article_id  bigint      references public.articles (id) on delete cascade,
+  -- The four possible targets. Exactly one is set; the check below
+  -- enforces that. All cascade, so a hard-deleted disease, article,
+  -- hospital or pharmacy takes its bookmarks with it and no dead link is
+  -- ever left in a saved list.
+  disease_id  bigint      references public.diseases (id)   on delete cascade,
+  article_id  bigint      references public.articles (id)   on delete cascade,
+  hospital_id bigint      references public.hospitals (id)  on delete cascade,
+  pharmacy_id bigint      references public.pharmacies (id) on delete cascade,
 
   created_at  timestamptz not null default now(),
 
   -- Exactly one target. Not "at least one" and not "at most one" — a
   -- bookmark of nothing and a bookmark of two things are both nonsense,
   -- and the database is the only place that can refuse them for good.
+  -- num_nonnulls() counts how many of the four are set.
   constraint bookmarks_one_target check (
-    (disease_id is not null and article_id is null) or
-    (disease_id is null     and article_id is not null)
+    num_nonnulls(disease_id, article_id, hospital_id, pharmacy_id) = 1
   )
 );
 
 comment on table public.bookmarks is
-  'A reader''s saved diseases and articles. Private to the reader who made them — not readable by staff. One row per person per item.';
+  'A reader''s saved diseases, articles, hospitals and pharmacies. Private to the reader who made them — not readable by staff. One row per person per item.';
 comment on column public.bookmarks.user_id is
   'The owner. Defaults to auth.uid() so the client never sends it; the RLS policies re-check it, because a default is convenience, not enforcement.';
+
+
+-- ---------- 1b. UPGRADE AN EXISTING TABLE ----------
+-- `create table if not exists` above builds a fresh install with all four
+-- targets, but does nothing to a table that predates hospitals and
+-- pharmacies. These bring such a table up to date, and are no-ops once it
+-- already has the columns — so the whole file stays safe to re-run.
+alter table public.bookmarks
+  add column if not exists hospital_id  bigint references public.hospitals (id)  on delete cascade,
+  add column if not exists pharmacy_id  bigint references public.pharmacies (id) on delete cascade;
+
+-- Widen the one-target check from the two-column original to all four.
+alter table public.bookmarks drop constraint if exists bookmarks_one_target;
+alter table public.bookmarks
+  add constraint bookmarks_one_target check (
+    num_nonnulls(disease_id, article_id, hospital_id, pharmacy_id) = 1
+  );
 
 
 -- ---------- 2. SERVER-SIDE DEFAULT FOR user_id ----------
@@ -175,6 +197,12 @@ create unique index if not exists bookmarks_user_disease_uidx
 
 create unique index if not exists bookmarks_user_article_uidx
   on public.bookmarks (user_id, article_id) where article_id is not null;
+
+create unique index if not exists bookmarks_user_hospital_uidx
+  on public.bookmarks (user_id, hospital_id) where hospital_id is not null;
+
+create unique index if not exists bookmarks_user_pharmacy_uidx
+  on public.bookmarks (user_id, pharmacy_id) where pharmacy_id is not null;
 
 -- The one query the reader's "Saved" page runs: my bookmarks, newest
 -- first.

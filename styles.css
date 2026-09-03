@@ -808,8 +808,61 @@
   .mc-toast-x{flex-shrink:0;width:26px;height:26px;margin:-.15rem -.25rem 0 auto;border:none;background:transparent;color:var(--mc-muted);border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.72rem}
   .mc-toast-x:hover{background:var(--mc-bg);color:var(--mc-text)}
   .mc-toast-x:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
+  .mc-toast--error{border-left-color:var(--mc-danger)}
+  .mc-toast--error .mc-toast-ico{color:var(--mc-danger)}
+
+  /* ===================== Bookmarks ("Save this") ===================== */
+  /* The wrapper that lets an overlay button sit over a card that is itself
+     a single link. It has to carry the card's full height so the row of
+     cards stays equal-height the way it was before the wrapper existed. */
+  .mc-bm-host{position:relative;height:100%}
+
+  /* The button itself, in three shapes. Shared: a bookmark icon that fills
+     in when saved and turns teal, on a control that never navigates. */
+  .mc-bm{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font-family:inherit;border:1px solid var(--mc-border);background:#fff;color:var(--mc-muted);cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .1s}
+  .mc-bm:hover{color:var(--mc-primary-600);border-color:var(--mc-primary)}
+  .mc-bm:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
+  .mc-bm:active{transform:scale(.92)}
+  .mc-bm.is-saved{color:var(--mc-primary-600);border-color:var(--mc-primary);background:var(--mc-primary-50)}
+  .mc-bm i{font-size:1rem;line-height:1}
+
+  /* Overlay: a round icon button in the top-right of a disease or article
+     card, above the link so a tap saves instead of opening the page. */
+  .mc-bm--overlay{position:absolute;top:.7rem;right:.7rem;z-index:2;width:38px;height:38px;border-radius:999px;box-shadow:var(--mc-shadow)}
+  .mc-article .mc-bm--overlay,.mc-bm-host>.mc-article+.mc-bm--overlay{top:.7rem;right:.7rem}
+  /* On an article card the thumbnail is at the top, so the button sits on
+     the image — give it a solid ground so the icon stays legible. */
+  .mc-bm-host>.mc-article+.mc-bm--overlay{background:rgba(255,255,255,.92);backdrop-filter:blur(2px)}
+
+  /* Inline: sits in the actions row of a hospital or pharmacy card beside
+     Call and Directions, matching their height. */
+  .mc-bm--inline{height:auto;padding:.6rem .95rem;border-radius:10px;font-weight:600;font-size:.9rem;color:var(--mc-text)}
+
+  /* Detail: the labelled button in the "Save this article" bar on a
+     content page. The <span class="mc-bm-text"> carries the word. */
+  .mc-bm-bar{display:flex;align-items:center;justify-content:space-between;gap:1.1rem;flex-wrap:wrap;background:var(--mc-primary-50);border:1px solid #ccfbf1;border-radius:16px;padding:1.15rem 1.35rem;margin:2rem 0 0}
+  .mc-bm-bar-text{font-size:.93rem;line-height:1.6;color:#334155}
+  .mc-bm-bar-text strong{color:var(--mc-primary-600)}
+  .mc-bm--detail{padding:.55rem 1.15rem;border-radius:10px;font-weight:600;font-size:.9rem;color:var(--mc-text);white-space:nowrap}
+
+  /* ---- The Saved page list (saved.html) ---- */
+  .mc-saved-list{display:flex;flex-direction:column;gap:.9rem}
+  .mc-saved-card{display:flex;align-items:center;gap:1rem;background:#fff;border:1px solid var(--mc-border);border-radius:16px;box-shadow:var(--mc-shadow);padding:1.1rem 1.25rem}
+  .mc-saved-ico{flex-shrink:0;width:46px;height:46px;border-radius:12px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem}
+  .mc-saved-body{min-width:0;flex:1}
+  .mc-saved-type{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--mc-muted);background:var(--mc-bg);border:1px solid var(--mc-border);border-radius:999px;padding:.1rem .5rem;margin-bottom:.35rem}
+  .mc-saved-body h3{font-family:'Poppins',sans-serif;font-size:1.02rem;font-weight:600;margin:0 0 .2rem;line-height:1.35}
+  .mc-saved-body h3 a{color:var(--mc-text);text-decoration:none}
+  .mc-saved-body h3 a:hover{color:var(--mc-primary-600);text-decoration:underline}
+  .mc-saved-body p{font-size:.88rem;color:var(--mc-muted);line-height:1.5;margin:0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .mc-saved-actions{flex-shrink:0;display:flex;align-items:center;gap:.5rem}
+  .mc-saved-open{padding:.5rem .9rem;font-size:.86rem}
 
   @media (max-width:575.98px){
+    .mc-saved-card{flex-wrap:wrap}
+    .mc-saved-ico{width:40px;height:40px;font-size:1.1rem}
+    .mc-saved-actions{width:100%;margin-left:calc(40px + 1rem)}
+    .mc-bm-bar{flex-direction:column;align-items:flex-start}
     .mc-report{flex-direction:column;align-items:flex-start}
     .mc-report.has-edit .mc-report-text{flex:1 1 auto}
     .mc-modal-panel{padding:1.6rem 1.25rem 1.4rem}

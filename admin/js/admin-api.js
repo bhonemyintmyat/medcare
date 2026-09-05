@@ -487,6 +487,52 @@
   }
 
 
+  /* ----------------------------------------------------------------
+     The footer pages
+
+     public.pages, one row per page, seeded by supabase_footer_pages.sql.
+     A different table from site_settings on purpose: these bodies are
+     rendered as HTML, and site_settings says of itself that nothing in
+     it ever is. The migration's header has the long version.
+
+     No insert half here, unlike saveSetting above. A page row is created
+     by the migration and never by a screen: `slug` and `href` are not in
+     the column grant, so a client could not write a usable row anyway,
+     and a screen that could invent pages is a screen that can invent a
+     page no file renders.
+     ---------------------------------------------------------------- */
+
+  function loadPages() {
+    return db.from('pages')
+      .select('slug,title,body,body_my,href,updated_at,updated_by')
+      .order('slug')
+      .then(function (res) {
+        if (res.error) { throw res.error; }
+        return res.data || [];
+      });
+  }
+
+  function savePage(slug, fields) {
+    return db.from('pages')
+      .update({ title: fields.title, body: fields.body, body_my: fields.body_my })
+      .eq('slug', slug)
+      .select('slug,title,body,body_my,href,updated_at,updated_by')
+      .then(function (res) {
+        if (res.error) { throw res.error; }
+        /* Nothing came back: either RLS refused the write, or the row is
+           missing because the migration has not been run. Both end here,
+           and the screen says so — an editor who reached this by opening
+           the admin URL directly should be told it was refused, not left
+           looking at a Save that appeared to work. */
+        if (!res.data || !res.data.length) {
+          throw { code: '42501',
+                  message: 'The database changed nothing. Either this account may not edit pages, or supabase_footer_pages.sql has not been run.' };
+        }
+        return res.data[0];
+      });
+  }
+
+
   /* ================================================================
      4. THE DIALOGS
      ================================================================
@@ -658,6 +704,9 @@
     SETTING_DEFAULTS: DEFAULTS,
     loadSettings: loadSettings,
     saveSetting: saveSetting,
+
+    loadPages: loadPages,
+    savePage: savePage,
 
     confirmDialog: confirmDialog,
     confirmByName: confirmByName

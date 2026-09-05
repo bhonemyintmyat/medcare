@@ -13,7 +13,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
 <script src="supabase.js" defer></script>
 <script src="auth.js" defer></script>
+<script src="sanitize-html.js" defer></script>
 <script src="script.js" defer></script>
+<script src="page-body.js" defer></script>
 </head>
 <body>
 
@@ -52,66 +54,105 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-8">
-          <p class="mc-article-lede">Looking up a health condition is private. MedCare is built so that you can do it without telling us who you are.</p>
+          <p class="mc-article-lede">Looking up a health condition is private. You can read every page on MedCare without an account, without giving a name, and without telling us anything about yourself.</p>
 
           <div class="mc-callout mc-callout--info">
             <span class="ico"><i class="bi bi-shield-check"></i></span>
             <div>
               <h3>The short version</h3>
-              <p>We have no accounts, no sign-up, no contact forms, and no analytics. We do not ask for your name, and we have no database of visitors. Everything you type into a search box stays inside your own browser. We set no cookies of our own.</p>
+              <p>Reading is anonymous: no sign-in, and no record tying a page to you. An account is optional and only needed to save pages or report a mistake — if you create one, we hold your name, your email address, and the pages you chose to save, and you can delete all of it yourself. We run no advertising and no analytics, everything you type into a search box stays inside your own browser, and we set no cookies of our own.</p>
             </div>
           </div>
 
-          <div class="mc-article-prose">
-            <h2 class="mc-article-h2">What we do not collect</h2>
-            <p>MedCare has no user accounts and no way to register. We do not ask for, and cannot receive, your name, age, phone number, email address, or any detail of your health. There is no form on this site that sends anything to us.</p>
-            <p>We do not run advertising, and we do not use analytics or tracking services of any kind. No advertising network is given access to your visit.</p>
+          <div data-page-slug="privacy">
+            <div class="mc-article-prose" data-page-static>
+              <h2 class="mc-article-h2">Reading without an account</h2>
+              <p>Everything on MedCare — every condition, article, hospital, pharmacy, and emergency number — can be read without signing in. Browsing that way, we do not ask for, and cannot receive, your name, age, phone number, email address, or any detail of your health. Nothing you read is recorded against you, and there is no profile of you to build because there is nothing to attach one to.</p>
+              <p>We do not run advertising, and we do not use analytics or tracking services of any kind. No advertising network is given access to your visit.</p>
 
-            <h2 class="mc-article-h2">Searching and filtering</h2>
-            <p>The search boxes on the diseases, hospitals, pharmacy, and article pages work entirely inside your browser. What you type is matched against a list already loaded on the page. It is never sent to us or to anyone else, and it is not saved after you close the page.</p>
+              <h2 class="mc-article-h2">If you create an account</h2>
+              <p>An account is optional. It exists for two things: saving pages so you can find them again, and telling us that something on a page is wrong. If neither is useful to you, there is no reason to make one — the site reads exactly the same either way.</p>
+              <p>When you sign up, we ask for and store:</p>
+              <ul class="mc-list sym">
+                <li><i class="bi bi-dot"></i><span><strong>Your email address</strong> — so you can sign in, confirm the account, and reset a forgotten password.</span></li>
+                <li><i class="bi bi-dot"></i><span><strong>Your password</strong> — kept only as a cryptographic hash. Neither we nor anyone else can read it back, which is why a forgotten password can be replaced but never recovered.</span></li>
+                <li><i class="bi bi-dot"></i><span><strong>Your name and a display name</strong> — the display name is what the site shows back to you, and what the editors see on a report you send. Both can be anything you like; we check them against nothing.</span></li>
+                <li><i class="bi bi-dot"></i><span><strong>The date the account was created</strong>, and whether it is a reader, editor, or administrator account.</span></li>
+              </ul>
+              <p>After that, two things accumulate — and only if you choose to do them:</p>
+              <ul class="mc-list sym">
+                <li><i class="bi bi-dot"></i><span><strong>Pages you save.</strong> We store which condition, article, hospital, or pharmacy you saved, and that it was your account that saved it. The list is private: the database is configured so that no account but your own can read it.</span></li>
+                <li><i class="bi bi-dot"></i><span><strong>Reports you send.</strong> If you report an error, we store what you wrote, which page it concerned, when you sent it, and which account sent it — so the editors can act on it and so one account cannot flood the queue.</span></li>
+              </ul>
+              <p>Even with an account, we do not ask about your health, and nothing records which pages you have read. Saving a page is a deliberate act; ordinary browsing is not logged either way.</p>
 
-            <h2 class="mc-article-h2">What is stored on your device</h2>
-            <p>MedCare stores one thing, and only if you choose a language: your preference for English or Burmese, kept in your browser's local storage so the site opens in the same language next time. It is a single setting, held on your own device, readable only by this site, and never transmitted to us.</p>
-            <p>You can inspect and erase it at any time, or clear all site data in your browser.</p>
-            <p><a href="cookies.html">Cookie Settings</a></p>
+              <h2 class="mc-article-h2">Searching and filtering</h2>
+              <p>The search boxes on the diseases, hospitals, pharmacy, and article pages work entirely inside your browser. What you type is matched against a list already loaded on the page. It is never sent to us or to anyone else, and it is not saved after you close the page.</p>
 
-            <h2 class="mc-article-h2">Others who see your visit</h2>
-            <p>Like most websites, MedCare loads some files from other companies' servers. When your browser fetches a file, that company necessarily learns your IP address, roughly where you are, and which page requested it. We do not control what they do with that, and their privacy policies apply:</p>
-            <ul class="mc-list sym">
-              <li><i class="bi bi-dot"></i><span><strong>Google Fonts and jsDelivr</strong> — supply the typefaces, icons, and layout framework used on every page.</span></li>
-              <li><i class="bi bi-dot"></i><span><strong>Unsplash</strong> — supplies the photographs used on the home page and article pages.</span></li>
-              <li><i class="bi bi-dot"></i><span><strong>Google Maps</strong> — supplies the map embedded on the Find Hospitals page. This is the one place on the site where a third party may set cookies in your browser.</span></li>
-            </ul>
-            <p>Because the map is the most intrusive of these, we do not load it until you ask for it. You will see a placeholder with a button, and the map — and Google's cookies with it — arrive only after you click. Your choice is remembered, and you can change it at any time.</p>
-            <p><a href="cookies.html">Cookie Settings</a></p>
+              <h2 class="mc-article-h2">What is stored on your device</h2>
+              <p>If you never sign in, MedCare stores one thing, and only once you choose a language: your preference for English or Burmese, kept in your browser's local storage so the site opens the same way next time. It is a single setting, held on your own device, readable only by this site, and never transmitted to us.</p>
+              <p>Signing in adds a session token — the credential that keeps you signed in between visits, and that your browser sends to our database so it can tell it is you. It is stored by your browser, not by us, and signing out deletes it. Alongside it the site keeps two short-lived notes for the length of the browser tab: whether your account is a reader, editor, or administrator, so the right menu can be drawn without asking the server again, and a cached copy of the site notice.</p>
+              <p>None of these are cookies, and you can inspect and erase any of them at any time, or clear all site data in your browser.</p>
+              <p><a href="cookies.html">Cookie Settings</a></p>
 
-            <h2 class="mc-article-h2">Links to other sites</h2>
-            <p>Our source lists link to organisations such as the World Health Organization and the Ministry of Health. Once you follow a link you are on their site, under their privacy policy, and we no longer have any part in it.</p>
+              <h2 class="mc-article-h2">Others who see your visit</h2>
+              <p>Like most websites, MedCare loads some files from other companies' servers. When your browser fetches a file, that company necessarily learns your IP address, roughly where you are, and which page requested it. We do not control what they do with that, and their privacy policies apply:</p>
+              <ul class="mc-list sym">
+                <li><i class="bi bi-dot"></i><span><strong>Google Fonts and jsDelivr</strong> — supply the typefaces, icons, and layout framework used on every page.</span></li>
+                <li><i class="bi bi-dot"></i><span><strong>Unsplash</strong> — supplies the photographs used on some of the article pages.</span></li>
+              </ul>
+              <p>These supply files only. MedCare embeds nothing from a third party — no map, no video player, no comment widget — so none of them is in a position to set a cookie in your browser. The <em>Directions</em> buttons on a hospital or pharmacy are plain links to Google Maps: nothing is loaded until you choose to follow one, and from that point you are on Google's site under Google's policy.</p>
+              <p><a href="cookies.html">Cookie Settings</a></p>
 
-            <h2 class="mc-article-h2">Server logs</h2>
-            <p>MedCare is published as static pages. Whoever hosts them may keep ordinary server logs — IP address, time, and page requested — as part of running the service. We do not add to those logs, do not analyse them, and do not use them to build any profile of you.</p>
+              <h2 class="mc-article-h2">Companies that hold data for us</h2>
+              <p>Two companies handle information on our behalf. They are processors: they hold the data so that the site can work, and they are not permitted to use it for their own purposes.</p>
+              <ul class="mc-list sym">
+                <li><i class="bi bi-dot"></i><span><strong>Supabase</strong> — hosts the database and runs the sign-in system. Everything described above under <em>If you create an account</em> lives there, including the stored hash of your password. The pages, hospital listings, and emergency numbers you read are served from it too.</span></li>
+                <li><i class="bi bi-dot"></i><span><strong>Brevo</strong> — delivers the only emails we send: the message confirming a new account, and the one that lets you reset a forgotten password. It sees the address the email is going to. We do not send newsletters, and we do not send marketing of any kind.</span></li>
+              </ul>
+              <p>If you write to us at the address on the <a href="contact.html">contact page</a>, that message arrives as ordinary email, and we hold whatever you put in it — including your email address — for as long as it takes to answer you.</p>
 
-            <h2 class="mc-article-h2">Children</h2>
-            <p>The site is written for a general audience, including families. Since we collect nothing, we hold no information about children any more than about anyone else.</p>
+              <h2 class="mc-article-h2">Links to other sites</h2>
+              <p>Our source lists link to organisations such as the World Health Organization and the Ministry of Health. Once you follow a link you are on their site, under their privacy policy, and we no longer have any part in it.</p>
 
-            <h2 class="mc-article-h2">Your rights</h2>
-            <p>Rights to see, correct, or delete personal data depend on our holding some. We hold none — so there is nothing for us to show you, amend, or erase. The single language preference described above is on your device and entirely under your control.</p>
+              <h2 class="mc-article-h2">Server logs</h2>
+              <p>MedCare's pages are static files. Whoever hosts them, and Supabase in serving the database behind them, may keep ordinary server logs — IP address, time, and what was requested — as part of running the service. We do not add to those logs, do not analyse them, and do not use them to build any profile of you.</p>
 
-            <h2 class="mc-article-h2">Changes to this policy</h2>
-            <p>If we ever add a feature that collects anything, we will change this page before that feature goes live, and update the date below. Continuing to use MedCare after a change means you accept the revised policy.</p>
+              <h2 class="mc-article-h2">Children</h2>
+              <p>The site is written for a general audience, including families. We do not knowingly create accounts for children, and since reading needs no account, a child can use everything on MedCare without us holding anything about them at all. If you believe a child has signed up, write to us and we will remove the account.</p>
 
-            <h2 class="mc-article-h2">Contact</h2>
-            <p>Questions about privacy can be sent to the team.</p>
-            <p><a href="contact.html">Contact us</a> · <a href="editor.html">Our editorial team</a></p>
+              <h2 class="mc-article-h2">Your rights</h2>
+              <p>If you have never made an account, we hold nothing about you, so there is nothing for us to show you, amend, or erase. The language preference described above is on your device and entirely under your control.</p>
+              <p>If you do have an account, you can act on it yourself from inside the site:</p>
+              <ul class="mc-list sym">
+                <li><i class="bi bi-dot"></i><span><strong>See and change</strong> your display name from your account menu.</span></li>
+                <li><i class="bi bi-dot"></i><span><strong>Remove saved pages</strong> individually at any time, from the page itself or from your saved list.</span></li>
+                <li><i class="bi bi-dot"></i><span><strong>Delete the whole account.</strong> This asks for your password, then erases the account, your profile, and every page you saved. It cannot be undone and we keep no copy.</span></li>
+              </ul>
+              <p>Deleting an account leaves behind only the text of any error reports you sent, and those are detached from you in the same operation — the report stays in the editors' queue with no account attached, because the correction is still worth making. If you would rather a report were removed outright, ask us and we will delete it.</p>
 
-            <p class="text-muted mt-4" style="font-size:.83rem">Last updated: August 2026.</p>
+              <h2 class="mc-article-h2">Changes to this policy</h2>
+              <p>If we add a feature that collects anything beyond what is described above, we will change this page before that feature goes live, and update the date below. Continuing to use MedCare after a change means you accept the revised policy.</p>
+
+              <h2 class="mc-article-h2">Contact</h2>
+              <p>Questions about privacy can be sent to the team.</p>
+              <p><a href="contact.html">Contact us</a> · <a href="editor.html">Our editorial team</a></p>
+
+              <p class="text-muted mt-4" style="font-size:.83rem">Last updated: September 2026.</p>
+            </div>
+
+            <!-- Filled by page-body.js when public.pages holds prose for this
+                 page. Until then these stay empty and hidden, and the copy
+                 above stands. mc-noi18n keeps the phrase dictionary off it. -->
+            <div class="mc-article-prose mc-noi18n mc-en" data-page-body="en" hidden></div>
+            <div class="mc-article-prose mc-noi18n mc-my" data-page-body="my" hidden></div>
           </div>
 
           <div class="mc-callout">
             <span class="ico"><i class="bi bi-exclamation-triangle"></i></span>
             <div>
               <h3>A note on shared devices</h3>
-              <p>Your browser keeps its own history of the pages you visit, and MedCare cannot clear it. On a shared or family phone, use a private browsing window if you would rather your visit left no trace.</p>
+              <p>Your browser keeps its own history of the pages you visit, and MedCare cannot clear it. On a shared or family phone, use a private browsing window if you would rather your visit left no trace. If you have an account, sign out as well — otherwise the next person to open the site is still signed in as you, and can see the pages you saved.</p>
             </div>
           </div>
         </div>
@@ -132,7 +173,7 @@
       </div>
       <div class="col-6 col-md-3 col-lg-2">
         <h5>About</h5>
-        <ul><li><a href="editor.html">Our editorial team</a></li><li><a href="contact.html">Contact us</a></li></ul>
+        <ul><li><a href="about.html">About MedCare</a></li><li><a href="editor.html">Our editorial team</a></li><li><a href="contact.html">Contact us</a></li></ul>
       </div>
       <div class="col-md-6 col-lg-3">
         <h5>Legal</h5>

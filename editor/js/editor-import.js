@@ -85,6 +85,31 @@
        once the accordion is flattened into headings it is a stray line
        of prose that says nothing. All twelve carry it. */
     '.mc-section-label',
+    /* The footer pages (admin/pages.html) carry two things inside their
+       article column that are furniture rather than prose, and that stay
+       in the HTML file when the prose moves to the database:
+
+         .mc-setting   the cookie page's live cards. Each one reports what
+                       is on the reader's own device and carries the button
+                       that clears it, so the words in it are a caption for
+                       a control that would not come with them.
+         .mc-feature   the panel of links on the About page. Sanitised it
+                       is four headings and four stray links, which is not
+                       what it says on the page.
+
+       Both are outside the editable region on the public side. Taking
+       them here as well means an import returns the same text that
+       region shows, rather than text plus a flattened copy of the
+       furniture around it. */
+    '.mc-setting',
+    '.mc-feature',
+    /* The empty boxes page-body.js fills from the database. They are the
+       DESTINATION of this import, not part of the page, and one of them
+       carries .mc-my — so leaving them in makes the language test below
+       count a translation that is not there, and the Burmese half of the
+       import comes back holding the English text. Struck before anything
+       is counted. */
+    '[data-page-body]',
     'script', 'style', 'noscript',
     'form', 'iframe'
   ];

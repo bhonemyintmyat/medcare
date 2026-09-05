@@ -13,7 +13,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
 <script src="supabase.js" defer></script>
 <script src="auth.js" defer></script>
+<script src="sanitize-html.js" defer></script>
 <script src="script.js" defer></script>
+<script src="page-body.js" defer></script>
 </head>
 <body>
 
@@ -63,50 +65,58 @@
             </div>
           </div>
 
-          <div class="mc-article-prose">
-            <h2 class="mc-article-h2">Who we are</h2>
-            <p>MedCare is a student project, built and maintained by a five-person team as coursework. It is offered free of charge, with no advertising and no commercial sponsor. It is not a hospital, a clinic, a pharmacy, or a registered healthcare provider, and no doctor–patient relationship is created by your use of it.</p>
+          <div data-page-slug="terms">
+            <div class="mc-article-prose" data-page-static>
+              <h2 class="mc-article-h2">Who we are</h2>
+              <p>MedCare is a student project, built and maintained by a five-person team as coursework. It is offered free of charge, with no advertising and no commercial sponsor. It is not a hospital, a clinic, a pharmacy, or a registered healthcare provider, and no doctor–patient relationship is created by your use of it.</p>
 
-            <h2 class="mc-article-h2">Using the site</h2>
-            <p>You may read, print, and share our pages for your own personal, non-commercial use, and for teaching or community health education, as long as you keep the content intact and credit MedCare as the source.</p>
-            <p>You agree not to:</p>
-            <ul class="mc-list donts">
-              <li><i class="bi bi-x-circle-fill"></i><span>Present our content as your own, or as the advice of a licensed clinician.</span></li>
-              <li><i class="bi bi-x-circle-fill"></i><span>Alter the medical content and continue to attribute it to MedCare.</span></li>
-              <li><i class="bi bi-x-circle-fill"></i><span>Sell the content, or place it behind a paywall.</span></li>
-              <li><i class="bi bi-x-circle-fill"></i><span>Attempt to disrupt the site, or use automated tools to overload it.</span></li>
-            </ul>
+              <h2 class="mc-article-h2">Using the site</h2>
+              <p>You may read, print, and share our pages for your own personal, non-commercial use, and for teaching or community health education, as long as you keep the content intact and credit MedCare as the source.</p>
+              <p>You agree not to:</p>
+              <ul class="mc-list donts">
+                <li><i class="bi bi-x-circle-fill"></i><span>Present our content as your own, or as the advice of a licensed clinician.</span></li>
+                <li><i class="bi bi-x-circle-fill"></i><span>Alter the medical content and continue to attribute it to MedCare.</span></li>
+                <li><i class="bi bi-x-circle-fill"></i><span>Sell the content, or place it behind a paywall.</span></li>
+                <li><i class="bi bi-x-circle-fill"></i><span>Attempt to disrupt the site, or use automated tools to overload it.</span></li>
+              </ul>
 
-            <h2 class="mc-article-h2">Accuracy and limits of the information</h2>
-            <p>Our disease and article pages are written in plain language from public health sources, and each page lists the sources it draws on. We review them periodically and show the date of the last review at the foot of each page.</p>
-            <p>Even so, medical knowledge changes, and general guidance cannot account for your age, your other conditions, the medicines you already take, or whether you are pregnant. Information here may be incomplete or out of date by the time you read it. Always confirm anything that affects a decision about your health with a health worker.</p>
-            <p>Drug names, dosages, and treatment schedules are described only in general terms. Never start, stop, or change a medicine on the strength of what you read here.</p>
+              <h2 class="mc-article-h2">Accuracy and limits of the information</h2>
+              <p>Our disease and article pages are written in plain language from public health sources, and each page lists the sources it draws on. We review them periodically and show the date of the last review at the foot of each page.</p>
+              <p>Even so, medical knowledge changes, and general guidance cannot account for your age, your other conditions, the medicines you already take, or whether you are pregnant. Information here may be incomplete or out of date by the time you read it. Always confirm anything that affects a decision about your health with a health worker.</p>
+              <p>Drug names, dosages, and treatment schedules are described only in general terms. Never start, stop, or change a medicine on the strength of what you read here.</p>
 
-            <h2 class="mc-article-h2">Hospital, pharmacy, and emergency listings</h2>
-            <p>The directories of hospitals, pharmacies, and emergency numbers are compiled from public sources and checked by our team. Opening hours, phone numbers, and services change frequently and without notice. Treat every listing as a starting point, and telephone ahead before travelling — particularly at night or in an emergency.</p>
-            <p>Listing a facility is not a recommendation or an endorsement of it, and we have no commercial relationship with any facility named on this site.</p>
+              <h2 class="mc-article-h2">Hospital, pharmacy, and emergency listings</h2>
+              <p>The directories of hospitals, pharmacies, and emergency numbers are compiled from public sources and checked by our team. Opening hours, phone numbers, and services change frequently and without notice. Treat every listing as a starting point, and telephone ahead before travelling — particularly at night or in an emergency.</p>
+              <p>Listing a facility is not a recommendation or an endorsement of it, and we have no commercial relationship with any facility named on this site.</p>
 
-            <h2 class="mc-article-h2">Links to other websites</h2>
-            <p>We link to organisations such as the World Health Organization and the Ministry of Health so you can read the primary source. Those sites are not under our control. We are not responsible for their content, their accuracy, or how they handle your data — their own terms and privacy policies apply once you follow the link.</p>
+              <h2 class="mc-article-h2">Links to other websites</h2>
+              <p>We link to organisations such as the World Health Organization and the Ministry of Health so you can read the primary source. Those sites are not under our control. We are not responsible for their content, their accuracy, or how they handle your data — their own terms and privacy policies apply once you follow the link.</p>
 
-            <h2 class="mc-article-h2">Availability</h2>
-            <p>We offer the site as it is. We do not promise that it will always be reachable, free of errors, or uninterrupted, and we may change, move, or remove any page at any time. As a student project, MedCare may be taken offline at the end of the course.</p>
+              <h2 class="mc-article-h2">Availability</h2>
+              <p>We offer the site as it is. We do not promise that it will always be reachable, free of errors, or uninterrupted, and we may change, move, or remove any page at any time. As a student project, MedCare may be taken offline at the end of the course.</p>
 
-            <h2 class="mc-article-h2">Liability</h2>
-            <p>To the fullest extent permitted by law, the MedCare team accepts no liability for any loss, injury, or harm arising from reliance on the information on this site, from any inaccuracy in it, or from the site being unavailable. Your use of MedCare, and any decision you make on the basis of it, is your own responsibility.</p>
-            <p>Nothing in these terms limits any liability that cannot lawfully be limited.</p>
+              <h2 class="mc-article-h2">Liability</h2>
+              <p>To the fullest extent permitted by law, the MedCare team accepts no liability for any loss, injury, or harm arising from reliance on the information on this site, from any inaccuracy in it, or from the site being unavailable. Your use of MedCare, and any decision you make on the basis of it, is your own responsibility.</p>
+              <p>Nothing in these terms limits any liability that cannot lawfully be limited.</p>
 
-            <h2 class="mc-article-h2">Content that belongs to others</h2>
-            <p>The MedCare name, page designs, and written content belong to the MedCare team. Photographs are used under the licences granted by their sources. Icons and page framework come from Bootstrap and Bootstrap Icons under their own open-source licences. If you believe material on this site infringes your rights, write to us and we will remove it while we look into it.</p>
+              <h2 class="mc-article-h2">Content that belongs to others</h2>
+              <p>The MedCare name, page designs, and written content belong to the MedCare team. Photographs are used under the licences granted by their sources. Icons and page framework come from Bootstrap and Bootstrap Icons under their own open-source licences. If you believe material on this site infringes your rights, write to us and we will remove it while we look into it.</p>
 
-            <h2 class="mc-article-h2">Changes to these terms</h2>
-            <p>We may update these terms as the site develops. The version published here is the one that applies, and the date below shows when it last changed. Continuing to use MedCare after a change means you accept the revised terms.</p>
+              <h2 class="mc-article-h2">Changes to these terms</h2>
+              <p>We may update these terms as the site develops. The version published here is the one that applies, and the date below shows when it last changed. Continuing to use MedCare after a change means you accept the revised terms.</p>
 
-            <h2 class="mc-article-h2">Contact</h2>
-            <p>Questions about these terms, corrections to a page, or a request to remove material can be sent to the team.</p>
-            <p><a href="contact.html">Contact us</a> · <a href="editor.html">Our editorial team</a></p>
+              <h2 class="mc-article-h2">Contact</h2>
+              <p>Questions about these terms, corrections to a page, or a request to remove material can be sent to the team.</p>
+              <p><a href="contact.html">Contact us</a> · <a href="editor.html">Our editorial team</a></p>
 
-            <p class="text-muted mt-4" style="font-size:.83rem">Last updated: August 2026.</p>
+              <p class="text-muted mt-4" style="font-size:.83rem">Last updated: August 2026.</p>
+            </div>
+
+            <!-- Filled by page-body.js when public.pages holds prose for this
+                 page. Until then these stay empty and hidden, and the copy
+                 above stands. mc-noi18n keeps the phrase dictionary off it. -->
+            <div class="mc-article-prose mc-noi18n mc-en" data-page-body="en" hidden></div>
+            <div class="mc-article-prose mc-noi18n mc-my" data-page-body="my" hidden></div>
           </div>
 
           <div class="mc-callout mc-callout--info">
@@ -137,7 +147,7 @@
       </div>
       <div class="col-6 col-md-3 col-lg-2">
         <h5>About</h5>
-        <ul><li><a href="editor.html">Our editorial team</a></li><li><a href="contact.html">Contact us</a></li></ul>
+        <ul><li><a href="about.html">About MedCare</a></li><li><a href="editor.html">Our editorial team</a></li><li><a href="contact.html">Contact us</a></li></ul>
       </div>
       <div class="col-md-6 col-lg-3">
         <h5>Legal</h5>

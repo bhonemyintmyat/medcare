@@ -55,11 +55,22 @@
     return window.location.pathname.indexOf('/diseases/') !== -1 ? '../' : '';
   }
 
-  /* The address of the form for this row. `type` and `id` are the two
-     parameters entry.html reads — see the header of editor-entry.js —
-     and they are the whole of what it needs to fetch the row and fill
-     the fields in. */
-  function entryHref(t) {
+  /* The address of the screen that edits this row. Two shapes, because
+     the two kinds of page are edited in different places:
+
+       article / disease   editor/entry.html?type=&id=   — the entry form
+       page                editor/pages.html?slug=       — the footer pages
+
+     entry.html reads `type` and `id` (see the header of
+     editor-entry.js); pages.html reads `slug` and opens that row. Both
+     are in the editor area, which admits editors and admins alike — an
+     admin gets a Save button on the footer pages and an editor does
+     not, and that is decided there rather than by which link was
+     followed here. */
+  function editHref(t) {
+    if (t.kind === 'page') {
+      return depth() + 'editor/pages.html?slug=' + encodeURIComponent(t.slug);
+    }
     return depth() + 'editor/entry.html' +
            '?type=' + encodeURIComponent(t.kind) +
            '&id='   + encodeURIComponent(t.id);
@@ -83,7 +94,7 @@
     var link = document.createElement('a');
     link.id = LINK_ID;
     link.className = 'mc-edit-link';
-    link.href = entryHref(t);
+    link.href = editHref(t);
     link.innerHTML = '<i class="bi bi-pencil-square"></i> Edit this page';
 
     if (reportWrap) {
@@ -92,7 +103,14 @@
       return;
     }
 
+    /* .col-lg-8 before .container: the footer pages have no sources
+       block, and appending to the container would hang the link off the
+       full width of the page while every word above it sits in the
+       narrower reading column. The article pages never reach this line
+       — they match .mc-report or .mc-sources first — so their placement
+       is unchanged. */
     var anchor = document.querySelector('.mc-sources') ||
+                 document.querySelector('.mc-detail-body .col-lg-8') ||
                  document.querySelector('.mc-detail-body .container');
     if (!anchor) { return; }
 

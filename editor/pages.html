@@ -241,10 +241,26 @@
         </p>
 
         <label class="mc-auth-label" for="pageBodyEn" style="margin-top:1.1rem">English</label>
-        <div id="pageBodyEn"></div>
+        <!-- The same wrapper the entry form uses. Quill inserts its
+             toolbar as a SIBLING of the element it mounts into, so the
+             border, the rounded corners and the height limits have to
+             live on a parent that holds both — on the host alone the
+             toolbar falls outside the box and the writing area grows
+             without limit. -->
+        <div class="mc-ed-rt">
+          <div id="pageBodyEn" class="mc-ed-rt-host"></div>
+        </div>
 
         <label class="mc-auth-label" for="pageBodyMy" style="margin-top:1.1rem">Burmese</label>
-        <div id="pageBodyMy"></div>
+        <!-- The same wrapper the entry form uses. Quill inserts its
+             toolbar as a SIBLING of the element it mounts into, so the
+             border, the rounded corners and the height limits have to
+             live on a parent that holds both — on the host alone the
+             toolbar falls outside the box and the writing area grows
+             without limit. -->
+        <div class="mc-ed-rt">
+          <div id="pageBodyMy" class="mc-ed-rt-host"></div>
+        </div>
 
         <p class="mc-admin-hint">
           Prose only: headings, paragraphs, lists, links, bold and italic.

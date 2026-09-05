@@ -66,13 +66,13 @@
             </div>
           </div>
 
-          <div data-page-slug="about">
-            <div class="mc-article-prose" data-page-static>
-              <h2 class="mc-article-h2">Why we built it</h2>
-              <p>Reliable health information about Myanmar exists, but it is scattered — across ministry circulars, international fact sheets, and clinical guidance written for doctors rather than for the people who need it. Someone worried about a fever at ten at night should not have to read a surveillance report to find out when to go to hospital.</p>
-              <p>So we put the answers in one place, in the words people actually use, and made sure the site opens quickly on a modest phone and an unreliable connection.</p>
-
-              <h2 class="mc-article-h2">What you will find here</h2>
+          <!-- Outside the editable region on purpose. This panel is links and
+               icons, not prose: the allowlist that guards the database strips
+               div and class, so it could not survive a round trip through
+               admin/pages.html, and leaving it inside would mean the cards
+               vanished the first time anybody saved the page. -->
+          <div class="mc-article-prose">
+            <h2 class="mc-article-h2">What you will find here</h2>
               <div class="row g-4 my-1">
                 <div class="col-md-6">
                   <a href="common-diseases.html" class="mc-feature">
@@ -104,6 +104,15 @@
                 </div>
               </div>
               <p>There is also a <a href="bmi.html">BMI calculator</a> that runs entirely in your browser, and you can save any page you want to come back to.</p>
+          </div>
+
+          <div data-page-slug="about">
+            <div class="mc-article-prose" data-page-static>
+              <h2 class="mc-article-h2">Why we built it</h2>
+              <p>Reliable health information about Myanmar exists, but it is scattered — across ministry circulars, international fact sheets, and clinical guidance written for doctors rather than for the people who need it. Someone worried about a fever at ten at night should not have to read a surveillance report to find out when to go to hospital.</p>
+              <p>So we put the answers in one place, in the words people actually use, and made sure the site opens quickly on a modest phone and an unreliable connection.</p>
+
+              
 
               <h2 class="mc-article-h2">How a page gets written</h2>
               <p>Every condition and article follows the same route before it appears on the site:</p>

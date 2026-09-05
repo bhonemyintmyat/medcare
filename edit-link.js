@@ -55,11 +55,22 @@
     return window.location.pathname.indexOf('/diseases/') !== -1 ? '../' : '';
   }
 
-  /* The address of the form for this row. `type` and `id` are the two
-     parameters entry.html reads — see the header of editor-entry.js —
-     and they are the whole of what it needs to fetch the row and fill
-     the fields in. */
-  function entryHref(t) {
+  /* The address of the screen that edits this row. Two shapes, because
+     the two kinds of page are edited in different places:
+
+       article / disease   editor/entry.html?type=&id=   — the entry form
+       page                editor/pages.html?slug=       — the footer pages
+
+     entry.html reads `type` and `id` (see the header of
+     editor-entry.js); pages.html reads `slug` and opens that row. Both
+     are in the editor area, which admits editors and admins alike — an
+     admin gets a Save button on the footer pages and an editor does
+     not, and that is decided there rather than by which link was
+     followed here. */
+  function editHref(t) {
+    if (t.kind === 'page') {
+      return depth() + 'editor/pages.html?slug=' + encodeURIComponent(t.slug);
+    }
     return depth() + 'editor/entry.html' +
            '?type=' + encodeURIComponent(t.kind) +
            '&id='   + encodeURIComponent(t.id);
@@ -72,6 +83,29 @@
      shows the destination in the status bar, and still works if the
      page's JavaScript fails after this point. A <button> would have to
      re-implement all of that badly. */
+  /* What the link should say, which is not the same question on every
+     page because "staff" is not one permission.
+
+     On a condition or an article an editor really does edit: they write
+     and submit, and only publishing is held back for an admin. "Edit
+     this page" is the truth for both roles there.
+
+     On a footer page it is not. supabase_footer_pages.sql grants UPDATE
+     to admins alone, so an editor following this link gets the text, a
+     read-only Quill and no Save button. Promising them an edit and then
+     showing them a locked form is a small lie that costs somebody the
+     walk to the screen to discover it — so the link says what they will
+     actually get.
+
+     The role behind this is the browser's cached copy, with all the
+     caveats in the header. Getting it wrong changes a word on a button;
+     it does not change what the database will accept. */
+  function labelFor(t) {
+    return (t.kind === 'page' && auth.getRole() !== 'admin')
+      ? '<i class="bi bi-eye"></i> View in the editor'
+      : '<i class="bi bi-pencil-square"></i> Edit this page';
+  }
+
   function mount(t) {
     if (document.getElementById(LINK_ID)) { return; }
 
@@ -83,8 +117,8 @@
     var link = document.createElement('a');
     link.id = LINK_ID;
     link.className = 'mc-edit-link';
-    link.href = entryHref(t);
-    link.innerHTML = '<i class="bi bi-pencil-square"></i> Edit this page';
+    link.href = editHref(t);
+    link.innerHTML = labelFor(t);
 
     if (reportWrap) {
       reportWrap.appendChild(link);
@@ -92,7 +126,14 @@
       return;
     }
 
+    /* .col-lg-8 before .container: the footer pages have no sources
+       block, and appending to the container would hang the link off the
+       full width of the page while every word above it sits in the
+       narrower reading column. The article pages never reach this line
+       — they match .mc-report or .mc-sources first — so their placement
+       is unchanged. */
     var anchor = document.querySelector('.mc-sources') ||
+                 document.querySelector('.mc-detail-body .col-lg-8') ||
                  document.querySelector('.mc-detail-body .container');
     if (!anchor) { return; }
 
@@ -125,8 +166,17 @@
     var t = results[0];
     if (!t) { return; }
 
+    /* mount() returns early once the link exists, so the wording is set
+       again here rather than inside it. The role can change under a link
+       that is already on screen — it arrives late from `profiles` and
+       disagrees with the cached guess, or somebody signs in as an admin
+       in another tab — and a button left saying "View" to an admin who
+       can now save is the same small lie in the other direction. */
     function sync() {
-      if (auth.isStaff()) { mount(t); } else { unmount(); }
+      if (!auth.isStaff()) { unmount(); return; }
+      mount(t);
+      var link = document.getElementById(LINK_ID);
+      if (link) { link.innerHTML = labelFor(t); }
     }
 
     sync();

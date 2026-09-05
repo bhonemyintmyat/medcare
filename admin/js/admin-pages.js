@@ -335,6 +335,17 @@
         return;
       }
       draw();
+
+      /* ?slug= — how "Edit this page" on the public site arrives here.
+         edit-link.js builds it from data-page-slug, so the value is a
+         slug this table uses; an unknown one is ignored rather than
+         reported, because the list is already on screen and open() would
+         have nothing to show. Landing on the list is a fair answer to a
+         link that has gone stale. */
+      var wanted = new URLSearchParams(window.location.search).get('slug');
+      if (wanted && rows.some(function (r) { return r.slug === wanted; })) {
+        open(wanted);
+      }
     })['catch'](function (err) {
       ad.message(msgEl, 'error', ad.describeError(err, 'the pages'));
     });

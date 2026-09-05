@@ -11,11 +11,25 @@
 
        MedCarePageTarget.ready.then(function (target) {
          if (!target) { return; }        // not a page backed by a row
-         target.kind    // 'article' | 'disease'
-         target.table   // 'articles' | 'diseases'
-         target.id      // the numeric primary key
+         target.kind    // 'article' | 'disease' | 'page'
+         target.table   // 'articles' | 'diseases' | 'pages'
+         target.id      // the numeric primary key — NOT set for 'page'
+         target.slug    // the text key — ONLY set for 'page'
          target.title   // for whatever needs to name it on screen
        });
+
+   A 'page' TARGET IS KEYED DIFFERENTLY, AND ON PURPOSE
+
+   The footer pages live in public.pages, which is keyed by a text slug
+   rather than by a generated id, because the slug is written into the
+   HTML file as data-page-slug and has to stay legible in both places.
+   So a 'page' target carries `slug` and no `id`.
+
+   Any caller that needs a numeric id must therefore check `kind` first.
+   Today that means report.js, which files against a numeric target and
+   is not loaded on the footer pages — there is no editorial queue for
+   the privacy policy. edit-link.js checks, and builds a different
+   address for the two shapes.
 
    TWO WAYS A PAGE KNOWS WHAT IT IS
 
@@ -134,9 +148,38 @@
     return true;
   }
 
+  /* ---------- a footer page ----------
+     about, terms, privacy and cookies. These already say which row backs
+     them, in the attribute page-body.js reads to decide whether to
+     render from the database — so the answer is in the DOM and costs
+     nothing to fetch. Deliberately no round trip: page-body.js is
+     already asking public.pages for this exact row on this exact load,
+     and a second query for a title nothing prints would be a request
+     spent on nothing.
+
+     Checked before the article lookup below, which would otherwise ask
+     the articles table for href='privacy.html' and correctly find
+     nothing. */
+  function fromFooterPage() {
+    var host = document.querySelector('[data-page-slug]');
+    if (!host) { return false; }
+
+    var slug = host.getAttribute('data-page-slug');
+    if (!slug) { return false; }
+
+    var h1 = document.querySelector('.mc-page-head h1');
+    finish({
+      kind:  'page',
+      table: 'pages',
+      slug:  slug,
+      title: h1 ? h1.textContent.trim() : slug
+    });
+    return true;
+  }
+
   if (!db) {
     finish(null);
-  } else if (!fromStaticPage()) {
+  } else if (!fromFooterPage() && !fromStaticPage()) {
     fromReader();
   }
 

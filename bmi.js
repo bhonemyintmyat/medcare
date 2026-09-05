@@ -102,18 +102,25 @@
     return Math.max(0, Math.min(100, pct));
   }
 
-  /* Whole years from a date of birth, or null. The field is optional and
-     does not enter the formula — it only lets the result note whether the
-     adult BMI bands apply to this reader. */
-  function ageFrom(dob) {
-    if (!dob) { return null; }
-    var d = new Date(dob);
-    if (isNaN(d.getTime())) { return null; }
-    var now = new Date();
-    if (d > now) { return null; }
-    var years = now.getFullYear() - d.getFullYear();
-    var m = now.getMonth() - d.getMonth();
-    if (m < 0 || (m === 0 && now.getDate() < d.getDate())) { years--; }
+  /* Whole years as typed, or null. The field is optional and does not
+     enter the formula — it only lets the result note whether the adult
+     BMI bands apply to this reader.
+
+     Anything unusable is null rather than an error, which is what the
+     date field it replaced did with an impossible date. The reading is
+     already on screen by then and is correct without it; refusing to
+     show a BMI because the age box has a typo in it would withhold the
+     answer over the one field that does not affect it.
+
+     Bounded at 130 for the same reason the date version rejected the
+     future: a number outside that is a slip, and printing "Age: 900"
+     next to a medical reading would make the whole box look unreliable. */
+  function ageFrom(value) {
+    if (value === null || value === undefined) { return null; }
+    var raw = String(value).trim();
+    if (!raw) { return null; }
+    if (!/^\d{1,3}$/.test(raw)) { return null; }
+    var years = parseInt(raw, 10);
     return years >= 0 && years < 130 ? years : null;
   }
 
@@ -140,7 +147,7 @@
     el('bmiCategory').innerHTML = bi(band.en, band.my);
     el('bmiMarker').style.left = scalePercent(bmi) + '%';
 
-    var age = ageFrom(el('dob').value);
+    var age = ageFrom(el('age').value);
     var ageEl = el('bmiAge');
     if (age !== null) {
       ageEl.innerHTML = bi('Age: ' + age, 'အသက်: ' + age + ' နှစ်') +

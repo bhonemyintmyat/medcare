@@ -57,14 +57,19 @@
 
         <form id="bmiForm" novalidate>
 
-          <!-- Date of birth (optional) -->
-          <label class="mc-auth-label" for="dob">
-            <span class="mc-en">Date of birth <span style="font-weight:400;color:var(--mc-muted)">(optional)</span></span>
-            <span class="mc-my">မွေးသက္ကရာဇ် <span style="font-weight:400;color:var(--mc-muted)">(မဖြည့်လည်းရ)</span></span>
+          <!-- Age (optional). Asked for directly rather than worked out
+               from a date of birth: the result only ever prints whole
+               years and uses them to say whether the adult bands apply,
+               so a birth date was a more personal thing to ask for than
+               the answer needed. -->
+          <label class="mc-auth-label" for="age">
+            <span class="mc-en">Age <span style="font-weight:400;color:var(--mc-muted)">(optional)</span></span>
+            <span class="mc-my">အသက် <span style="font-weight:400;color:var(--mc-muted)">(မဖြည့်လည်းရ)</span></span>
           </label>
           <div class="mc-auth-field">
-            <i class="bi bi-calendar-event"></i>
-            <input type="date" id="dob">
+            <i class="bi bi-person"></i>
+            <input type="number" id="age" min="0" max="129" step="1" inputmode="numeric"
+                   placeholder="Years / နှစ်">
           </div>
 
           <!-- Gender -->
@@ -120,28 +125,6 @@
               </select>
             </div>
           </div>
-
-          <!-- Weight-loss interest -->
-          <fieldset class="mc-radio-group">
-            <legend class="mc-auth-label">
-              <span class="mc-en">Interested in managing your weight?</span>
-              <span class="mc-my">ကိုယ်အလေးချိန် ထိန်းညှိရန် စိတ်ဝင်စားပါသလား?</span>
-            </legend>
-            <label class="mc-radio">
-              <input type="radio" name="weightLossInterest" value="yes" checked>
-              <span class="mc-radio-mark" aria-hidden="true"></span>
-              <span class="mc-radio-text"><span class="mc-radio-label">
-                <span class="mc-en">Yes</span><span class="mc-my">စိတ်ဝင်စားပါသည်</span>
-              </span></span>
-            </label>
-            <label class="mc-radio">
-              <input type="radio" name="weightLossInterest" value="no">
-              <span class="mc-radio-mark" aria-hidden="true"></span>
-              <span class="mc-radio-text"><span class="mc-radio-label">
-                <span class="mc-en">No</span><span class="mc-my">စိတ်မဝင်စားပါ</span>
-              </span></span>
-            </label>
-          </fieldset>
 
           <div class="mc-auth-msg" id="bmiMsg" role="status" aria-live="polite" style="display:none"></div>
 

@@ -112,16 +112,24 @@
      show a BMI because the age box has a typo in it would withhold the
      answer over the one field that does not affect it.
 
-     Bounded at 130 for the same reason the date version rejected the
-     future: a number outside that is a slip, and printing "Age: 900"
-     next to a medical reading would make the whole box look unreliable. */
+     Bounded 1 to 129. The ceiling is there for the reason the date
+     version rejected a future date: a number outside it is a slip, and
+     printing "Age: 900" next to a medical reading would make the whole
+     box look unreliable.
+
+     The floor is 1 rather than 0 because 0 was never an answer somebody
+     typed on purpose — it is what an empty-ish or mistyped box produces,
+     and it printed "Age: 0" alongside the note about young readers, on a
+     calculator whose bands are for adults and which nobody weighs a
+     newborn on. An infant's growth is read off a paediatric chart, not
+     off this. */
   function ageFrom(value) {
     if (value === null || value === undefined) { return null; }
     var raw = String(value).trim();
     if (!raw) { return null; }
     if (!/^\d{1,3}$/.test(raw)) { return null; }
     var years = parseInt(raw, 10);
-    return years >= 0 && years < 130 ? years : null;
+    return years >= 1 && years < 130 ? years : null;
   }
 
   /* ---------- Submit ---------- */

@@ -13,7 +13,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
 <script src="supabase.js" defer></script>
 <script src="auth.js" defer></script>
+<script src="sanitize-html.js" defer></script>
 <script src="script.js" defer></script>
+<script src="cookies.js" defer></script>
+<script src="page-body.js" defer></script>
 </head>
 <body>
 
@@ -56,7 +59,7 @@
             <span class="ico"><i class="bi bi-shield-check"></i></span>
             <div>
               <h3>MedCare sets no cookies</h3>
-              <p>There is no consent banner on this site because there is nothing to consent to. We use no advertising, no analytics, and no tracking. The two settings below are the only things stored on your device, and both are yours to change.</p>
+              <p>There is no consent banner on this site because there is nothing to consent to. We use no advertising, no analytics, and no tracking. What MedCare does keep is listed below — a language preference, and, only if you sign in, the session that keeps you signed in. Each card reads your device as the page loads, so it shows what is actually there, and each one can be cleared from here.</p>
             </div>
           </div>
 
@@ -67,7 +70,7 @@
               <span class="mc-setting-ico"><i class="bi bi-translate"></i></span>
               <div>
                 <h3>Language preference</h3>
-                <p>Remembers whether you chose English or Burmese, so the site opens the same way next time. It is kept in your browser's local storage under the name mc-lang, and is never sent to us.</p>
+                <p>Remembers whether you chose English or Burmese, so the site opens the same way next time. It is kept in your browser's local storage under the name mc-lang, and is never sent to us. It is written only when you actually press a language button — until then there is nothing stored, and the site simply opens in English.</p>
               </div>
             </div>
             <div class="mc-setting-foot">
@@ -76,37 +79,43 @@
             </div>
           </div>
 
-          <div class="mc-setting" id="setMap">
+          <div class="mc-setting" id="setSession">
             <div class="mc-setting-head">
-              <span class="mc-setting-ico"><i class="bi bi-geo-alt"></i></span>
+              <span class="mc-setting-ico"><i class="bi bi-person-badge"></i></span>
               <div>
-                <h3>Google Maps on the Find Hospitals page</h3>
-                <p>The hospital map is served by Google, which can set its own cookies and will see your IP address. We do not load it until you ask. Turning this on loads the map automatically from now on; it is the only third-party embed on the site.</p>
+                <h3>Your signed-in session</h3>
+                <p>Only if you have an account and are signed in. This is the token that keeps you signed in between visits and proves to our database that a request is yours. It is held in your browser's local storage, and signing out deletes it. Alongside it the site keeps two notes that last only as long as the browser tab: whether your account is a reader, editor, or administrator, and a cached copy of the site notice.</p>
               </div>
             </div>
             <div class="mc-setting-foot">
-              <span class="mc-setting-state" id="mapState">Checking…</span>
-              <label class="mc-switch">
-                <input type="checkbox" id="mapToggle">
-                <span>Load the map automatically</span>
-              </label>
+              <span class="mc-setting-state" id="sessState">Checking…</span>
+              <button type="button" class="mc-btn-ghost" id="sessOut">Sign out</button>
             </div>
           </div>
 
-          <div class="mc-article-prose">
-            <h2 class="mc-article-h2">Why there is no cookie banner</h2>
-            <p>Consent banners exist because most sites place cookies that follow you between pages and between websites, usually for advertising. MedCare places none. A banner asking permission for something we do not do would only add a click.</p>
+          <div data-page-slug="cookies">
+            <div class="mc-article-prose" data-page-static>
+              <h2 class="mc-article-h2">Why there is no cookie banner</h2>
+              <p>Consent banners exist because most sites place cookies that follow you between pages and between websites, usually for advertising. MedCare places none. A banner asking permission for something we do not do would only add a click.</p>
 
-            <h2 class="mc-article-h2">Local storage is not a cookie</h2>
-            <p>The language setting uses local storage rather than a cookie. The practical difference is that a cookie is attached to every request your browser sends to the server, while local storage stays on your device and is read only by the page itself. Nothing about your language choice reaches us either way.</p>
+              <h2 class="mc-article-h2">Local storage is not a cookie</h2>
+              <p>The language setting uses local storage rather than a cookie. The practical difference is that a cookie is attached to every request your browser sends to the server, while local storage stays on your device and is read only by the page itself. Nothing about your language choice reaches us either way.</p>
 
-            <h2 class="mc-article-h2">Files loaded from other companies</h2>
-            <p>Every page pulls fonts, icons, and layout styles from Google Fonts and jsDelivr, and photographs from Unsplash. Those requests do not create cookies here, but the companies serving them can see your IP address and which page asked. This is how nearly all websites are built; if you would rather avoid it entirely, a content blocker or a privacy-focused browser will stop the requests, and MedCare will still be readable without them.</p>
+              <h2 class="mc-article-h2">Files loaded from other companies</h2>
+              <p>Every page pulls fonts, icons, and layout styles from Google Fonts and jsDelivr, and some article pages load photographs from Unsplash. Those requests do not create cookies here, but the companies serving them can see your IP address and which page asked. This is how nearly all websites are built; if you would rather avoid it entirely, a content blocker or a privacy-focused browser will stop the requests, and MedCare will still be readable without them.</p>
+              <p>There is no third-party embed anywhere on the site — no map, no video player, no comment widget — so nothing else is in a position to set a cookie in your browser. Where we point you at an outside map for directions, it is an ordinary link: nothing loads until you choose to follow it, and then you are on that company's site under its own policy.</p>
 
-            <h2 class="mc-article-h2">Clearing everything</h2>
-            <p>Use the buttons above, or clear site data for this domain in your browser settings. Either removes the settings completely — the site will simply open in English and ask again before loading the map.</p>
+              <h2 class="mc-article-h2">Clearing everything</h2>
+              <p>Use the buttons above, or clear site data for this domain in your browser settings. Either removes these completely — the site will simply open in English, and signed out.</p>
 
-            <p class="text-muted mt-4" style="font-size:.83rem">Last updated: August 2026.</p>
+              <p class="text-muted mt-4" style="font-size:.83rem">Last updated: September 2026.</p>
+            </div>
+
+            <!-- Filled by page-body.js when public.pages holds prose for this
+                 page. Until then these stay empty and hidden, and the copy
+                 above stands. mc-noi18n keeps the phrase dictionary off it. -->
+            <div class="mc-article-prose mc-noi18n mc-en" data-page-body="en" hidden></div>
+            <div class="mc-article-prose mc-noi18n mc-my" data-page-body="my" hidden></div>
           </div>
 
           <div class="mc-callout mc-callout--info">
@@ -137,7 +146,7 @@
       </div>
       <div class="col-6 col-md-3 col-lg-2">
         <h5>About</h5>
-        <ul><li><a href="editor.html">Our editorial team</a></li><li><a href="contact.html">Contact us</a></li></ul>
+        <ul><li><a href="about.html">About MedCare</a></li><li><a href="editor.html">Our editorial team</a></li><li><a href="contact.html">Contact us</a></li></ul>
       </div>
       <div class="col-md-6 col-lg-3">
         <h5>Legal</h5>

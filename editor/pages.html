@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Edit entry — MedCare</title>
+<title>Legal and footer pages — MedCare</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -17,26 +17,30 @@
      to run before the page's own script, and everything needs the
      client that supabase.js creates. admin-shell.js is the chrome both
      staff areas share; editor-guard.js publishes itself under the name
-     it looks for. -->
+     it looks for.
+
+     THE LAST TWO ARE THE ADMIN AREA'S FILES, ON PURPOSE. This screen and
+     admin/contact.html edit the same row with the same rules, so they
+     run the same script rather than a copy of it that would disagree by
+     the third change. admin-contact.js asks for its guard under the one
+     name both areas answer to, and admin-api.js's loadNames() degrades
+     to no name when the reader is an editor with no policy on profiles.
+     editor-api.js is not loaded here because this screen does not touch
+     content. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
 <script src="../supabase.js" defer></script>
 <script src="../auth.js" defer></script>
 <script src="../script.js" defer></script>
 <script src="js/editor-guard.js" defer></script>
 <script src="../admin/js/admin-shell.js" defer></script>
-<!-- The allowlist. Shared with the reader side, so what is stored and
-     what is shown are cleaned by the same rules. -->
+<script src="../admin/js/admin-api.js" defer></script>
+<!-- The prose pipeline, borrowed whole from the entry form: the same
+     allowlist, the same Quill wrapper, and the same reader that pulls a
+     hand-written page back into the editor. -->
 <script src="../sanitize-html.js" defer></script>
-<script src="js/editor-api.js" defer></script>
-<!-- Wraps Quill, which it fetches from the CDN only when a body
-     field is actually on the form. Must load before editor-entry.js,
-     which asks it to build the editors. -->
 <script src="js/editor-richtext.js" defer></script>
-<!-- Reads a hand-written page back into the body editor when the row
-     points at one and has no body of its own. Before editor-entry.js,
-     which asks it for the text. -->
 <script src="js/editor-import.js" defer></script>
-<script src="js/editor-entry.js" defer></script>
+<script src="../admin/js/admin-pages.js" defer></script>
 </head>
 <body>
 
@@ -95,7 +99,6 @@
         </svg>
         Emergency numbers
       </a>
-
       <a href="contact.html">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <rect x="3.2" y="5.2" width="17.6" height="13.6" rx="2"></rect>
@@ -103,7 +106,7 @@
         </svg>
         Contact details
       </a>
-      <a href="pages.html">
+      <a href="pages.html" aria-current="page">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M6 3.2h7.4L18.8 8.6V20a.8.8 0 0 1-.8.8H6a.8.8 0 0 1-.8-.8V4a.8.8 0 0 1 .8-.8z"></path>
           <path d="M13.2 3.4v5.4h5.4"></path>
@@ -160,8 +163,8 @@
         <i class="bi bi-list"></i>
       </button>
       <div>
-        <h1>Entry</h1>
-        <p class="mc-admin-top-sub">One entry, its Burmese, and the way onto the site.</p>
+        <h1>Legal and footer pages</h1>
+        <p class="mc-admin-top-sub">What the site says on its own pages. Reading is yours; changing them is an admin’s.</p>
       </div>
       <div class="mc-admin-top-right">
         <!-- The account menu, built by auth.js into this slot: your name
@@ -173,110 +176,93 @@
       </div>
     </header>
 
+    <!-- The form below is the same form as admin/contact.html, driven by
+         the same script, because it is the same row with the same rules
+         and there is no version of this screen that should differ by
+         area. Only the notes underneath are written for who is reading:
+         an editor's neighbours are the emergency numbers, an admin's are
+         the site settings. Change one form, change the other. -->
     <main class="mc-admin-content">
 
-      <p class="mc-admin-msg" id="entryMsg" hidden></p>
-
-      <!-- A reader's report, shown only when this page was opened from the
-           queue as entry.html?type=article&id=4&report=16. Everything in
-           it is filled by editor-entry.js; it stays hidden otherwise.
-
-           Bootstrap's alert CSS is loaded on this site but its JS bundle
-           is not, so .btn-close is styling only and the dismissal is
-           wired by hand in editor-entry.js. -->
-      <div class="alert alert-dismissible mc-ed-report-alert" id="entryReport" role="alert" hidden>
-
-        <div class="mc-ed-report-alert-head">
-          <i class="bi bi-flag-fill"></i>
-          <span>A reader reported this page</span>
-          <span class="mc-admin-pill mc-report-cat" id="entryReportCat"></span>
-        </div>
-
-        <!-- Reader-supplied text. Written with textContent, never as markup. -->
-        <p class="mc-ed-report-alert-reason" id="entryReportReason"></p>
-        <p class="mc-ed-report-alert-detail" id="entryReportDetail" hidden></p>
-        <p class="mc-ed-report-alert-meta" id="entryReportMeta"></p>
-
-        <label class="mc-auth-label" for="entryReportNote">What did you do about it?</label>
-        <textarea id="entryReportNote" rows="2" maxlength="500"
-                  placeholder="Corrected the dose in the second paragraph."></textarea>
-        <p class="mc-ed-error" id="entryReportNoteError" hidden></p>
-
-        <button type="button" class="btn-close" id="entryReportClose" aria-label="Dismiss"></button>
-      </div>
-
-      <!-- Says where the body text came from when it was read out of the
-           hand-written page rather than out of the row. Hidden unless
-           that actually happened. -->
-      <div class="mc-admin-note mc-ed-imported" id="entryImported" hidden>
-        <i class="bi bi-file-earmark-arrow-down"></i>
-        <div id="entryImportedText"></div>
-      </div>
-
-      <!-- Where this row is in the workflow, and the ways out of it.
-           Hidden until a saved row exists: an entry that has never been
-           saved has no status to move between. -->
-      <section class="mc-ed-workflow" id="workflow" hidden aria-label="Publishing status">
-        <div class="mc-ed-workflow-state">
-          <span id="workflowPill"></span>
-          <span class="mc-ed-workflow-hint" id="workflowHint"></span>
-        </div>
-        <div class="mc-ed-workflow-acts" id="workflowActs"></div>
-      </section>
+      <p class="mc-admin-msg" id="pagesMsg" hidden></p>
 
       <div class="mc-admin-card">
-        <h2 id="entryHeading">Entry</h2>
-        <p class="mc-admin-hint" id="entrySub"></p>
-
-        <form class="mc-ed-form" id="entryForm" novalidate>
-          <!-- Shown instead of a Save button when the row is live and the
-               person is not an admin. It carries the one action that
-               makes the form editable again, so the explanation and the
-               way out are the same element. -->
-          <div class="mc-ed-locked" id="entryLocked" hidden>
-            <i class="bi bi-lock-fill"></i>
-            <div>
-              <p id="entryLockedText"></p>
-              <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="entryUnlock">
-                <i class="bi bi-eye-slash"></i> Take it off the site to edit
-              </button>
-            </div>
-          </div>
-
-          <div id="fieldHost">
-            <div class="mc-skeleton" aria-hidden="true">
-              <span></span><span></span><span></span><span></span>
-            </div>
-          </div>
-
-          <div class="mc-ed-actions">
-            <a class="mc-auth-btn mc-auth-btn--ghost" id="entryBack" href="content.html">
-              <i class="bi bi-arrow-left"></i> Back to the list
-            </a>
-            <span class="mc-ed-dirty" id="entryDirty" hidden>
-              <i class="bi bi-dot"></i> Unsaved changes
-            </span>
-            <div class="mc-ed-actions-right">
-              <!-- Secondary, and before Save so the primary action stays
-                   last. Both submit the form and the handler reads
-                   event.submitter, so there is one save path rather than
-                   two that can drift apart. Shown only when a report is
-                   attached to this page. -->
-              <button type="submit" class="mc-auth-btn mc-auth-btn--ghost"
-                      id="entrySaveResolve" hidden>
-                <i class="bi bi-flag"></i> Save and Resolve Report
-              </button>
-              <button type="submit" class="mc-auth-btn" id="entrySave">
-                <i class="bi bi-check-lg"></i> Save
-              </button>
-            </div>
-          </div>
-        </form>
+        <h2>The pages</h2>
+        <p class="mc-admin-hint">
+          Four pages hang off the site footer and carry no medical advice:
+          About MedCare, the terms, the privacy policy and the cookie
+          settings. Each one ships its own copy inside its HTML file, and
+          that copy is what readers see until something is saved here.
+          Save prose for a page and it replaces the file&rsquo;s copy; empty
+          both boxes and the file&rsquo;s copy comes back. Nothing here can
+          leave a page blank.
+        </p>
+        <p class="mc-admin-hint" id="pagesReadonly" hidden>
+          <i class="bi bi-eye"></i>
+          You can read these and see exactly what the site says. Changing
+          them is an admin&rsquo;s: legal text is the one thing on this site an
+          editor does not sign off. If something here is wrong, tell an
+          admin &mdash; or send it through
+          <a href="reports.html">the reports queue</a> so it is written down.
+        </p>
+        <div class="mc-admin-queue" id="pagesList"></div>
       </div>
 
-      <!-- Who made this row and who touched it last. Below the form
-           rather than in it: it is a fact about the row, not a field. -->
-      <p class="mc-touched" id="entryTouched" hidden></p>
+      <p class="mc-admin-hint" id="pagesEmpty">Choose a page to read it.</p>
+
+      <div class="mc-admin-card" id="pagesPanel" hidden>
+
+        <div class="mc-admin-listhead">
+          <h2 id="pageName">&hellip;</h2>
+          <div class="mc-admin-listhead-actions">
+            <a class="mc-auth-btn mc-auth-btn--ghost" id="pageView"
+               href="../index.html" target="_blank" rel="noopener">View the page</a>
+            <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="pageImport" hidden>
+              Read the page&rsquo;s text
+            </button>
+          </div>
+        </div>
+
+        <p class="mc-admin-hint" id="pageState"></p>
+        <p class="mc-admin-msg mc-admin-msg--ok" id="pageImported" hidden></p>
+
+        <label class="mc-auth-label" for="pageTitle">Name</label>
+        <div class="mc-auth-field">
+          <input type="text" id="pageTitle" maxlength="80" autocomplete="off">
+        </div>
+        <p class="mc-admin-hint">
+          Shown in the list above. The page&rsquo;s own heading is written into
+          its HTML file, because a heading that arrives over the network has
+          nothing to show while it is arriving.
+        </p>
+
+        <label class="mc-auth-label" for="pageBodyEn" style="margin-top:1.1rem">English</label>
+        <div id="pageBodyEn"></div>
+
+        <label class="mc-auth-label" for="pageBodyMy" style="margin-top:1.1rem">Burmese</label>
+        <div id="pageBodyMy"></div>
+
+        <p class="mc-admin-hint">
+          Prose only: headings, paragraphs, lists, links, bold and italic.
+          The site&rsquo;s own furniture &mdash; the callout boxes, the panel of
+          links on the About page, the setting cards on the cookie page &mdash;
+          lives in the HTML file outside this text and keeps its styling.
+          It cannot be typed or pasted in here; anything of that kind is
+          reduced to the words inside it when the page is saved.
+        </p>
+        <p class="mc-admin-hint">
+          Written in one language only, that one is shown to everybody
+          &mdash; the same rule the articles follow. Better the wrong
+          language than an empty page.
+        </p>
+
+        <div class="mc-admin-actions">
+          <button type="button" class="mc-auth-btn" id="pageSave" hidden disabled>Save</button>
+          <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="pageClear" hidden>
+            Empty both boxes
+          </button>
+        </div>
+      </div>
 
     </main>
   </div>

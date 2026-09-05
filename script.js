@@ -3163,7 +3163,12 @@
     for (var child = node.firstChild; child; child = child.nextSibling) { walk(child); }
   }
 
-  function applyLang(lang) {
+  /* `persist` is opt-in on purpose. Restoring a stored choice at load, or
+     re-running the walk after the DOM changed, must not write the key —
+     otherwise every visitor grows an mc-lang they never asked for, and
+     "Forget this setting" on cookies.html could never stick. Only the
+     language buttons below pass true. */
+  function applyLang(lang, persist) {
     currentLang = LANGS[lang] === undefined ? 'en' : lang;
     busy = true;
     document.documentElement.lang = currentLang;
@@ -3175,7 +3180,9 @@
         b.setAttribute('aria-pressed', b.getAttribute('data-lang') === currentLang ? 'true' : 'false');
       });
     }
-    try { localStorage.setItem(LANG_KEY, currentLang); } catch (e) { /* file:// or private mode */ }
+    if (persist) {
+      try { localStorage.setItem(LANG_KEY, currentLang); } catch (e) { /* file:// or private mode */ }
+    }
   }
 
   // Build the bar here so every page gets it without duplicating markup.
@@ -3192,7 +3199,7 @@
   document.body.insertBefore(langbar, document.body.firstChild);
   langbar.addEventListener('click', function (e) {
     var btn = e.target.closest('.mc-lang-btn');
-    if (btn) { applyLang(btn.getAttribute('data-lang')); }
+    if (btn) { applyLang(btn.getAttribute('data-lang'), true); }
   });
 
   // Re-translate anything drawn after load (filtered cards, search results…).

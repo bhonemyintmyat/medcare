@@ -69,8 +69,13 @@
             </div>
           </aside>
           <div class="hospital-map">
-            <!-- Filled by script.js: the Google embed loads only once the
-                 visitor allows it. See cookies.html for the setting. -->
+            <!-- Placeholder for a future hospital map. Nothing fills it
+                 today: no code reads data-map-src, so no Google embed is
+                 ever loaded and the element renders empty. If the map is
+                 built, it needs a consent gate in front of it and a
+                 matching setting added back to cookies.html — the privacy
+                 and cookie pages both state that the site embeds nothing
+                 third-party, and that has to stay true. -->
             <div id="hospMapGate" data-map-src="https://www.google.com/maps/d/u/0/embed?mid=1TtGhNHdTGtNOfxtguVDWtLwTh8zAE64&ehbc=2E312F&noprof=1"></div>
           </div>
         </div>
@@ -106,7 +111,7 @@
       </div>
       <div class="col-6 col-md-3 col-lg-2">
         <h5>About</h5>
-        <ul><li><a href="editor.html">Our editorial team</a></li><li><a href="contact.html">Contact us</a></li></ul>
+        <ul><li><a href="about.html">About MedCare</a></li><li><a href="editor.html">Our editorial team</a></li><li><a href="contact.html">Contact us</a></li></ul>
       </div>
       <div class="col-md-6 col-lg-3">
         <h5>Legal</h5>

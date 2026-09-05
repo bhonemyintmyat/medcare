@@ -730,3 +730,33 @@ html.mc-guard-pending body::after {
   .mc-ad-phone-grid { grid-template-columns: 1fr; }
   .mc-ad-phone-foot { flex-direction: column; align-items: stretch; }
 }
+
+/* ============================================================
+   Housekeeping
+   ============================================================ */
+
+/* A count that found something. The neutral pill reads as "checked and
+   fine", which is what three of the four cards normally are, so a
+   non-zero result has to look different or it disappears among them. */
+.mc-admin-count.is-flagged {
+  background: #fff7ed;
+  color: #c2410c;
+  border-color: #fed7aa;
+}
+
+/* The findings sit in a card that also carries a paragraph of
+   explanation, so the queue underneath needs the gap the other screens
+   get from their own headers. */
+.mc-hk-card .mc-admin-queue { margin-top: .9rem; }
+.mc-hk-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.mc-hk-stamp { color: var(--mc-muted); font-size: .86rem; }
+
+/* A Burmese word inside an otherwise English admin screen. The language
+   bar sets the same two properties on .mc-lang-btn for the same reason:
+   without the font the glyphs fall back to something that renders the
+   stacked marks wrongly, and without the taller line-height they are
+   clipped by the button's own box. */
+.mc-lang-native {
+  font-family: 'Noto Sans Myanmar', 'Inter', system-ui, sans-serif;
+  line-height: 1.7;
+}

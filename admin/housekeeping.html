@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Housekeeping — MedCare</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="css/admin.css">
+<!-- Same order as every public page, then the admin set. The guard has
+     to run before the page's own script, and everything needs the
+     client that supabase.js creates. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
+<script src="../supabase.js" defer></script>
+<script src="../auth.js" defer></script>
+<script src="../script.js" defer></script>
+<script src="js/admin-guard.js" defer></script>
+<script src="js/admin-shell.js" defer></script>
+<script src="js/admin-api.js" defer></script>
+<!-- For sourceLooksApproved(): the entry form owns that rule and says
+     beside it that it and the SQL constraint are a pair. Borrowed
+     rather than copied a third time. -->
+<script src="../editor/js/editor-api.js" defer></script>
+<script src="js/admin-housekeeping.js" defer></script>
+</head>
+<body>
+
+<!-- Nothing inside .mc-admin-shell is displayed until admin-guard.js
+     confirms an admin: admin.css hides it by default. -->
+<div class="mc-admin-shell" id="adminShell">
+
+  <div class="mc-admin-backdrop" data-shell-close></div>
+
+  <!-- ===================== Sidebar ===================== -->
+  <aside class="mc-admin-side">
+    <a class="mc-admin-brand" href="index.html">
+      <span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>
+      <span>MedCare<small>Admin</small></span>
+    </a>
+
+    <nav class="mc-admin-nav" aria-label="Admin sections">
+      <a href="index.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.5" y="3.5" width="7" height="7" rx="1.6"></rect>
+          <rect x="13.5" y="3.5" width="7" height="7" rx="1.6"></rect>
+          <rect x="13.5" y="13.5" width="7" height="7" rx="1.6"></rect>
+          <rect x="3.5" y="13.5" width="7" height="7" rx="1.6"></rect>
+        </svg>
+        Overview
+      </a>
+
+      <div class="mc-admin-nav-label">People</div>
+      <a href="users.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9.2" cy="8.4" r="3.2"></circle>
+          <path d="M3.6 20a5.6 5.6 0 0 1 11.2 0"></path>
+          <path d="M16.2 5.6a3 3 0 0 1 0 5.8"></path>
+          <path d="M18.2 20a5.7 5.7 0 0 0-2.4-4.5"></path>
+        </svg>
+        Users and accounts
+      </a>
+      <a href="permissions.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3.2l7 2.8v5.3c0 4.2-2.9 7.6-7 9.5-4.1-1.9-7-5.3-7-9.5V6z"></path>
+          <path d="M9.2 12.1l2 2 3.6-3.9"></path>
+        </svg>
+        Roles and permissions
+      </a>
+
+      <div class="mc-admin-nav-label">Site</div>
+      <a href="maintenance.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15.6 3.4a4.6 4.6 0 0 0-5.9 5.9l-6 6a1.7 1.7 0 0 0 2.4 2.4l6-6a4.6 4.6 0 0 0 5.9-5.9l-2.7 2.7-2.4-2.4z"></path>
+          <path d="M15.4 15.4l4.4 4.4"></path>
+        </svg>
+        Maintenance mode
+      </a>
+      <a href="housekeeping.html" aria-current="page">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <ellipse cx="12" cy="6" rx="7" ry="2.8"></ellipse>
+          <path d="M5 6v12c0 1.6 3.1 2.8 7 2.8s7-1.2 7-2.8V6"></path>
+          <path d="M5 12c0 1.6 3.1 2.8 7 2.8s7-1.2 7-2.8"></path>
+        </svg>
+        Housekeeping
+      </a>
+      <a href="contact.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.2" y="5.2" width="17.6" height="13.6" rx="2"></rect>
+          <path d="M3.8 6.6l8.2 6 8.2-6"></path>
+        </svg>
+        Contact details
+      </a>
+      <a href="pages.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 3.2h7.4L18.8 8.6V20a.8.8 0 0 1-.8.8H6a.8.8 0 0 1-.8-.8V4a.8.8 0 0 1 .8-.8z"></path>
+          <path d="M13.2 3.4v5.4h5.4"></path>
+          <path d="M8.4 13h7"></path>
+          <path d="M8.4 16.6h4.6"></path>
+        </svg>
+        Legal and footer pages
+      </a>
+
+      <div class="mc-admin-nav-label">You</div>
+      <a href="profile.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="9.4" r="3.4"></circle>
+          <path d="M5.2 20a6.8 6.8 0 0 1 13.6 0"></path>
+        </svg>
+        Your profile
+      </a>
+    </nav>
+
+    <div class="mc-admin-side-foot">
+      <a class="mc-auth-btn mc-auth-btn--ghost mc-auth-btn--full" href="../index.html">
+        Back to MedCare
+      </a>
+    </div>
+  </aside>
+
+  <!-- ===================== Main ===================== -->
+  <div class="mc-admin-main">
+
+    <header class="mc-admin-top">
+      <button type="button" class="mc-admin-burger" id="adminBurger"
+              aria-label="Show admin sections" aria-expanded="false" aria-controls="adminShell">
+        <i class="bi bi-list"></i>
+      </button>
+      <div>
+        <h1>Housekeeping</h1>
+        <p class="mc-admin-top-sub">Loose ends: content with no owner, dead links, stray sources, accounts with no profile.</p>
+      </div>
+      <div class="mc-admin-top-right">
+        <span class="mc-admin-who">
+          <i class="bi bi-shield-lock"></i>
+          <strong id="adminWho">…</strong>
+        </span>
+        <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="adminSignOut">Sign out</button>
+      </div>
+    </header>
+
+    <main class="mc-admin-content">
+
+      <p class="mc-admin-msg" id="hkMsg" hidden></p>
+
+      <div class="mc-admin-card">
+        <div class="mc-hk-head">
+          <h2>What this looks for</h2>
+          <div class="mc-admin-listhead-actions">
+            <span class="mc-hk-stamp" id="hkStamp"></span>
+            <button type="button" class="mc-auth-btn mc-auth-btn--ghost" id="hkRun">Check again</button>
+          </div>
+        </div>
+        <p class="mc-admin-hint">
+          Four things that no single screen is placed to notice, because each
+          one is a gap rather than a row: content nobody is recorded as
+          owning, links that no longer lead anywhere, citations that are
+          neither WHO nor the Ministry, and accounts that never got a
+          profile.
+        </p>
+        <p class="mc-admin-hint">
+          <strong>Nothing here changes anything.</strong> Every finding links
+          to the screen that owns it &mdash; the entry form for content, the
+          accounts screen for people &mdash; because each of these can be
+          correct, and which ones are is a judgement rather than a rule. The
+          link check fetches every page a few at a time, so it is the slow
+          one.
+        </p>
+      </div>
+
+      <div class="mc-admin-card mc-hk-card">
+        <h2>Content with no owner <span class="mc-admin-count" id="hkOwnersCount">&hellip;</span></h2>
+        <div id="hkOwners"></div>
+      </div>
+
+      <div class="mc-admin-card mc-hk-card">
+        <h2>Dead links <span class="mc-admin-count" id="hkLinksCount">&hellip;</span></h2>
+        <div id="hkLinks"></div>
+      </div>
+
+      <div class="mc-admin-card mc-hk-card">
+        <h2>Unapproved source URLs <span class="mc-admin-count" id="hkSourcesCount">&hellip;</span></h2>
+        <div id="hkSources"></div>
+      </div>
+
+      <div class="mc-admin-card mc-hk-card">
+        <h2>Accounts with no profile <span class="mc-admin-count" id="hkAccountsCount">&hellip;</span></h2>
+        <div id="hkAccounts"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

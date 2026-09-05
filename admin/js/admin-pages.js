@@ -199,11 +199,16 @@
      there must be a page to read, the row must be empty, and the boxes
      must still be empty when the download lands — a slow fetch must not
      land on top of something somebody typed while waiting for it. */
+  /* row.href is passed BARE. fromPage() resolves it itself with a '../'
+     because every screen that calls it sits one folder deep, and its
+     siteRelative() guard rejects any path containing '..' outright — so
+     prefixing one here does not double up, it fails the guard and the
+     import returns null without saying why. */
   function maybeImport(row) {
     if (!window.MedCareImport || !row.href) { return; }
     if ((row.body && row.body.trim()) || (row.body_my && row.body_my.trim())) { return; }
 
-    window.MedCareImport.fromPage('../' + row.href).then(function (found) {
+    window.MedCareImport.fromPage(row.href).then(function (found) {
       if (!found || current !== row) { return; }
       if (editors.en.getText() || editors.my.getText()) { return; }
 
@@ -298,7 +303,7 @@
   if (importEl) {
     importEl.addEventListener('click', function () {
       if (!current) { return; }
-      window.MedCareImport.fromPage('../' + current.href).then(function (found) {
+      window.MedCareImport.fromPage(current.href).then(function (found) {
         if (!found) {
           ad.message(msgEl, 'error', 'Could not read ' + current.href + '.');
           return;

@@ -36,8 +36,12 @@
 <script src="../admin/js/admin-api.js" defer></script>
 <!-- The prose pipeline, borrowed whole from the entry form: the same
      allowlist, the same Quill wrapper, and the same reader that pulls a
-     hand-written page back into the editor. -->
+     hand-written page back into the editor.
+     editor-api.js comes first because editor-richtext.js returns early
+     and publishes nothing when window.MedCareEditor is absent — the
+     editor area always has it, an admin screen has to ask. -->
 <script src="../sanitize-html.js" defer></script>
+<script src="js/editor-api.js" defer></script>
 <script src="js/editor-richtext.js" defer></script>
 <script src="js/editor-import.js" defer></script>
 <script src="../admin/js/admin-pages.js" defer></script>

@@ -140,7 +140,21 @@
   }
 
   function extract(doc, lang) {
-    var scope = doc.querySelector('.mc-detail-body .col-lg-8') ||
+    /* [data-page-static] first, and only the footer pages have one. It
+       marks the exact block that page-body.js replaces when a row in
+       public.pages has prose in it — so on those pages it, and not the
+       whole article column, is the region this import is destined for.
+
+       Taking the column instead would sweep up the lede, the callout
+       boxes and the panel of links that sit OUTSIDE that block and stay
+       in the file. Saving the result would then print all of them twice:
+       once from the file, once from the row that replaced only the
+       middle. Scoping to the destination is what stops that.
+
+       Disease and article pages carry no such marker, so they fall
+       through to the column exactly as before. */
+    var scope = doc.querySelector('[data-page-static]') ||
+                doc.querySelector('.mc-detail-body .col-lg-8') ||
                 doc.querySelector('.mc-detail-body') ||
                 doc.querySelector('main');
     if (!scope) { return ''; }

@@ -760,3 +760,25 @@ html.mc-guard-pending body::after {
   font-family: 'Noto Sans Myanmar', 'Inter', system-ui, sans-serif;
   line-height: 1.7;
 }
+
+/* The footer-pages list makes each row a <button>, so it is reachable by
+   keyboard and announces itself as a control rather than as text you
+   have to guess is clickable. .mc-admin-row was written for a <div>,
+   though, so a button arrives carrying defaults that rule never had to
+   clear: centred text, its own font and colour, a border, a grey
+   background and a shrink-to-fit box. Cleared here rather than by
+   dropping back to a div. */
+button.mc-admin-row {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--mc-border);
+  cursor: pointer;
+}
+button.mc-admin-row:last-child { border-bottom: none; }
+button.mc-admin-row:hover .mc-admin-row-name,
+button.mc-admin-row.is-open .mc-admin-row-name { color: var(--mc-primary-600); }
+button.mc-admin-row:focus-visible { outline: 2px solid var(--mc-primary); outline-offset: -2px; }

@@ -44,6 +44,14 @@
 -- admin's. Nothing here grants an editor a write, and RLS refuses one
 -- whatever a screen chooses to draw.
 --
+-- ^ SINCE SUPERSEDED. supabase_footer_pages_editors.sql widened UPDATE
+-- on this table to ('editor', 'admin'). The paragraph above describes
+-- what this file did on the day it ran, which is the only thing a
+-- migration should say — read that file for the rule in force, and for
+-- why it changed. INSERT is still admin-only and there is still no
+-- DELETE policy, both of which this file created and neither of which
+-- that one touches.
+--
 -- NOTHING BLANKS. Every row is seeded EMPTY on purpose. Each of the four
 -- pages ships its full prose in the HTML file, and page-body.js renders
 -- the row only when the row has something in it. So on the day this file

@@ -10,26 +10,25 @@
    the public side decides that.
 
    ------------------------------------------------------------
-   TWO AREAS, ONE SCRIPT, TWO DIFFERENT ANSWERS
+   TWO AREAS, ONE SCRIPT, ONE ANSWER
 
    admin/pages.html and editor/pages.html both run this file, the way the
-   contact screens both run admin-contact.js. The difference here is that
-   the two areas are NOT equal:
+   contact screens both run admin-contact.js — and both areas now get the
+   same screen, because editors and admins may both write these pages.
+   supabase_footer_pages_editors.sql widened UPDATE on public.pages to
+   ('editor', 'admin'), superseding the admin-only rule this screen was
+   first built under.
 
-       admin    reads and writes
-       editor   reads
+   What an editor still cannot do is create or remove a page: INSERT is
+   admin-only, there is no DELETE policy for anybody, and slug and href
+   sit outside the column grant. So the four rows are fixed, and what a
+   staff member can change is the words on them.
 
-   That is not a decision this screen makes. supabase_footer_pages.sql
-   grants UPDATE on public.pages to admins alone, exactly as
-   supabase_contact_editors.sql left legal text admin-only while widening
-   the contact details to editors. Legal text is the one thing on this
-   site an editor does not sign off.
-
-   So an editor gets the whole screen, the real text, and no Save. The
-   read-only state is drawn from the role, but the database is what
-   enforces it: if this file were wrong, or somebody opened the admin URL
-   with an editor account, the write is still refused and savePage()
-   turns that refusal into a sentence.
+   That is not a decision this screen makes. canEdit below decides what
+   to DRAW; the database decides what is ALLOWED, and the two are set
+   from the same fact rather than from the area the URL happens to be in.
+   If this file were wrong, savePage() turns the refusal into a sentence
+   rather than a silent no-op.
 
    ------------------------------------------------------------
    WHERE THE TEXT COMES FROM THE FIRST TIME
@@ -89,7 +88,6 @@
   var importedEl= document.getElementById('pageImported');
   var saveEl    = document.getElementById('pageSave');
   var clearEl   = document.getElementById('pageClear');
-  var roEl      = document.getElementById('pagesReadonly');
 
   var rows    = [];
   var current = null;          // the row being edited
@@ -242,7 +240,6 @@
     if (clearEl) { clearEl.hidden = !canEdit; }
     if (importEl){ importEl.hidden = !canEdit; }
     if (titleEl) { titleEl.disabled = !canEdit; }
-    if (roEl)    { roEl.hidden = canEdit; }
     if (editors.en) { editors.en.setEnabled(canEdit); }
     if (editors.my) { editors.my.setEnabled(canEdit); }
   }
@@ -356,7 +353,11 @@
      resolves after this file runs still lands on the right state. */
   if (auth) {
     auth.onChange(function (user, role) {
-      canEdit = role === 'admin';
+      /* Both staff roles, matching the UPDATE policy in
+         supabase_footer_pages_editors.sql. Anyone else reaching this
+         file has already been turned away by the area's guard, so the
+         else-branch is a belt for a fastened seatbelt. */
+      canEdit = role === 'editor' || role === 'admin';
       applyRole();
     });
   }

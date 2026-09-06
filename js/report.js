@@ -3,9 +3,9 @@
 
    Load after supabase.js and auth.js:
 
-     <script src="supabase.js" defer></script>
-     <script src="auth.js" defer></script>
-     <script src="report.js" defer></script>
+     <script src="js/supabase.js" defer></script>
+     <script src="js/auth.js" defer></script>
+     <script src="js/report.js" defer></script>
 
    TWO KINDS OF PAGE, ONE REPORT FORM
 

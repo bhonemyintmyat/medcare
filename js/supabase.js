@@ -6,8 +6,8 @@
    and BEFORE any of your own code that talks to Supabase:
 
      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
-     <script src="supabase.js" defer></script>
-     <script src="script.js" defer></script>
+     <script src="js/supabase.js" defer></script>
+     <script src="js/script.js" defer></script>
 
    (`defer` makes scripts run in the order they appear, after the
    HTML is parsed — so the order above is guaranteed.)

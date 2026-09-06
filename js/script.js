@@ -47,7 +47,7 @@
     type: 'general',
     township: 'Hlaing Tharyar',
     address: 'Corner of Yangon-Pathein Road & Kyansittha Road, Ward       3, Hlaing Tharyar Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -56,7 +56,7 @@
     type: 'clinic',
     township: 'Hlaing Tharyar',
     address: 'Yangon-Pathein Road, Hlaing Tharyar Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -65,7 +65,7 @@
     type: 'general',
     township: 'Hlaing Tharyar',
     address: 'Industrial Zone Main Road, Hlaing Tharyar Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -74,7 +74,7 @@
     type: 'specialist',
     township: 'Hlaing',
     address: 'No. 37, Kaba Aye Pagoda Road (Inya Lake Hotel Compound), Hlaing Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -83,7 +83,7 @@
     type: 'specialist',
     township: 'Hlaing',
     address: 'No. 87, Pyay Road (6 half Mile), Hlaing Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -92,7 +92,7 @@
     type: 'general',
     township: 'Insein',
     address: 'Mingyi Road, Insein Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -101,7 +101,7 @@
     type: 'specialist',
     township: 'Insein',
     address: 'Aung San Ward, Insein Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -119,16 +119,7 @@
     type: 'general',
     township: 'Lanmadaw',
     address: 'No. 15/19, Zawgyi Street, Lanmadaw Township, Yangon',
-    phone: 'N/A',
-    hours: 'Open 24 hours',
-    er: true
-  },
-  {
-    name: 'Yangon General Hospital - YGH',
-    type: 'general',
-    township: 'Lanmadaw',
-    address: 'Bogyoke Aung San Road (Latha/Lanmadaw Township Border), Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -137,17 +128,8 @@
     type: 'specialist',
     township: 'Lanmadaw',
     address: 'Corner of Ahlone Road and Min Ye Kyaw Swa Road (Lanmadaw/Ahlone Township Border), Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
-    er: true
-  },
-	{
-    name: 'Yangon General Hospital - YGH',
-    type: 'general',
-    township: 'Latha',
-    address: 'Bogyoke Aung San Road, Latha Township, Yangon',
-    phone: 'N/A',
-    hours: 'Open 24 hours',
     er: true
   },
   {
@@ -155,7 +137,7 @@
     type: 'general',
     township: 'Pabedan',
     address: 'Maha Bandula Road, Pabedan Township (Near Latha Township), Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -164,7 +146,7 @@
     type: 'clinic',
     township: 'Latha',
     address: 'No. 91/93, Corner of Anawrahta Road and 20th Street, Latha Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -173,25 +155,16 @@
     type: 'clinic',
     township: 'Latha',
     address: 'No. 46, Bo Ywe Street (Lower Block), Latha Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
-  },
-	{
-    name: 'Victoria Hospital',
-    type: 'general',
-    township: 'Mayangone',
-    address: 'No. 68, Taw Win Road, 9th Ward, Mayangone Township, Yangon',
-    phone: 'N/A',
-    hours: 'Open 24 hours',
-    er: true
   },
   {
     name: 'Thamine General Hospital',
     type: 'general',
     township: 'Mayangone',
     address: 'No. 12/A, Yangon-Insein Road, Thamine Junction, Mayangone Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: true
   },
@@ -200,7 +173,7 @@
     type: 'specialist',
     township: 'Mayangone',
     address: 'No. 60, Parami Road, Mayangone Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -209,7 +182,7 @@
     type: 'specialist',
     township: 'Mayangone',
     address: 'No. 87, Pyay Road (Near Inya Lake), Mayangone Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -218,7 +191,7 @@
     type: 'general',
     township: 'Mingaladon',
     address: 'Khayoung Street, near Pyay Road, Mingaladon Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: true
   },
@@ -227,7 +200,7 @@
     type: 'general',
     township: 'Mingaladon',
     address: 'Pyay Road, Mingaladon Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -236,7 +209,7 @@
     type: 'specialist',
     township: 'Mingaladon',
     address: 'Pyay Road (Near No. 1 Military Hospital), Mingaladon Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -245,7 +218,7 @@
     type: 'general',
     township: 'Mingaladon',
     address: 'Pyay Road, Mingaladon Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -254,7 +227,7 @@
     type: 'specialist',
     township: 'North Dagon',
     address: 'No. 21, Corner of Pinlon Main Road and Sayar San Road, 26th Ward, North Dagon Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -263,7 +236,7 @@
     type: 'general',
     township: 'North Dagon',
     address: 'Bayint Naung Road, 32nd Ward, North Dagon Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: true
   },
@@ -272,25 +245,16 @@
     type: 'specialist',
     township: 'North Dagon',
     address: 'Pyidaungsu Main Road, North Dagon / Dagon Seikkan Border, North Dagon Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
 },
-{
-    name: 'North Okkalapa General and Teaching Hospital',
-    type: 'general',
-    township: 'North Okkalapa',
-    address: 'Corner of Khemarthi Road and Thudhamma Road, (Kha) Ward, North Okkalapa Township, Yangon',
-    phone: 'N/A',
-    hours: 'Open 24 hours',
-    er: true
-  },
   {
     name: 'OSC Hospital - North Okkalapa',
     type: 'specialist',
     township: 'North Okkalapa',
     address: 'Thudhamma Main Road, (Sa) Ward, North Okkalapa Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -299,7 +263,7 @@
     type: 'specialist',
     township: 'North Okkalapa',
     address: 'Thudhamma Road, North Okkalapa Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -308,7 +272,7 @@
     type: 'specialist',
     township: 'Sanchaung',
     address: 'No. 14, Baho Road, Sanchaung Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -317,7 +281,7 @@
     type: 'general',
     township: 'Sanchaung',
     address: 'No. 21/23, Shin Saw Pu Road, Sanchaung Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -326,7 +290,7 @@
     type: 'clinic',
     township: 'Sanchaung',
     address: 'No. 147, Kyundaw Street, Myaytani Ward, Sanchaung Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -335,25 +299,16 @@
     type: 'clinic',
     township: 'Sanchaung',
     address: 'No. 31, Pyapon Street, Sanchaung Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
-  },
-  {
-    name: 'Yangon Children\'s Hospital',
-    type: 'specialist',
-    township: 'Sanchaung',
-    address: 'Corner of Pyay Road and Ahlone Road, Sanchaung Township (Kamayut/Sanchaung Border), Yangon',
-    phone: 'N/A',
-    hours: 'Open 24 hours',
-    er: true
   },
 	{
     name: 'Shwe Pyi Thar Township Hospital',
     type: 'general',
     township: 'Shwe Pyi Thar',
     address: 'No. 10 Ward, Shwe Pyi Thar Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: true
   },
@@ -362,7 +317,7 @@
     type: 'general',
     township: 'Shwe Pyi Thar',
     address: 'Industrial Zone Main Road, Shwe Pyi Thar Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -371,7 +326,7 @@
     type: 'general',
     township: 'South Dagon',
     address: 'No. 57 Ward, Near Hlaing Zay Yar Road / Myawaddy Mingyi Road, South Dagon Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: true
   },
@@ -380,7 +335,7 @@
     type: 'specialist',
     township: 'South Dagon',
     address: 'Pyidaungsu Main Road, No. 104 Ward (South Dagon / Dagon Seikkan Border), South Dagon Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -389,7 +344,7 @@
     type: 'clinic',
     township: 'South Dagon',
     address: 'No. 56 Ward, Anawrahta Main Road, South Dagon Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -398,7 +353,7 @@
     type: 'specialist',
     township: 'South Okkalapa',
     address: 'Corner of Thamin Ba Yan Road and Thumingalar Road, 6th Ward, South Okkalapa Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -407,7 +362,7 @@
     type: 'general',
     township: 'South Okkalapa',
     address: 'No. 40, Kyaik Ka San Road (Near Thuwunna Roundabout), 1st Ward, South Okkalapa Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -416,7 +371,7 @@
     type: 'specialist',
     township: 'South Okkalapa',
     address: 'Thumingalar Main Road, 7th Ward, South Okkalapa Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -425,7 +380,7 @@
     type: 'general',
     township: 'Tamwe',
     address: 'Kyaikkasan Road, Tamwe Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: true
   },
@@ -434,7 +389,7 @@
     type: 'general',
     township: 'Tamwe',
     address: 'No. 137, Kyaikkasan Road, Tamwe Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -443,7 +398,7 @@
     type: 'specialist',
     township: 'Tamwe',
     address: 'No. 149, Kyaikkasan Road, Tamwe Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -452,7 +407,7 @@
     type: 'general',
     township: 'Tamwe',
     address: 'Kyaikkasan Road, Corner of Natmauk Road, Tamwe Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -461,7 +416,7 @@
     type: 'general',
     township: 'Thaketa',
     address: '7/West Ward, Near Ayeyarwun Road, Thaketa Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: true
   },
@@ -470,7 +425,7 @@
     type: 'specialist',
     township: 'Thaketa',
     address: 'No. 59/60, Ayeyarwun Main Road, 7/East Ward, Thaketa Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -479,7 +434,7 @@
     type: 'specialist',
     township: 'Thaketa',
     address: 'Ayeyarwun Road, Thaketa Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -488,7 +443,7 @@
     type: 'general',
     township: 'Thingangyun',
     address: 'Hlaing Zay Yar Road, 2nd Ward, Thingangyun Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -497,25 +452,7 @@
     type: 'specialist',
     township: 'Thingangyun',
     address: 'No. 59/A, Lay Daung Kan Road, 2nd Ward, Thingangyun Township, Yangon',
-    phone: 'N/A',
-    hours: 'Open 24 hours',
-    er: true
-  },
-  {
-    name: 'Pinlon Hospital',
-    type: 'specialist',
-    township: 'Thingangyun',
-    address: 'Corner of Pinlon Road and Sayar San Road, 26th Ward (North Dagon / Thingangyun Border), Yangon',
-    phone: 'N/A',
-    hours: 'Open 24 hours',
-    er: true
-  },
-  {
-    name: 'Yankin Children\'s Hospital',
-    type: 'specialist',
-    township: 'Yankin',
-    address: 'Kanbe Road, 16th Ward, Yankin Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Open 24 hours',
     er: true
   },
@@ -524,7 +461,7 @@
     type: 'specialist',
     township: 'Yankin',
     address: 'Yankin Road, 1st Ward, Yankin Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   },
@@ -533,7 +470,7 @@
     type: 'clinic',
     township: 'Yankin',
     address: 'Kanbe Road / Near Kaba Aye Pagoda Road, Yankin Township, Yangon',
-    phone: 'N/A',
+    phone: '01-000000',
     hours: 'Regular Hours',
     er: false
   }

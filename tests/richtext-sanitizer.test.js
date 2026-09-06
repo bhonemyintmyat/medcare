@@ -51,7 +51,7 @@ global.DOMParser = page.window.DOMParser;
 /* Resolved from this file's own location, so the test can be run from
    anywhere and copied to a scratch directory to pick up linkedom. */
 const target = process.env.MEDCARE_SANITIZER ||
-  path.join(__dirname, '..', 'sanitize-html.js');
+  path.join(__dirname, '..', 'js', 'sanitize-html.js');
 const src = fs.readFileSync(target, 'utf8');
 new Function('window', 'document', 'DOMParser', src)(global.window, global.document, global.DOMParser);
 

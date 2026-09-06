@@ -4,9 +4,9 @@
    Load after supabase.js on every page:
 
      <script src=".../supabase-js@2.112.3" defer></script>
-     <script src="supabase.js" defer></script>
-     <script src="auth.js" defer></script>
-     <script src="script.js" defer></script>
+     <script src="js/supabase.js" defer></script>
+     <script src="js/auth.js" defer></script>
+     <script src="js/script.js" defer></script>
 
    Two different jobs live in this file, and it is worth keeping them
    apart in your head:

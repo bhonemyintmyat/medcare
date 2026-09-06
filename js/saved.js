@@ -3,11 +3,11 @@
 
    Load after supabase.js, auth.js and bookmarks.js:
 
-     <script src="supabase.js" defer></script>
-     <script src="auth.js" defer></script>
-     <script src="bookmarks.js" defer></script>
-     <script src="script.js" defer></script>
-     <script src="saved.js" defer></script>
+     <script src="js/supabase.js" defer></script>
+     <script src="js/auth.js" defer></script>
+     <script src="js/bookmarks.js" defer></script>
+     <script src="js/script.js" defer></script>
+     <script src="js/saved.js" defer></script>
 
    Everything a person has saved, newest first, each with a way back to it
    and a way to un-save it. The un-save button is the very same

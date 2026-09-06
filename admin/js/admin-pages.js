@@ -10,26 +10,25 @@
    the public side decides that.
 
    ------------------------------------------------------------
-   TWO AREAS, ONE SCRIPT, TWO DIFFERENT ANSWERS
+   TWO AREAS, ONE SCRIPT, ONE ANSWER
 
    admin/pages.html and editor/pages.html both run this file, the way the
-   contact screens both run admin-contact.js. The difference here is that
-   the two areas are NOT equal:
+   contact screens both run admin-contact.js — and both areas now get the
+   same screen, because editors and admins may both write these pages.
+   supabase_footer_pages_editors.sql widened UPDATE on public.pages to
+   ('editor', 'admin'), superseding the admin-only rule this screen was
+   first built under.
 
-       admin    reads and writes
-       editor   reads
+   What an editor still cannot do is create or remove a page: INSERT is
+   admin-only, there is no DELETE policy for anybody, and slug and href
+   sit outside the column grant. So the four rows are fixed, and what a
+   staff member can change is the words on them.
 
-   That is not a decision this screen makes. supabase_footer_pages.sql
-   grants UPDATE on public.pages to admins alone, exactly as
-   supabase_contact_editors.sql left legal text admin-only while widening
-   the contact details to editors. Legal text is the one thing on this
-   site an editor does not sign off.
-
-   So an editor gets the whole screen, the real text, and no Save. The
-   read-only state is drawn from the role, but the database is what
-   enforces it: if this file were wrong, or somebody opened the admin URL
-   with an editor account, the write is still refused and savePage()
-   turns that refusal into a sentence.
+   That is not a decision this screen makes. canEdit below decides what
+   to DRAW; the database decides what is ALLOWED, and the two are set
+   from the same fact rather than from the area the URL happens to be in.
+   If this file were wrong, savePage() turns the refusal into a sentence
+   rather than a silent no-op.
 
    ------------------------------------------------------------
    WHERE THE TEXT COMES FROM THE FIRST TIME
@@ -89,7 +88,6 @@
   var importedEl= document.getElementById('pageImported');
   var saveEl    = document.getElementById('pageSave');
   var clearEl   = document.getElementById('pageClear');
-  var roEl      = document.getElementById('pagesReadonly');
 
   var rows    = [];
   var current = null;          // the row being edited
@@ -242,7 +240,6 @@
     if (clearEl) { clearEl.hidden = !canEdit; }
     if (importEl){ importEl.hidden = !canEdit; }
     if (titleEl) { titleEl.disabled = !canEdit; }
-    if (roEl)    { roEl.hidden = canEdit; }
     if (editors.en) { editors.en.setEnabled(canEdit); }
     if (editors.my) { editors.my.setEnabled(canEdit); }
   }
@@ -287,12 +284,58 @@
 
   /* Emptying both boxes is how a page is handed back to its file. It is
      the closest thing to a revert this screen has, and it is worth a
-     confirm: the text being removed may be the only copy of an edit. */
+     confirm: the text being removed may be the only copy of an edit.
+
+     THE TWO LANGUAGES ARE NOT EQUALLY RECOVERABLE, and the warning says
+     so rather than treating them alike.
+
+     The English can be read back: it is in the HTML file, and the import
+     button fetches it. Clearing it costs a click to undo.
+
+     The Burmese cannot. These files are written in English and carry no
+     .mc-my markup, so an import returns nothing for Burmese and the row
+     is the only place a translation lives. Emptying that box and saving
+     destroys the only copy — which is the same loss the import button
+     used to cause silently, and the reason this one is allowed to happen
+     only after somebody has been told the size of it.
+
+     Told, not stopped. Handing a page back to its file is a legitimate
+     thing to want, including for a translation that has gone stale. */
+  function words(handle) {
+    var text = handle ? handle.getText() : '';
+    return text ? text.length : 0;
+  }
+
+  function thousands(n) {
+    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
   function clearBoth() {
     if (!current || !canEdit) { return; }
-    if (!window.confirm(
-          'Empty both boxes?\n\n' + current.href + ' will go back to showing the text ' +
-          'written into the file. Press Save afterwards to make that happen.')) { return; }
+
+    var enLen = words(editors.en);
+    var myLen = words(editors.my);
+
+    /* Nothing to lose and nothing to confirm. Both boxes empty already
+       means this button would ask a question about no text at all. */
+    if (!enLen && !myLen) { return; }
+
+    var ask = 'Empty both boxes?\n\n';
+
+    if (myLen) {
+      ask += 'The Burmese is ' + thousands(myLen) + ' characters and exists only here. ' +
+             current.href + ' carries no Burmese, so “Read the page’s text” cannot ' +
+             'bring it back — copy it somewhere first if you might want it again.\n\n';
+    }
+    if (enLen) {
+      ask += 'The English can be read back from the file at any time.\n\n';
+    }
+
+    ask += current.href + ' will go back to showing the text written into the file. ' +
+           'Press Save afterwards to make that happen.';
+
+    if (!window.confirm(ask)) { return; }
+
     editors.en.setHTML('');
     editors.my.setHTML('');
     touch();
@@ -301,6 +344,23 @@
   if (saveEl)   { saveEl.addEventListener('click', save); }
   if (clearEl)  { clearEl.addEventListener('click', clearBoth); }
   if (importEl) {
+    /* A language the file has nothing for is LEFT ALONE, never emptied.
+
+       These files are written in English; none of them carries the
+       .mc-my markup that editor-import.js splits on, so an import
+       truthfully returns nothing for Burmese. Writing that nothing into
+       the Burmese box would silently delete a translation somebody had
+       written into the row — and since Save sends both bodies together,
+       the next Save would make the deletion permanent. That is a real
+       way to lose thousands of words to a button labelled "read".
+
+       Replacing a box with better text is what this button is for, so a
+       language the import DOES have still overwrites whatever is there:
+       pressing it is a deliberate "go and re-read the page". The rule is
+       only that an empty result never counts as text.
+
+       Because the two boxes can now take different outcomes, the message
+       names which ones actually changed rather than claiming both did. */
     importEl.addEventListener('click', function () {
       if (!current) { return; }
       window.MedCareImport.fromPage(current.href).then(function (found) {
@@ -308,10 +368,31 @@
           ad.message(msgEl, 'error', 'Could not read ' + current.href + '.');
           return;
         }
-        editors.en.setHTML(found.en || '');
-        editors.my.setHTML(found.my || '');
+
+        var en = sanitize.textOf(found.en || '') ? found.en : null;
+        var my = sanitize.textOf(found.my || '') ? found.my : null;
+
+        if (!en && !my) {
+          ad.message(msgEl, 'error',
+            'There is no prose in ' + current.href + ' to read. Nothing was changed.');
+          return;
+        }
+
+        var changed = [];
+        if (en) { editors.en.setHTML(en); changed.push('English'); }
+        if (my) { editors.my.setHTML(my); changed.push('Burmese'); }
+
+        var kept = [];
+        if (!en && editors.en.getText()) { kept.push('English'); }
+        if (!my && editors.my.getText()) { kept.push('Burmese'); }
+
         touch();
-        ad.message(msgEl, 'ok', 'Read from ' + current.href + '. Nothing is saved until you press Save.');
+        ad.message(msgEl, 'ok',
+          'Read the ' + changed.join(' and ') + ' from ' + current.href + '.' +
+          (kept.length
+            ? ' ' + kept.join(' and ') + ' is not in that file, so what you had is still here.'
+            : '') +
+          ' Nothing is saved until you press Save.');
       })['catch'](function (err) {
         ad.message(msgEl, 'error', ad.describeError(err, current.href));
       });
@@ -356,7 +437,11 @@
      resolves after this file runs still lands on the right state. */
   if (auth) {
     auth.onChange(function (user, role) {
-      canEdit = role === 'admin';
+      /* Both staff roles, matching the UPDATE policy in
+         supabase_footer_pages_editors.sql. Anyone else reaching this
+         file has already been turned away by the area's guard, so the
+         else-branch is a belt for a fastened seatbelt. */
+      canEdit = role === 'editor' || role === 'admin';
       applyRole();
     });
   }

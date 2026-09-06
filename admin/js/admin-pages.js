@@ -284,12 +284,58 @@
 
   /* Emptying both boxes is how a page is handed back to its file. It is
      the closest thing to a revert this screen has, and it is worth a
-     confirm: the text being removed may be the only copy of an edit. */
+     confirm: the text being removed may be the only copy of an edit.
+
+     THE TWO LANGUAGES ARE NOT EQUALLY RECOVERABLE, and the warning says
+     so rather than treating them alike.
+
+     The English can be read back: it is in the HTML file, and the import
+     button fetches it. Clearing it costs a click to undo.
+
+     The Burmese cannot. These files are written in English and carry no
+     .mc-my markup, so an import returns nothing for Burmese and the row
+     is the only place a translation lives. Emptying that box and saving
+     destroys the only copy — which is the same loss the import button
+     used to cause silently, and the reason this one is allowed to happen
+     only after somebody has been told the size of it.
+
+     Told, not stopped. Handing a page back to its file is a legitimate
+     thing to want, including for a translation that has gone stale. */
+  function words(handle) {
+    var text = handle ? handle.getText() : '';
+    return text ? text.length : 0;
+  }
+
+  function thousands(n) {
+    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
   function clearBoth() {
     if (!current || !canEdit) { return; }
-    if (!window.confirm(
-          'Empty both boxes?\n\n' + current.href + ' will go back to showing the text ' +
-          'written into the file. Press Save afterwards to make that happen.')) { return; }
+
+    var enLen = words(editors.en);
+    var myLen = words(editors.my);
+
+    /* Nothing to lose and nothing to confirm. Both boxes empty already
+       means this button would ask a question about no text at all. */
+    if (!enLen && !myLen) { return; }
+
+    var ask = 'Empty both boxes?\n\n';
+
+    if (myLen) {
+      ask += 'The Burmese is ' + thousands(myLen) + ' characters and exists only here. ' +
+             current.href + ' carries no Burmese, so “Read the page’s text” cannot ' +
+             'bring it back — copy it somewhere first if you might want it again.\n\n';
+    }
+    if (enLen) {
+      ask += 'The English can be read back from the file at any time.\n\n';
+    }
+
+    ask += current.href + ' will go back to showing the text written into the file. ' +
+           'Press Save afterwards to make that happen.';
+
+    if (!window.confirm(ask)) { return; }
+
     editors.en.setHTML('');
     editors.my.setHTML('');
     touch();

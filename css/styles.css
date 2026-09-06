@@ -430,6 +430,9 @@
   .mc-hosp-actions{margin-top:1.2rem;display:flex;gap:.65rem;flex-wrap:wrap}
   .mc-call{display:inline-flex;align-items:center;gap:.5rem;background:var(--mc-primary);color:#fff;font-weight:600;font-size:.9rem;padding:.6rem 1.1rem;border-radius:10px;text-decoration:none;transition:background .15s}
   .mc-call:hover{background:var(--mc-primary-600);color:#fff;text-decoration:none}
+  /* A card with no number to dial. Same shape as the button beside it so
+     the row still lines up, but plainly not something you can press. */
+  .mc-call.is-none{background:var(--mc-bg);color:var(--mc-muted);border:1px solid var(--mc-border);font-weight:500;cursor:default}
   .mc-directions{display:inline-flex;align-items:center;gap:.5rem;background:#fff;border:1px solid var(--mc-border);color:var(--mc-text);font-weight:500;font-size:.9rem;padding:.6rem 1.1rem;border-radius:10px;text-decoration:none;transition:all .15s}
   .mc-directions:hover{border-color:var(--mc-primary);color:var(--mc-primary-600);background:var(--mc-primary-50);text-decoration:none}
   .mc-empty{background:#fff;border:1px dashed var(--mc-border);border-radius:18px;text-align:center;padding:3.5rem 1.5rem}

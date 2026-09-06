@@ -608,6 +608,29 @@
       : '';
   }
 
+  /* The "call" action on a hospital or pharmacy card.
+
+     Most rows in this directory have no published number: the shipped
+     arrays carry the string 'N/A' and the table carries null. Stripping
+     either down to digits leaves nothing, and 'tel:' with nothing after
+     it is a link that dials nothing - while still being drawn as the
+     same green button as a number that works. On a page somebody opens
+     in a hurry, a button that looks dialable and is not is worse than
+     one that plainly says there is no number to dial.
+
+     So: a real link when there are digits, plain text when there are
+     not. The English here is a dictionary key, so it turns over with
+     the rest of the card when the page is in Burmese. */
+  function callAction(phone) {
+    var digits = String(phone == null ? '' : phone).replace(/[^0-9+]/g, '');
+    if (!digits) {
+      return '<span class="mc-call is-none"><i class="bi bi-telephone"></i> ' +
+             'No phone number listed</span>';
+    }
+    return '<a href="tel:' + digits + '" class="mc-call">' +
+           '<i class="bi bi-telephone-fill"></i> ' + esc(phone) + '</a>';
+  }
+
   // Townships are needed on the home page (menu) and the hospitals page
   // (select). Recomputed rather than fixed, because `hospitals` below is
   // replaced by what the table says as soon as it answers.
@@ -1275,7 +1298,6 @@
       });
       var typeLabelMap = { general: 'General', specialist: 'Specialist', clinic: 'Clinic' };
       hList.innerHTML = filtered.map(function (h) {
-        var tel = 'tel:' + h.phone.replace(/[^0-9+]/g, '');
         var maps = 'https://www.google.com/maps/search/?api=1&query=' +
           encodeURIComponent(h.name + ', ' + h.address + ', Yangon');
         return '<article class="mc-hosp">' +
@@ -1289,7 +1311,7 @@
           '<div class="mc-hosp-row hours"><i class="bi bi-clock"></i><span class="open">' + esc(h.hours) + '</span></div>' +
           '</div>' +
           '<div class="mc-hosp-actions">' +
-          '<a href="' + tel + '" class="mc-call"><i class="bi bi-telephone-fill"></i> ' + esc(h.phone) + '</a>' +
+          callAction(h.phone) +
           '<a href="' + maps + '" class="mc-directions" target="_blank" rel="noopener"><i class="bi bi-map"></i> Directions</a>' +
           bmBtn('hospital', h.id, 'inline') +
           '</div></article>';
@@ -1324,8 +1346,9 @@
 
     /* Now the real list. `phone` is nullable in the table and most rows
        have no number; the shipped array wrote 'N/A' for those, and the
-       card markup below calls .replace() on it, so the coalesce is what
-       keeps a null out of a method call. */
+       coalesce keeps the two paths saying the same thing. Either way it
+       is callAction() that decides whether a card gets a live tel: link
+       or the words "No phone number listed". */
     loadDirectory('hospitals', function (r) {
       return {
         id: r.id,
@@ -1441,7 +1464,6 @@
         clinic: 'Clinic pharmacy'
       };
       pList.innerHTML = filtered.map(function (p) {
-        var tel = 'tel:' + p.phone.replace(/[^0-9+]/g, '');
         var maps = 'https://www.google.com/maps/search/?api=1&query=' +
           encodeURIComponent(p.name + ', ' + p.address + ', Yangon');
         var chips = '';
@@ -1459,7 +1481,7 @@
           '</div>' +
           '<div class="mc-svc-row">' + chips + '</div>' +
           '<div class="mc-hosp-actions">' +
-          '<a href="' + tel + '" class="mc-call"><i class="bi bi-telephone-fill"></i> ' + esc(p.phone) + '</a>' +
+          callAction(p.phone) +
           '<a href="' + maps + '" class="mc-directions" target="_blank" rel="noopener"><i class="bi bi-map"></i> Directions</a>' +
           bmBtn('pharmacy', p.id, 'inline') +
           '</div></article>';
@@ -1833,6 +1855,7 @@
     'hospital': 'ဆေးရုံ',
     'found': 'တွေ့ရှိသည်',
     'ER available': 'အရေးပေါ်ဌာန ရှိသည်',
+    'No phone number listed': 'ဖုန်းနံပါတ် မဖော်ပြထား',
     'Open 24 hours': '၂၄ နာရီ ဖွင့်',
     'Mon–Fri, 8:00–16:00': 'တနင်္လာ–သောကြာ၊ ၈:၀၀–၁၆:၀၀',
     'No hospitals match your filters': 'သင့်စစ်ထုတ်မှုနှင့် ကိုက်ညီသော ဆေးရုံ မတွေ့ပါ',

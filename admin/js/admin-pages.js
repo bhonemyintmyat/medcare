@@ -298,6 +298,23 @@
   if (saveEl)   { saveEl.addEventListener('click', save); }
   if (clearEl)  { clearEl.addEventListener('click', clearBoth); }
   if (importEl) {
+    /* A language the file has nothing for is LEFT ALONE, never emptied.
+
+       These files are written in English; none of them carries the
+       .mc-my markup that editor-import.js splits on, so an import
+       truthfully returns nothing for Burmese. Writing that nothing into
+       the Burmese box would silently delete a translation somebody had
+       written into the row — and since Save sends both bodies together,
+       the next Save would make the deletion permanent. That is a real
+       way to lose thousands of words to a button labelled "read".
+
+       Replacing a box with better text is what this button is for, so a
+       language the import DOES have still overwrites whatever is there:
+       pressing it is a deliberate "go and re-read the page". The rule is
+       only that an empty result never counts as text.
+
+       Because the two boxes can now take different outcomes, the message
+       names which ones actually changed rather than claiming both did. */
     importEl.addEventListener('click', function () {
       if (!current) { return; }
       window.MedCareImport.fromPage(current.href).then(function (found) {
@@ -305,10 +322,31 @@
           ad.message(msgEl, 'error', 'Could not read ' + current.href + '.');
           return;
         }
-        editors.en.setHTML(found.en || '');
-        editors.my.setHTML(found.my || '');
+
+        var en = sanitize.textOf(found.en || '') ? found.en : null;
+        var my = sanitize.textOf(found.my || '') ? found.my : null;
+
+        if (!en && !my) {
+          ad.message(msgEl, 'error',
+            'There is no prose in ' + current.href + ' to read. Nothing was changed.');
+          return;
+        }
+
+        var changed = [];
+        if (en) { editors.en.setHTML(en); changed.push('English'); }
+        if (my) { editors.my.setHTML(my); changed.push('Burmese'); }
+
+        var kept = [];
+        if (!en && editors.en.getText()) { kept.push('English'); }
+        if (!my && editors.my.getText()) { kept.push('Burmese'); }
+
         touch();
-        ad.message(msgEl, 'ok', 'Read from ' + current.href + '. Nothing is saved until you press Save.');
+        ad.message(msgEl, 'ok',
+          'Read the ' + changed.join(' and ') + ' from ' + current.href + '.' +
+          (kept.length
+            ? ' ' + kept.join(' and ') + ' is not in that file, so what you had is still here.'
+            : '') +
+          ' Nothing is saved until you press Save.');
       })['catch'](function (err) {
         ad.message(msgEl, 'error', ad.describeError(err, current.href));
       });

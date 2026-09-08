@@ -1787,7 +1787,7 @@
     'Specialist': 'အထူးကု',
     'Clinic': 'ဆေးခန်း',
     'Emergency / ER': 'အရေးပေါ်ဌာန',
-    'Search by hospital name or area…': 'ဆေးရုံအမည် သို့မဟုတ် ဒေသဖြင့် ရှာရန်…',
+    'Search by hospital name…': 'ဆေးရုံအမည်ဖြင့် ရှာရန်…',
     'hospitals': 'ဆေးရုံများ',
     'hospital': 'ဆေးရုံ',
     'found': 'တွေ့ရှိသည်',
@@ -1795,6 +1795,13 @@
     'No phone number listed': 'ဖုန်းနံပါတ် မဖော်ပြထား',
     'Open 24 hours': '၂၄ နာရီ ဖွင့်',
     'Mon–Fri, 8:00–16:00': 'တနင်္လာ–သောကြာ၊ ၈:၀၀–၁၆:၀၀',
+    'Regular Hours': 'ပုံမှန် ဖွင့်ချိန်',
+    'Daily, 8:00–20:00': 'နေ့စဉ်၊ ၈:၀၀–၂၀:၀၀',
+    'Daily, 8:00–21:00': 'နေ့စဉ်၊ ၈:၀၀–၂၁:၀၀',
+    'Daily, 8:00–22:00': 'နေ့စဉ်၊ ၈:၀၀–၂၂:၀၀',
+    'Daily, 8:30–20:30': 'နေ့စဉ်၊ ၈:၃၀–၂၀:၃၀',
+    'Daily, 9:00–21:00': 'နေ့စဉ်၊ ၉:၀၀–၂၁:၀၀',
+    'Daily, 9:00–22:00': 'နေ့စဉ်၊ ၉:၀၀–၂၂:၀၀',
     'No hospitals match your filters': 'သင့်စစ်ထုတ်မှုနှင့် ကိုက်ညီသော ဆေးရုံ မတွေ့ပါ',
     'Try a different township, remove a hospital-type filter, or clear your search to see all hospitals in Yangon.':
       'အခြားမြို့နယ်ကို ရွေးပါ၊ ဆေးရုံအမျိုးအစား စစ်ထုတ်မှုကို ဖယ်ပါ သို့မဟုတ် ရန်ကုန်ရှိ ဆေးရုံအားလုံး ကြည့်ရန် ရှာဖွေမှုကို ရှင်းပါ။',
@@ -2726,8 +2733,8 @@
       'ဤစည်းကမ်းချက်များနှင့် ပတ်သက်သည့် မေးခွန်းများ၊ စာမျက်နှာ ပြင်ဆင်ချက်များ သို့မဟုတ် အကြောင်းအရာ ဖယ်ရှားပေးရန် တောင်းဆိုချက်များကို အဖွဲ့ထံ ပေးပို့နိုင်ပါသည်။',
 
     /* --- privacy policy: body --- */
-    'Looking up a health condition is private. MedCare is built so that you can do it without telling us who you are.':
-      'ကျန်းမာရေး အခြေအနေတစ်ခုကို ရှာဖွေခြင်းသည် ကိုယ်ရေးကိုယ်တာ ကိစ္စဖြစ်သည်။ သင်မည်သူဖြစ်ကြောင်း ကျွန်ုပ်တို့အား မပြောဘဲ ရှာဖွေနိုင်စေရန် MedCare ကို တည်ဆောက်ထားပါသည်။',
+    'Looking up a health condition is private. You can read every page on MedCare without an account, without giving a name, and without telling us anything about yourself.':
+      'ကျန်းမာရေး အခြေအနေတစ်ခုကို ရှာဖွေခြင်းသည် ကိုယ်ရေးကိုယ်တာ ကိစ္စဖြစ်သည်။ MedCare ရှိ စာမျက်နှာတိုင်းကို အကောင့်မလိုဘဲ၊ အမည်မပေးဘဲ၊ သင့်အကြောင်း မည်သည့်အရာမျှ မပြောဘဲ ဖတ်ရှုနိုင်ပါသည်။',
     'We have no accounts, no sign-up, no contact forms, and no analytics. We do not ask for your name, and we have no database of visitors. Everything you type into a search box stays inside your own browser. We set no cookies of our own.':
       'အကောင့်များ မရှိ၊ စာရင်းသွင်းရန် မရှိ၊ ဆက်သွယ်ရန် ဖောင်များ မရှိ၊ ခွဲခြမ်းစိတ်ဖြာမှု ကိရိယာများလည်း မရှိပါ။ သင့်အမည်ကို မမေးပါ။ လာရောက်သူများ၏ ဒေတာဘေ့စ်လည်း မရှိပါ။ ရှာဖွေရေး အကွက်တွင် ရိုက်ထည့်သမျှသည် သင့်ဘရောက်ဆာ အတွင်း၌သာ ရှိနေပါသည်။ ကျွန်ုပ်တို့၏ ကိုယ်ပိုင် ကွတ်ကီးများ မထားရှိပါ။',
     'What we do not collect': 'ကျွန်ုပ်တို့ မစုဆောင်းသည်များ',
@@ -2771,14 +2778,14 @@
       'တစ်စုံတစ်ရာ စုဆောင်းသည့် လုပ်ဆောင်ချက်တစ်ခု ထည့်သွင်းမည်ဆိုပါက ထိုလုပ်ဆောင်ချက် စတင်အသုံးပြုမီ ဤစာမျက်နှာကို ပြောင်းလဲပြီး အောက်ပါရက်စွဲကို ပြင်ဆင်ပါမည်။ ပြောင်းလဲပြီးနောက် MedCare ကို ဆက်လက် အသုံးပြုခြင်းသည် ပြင်ဆင်ထားသော မူဝါဒကို လက်ခံသည်ဟု ဆိုလိုပါသည်။',
     'Questions about privacy can be sent to the team.':
       'ကိုယ်ရေးအချက်အလက်နှင့် ပတ်သက်သည့် မေးခွန်းများကို အဖွဲ့ထံ ပေးပို့နိုင်ပါသည်။',
-    'Your browser keeps its own history of the pages you visit, and MedCare cannot clear it. On a shared or family phone, use a private browsing window if you would rather your visit left no trace.':
-      'သင့်ဘရောက်ဆာသည် သင်ဝင်ကြည့်ခဲ့သည့် စာမျက်နှာများ၏ မှတ်တမ်းကို ကိုယ်ပိုင် သိမ်းထားပြီး MedCare က ၎င်းကို ရှင်းလင်း၍ မရပါ။ အတူတကွ သုံးသည့် သို့မဟုတ် မိသားစု ဖုန်းတွင် သင့်လာရောက်မှု ခြေရာမကျန်စေလိုပါက private browsing ဝင်းဒိုးကို အသုံးပြုပါ။',
+    'Your browser keeps its own history of the pages you visit, and MedCare cannot clear it. On a shared or family phone, use a private browsing window if you would rather your visit left no trace. If you have an account, sign out as well — otherwise the next person to open the site is still signed in as you, and can see the pages you saved.':
+      'သင့်ဘရောက်ဆာသည် သင်ဝင်ကြည့်ခဲ့သည့် စာမျက်နှာများ၏ မှတ်တမ်းကို ကိုယ်ပိုင် သိမ်းထားပြီး MedCare က ၎င်းကို ရှင်းလင်း၍ မရပါ။ အတူတကွ သုံးသည့် သို့မဟုတ် မိသားစု ဖုန်းတွင် သင့်လာရောက်မှု ခြေရာမကျန်စေလိုပါက private browsing ဝင်းဒိုးကို အသုံးပြုပါ။ အကောင့်ရှိပါက ထွက်ခဲ့ပါ — မဟုတ်ပါက ဤဝဘ်ဆိုက်ကို နောက်ထပ်ဖွင့်သူသည် သင့်အနေဖြင့် ဝင်ရောက်ထားဆဲဖြစ်ပြီး သင်သိမ်းထားသည့် စာမျက်နှာများကို မြင်နိုင်ပါသည်။',
 
     /* --- cookie settings: body --- */
-    'There is no consent banner on this site because there is nothing to consent to. We use no advertising, no analytics, and no tracking. The two settings below are the only things stored on your device, and both are yours to change.':
-      'သဘောတူရန် မည်သည်မျှ မရှိသောကြောင့် ဤဝဘ်ဆိုက်တွင် သဘောတူညီချက် ဘန်နာ မရှိပါ။ ကြော်ငြာ၊ ခွဲခြမ်းစိတ်ဖြာမှုနှင့် ခြေရာခံမှု မသုံးပါ။ အောက်ပါ ဆက်တင်နှစ်ခုသည် သင့်စက်ပစ္စည်းတွင် သိမ်းထားသည့် တစ်ခုတည်းသော အရာများဖြစ်ပြီး နှစ်ခုစလုံးကို သင် ပြောင်းလဲနိုင်ပါသည်။',
-    "Remembers whether you chose English or Burmese, so the site opens the same way next time. It is kept in your browser's local storage under the name mc-lang, and is never sent to us.":
-      'အင်္ဂလိပ် သို့မဟုတ် မြန်မာ ရွေးချယ်ခဲ့သည်ကို မှတ်ထားပြီး နောက်တစ်ကြိမ် ဝင်ရောက်ချိန်တွင် တူညီစွာ ပွင့်စေသည်။ သင့်ဘရောက်ဆာ၏ local storage တွင် mc-lang အမည်ဖြင့် သိမ်းထားပြီး ကျွန်ုပ်တို့ထံ လုံးဝ မပေးပို့ပါ။',
+    'There is no consent banner on this site because there is nothing to consent to. We use no advertising, no analytics, and no tracking. What MedCare does keep is listed below — a language preference, and, only if you sign in, the session that keeps you signed in. Each card reads your device as the page loads, so it shows what is actually there, and each one can be cleared from here.':
+      'သဘောတူရန် မည်သည်မျှ မရှိသောကြောင့် ဤဝဘ်ဆိုက်တွင် သဘောတူညီချက် ဘန်နာ မရှိပါ။ ကြော်ငြာ၊ ခွဲခြမ်းစိတ်ဖြာမှုနှင့် ခြေရာခံမှု မသုံးပါ။ MedCare သိမ်းဆည်းထားသည်များကို အောက်တွင် ဖော်ပြထားသည် — ဘာသာစကား ရွေးချယ်မှုနှင့်၊ သင် ဝင်ရောက်ထားမှသာ၊ ဝင်ရောက်မှုကို ဆက်လက် ထိန်းသိမ်းပေးသည့် session ဖြစ်သည်။ ကတ်တစ်ခုစီသည် စာမျက်နှာ ပွင့်ချိန်တွင် သင့်စက်ပစ္စည်းကို ဖတ်သဖြင့် အမှန်တကယ် ရှိသည်များကို ပြသပြီး တစ်ခုချင်းစီကို ဤနေရာမှ ရှင်းလင်းနိုင်ပါသည်။',
+    "Remembers whether you chose English or Burmese, so the site opens the same way next time. It is kept in your browser's local storage under the name mc-lang, and is never sent to us. It is written only when you actually press a language button — until then there is nothing stored, and the site simply opens in English.":
+      'အင်္ဂလိပ် သို့မဟုတ် မြန်မာ ရွေးချယ်ခဲ့သည်ကို မှတ်ထားပြီး နောက်တစ်ကြိမ် ဝင်ရောက်ချိန်တွင် တူညီစွာ ပွင့်စေသည်။ သင့်ဘရောက်ဆာ၏ local storage တွင် mc-lang အမည်ဖြင့် သိမ်းထားပြီး ကျွန်ုပ်တို့ထံ လုံးဝ မပေးပို့ပါ။ ဘာသာစကား ခလုတ်ကို သင် အမှန်တကယ် နှိပ်မှသာ ရေးသွင်းသည် — ထိုအချိန်အထိ သိမ်းထားသည် မရှိဘဲ ဝဘ်ဆိုက်သည် အင်္ဂလိပ်ဘာသာဖြင့်သာ ပွင့်ပါသည်။',
     'Checking…': 'စစ်ဆေးနေသည်…',
     'The hospital map is served by Google, which can set its own cookies and will see your IP address. We do not load it until you ask. Turning this on loads the map automatically from now on; it is the only third-party embed on the site.':
       'ဆေးရုံမြေပုံကို Google မှ ပေးပို့ပြီး ၎င်းသည် ကိုယ်ပိုင် ကွတ်ကီးများ ထားရှိနိုင်ကာ သင့် IP လိပ်စာကို မြင်ရပါမည်။ သင် တောင်းဆိုမှသာ ရယူပါသည်။ ဤအရာကို ဖွင့်ထားပါက ယခုမှစ၍ မြေပုံ အလိုအလျောက် ပေါ်လာမည်။ ၎င်းသည် ဝဘ်ဆိုက်ပေါ်ရှိ တစ်ခုတည်းသော တတိယအဖွဲ့ ထည့်သွင်းမှု ဖြစ်သည်။',
@@ -3044,6 +3051,71 @@
     'This site is not connected to its database. See the console for details.': 'ဤဝဘ်ဆိုက်သည် ဒေတာဘေ့စ်နှင့် မချိတ်ဆက်ထားပါ။ အသေးစိတ်ကို console တွင် ကြည့်ပါ။',
     'Could not check your permissions': 'သင့်ခွင့်ပြုချက်များကို စစ်ဆေး၍ မရပါ',
     'The database did not answer. Check your connection and reload the page.': 'ဒေတာဘေ့စ်မှ အဖြေ မရပါ။ ချိတ်ဆက်မှုကို စစ်ဆေးပြီး စာမျက်နှာကို ပြန်ဖွင့်ပါ။',
+    /* ---- Site chrome that had no entry, so it stayed English ----
+       Found by switching every page to Burmese and reading back every text
+       node that still had no Myanmar characters in it. Names, the brand, the
+       source domains and the hospital and pharmacy records stay English on
+       purpose and are not listed here. */
+
+    // Navbar and footer, on every page
+    'About MedCare': 'MedCare အကြောင်း',
+    'BMI Calculator': 'BMI တွက်စက်',
+    'BMI calculator': 'BMI တွက်စက်',
+
+    // The save and report bars on the disease and wellness pages
+    'Save this disease': 'ဤရောဂါကို သိမ်းဆည်းရန်',
+    'Save this article': 'ဤဆောင်းပါးကို သိမ်းဆည်းရန်',
+    'to read again later from your account.': 'သင့်အကောင့်မှတစ်ဆင့် နောက်မှ ပြန်ဖတ်ရန်။',
+    'Spotted something wrong?': 'မှားယွင်းနေသည့်အရာ တွေ့ပါသလား။',
+    'Tell our editorial team and they will check it.': 'ကျွန်ုပ်တို့၏ တည်းဖြတ်အဖွဲ့ကို အကြောင်းကြားပါ၊ သူတို့က စစ်ဆေးပေးပါမည်။',
+    'Report Error': 'အမှား သတင်းပို့ရန်',
+
+    /* saved.html writes one of these beside the count. Burmese does not
+       inflect for number, so both map to the same counter word. */
+    'item': 'ခု',
+    'items': 'ခု',
+
+    /* The home page slider. These are aria-labels, so they are read aloud
+       rather than seen; the dot labels are built as 'Go to slide ' + n, so
+       there is one key per slide and a third slide would need a third key. */
+    'Previous slide': 'ယခင် ဆလိုက်',
+    'Next slide': 'နောက် ဆလိုက်',
+    'Slide selector': 'ဆလိုက် ရွေးချယ်ရန်',
+    'Go to slide 1': 'ဆလိုက် ၁ သို့ သွားရန်',
+    'Go to slide 2': 'ဆလိုက် ၂ သို့ သွားရန်',
+
+    // contact.html
+    'Monday to Friday, 9am to 5pm': 'တနင်္လာမှ သောကြာ၊ နံနက် ၉ နာရီမှ ညနေ ၅ နာရီ',
+    /* This sentence is broken across two links, so it arrives as five text
+       nodes. Each is translated to stand where the English one stood. */
+    'We do not give medical advice by email or on the phone, and we cannot read test results, book appointments, or say which medicine to take. For that you need a doctor — the': 'ကျွန်ုပ်တို့သည် အီးမေးလ် သို့မဟုတ် ဖုန်းဖြင့် ဆေးဘက်ဆိုင်ရာ အကြံဉာဏ် မပေးပါ။ ဓာတ်ခွဲ ရလဒ်များကို ဖတ်ပေးခြင်း၊ ချိန်းဆိုမှု ပြုလုပ်ပေးခြင်း သို့မဟုတ် မည်သည့်ဆေး သောက်ရမည်ကို ပြောပေးခြင်းတို့လည်း မလုပ်နိုင်ပါ။ ထိုအတွက် ဆရာဝန်တစ်ဦး လိုအပ်ပါသည် —',
+    'hospital list': 'ဆေးရုံစာရင်း',
+    'pharmacy list': 'ဆေးဆိုင်စာရင်း',
+    'and the': 'နှင့်',
+    'are there to help you find one.': 'တို့သည် ဆရာဝန်တစ်ဦး ရှာဖွေရာတွင် ကူညီပေးရန် ရှိပါသည်။',
+
+    // about.html
+    'What we publish, how we check it, and who stands behind it.': 'ကျွန်ုပ်တို့ ဖော်ပြသည့်အရာ၊ မည်သို့ စစ်ဆေးသည်နှင့် မည်သူ တာဝန်ယူသည်။',
+    'MedCare is a free health information site for Myanmar. It explains common conditions in plain language, points you to hospitals and pharmacies near you, and keeps the numbers you need in an emergency one tap away.': 'MedCare သည် မြန်မာနိုင်ငံအတွက် အခမဲ့ ကျန်းမာရေး အချက်အလက် ဝဘ်ဆိုက် ဖြစ်သည်။ အဖြစ်များသော ရောဂါများကို ရိုးရှင်းသော ဘာသာစကားဖြင့် ရှင်းပြပြီး၊ သင့်အနီးရှိ ဆေးရုံနှင့် ဆေးဆိုင်များကို ညွှန်ပြကာ၊ အရေးပေါ်တွင် လိုအပ်သည့် ဖုန်းနံပါတ်များကို တစ်ချက်နှိပ်ရုံဖြင့် ရရှိစေပါသည်။',
+    "We take the health guidance published by the World Health Organization and Myanmar's Ministry of Health and rewrite it so it can be read and acted on without medical training — in English and in Burmese, on a phone, for free. We sell nothing, and we run no advertising.": 'ကမ္ဘာ့ကျန်းမာရေးအဖွဲ့နှင့် မြန်မာနိုင်ငံ ကျန်းမာရေးဝန်ကြီးဌာနတို့ ထုတ်ပြန်သည့် ကျန်းမာရေး လမ်းညွှန်ချက်များကို ယူ၍ ဆေးပညာ မသင်ကြားထားဘဲ ဖတ်ရှုနားလည်ပြီး လက်တွေ့ အသုံးချနိုင်အောင် ပြန်လည် ရေးသားထားပါသည် — အင်္ဂလိပ်နှင့် မြန်မာ ဘာသာဖြင့်၊ ဖုန်းပေါ်တွင်၊ အခမဲ့။ ကျွန်ုပ်တို့ မည်သည့်အရာမျှ မရောင်းချပါ၊ ကြော်ငြာလည်း မထည့်ပါ။',
+    'What you will find here': 'ဤနေရာတွင် တွေ့ရှိနိုင်သည်များ',
+    'Symptoms, causes, treatment, and prevention for the conditions seen most often in Myanmar.': 'မြန်မာနိုင်ငံတွင် အဖြစ်များဆုံး ရောဂါများ၏ လက္ခဏာ၊ အကြောင်းရင်း၊ ကုသမှုနှင့် ကာကွယ်နည်းများ။',
+    'Everyday guides on sleep, diet, hydration, mental health, hygiene, and staying well.': 'အိပ်စက်ခြင်း၊ အစားအသောက်၊ ရေဓာတ်၊ စိတ်ကျန်းမာရေး၊ တစ်ကိုယ်ရေ သန့်ရှင်းရေးနှင့် ကျန်းမာစွာ နေထိုင်ရေးဆိုင်ရာ နေ့စဉ် လမ်းညွှန်များ။',
+    'Hospitals and pharmacies': 'ဆေးရုံများနှင့် ဆေးဆိုင်များ',
+    'Directories you can filter by township, with locations and contact details.': 'မြို့နယ်အလိုက် စစ်ထုတ်ကြည့်နိုင်သော စာရင်းများ — တည်နေရာနှင့် ဆက်သွယ်ရန် အချက်အလက်များနှင့်အတူ။',
+    'Ambulance, poison control, and 24-hour hotlines, ready to dial.': 'လူနာတင်ယာဉ်၊ အဆိပ်ဖြေ ဌာနနှင့် ၂၄ နာရီ အရေးပေါ် ဖုန်းလိုင်းများကို ချက်ချင်း ခေါ်ဆိုနိုင်သည်။',
+    'There is also a': 'ထို့အပြင်',
+    'that runs entirely in your browser, and you can save any page you want to come back to.': 'လည်း ရှိပါသည်။ ၎င်းသည် သင့်ဘရောက်ဆာ အတွင်း၌သာ အလုပ်လုပ်ပြီး ပြန်လာဖတ်လိုသည့် စာမျက်နှာ မှန်သမျှကို သိမ်းဆည်းထားနိုင်ပါသည်။',
+    'Where our information comes from': 'ကျွန်ုပ်တို့၏ အချက်အလက်များ မည်သည့်နေရာမှ ရရှိသနည်း',
+    'Fact sheets and regional guidance for South-East Asia, used as the base for our disease pages.': 'အရှေ့တောင်အာရှအတွက် အချက်အလက် စာရွက်များနှင့် ဒေသဆိုင်ရာ လမ်းညွှန်ချက်များ — ကျွန်ုပ်တို့၏ ရောဂါ စာမျက်နှာများ၏ အခြေခံအဖြစ် အသုံးပြုထားသည်။',
+    'National health programmes, outbreak guidance, and public hospital information.': 'အမျိုးသား ကျန်းမာရေး အစီအစဉ်များ၊ ရောဂါ ဖြစ်ပွားမှုဆိုင်ရာ လမ်းညွှန်ချက်များနှင့် အစိုးရ ဆေးရုံ အချက်အလက်များ။',
+
+    // privacy.html
+    'Reading is anonymous: no sign-in, and no record tying a page to you. An account is optional and only needed to save pages or report a mistake — if you create one, we hold your name, your email address, and the pages you chose to save, and you can delete all of it yourself. We run no advertising and no analytics, everything you type into a search box stays inside your own browser, and we set no cookies of our own.': 'ဖတ်ရှုခြင်းသည် အမည်မသိ ဖြစ်သည် — ဝင်ရောက်ရန် မလိုဘဲ စာမျက်နှာတစ်ခုကို သင်နှင့် ချိတ်ဆက်သည့် မှတ်တမ်းလည်း မရှိပါ။ အကောင့်သည် မဖြစ်မနေ မလိုအပ်ဘဲ စာမျက်နှာများ သိမ်းဆည်းရန် သို့မဟုတ် အမှားတစ်ခု သတင်းပို့ရန်အတွက်သာ လိုအပ်သည် — အကောင့်ဖွင့်ပါက သင့်အမည်၊ သင့်အီးမေးလ်နှင့် သင် သိမ်းဆည်းရန် ရွေးချယ်ခဲ့သည့် စာမျက်နှာများကို ကျွန်ုပ်တို့ သိမ်းထားပြီး ၎င်းအားလုံးကို သင်ကိုယ်တိုင် ဖျက်နိုင်ပါသည်။ ကြော်ငြာနှင့် ခွဲခြမ်းစိတ်ဖြာမှု မသုံးပါ၊ ရှာဖွေမှု အကွက်တွင် သင်ရိုက်ထည့်သမျှသည် သင့်ဘရောက်ဆာ အတွင်း၌သာ ရှိနေပြီး ကျွန်ုပ်တို့၏ ကိုယ်ပိုင် cookie လည်း မထားပါ။',
+
+    // cookies.html
+    'Your signed-in session': 'သင် ဝင်ရောက်ထားသည့် session',
+    "Only if you have an account and are signed in. This is the token that keeps you signed in between visits and proves to our database that a request is yours. It is held in your browser's local storage, and signing out deletes it. Alongside it the site keeps two notes that last only as long as the browser tab: whether your account is a reader, editor, or administrator, and a cached copy of the site notice.": 'အကောင့်ရှိပြီး ဝင်ရောက်ထားမှသာ ဖြစ်သည်။ ၎င်းသည် လာရောက်မှုများအကြား သင့်ဝင်ရောက်မှုကို ဆက်လက် ထိန်းသိမ်းပေးပြီး တောင်းဆိုမှုတစ်ခုသည် သင့်ထံမှ ဖြစ်ကြောင်း ကျွန်ုပ်တို့၏ ဒေတာဘေ့စ်ကို သက်သေပြသည့် token ဖြစ်သည်။ သင့်ဘရောက်ဆာ၏ local storage တွင် သိမ်းထားပြီး ထွက်လိုက်သည်နှင့် ဖျက်ပစ်ပါသည်။ ၎င်းနှင့်အတူ ဘရောက်ဆာ တဘ် ဖွင့်ထားသည့် အချိန်အထိသာ တည်ရှိသော မှတ်စု နှစ်ခုကို သိမ်းထားသည် — သင့်အကောင့်သည် စာဖတ်သူ၊ တည်းဖြတ်သူ သို့မဟုတ် စီမံခန့်ခွဲသူ ဟုတ်မဟုတ်နှင့် ဝဘ်ဆိုက် အသိပေးချက်၏ သိမ်းထားသော မိတ္တူ ဖြစ်သည်။',
   };
 
   var LANGS = { en: null, my: MY };

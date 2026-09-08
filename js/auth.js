@@ -153,8 +153,10 @@
      on the project. The length is safe either way while the project
      minimum stays at or below this one.
 
-     "Symbol" is anything that is not an ASCII letter or digit, which
-     keeps the door open for punctuation we did not think to list. */
+     The symbol set is the one Supabase Auth accepts, character for
+     character. Anything wider — a space, a Burmese letter — would pass
+     here and then be refused by the server the moment the same rule is
+     turned on there, which reads as the form lying to you. */
   var PASSWORD_MIN = 8;
   var PASSWORD_HINT = 'At least 8 characters, with an upper-case letter, a lower-case letter, a number, and a symbol.';
 
@@ -170,7 +172,7 @@
     if (!/[A-Z]/.test(pw)) { return 'Passwords need at least one upper-case letter.'; }
     if (!/[a-z]/.test(pw)) { return 'Passwords need at least one lower-case letter.'; }
     if (!/[0-9]/.test(pw)) { return 'Passwords need at least one number.'; }
-    if (!/[^A-Za-z0-9]/.test(pw)) {
+    if (!/[!@#$%^&*()_+\-=\[\]{};'\\:"|<>?,.\/`~]/.test(pw)) {
       return 'Passwords need at least one symbol, such as ! ? # or @.';
     }
     return null;

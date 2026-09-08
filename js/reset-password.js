@@ -1,23 +1,4 @@
-/* ============================================================
-   MedCare — "choose a new password" page
-   Loaded only by reset-password.html, after auth.js.
 
-   This is the far end of the recovery link that login.html asks
-   Supabase to send. Two jobs, in order:
-
-     1. Turn whatever Supabase put in the address bar into a real
-        session — and get it out of the address bar again.
-     2. Write the new password against that session.
-
-   Why step 1 is hand-rolled here: supabase.js deliberately creates
-   the client with `detectSessionInUrl: false`, so the library will
-   NOT go looking for a callback in the URL. That setting is what
-   keeps every other page from inspecting its own address bar for a
-   redirect that never arrives, and the note in supabase.js explains
-   what it cost to get there. Rather than switch it back on for all
-   33 pages to serve this one, the one page that really does receive
-   a callback reads it itself.
-   ============================================================ */
 
 (function () {
   'use strict';
@@ -41,12 +22,10 @@
 
   if (!form) { return; }
 
-  // Whose account the redeemed link turned out to belong to. Taken from
-  // the response below rather than from auth.js: its onAuthStateChange
-  // listener is not guaranteed to have run by the time we want the name.
+
   var recoveredUser = null;
 
-  /* ---------- one card at a time ---------- */
+  
   function show(card) {
     [checking, formCard, badCard, doneCard].forEach(function (el) {
       el.hidden = el !== card;
@@ -75,21 +54,9 @@
     revealBtn.innerHTML = shown ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
   });
 
-  /* ---------- reading the link ----------
-
-     Supabase has shipped three shapes of callback over the years and a
-     project can be configured into any of them, so all three are read.
-     They differ only in where the proof sits:
-
-       #access_token=…&refresh_token=…   the session, already minted
-       ?token_hash=…&type=recovery       a one-time code to redeem
-       ?code=…                           a PKCE code to exchange
-
-     Failures arrive the same way successes do — as parameters, not as a
-     thrown error: #error=access_denied&error_code=otp_expired is what an
-     hour-old link looks like. */
+  
   function params() {
-    // The hash carries a query string of its own, minus the '#'.
+
     var hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
     var query = new URLSearchParams(window.location.search);
     return {
@@ -97,10 +64,7 @@
     };
   }
 
-  /* Tokens in the address bar end up in browser history, in a shared
-     screen, and in the Referer header of anything this page loads next.
-     They have done their job the moment they are read, so take them out
-     of the URL without adding a history entry. */
+  
   function scrubUrl() {
     if (!window.history || !window.history.replaceState) { return; }
     window.history.replaceState(null, '', window.location.pathname);
@@ -116,17 +80,14 @@
     return description || 'That recovery link could not be used. Ask for a fresh one.';
   }
 
-  // All three redemption calls answer the same shape: { data, error }.
-  // Either it failed and the sentence explaining that is the result, or
-  // it worked and the account it belongs to is worth keeping.
+
   function keep(res) {
     if (res.error) { return explainLinkError('invalid', res.error.message); }
     recoveredUser = (res.data && res.data.user) || null;
     return null;
   }
 
-  /* Resolves with an error string to show, or null when a session is in
-     place and the form can be shown. */
+  
   function redeemLink() {
     var p = params();
 
@@ -155,17 +116,13 @@
       return db.auth.exchangeCodeForSession(code).then(keep);
     }
 
-    /* Nothing in the URL at all. Note what deliberately does NOT happen
-       here: an existing session is not accepted as permission to set a
-       new password. Somebody who is merely signed in — on a borrowed
-       laptop, on a session someone else left open — must prove the
-       mailbox first, which is exactly what the emailed link is for. */
+    
     return Promise.resolve(
       'Open this page from the link in your recovery email. Reaching it any other way leaves nothing to check.'
     );
   }
 
-  /* ---------- saving the new password ---------- */
+  
   function explainSave(err) {
     var text = String((err && err.message) || '');
     if (/should be at least|at least 6/i.test(text)) {
@@ -192,9 +149,7 @@
       passEl.focus();
       return;
     }
-    // Checked in the browser and nowhere else, the same as on the signup
-    // form: the confirmation never leaves this page. It is here so a typo
-    // cannot lock somebody out a second time.
+
     if (confirmEl.value !== password) {
       message('The two passwords do not match. Type the same one twice.');
       confirmEl.focus();
@@ -219,9 +174,9 @@
     });
   });
 
-  /* ---------- on load ---------- */
+  
   if (!db || !auth) {
-    // supabase.js already explained why on the console.
+
     refuse('Password recovery is unavailable because this site is not connected to its database.');
     return;
   }
@@ -230,8 +185,7 @@
     scrubUrl();
     if (problem) { refuse(problem); return; }
 
-    // Name the account the new password will belong to, so a link opened
-    // from the wrong mailbox is obvious before anything is typed.
+
     whoEl.textContent = (recoveredUser && recoveredUser.email) || '';
     show(formCard);
     passEl.focus();

@@ -1,44 +1,3 @@
--- ============================================================
--- MedCare — full name and username on profiles
--- Run in: Supabase dashboard -> SQL Editor -> New query -> Run
--- Run AFTER supabase_auth.sql, supabase_rls.sql and supabase_admin.sql.
---
--- DO NOT RE-RUN THIS FILE ON ITS OWN. It used to say "safe to re-run",
--- and on a fresh database it is. On this one it is not, because
--- supabase_display_name.sql has since renamed `username` to
--- `display_name` and dropped everything around it. Running this file
--- alone puts all of it back: the column, profiles_username_lower_idx,
--- and a handle_new_user() that inserts into a username column the rest
--- of the schema no longer has.
---
--- That is not theory. It happened, and it took two things down at once:
--- delete_own_account() and delete_account() started failing one line
--- short of the delete, and once the resurrected column was dropped
--- again the restored trigger broke SIGNUP until handle_new_user was put
--- back. If you run this, run supabase_display_name.sql immediately
--- after, every time.
---
--- SUPERSEDED IN PART by supabase_display_name.sql, which renames
--- `username` to `display_name` and drops every rule about its shape and
--- its uniqueness. Run this file first if you are setting up from
--- scratch, then that one; the rename is written to work either way.
---
--- The signup form now asks for three things beyond email and password:
--- a full name, a username to be called by, and the password a second
--- time. The confirmation never leaves the browser — it exists only so a
--- typo cannot lock somebody out of an account they just made. The other
--- two travel with the signup as user METADATA and land here.
---
--- Metadata is whatever the browser sent. Supabase stores it verbatim in
--- auth.users.raw_user_meta_data without checking a thing, so this file
--- treats it as untrusted input: the trigger validates it, the column
--- constraints police it, and the one field that actually grants power —
--- role — is still hard-coded and still never read from the client.
--- ============================================================
-
-
--- ---------- 1. THE COLUMNS ----------
-
 alter table public.profiles
   add column if not exists full_name text,
   add column if not exists username  text;
@@ -48,9 +7,6 @@ comment on column public.profiles.full_name is
 comment on column public.profiles.username is
   'Short handle the site calls them by. Unique, case-insensitively.';
 
--- Length and shape, enforced by the database rather than by the form.
--- A dropped constraint would be noticed here; a dropped JavaScript check
--- would not be noticed at all.
 alter table public.profiles drop constraint if exists profiles_full_name_len;
 alter table public.profiles
   add constraint profiles_full_name_len
@@ -61,27 +17,8 @@ alter table public.profiles
   add constraint profiles_username_format
   check (username is null or username ~ '^[A-Za-z0-9._-]{3,24}$');
 
--- Unique on the LOWERCASED value, so "SuAung" cannot be taken twice with
--- different capitalisation. A plain unique constraint would allow that.
--- Several rows may hold NULL: accounts created before this file ran have
--- no username, and unique indexes ignore nulls.
 create unique index if not exists profiles_username_lower_idx
   on public.profiles (lower(username));
-
-
--- ---------- 2. "IS THIS NAME FREE?" ----------
--- The signup form has to answer that question before submitting, and it
--- cannot: RLS lets a visitor read their own profile row and nothing else,
--- which is exactly right and also means a client-side SELECT can never
--- see whether a username is taken.
---
--- So the check lives in one narrow SECURITY DEFINER function. It takes a
--- candidate and answers yes or no. It cannot be used to read anybody's
--- row, list usernames, or learn who holds one.
---
--- It does disclose whether a given username exists. That is inherent to
--- every username picker ever built — the alternative is letting people
--- submit a name and then telling them it was taken.
 
 create or replace function public.username_available(candidate text)
 returns boolean
@@ -102,18 +39,6 @@ comment on function public.username_available(text) is
 
 revoke all on function public.username_available(text) from public;
 grant execute on function public.username_available(text) to anon, authenticated;
-
-
--- ---------- 3. THE SIGNUP TRIGGER ----------
--- Replaces the version from supabase_admin.sql. Everything that made it
--- safe is kept: security definer so the insert is allowed while RLS
--- grants nobody insert, an empty search_path so every name is written in
--- full, and a role that is written literally rather than read from input.
---
--- What is new is that two values now come from the browser, so both are
--- checked here. The username is REJECTED when malformed rather than
--- quietly cleaned up: a signup that silently renames you is worse than
--- one that fails and says why.
 
 create or replace function public.handle_new_user()
 returns trigger
@@ -152,30 +77,9 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
--- A taken username raises 23505 from the unique index above, which aborts
--- the signup: no auth.users row, no profile, nothing half-created. The
--- form checks availability first, so this is the race-condition path —
--- two people claiming the same name in the same second — and login.js
--- turns it back into "that username was just taken".
-
-
--- ---------- 4. COLUMN PRIVILEGES ----------
--- supabase_admin.sql narrowed browser writes on profiles to `role` alone
--- and that still holds: nothing here widens it. These two columns are
--- written by the trigger, never by the browser, so there is no way for
--- somebody to rewrite their name after signup from the client — and no
--- way to rewrite anybody else's either.
---
--- Re-stated rather than assumed, since this file adds the columns those
--- privileges have to keep excluding.
-
 revoke update, insert, delete on public.profiles from anon, authenticated;
 grant update (role) on public.profiles to authenticated;
 
-
--- ---------- 5. CHECKS ----------
-
--- Columns and constraints.
 select column_name, data_type, is_nullable
 from information_schema.columns
 where table_schema = 'public' and table_name = 'profiles'
@@ -187,20 +91,16 @@ from pg_constraint
 where conrelid = 'public.profiles'::regclass
   and conname in ('profiles_full_name_len', 'profiles_username_format');
 
--- The availability function should answer true for a free name and false
--- for a malformed one.
 select public.username_available('a_free_name')  as should_be_true,
        public.username_available('no')           as too_short,
        public.username_available('has spaces')   as bad_characters;
 
--- authenticated must still hold UPDATE on `role` only.
 select grantee, privilege_type, column_name
 from information_schema.column_privileges
 where table_schema = 'public' and table_name = 'profiles'
   and grantee in ('anon', 'authenticated') and privilege_type = 'UPDATE'
 order by grantee, column_name;
 
--- Accounts and what they are called.
 select email, username, full_name, role
 from public.profiles
 order by created_at;

@@ -13,9 +13,7 @@
 <link rel="stylesheet" href="../css/styles.css">
 <link rel="stylesheet" href="css/admin.css">
 <link rel="stylesheet" href="../editor/css/editor.css">
-<!-- Same order as every public page, then the admin set. The guard has
-     to run before the page's own script, and everything needs the
-     client that supabase.js creates. -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
 <script src="../js/supabase.js" defer></script>
 <script src="../js/auth.js" defer></script>
@@ -23,12 +21,7 @@
 <script src="js/admin-guard.js" defer></script>
 <script src="js/admin-shell.js" defer></script>
 <script src="js/admin-api.js" defer></script>
-<!-- The prose pipeline, borrowed whole from the entry form: the same
-     allowlist, the same Quill wrapper, and the same reader that pulls a
-     hand-written page back into the editor.
-     editor-api.js comes first because editor-richtext.js returns early
-     and publishes nothing when window.MedCareEditor is absent — the
-     editor area always has it, an admin screen has to ask. -->
+
 <script src="../js/sanitize-html.js" defer></script>
 <script src="../editor/js/editor-api.js" defer></script>
 <script src="../editor/js/editor-richtext.js" defer></script>
@@ -37,13 +30,10 @@
 </head>
 <body>
 
-<!-- Nothing inside .mc-admin-shell is displayed until admin-guard.js
-     confirms an admin: admin.css hides it by default. -->
 <div class="mc-admin-shell" id="adminShell">
 
   <div class="mc-admin-backdrop" data-shell-close></div>
 
-  <!-- ===================== Sidebar ===================== -->
   <aside class="mc-admin-side">
     <a class="mc-admin-brand" href="index.html">
       <span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>
@@ -129,7 +119,6 @@
     </div>
   </aside>
 
-  <!-- ===================== Main ===================== -->
   <div class="mc-admin-main">
 
     <header class="mc-admin-top">
@@ -197,23 +186,13 @@
         </p>
 
         <label class="mc-auth-label" for="pageBodyEn" style="margin-top:1.1rem">English</label>
-        <!-- The same wrapper the entry form uses. Quill inserts its
-             toolbar as a SIBLING of the element it mounts into, so the
-             border, the rounded corners and the height limits have to
-             live on a parent that holds both — on the host alone the
-             toolbar falls outside the box and the writing area grows
-             without limit. -->
+
         <div class="mc-ed-rt">
           <div id="pageBodyEn" class="mc-ed-rt-host"></div>
         </div>
 
         <label class="mc-auth-label" for="pageBodyMy" style="margin-top:1.1rem">Burmese</label>
-        <!-- The same wrapper the entry form uses. Quill inserts its
-             toolbar as a SIBLING of the element it mounts into, so the
-             border, the rounded corners and the height limits have to
-             live on a parent that holds both — on the host alone the
-             toolbar falls outside the box and the writing area grows
-             without limit. -->
+
         <div class="mc-ed-rt">
           <div id="pageBodyMy" class="mc-ed-rt-host"></div>
         </div>

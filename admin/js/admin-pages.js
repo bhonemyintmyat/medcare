@@ -1,69 +1,3 @@
-/* ============================================================
-   MedCare — the footer pages
-   Loaded by admin/pages.html AND editor/pages.html, after that area's
-   guard, admin-shell.js and admin-api.js.
-
-   Four pages hang off the footer and carry no medical advice: About
-   MedCare, Terms of use, Privacy policy, Cookie settings. Each has a row
-   in public.pages and a hand-written HTML file. The row wins when it has
-   prose in it; otherwise the file's own copy stands, and page-body.js on
-   the public side decides that.
-
-   ------------------------------------------------------------
-   TWO AREAS, ONE SCRIPT, ONE ANSWER
-
-   admin/pages.html and editor/pages.html both run this file, the way the
-   contact screens both run admin-contact.js — and both areas now get the
-   same screen, because editors and admins may both write these pages.
-   supabase_footer_pages_editors.sql widened UPDATE on public.pages to
-   ('editor', 'admin'), superseding the admin-only rule this screen was
-   first built under.
-
-   What an editor still cannot do is create or remove a page: INSERT is
-   admin-only, there is no DELETE policy for anybody, and slug and href
-   sit outside the column grant. So the four rows are fixed, and what a
-   staff member can change is the words on them.
-
-   That is not a decision this screen makes. canEdit below decides what
-   to DRAW; the database decides what is ALLOWED, and the two are set
-   from the same fact rather than from the area the URL happens to be in.
-   If this file were wrong, savePage() turns the refusal into a sentence
-   rather than a silent no-op.
-
-   ------------------------------------------------------------
-   WHERE THE TEXT COMES FROM THE FIRST TIME
-
-   Every row is seeded empty, so the first time a page is opened here the
-   boxes would be blank — while the live page is full of prose. That is
-   the same problem editor-entry.js has with the twenty hand-written
-   articles, and it gets the same answer: MedCareImport.fromPage() reads
-   the deployed page and hands back its prose, split by language and
-   sanitised.
-
-   Two rules, both borrowed from the entry form because both matter:
-
-     an import never overwrites stored text
-     an import never saves
-
-   The screen fills, says where the text came from, and waits. Until Save
-   is pressed the row is untouched and the public page is unchanged.
-
-   ------------------------------------------------------------
-   WHAT SURVIVES THE TRIP, AND WHAT DOES NOT
-
-   The allowlist in sanitize-html.js permits semantic prose and no
-   classes: p, h2-h4, lists, links, strong, em. It does not permit div or
-   span, so the site's own furniture — callout boxes, the feature grid on
-   the About page, the setting cards on the Cookies page — cannot be
-   stored in a body and does not come back from an import.
-
-   That is the allowlist working, not failing. Those pieces stay in the
-   HTML file, outside the editable region, and keep their styling; what
-   this screen edits is the prose between them. The note on the screen
-   says so, because an admin who pastes a layout in and watches it
-   flatten deserves to have been told first.
-   ============================================================ */
-
 (function () {
   'use strict';
 
@@ -90,15 +24,11 @@
   var clearEl   = document.getElementById('pageClear');
 
   var rows    = [];
-  var current = null;          // the row being edited
-  var editors = {};            // 'en' | 'my' -> richtext handle
+  var current = null;
+  var editors = {};
   var dirty   = false;
-  var canEdit = false;         // set once the role is known
+  var canEdit = false;
 
-  /* ---------- The list ---------- */
-
-  /* 'database' or 'file', said the same way here and in the migration's
-     checks query, so the two can be read against each other. */
   function source(row) {
     var en = row.body && row.body.trim();
     var my = row.body_my && row.body_my.trim();
@@ -128,8 +58,6 @@
     });
   }
 
-  /* ---------- Opening one ---------- */
-
   function open(slug) {
     var row = rows.filter(function (r) { return r.slug === slug; })[0];
     if (!row) { return; }
@@ -152,9 +80,6 @@
     setState(row);
     draw();
 
-    /* Quill is fetched on demand and the two editors are made once, then
-       refilled. Making a new pair per page would leave the old ones in
-       the DOM holding text nobody can see but the browser still keeps. */
     ensureEditors().then(function () {
       editors.en.setHTML(sanitize.clean(row.body || ''));
       editors.my.setHTML(sanitize.clean(row.body_my || ''));
@@ -191,17 +116,6 @@
     if (saveEl && canEdit) { saveEl.disabled = false; }
   }
 
-  /* ---------- The first fill ---------- */
-
-  /* Same three conditions as editor-entry.js, and for the same reasons:
-     there must be a page to read, the row must be empty, and the boxes
-     must still be empty when the download lands — a slow fetch must not
-     land on top of something somebody typed while waiting for it. */
-  /* row.href is passed BARE. fromPage() resolves it itself with a '../'
-     because every screen that calls it sits one folder deep, and its
-     siteRelative() guard rejects any path containing '..' outright — so
-     prefixing one here does not double up, it fails the guard and the
-     import returns null without saying why. */
   function maybeImport(row) {
     if (!window.MedCareImport || !row.href) { return; }
     if ((row.body && row.body.trim()) || (row.body_my && row.body_my.trim())) { return; }
@@ -223,17 +137,12 @@
           '. Nothing is saved until you press Save.';
         importedEl.hidden = false;
       }
-      /* Deliberately not marked dirty: setHTML does not fire onChange,
-         and an import the admin has not touched is not an edit. Save
-         stays available so they can adopt it in one press. */
+
       if (saveEl && canEdit) { saveEl.disabled = false; }
     })['catch'](function () {
-      /* A page that will not fetch is not an error worth a red bar: the
-         boxes are simply empty and the admin can write into them. */
+
     });
   }
-
-  /* ---------- Who may save ---------- */
 
   function applyRole() {
     if (saveEl)  { saveEl.hidden = !canEdit; }
@@ -244,19 +153,12 @@
     if (editors.my) { editors.my.setEnabled(canEdit); }
   }
 
-  /* ---------- Saving ---------- */
-
   function save() {
     if (!current || !canEdit) { return; }
 
     var body   = editors.en ? editors.en.getHTML() : '';
     var bodyMy = editors.my ? editors.my.getHTML() : '';
 
-    /* Quill leaves '<p><br></p>' behind when a box is cleared. Stored,
-       that is prose as far as any length test is concerned and blank as
-       far as a reader is concerned — the exact combination that would
-       replace a page with nothing. Normalise it to empty, which the
-       public side already reads as "show the file". */
     if (!sanitize.textOf(body))   { body = ''; }
     if (!sanitize.textOf(bodyMy)) { bodyMy = ''; }
 
@@ -282,25 +184,6 @@
     });
   }
 
-  /* Emptying both boxes is how a page is handed back to its file. It is
-     the closest thing to a revert this screen has, and it is worth a
-     confirm: the text being removed may be the only copy of an edit.
-
-     THE TWO LANGUAGES ARE NOT EQUALLY RECOVERABLE, and the warning says
-     so rather than treating them alike.
-
-     The English can be read back: it is in the HTML file, and the import
-     button fetches it. Clearing it costs a click to undo.
-
-     The Burmese cannot. These files are written in English and carry no
-     .mc-my markup, so an import returns nothing for Burmese and the row
-     is the only place a translation lives. Emptying that box and saving
-     destroys the only copy — which is the same loss the import button
-     used to cause silently, and the reason this one is allowed to happen
-     only after somebody has been told the size of it.
-
-     Told, not stopped. Handing a page back to its file is a legitimate
-     thing to want, including for a translation that has gone stale. */
   function words(handle) {
     var text = handle ? handle.getText() : '';
     return text ? text.length : 0;
@@ -316,8 +199,6 @@
     var enLen = words(editors.en);
     var myLen = words(editors.my);
 
-    /* Nothing to lose and nothing to confirm. Both boxes empty already
-       means this button would ask a question about no text at all. */
     if (!enLen && !myLen) { return; }
 
     var ask = 'Empty both boxes?\n\n';
@@ -344,23 +225,7 @@
   if (saveEl)   { saveEl.addEventListener('click', save); }
   if (clearEl)  { clearEl.addEventListener('click', clearBoth); }
   if (importEl) {
-    /* A language the file has nothing for is LEFT ALONE, never emptied.
 
-       These files are written in English; none of them carries the
-       .mc-my markup that editor-import.js splits on, so an import
-       truthfully returns nothing for Burmese. Writing that nothing into
-       the Burmese box would silently delete a translation somebody had
-       written into the row — and since Save sends both bodies together,
-       the next Save would make the deletion permanent. That is a real
-       way to lose thousands of words to a button labelled "read".
-
-       Replacing a box with better text is what this button is for, so a
-       language the import DOES have still overwrites whatever is there:
-       pressing it is a deliberate "go and re-read the page". The rule is
-       only that an empty result never counts as text.
-
-       Because the two boxes can now take different outcomes, the message
-       names which ones actually changed rather than claiming both did. */
     importEl.addEventListener('click', function () {
       if (!current) { return; }
       window.MedCareImport.fromPage(current.href).then(function (found) {
@@ -405,8 +270,6 @@
     e.returnValue = '';
   });
 
-  /* ---------- Start ---------- */
-
   function start() {
     ad.loadPages().then(function (data) {
       rows = data;
@@ -417,12 +280,6 @@
       }
       draw();
 
-      /* ?slug= — how "Edit this page" on the public site arrives here.
-         edit-link.js builds it from data-page-slug, so the value is a
-         slug this table uses; an unknown one is ignored rather than
-         reported, because the list is already on screen and open() would
-         have nothing to show. Landing on the list is a fair answer to a
-         link that has gone stale. */
       var wanted = new URLSearchParams(window.location.search).get('slug');
       if (wanted && rows.some(function (r) { return r.slug === wanted; })) {
         open(wanted);
@@ -432,15 +289,9 @@
     });
   }
 
-  /* The role decides what is drawn; the database decides what is
-     allowed. onChange rather than a single read, so a session that
-     resolves after this file runs still lands on the right state. */
   if (auth) {
     auth.onChange(function (user, role) {
-      /* Both staff roles, matching the UPDATE policy in
-         supabase_footer_pages_editors.sql. Anyone else reaching this
-         file has already been turned away by the area's guard, so the
-         else-branch is a belt for a fastened seatbelt. */
+
       canEdit = role === 'editor' || role === 'admin';
       applyRole();
     });

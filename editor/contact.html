@@ -13,20 +13,7 @@
 <link rel="stylesheet" href="../css/styles.css">
 <link rel="stylesheet" href="../admin/css/admin.css">
 <link rel="stylesheet" href="css/editor.css">
-<!-- Same order as every public page, then the editor set. The guard has
-     to run before the page's own script, and everything needs the
-     client that supabase.js creates. admin-shell.js is the chrome both
-     staff areas share; editor-guard.js publishes itself under the name
-     it looks for.
 
-     THE LAST TWO ARE THE ADMIN AREA'S FILES, ON PURPOSE. This screen and
-     admin/contact.html edit the same row with the same rules, so they
-     run the same script rather than a copy of it that would disagree by
-     the third change. admin-contact.js asks for its guard under the one
-     name both areas answer to, and admin-api.js's loadNames() degrades
-     to no name when the reader is an editor with no policy on profiles.
-     editor-api.js is not loaded here because this screen does not touch
-     content. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
 <script src="../js/supabase.js" defer></script>
 <script src="../js/auth.js" defer></script>
@@ -38,13 +25,10 @@
 </head>
 <body>
 
-<!-- Nothing inside .mc-admin-shell is displayed until editor-guard.js
-     confirms an editor or an admin: admin.css hides it by default. -->
 <div class="mc-admin-shell" id="adminShell">
 
   <div class="mc-admin-backdrop" data-shell-close></div>
 
-  <!-- ===================== Sidebar ===================== -->
   <aside class="mc-admin-side">
     <a class="mc-admin-brand" href="index.html">
       <span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>
@@ -148,7 +132,6 @@
     </div>
   </aside>
 
-  <!-- ===================== Main ===================== -->
   <div class="mc-admin-main">
 
     <header class="mc-admin-top">
@@ -161,21 +144,11 @@
         <p class="mc-admin-top-sub">The address and the numbers on the Contact us page.</p>
       </div>
       <div class="mc-admin-top-right">
-        <!-- The account menu, built by auth.js into this slot: your name
-             and role, the pages your role can reach, a way to rename
-             yourself, and the way out. It replaces the name pill and the
-             Sign out button that used to sit here — one control, and the
-             same one the public pages carry. -->
+
         <div data-mc-account></div>
       </div>
     </header>
 
-    <!-- The form below is the same form as admin/contact.html, driven by
-         the same script, because it is the same row with the same rules
-         and there is no version of this screen that should differ by
-         area. Only the notes underneath are written for who is reading:
-         an editor's neighbours are the emergency numbers, an admin's are
-         the site settings. Change one form, change the other. -->
     <main class="mc-admin-content">
 
       <p class="mc-admin-msg" id="ctMsg" hidden></p>
@@ -193,10 +166,6 @@
 
         <form id="ctForm" novalidate>
 
-          <!-- ---------- The addresses ----------
-               Drawn by admin-contact.js from the saved row, because the
-               count varies. Empty rows are ignored on save, so an address
-               is removed by clearing it or by pressing Remove. -->
           <label class="mc-auth-label" for="ctEmails">Email addresses</label>
           <div id="ctEmails" class="mc-ad-phones"></div>
 
@@ -219,10 +188,6 @@
             with no address at all.
           </p>
 
-          <!-- ---------- The numbers ----------
-               Drawn by admin-contact.js from the saved row, because the
-               count varies. Empty rows are ignored on save, so a number is
-               removed by clearing it or by pressing Remove. -->
           <label class="mc-auth-label" for="ctPhones">Phone numbers</label>
           <div id="ctPhones" class="mc-ad-phones"></div>
 
@@ -243,9 +208,6 @@
             </span>
           </div>
 
-          <!-- The preview uses the REAL public classes from styles.css, in a
-               framed box. A preview drawn from its own copy of the styling is
-               a preview of the copy. -->
           <div class="mc-ad-preview" id="ctPreview" hidden>
             <p class="mc-ad-preview-label">What a reader will see</p>
             <div class="mc-contact-list" id="ctPreviewList"></div>

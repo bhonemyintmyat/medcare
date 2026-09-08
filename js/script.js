@@ -1,15 +1,9 @@
 (function () {
   'use strict';
 
-  /* ---------- Data ---------- */
+  
 
-  // The twelve conditions this site shipped with, and what the page draws
-  // before Supabase has answered anything. loadDirectory('diseases', ...)
-  // replaces them with the published rows when those arrive; if that never
-  // happens, the reader keeps these. Same bargain the hospital, pharmacy
-  // and article lists make, and made for the same reason: a stale list of
-  // conditions is worth more to somebody looking up their symptoms than an
-  // apology where the conditions were.
+
   var diseases = [
     { name: 'Hypertension', icon: 'bi-heart-pulse', tag: 'Chronic', cat: 'chronic', href: 'diseases/hypertension.html', desc: 'High blood pressure often has no symptoms but raises the risk of stroke and heart disease over time. ' },
     { name: 'Diabetes', icon: 'bi-droplet-half', tag: 'Chronic', cat: 'chronic', href: 'diseases/diabetes.html', desc: 'A long-term condition where blood sugar levels are too high, manageable with diet, exercise, and medication.' },
@@ -475,11 +469,7 @@
     er: false
   }
 ];
-  /* Two different kinds of filter live in one list. General, specialist
-     and clinic are what a place IS — exactly one of them is true of any
-     row, and hospitals_type_check allows nothing else. "Emergency / ER"
-     is a property a place of any type can also have. matchesType() below
-     is where that difference is spent. */
+  
   var typeMeta = [
     { id: 'general', label: 'General' },
     { id: 'specialist', label: 'Specialist' },
@@ -498,21 +488,14 @@
     { name: 'Sein Gay Har Pharmacy', type: 'chain', township: 'Dagon', address: 'Pyay Rd, Dagon', phone: '01-379155', hours: 'Open 24 hours', open24: true, delivery: true },
     { name: 'Thukha Drug Store', type: 'independent', township: 'Mayangone', address: 'Insein Rd, Mayangone', phone: '01-9669042', hours: 'Daily, 8:00–20:00', open24: false, delivery: false }
   ];
-  /* `covers` is here because one chip does not always mean one value in
-     the column. A pharmacy inside a clinic and one inside a hospital are
-     the same thing to somebody choosing where to go — attached to a
-     medical facility rather than standing on its own — so they share a
-     filter. The column still tells them apart, and the card still prints
-     which of the two it is; it is only the filter that groups them. */
+  
   var pharmTypeMeta = [
     { id: 'chain',       label: 'Chain pharmacy',            covers: ['chain'] },
     { id: 'independent', label: 'Independent',               covers: ['independent'] },
     { id: 'hospital',    label: 'Hospital or clinic pharmacy', covers: ['hospital', 'clinic'] }
   ];
 
-  /* Which chip owns a row's type. A type with no chip — one added to the
-     database before this list learns about it — returns null and is left
-     out of every count rather than silently landing in the first chip. */
+  
   function pharmChipFor(type) {
     var hit = pharmTypeMeta.filter(function (tm) {
       return tm.covers.indexOf(type) !== -1;
@@ -534,30 +517,14 @@
     return new URLSearchParams(window.location.search).get(name) || '';
   }
 
-  /* A "Save" button for a card, drawn by bookmarks.js if it is loaded and
-     the row has a real database id — the shipped fallback rows have none,
-     and there is nothing to bookmark that a foreign key could point at.
-     Returns '' otherwise, so a card without a save button is the normal
-     graceful state rather than a broken one. */
+  
   function bmBtn(type, id, variant) {
     return (id != null && window.MedCareBookmarks)
       ? window.MedCareBookmarks.button(type, id, { variant: variant || 'overlay' })
       : '';
   }
 
-  /* The "call" action on a hospital or pharmacy card.
-
-     Most rows in this directory have no published number: the shipped
-     arrays carry the string 'N/A' and the table carries null. Stripping
-     either down to digits leaves nothing, and 'tel:' with nothing after
-     it is a link that dials nothing - while still being drawn as the
-     same green button as a number that works. On a page somebody opens
-     in a hurry, a button that looks dialable and is not is worse than
-     one that plainly says there is no number to dial.
-
-     So: a real link when there are digits, plain text when there are
-     not. The English here is a dictionary key, so it turns over with
-     the rest of the card when the page is in Burmese. */
+  
   function callAction(phone) {
     var digits = String(phone == null ? '' : phone).replace(/[^0-9+]/g, '');
     if (!digits) {
@@ -568,36 +535,14 @@
            '<i class="bi bi-telephone-fill"></i> ' + esc(phone) + '</a>';
   }
 
-  // Townships are needed on the home page (menu) and the hospitals page
-  // (select). Recomputed rather than fixed, because `hospitals` below is
-  // replaced by what the table says as soon as it answers.
+
   function townshipsOf(list) {
     return list.map(function (x) { return x.township; })
       .filter(function (v, i, a) { return a.indexOf(v) === i; }).sort();
   }
   var townValues = townshipsOf(hospitals);
 
-  /* ---------- Two ways for a list to be empty ----------
-     Until now there was only one, so every empty state on the site is
-     worded for it: "No hospitals match your filters", and a button that
-     clears them. `hasMigrated` creates the second one — the table
-     answered and said nothing — and under that sentence the same copy
-     tells a reader to undo a filter they never set, below a button that
-     will not help.
-
-     So the heading and the blurb are swapped when the list is empty at
-     source, and the reset button is hidden, because there is nothing to
-     reset. The filter wording is read off the element the page shipped
-     with and put back whenever it applies again, so that copy goes on
-     living in the HTML where it can be edited.
-
-     The blurb the caller passes depends on probeTotal(): "nothing has
-     been published" when the table really is bare, and "none of them are
-     published" when it is not. Only staff ever see the second — see
-     probeTotal() for why.
-
-     Both markups are covered: the disease grid's div/div and the two
-     directories' h3/p. Neither is addressed by index. */
+  
   function emptyState(el, sourceEmpty, heading, blurb) {
     if (!el) { return; }
     var h = el.querySelector('h3') || el.querySelector('.fw-semibold');
@@ -613,62 +558,10 @@
     if (reset) { reset.style.display = sourceEmpty ? 'none' : ''; }
   }
 
-  /* ---------- A directory, from its table ----------
-     hospitals.html and pharmacy.html each shipped with a hard-coded list
-     and each now takes the published rows from its table instead. Same
-     shape as the articles listing further down, for the same reasons:
-
-       * The list HAS to come from the table, or a hospital added in the
-         editor is published into a page that cannot show it.
-
-       * The shipped array stays as the fallback and is drawn first, so a
-         slow database delays nothing and a failed request leaves the
-         reader with the list they already had. For a page somebody opens
-         to find a phone number, a slightly stale directory beats an
-         error where the directory was.
-
-       * WHETHER to fall back is the caller's decision, and it is made on
-         `hasMigrated` rather than on a row count. A request the table
-         answered is the evidence that the table is there; zero rows in
-         an answered request is a real answer and the page shows it as
-         one. Only an unanswered request — no client, an error, a dead
-         network — leaves the shipped array standing, because that is the
-         only case where the site genuinely does not know.
-
-         The old rule was `if (!rows.length) return`, which read an empty
-         table as a migration that had not been run. That is one guess
-         about why a table is empty, and it made deleting the last row of
-         a directory impossible: the page would resurrect the shipped
-         list over the top of the deletion.
-
-       * .eq('status', 'published') is not redundant with RLS. The public
-         policy serves published rows only, but the STAFF policy serves
-         every row — so without this, an editor or an admin reading the
-         public page would see draft entries a signed-out reader never
-         would. This is a public listing; it shows what the public sees,
-         whoever is looking.
-
-       * .order('id') because Postgres promises no order without it, and
-         a directory that reshuffles between loads is one you cannot scan
-         twice.
-
-     `map` turns a row into the shape the page's render function already
-     expects, so nothing below this had to learn about columns.
-
-     `apply` is called exactly once, always, with (rows, hasMigrated, total):
-
-       hasMigrated === true   the table answered. `rows` is what it said,
-                              empty included. Show it.
-       hasMigrated === false  nothing answered. `rows` is []. Keep the
-                              shipped array; it is all the page has.
-       total                  see probeTotal(). null unless the table
-                              answered with nothing, and null even then
-                              if the probe itself did not answer. */
+  
   function loadDirectory(table, map, apply) {
     var db = window.supabaseClient;
-    // supabase.js sets this to null when the library or the keys are
-    // missing; it already logged why. Nothing answered, so nothing is
-    // known, so the shipped list stands.
+
     if (!db) { apply([], false, null); return; }
 
     db.from(table)
@@ -676,53 +569,22 @@
       .eq('status', 'published')
       .order('id')
       .then(function (res) {
-        // supabase-js does NOT throw on a database error — it resolves
-        // with { data, error }. A missing table or a blocking policy
-        // shows up here, not in .catch().
+
         if (res.error) { throw res.error; }
-        // Answered. Zero rows is an answer too — see the note above.
+
         var rows = (res.data || []).map(map);
-        // Rows came back, so there is nothing to explain and nothing to
-        // ask. The probe costs a round trip and only ever earns it on a
-        // page that came back blank.
+
         if (rows.length) { apply(rows, true, null); return; }
         probeTotal(db, table, function (total) { apply([], true, total); });
       })
       .catch(function (err) {
-        // Deliberately quiet on the page. The reader still has the
-        // shipped list; this is for whoever is looking at a console.
+
         console.error('[MedCare] Could not refresh ' + table + ' from Supabase:', err);
         apply([], false, null);
       });
   }
 
-  /* ---------- Why is it empty ----------
-     The listing above asks for published rows. When that comes back with
-     none, this asks a second question — how many rows are there at all,
-     of any status — and the gap between the two answers is the reason
-     the page is blank.
-
-     WHAT IT CANNOT DO. It cannot tell a blocked read from an empty
-     table. Row Level Security applies to this count exactly as it
-     applies to the listing, so a policy that hides everything hides it
-     from the probe too and both come back zero. Nothing sent with the
-     anon key can get around that, because the anon key is the identity
-     being refused. Detecting THAT needs something whose visibility does
-     not depend on the same policy — a security-definer RPC, or a
-     published number to compare against — which is server work, not a
-     second query.
-
-     WHAT IT DOES DO. The public policy on all four tables is
-     `status = 'published'`, so for a signed-out reader this count and
-     the listing's count are the same number and the answer is always
-     zero. For a signed-in editor or admin, whose policy serves every
-     row, it is the total — and `total > 0` beside an empty listing is
-     precisely "your rows are all still drafts", which is a different
-     sentence from "there is nothing here" and is worth the round trip
-     to the one person who can act on it.
-
-     Its own failure is not the caller's problem: a probe that does not
-     answer reports null and the page says the ordinary thing. */
+  
   function probeTotal(db, table, done) {
     db.from(table)
       .select('id', { count: 'exact', head: true })
@@ -732,16 +594,16 @@
       .catch(function () { done(null); });
   }
 
-  /* ---------- Home: image slider ---------- */
+  
   var slider = document.querySelector('.slider');
   if (slider) {
     var slides = slider.querySelectorAll('li');
     if (slides.length) {
-      var SLIDE_INTERVAL = 5000; // auto-advance pace (ms)
+      var SLIDE_INTERVAL = 5000;
       var activeSlide = 0;
       var timer = null;
 
-      // Build indicator dots (one per slide)
+
       var dotsWrap = slider.querySelector('.slider-dots');
       var dots = [];
       if (dotsWrap) {
@@ -769,7 +631,7 @@
       function goTo(i) {
         activeSlide = (i + slides.length) % slides.length;
         render();
-        restart(); // reset the timer so a manual move gets a full interval
+        restart();
       }
 
       function next() { goTo(activeSlide + 1); }
@@ -788,7 +650,7 @@
       if (prevBtn) prevBtn.addEventListener('click', prev);
       if (nextBtn) nextBtn.addEventListener('click', next);
 
-      // Pause while hovered so users can read the current slide
+
       slider.addEventListener('mouseenter', stop);
       slider.addEventListener('mouseleave', start);
 
@@ -797,7 +659,7 @@
     }
   }
 
-  /* ---------- Common Diseases page ---------- */
+  
   var dGrid = byId('diseaseGrid');
   if (dGrid) {
     var dState = { query: param('q'), category: param('cat') || 'all' };
@@ -819,21 +681,15 @@
       dChips.appendChild(b);
     });
 
-    // How many conditions exist at any status, once the table has come
-    // back with no published ones. null until then, and null for a
-    // signed-out reader — see probeTotal().
+
     var dTotal = null;
 
-    // Unchanged from before: this is your original search + category filter and
-    // card markup, untouched. It only ever runs once the data has arrived.
+
     var renderDiseaseList = function () {
       var q = dState.query.trim().toLowerCase();
       var cat = dState.category;
       var filtered = diseases.filter(function (d) {
-        /* Searched across both languages regardless of which one is on
-           screen. Somebody reading the Burmese page may still know the
-           condition by its English name, and the reverse is true for a
-           name that has no common English form. */
+        
         var hay = [d.name, d.desc, d.name_my, d.desc_my]
                     .filter(Boolean).join(' ').toLowerCase();
         var nameMatch = !q || hay.indexOf(q) !== -1;
@@ -841,11 +697,7 @@
         return nameMatch && catMatch;
       });
       dGrid.innerHTML = filtered.map(function (d) {
-        /* Both languages ship in the markup and CSS reveals the one
-           html[lang] selects, the same way the article cards do. The
-           fallback is to the English rather than to an empty element:
-           an untranslated card should read as English, not as a card
-           with no name on it. */
+        
         var nameMy = d.name_my || d.name;
         var descMy = d.desc_my || d.desc;
         return '<div class="col-md-6 col-lg-4">' +
@@ -881,52 +733,21 @@
       });
     }
 
-    // The shipped list, drawn now. There is no loading state to show
-    // because there is no moment at which this page has nothing to say.
+
     renderDiseaseList();
 
-    /* Then the real list, over the top of it. Same call the hospitals and
-       the pharmacies make, so the rules are the same rules: published rows
-       only, ordered, and a failure or an empty table leaves what is on
-       screen alone and says so only to the console.
-
-       No mapping. A `diseases` row already carries name, desc, icon, tag,
-       cat and href under those names, and pageHref() sends the ones with a
-       body written in the editor to read.html and the rest to the
-       hand-written page in diseases/. */
+    
     loadDirectory('diseases', function (r) { return r; }, function (rows, hasMigrated, total) {
-      // Nothing answered: the twelve shipped conditions are all this page
-      // has, and they are already on screen.
+
       if (!hasMigrated) { return; }
-      // The table answered. Whatever it said is the list, zero included.
+
       diseases = rows;
       dTotal = total;
       renderDiseaseList();
     });
   }
 
-  /* ---------- Where a row's page lives ----------
-     A row has two possible pages and this is the one place that decides
-     between them:
-
-       body written in the editor  ->  read.html renders it
-       href to a file in the repo  ->  that file, as it always was
-
-     Body wins when there is one. The ten articles and ten diseases that
-     shipped as hand-written files have no body, so they keep opening the
-     pages they always did; anything written in the editor from now on
-     gets the reader. Nothing had to be migrated for that to be true.
-
-     The href is escaped here rather than at the call sites. It is
-     editor-supplied and it goes straight into an attribute, which is
-     exactly the shape of bug that gets missed when each caller is
-     trusted to remember.
-
-     A declaration and not a `var pageHref = function`, because the
-     disease grid draws its shipped list the moment the script reaches
-     it — which is above this line. Hoisting is what makes that legal,
-     and esc(), byId() and loadDirectory() above are declarations for
-     the same reason. */
+  
   function pageHref(kind, row, fallback) {
     var hasBody = (row.body && String(row.body).trim()) ||
                   (row.body_my && String(row.body_my).trim());
@@ -936,9 +757,7 @@
     return esc(row.href || fallback);
   }
 
-  /* ---------- Health articles listing (articles.html) ----------
-     Each article lives in its own page and carries both languages, so the cards
-     link straight to the file and render both titles behind .mc-en / .mc-my. */
+  
   var myArticleCats = [
     { id: 'all', en: 'All', my: 'အားလုံး' },
     { id: 'prevention', en: 'Prevention', my: 'ကြိုတင်ကာကွယ်ရေး' },
@@ -1011,12 +830,11 @@
   var myCat = function (id) {
     return myArticleCats.filter(function (c) { return c.id === id; })[0] || { en: id, my: id };
   };
-  // Both languages ship in the markup; CSS reveals the one html[lang] selects.
+
   var bi = function (en, my) {
     return '<span class="mc-en">' + esc(en) + '</span><span class="mc-my">' + esc(my) + '</span>';
   };
-  // One card, used by the article grid and by the home page's Editor's picks,
-  // so the two never drift apart.
+
   var myArticleCard = function (a) {
     var c = myCat(a.cat);
     return '<div class="col-md-6 col-lg-4">' +
@@ -1059,7 +877,7 @@
       var q = myState.query.trim().toLowerCase();
       var cat = myState.category;
       var filtered = myArticles.filter(function (a) {
-        // Search both languages, so either script finds the article.
+
         var c = myCat(a.cat);
         var hay = (a.title + ' ' + a.excerpt + ' ' + c.en + ' ' +
                    a.titleMy + ' ' + a.excerptMy + ' ' + c.my).toLowerCase();
@@ -1078,23 +896,7 @@
     }
     renderMyArticles();
 
-    /* ---------- The same list, from the table ----------
-       myArticles above is the list this page shipped with, and it is now
-       a FALLBACK rather than the source. The ten rows in the `articles`
-       table are the same ten articles - supabase_seed_articles.sql put
-       them there - so until somebody writes an eleventh, both lists say
-       the same thing and swapping one for the other changes nothing a
-       reader can see.
-
-       It has to come from the table, though, or an article written in
-       the editor is published into a listing that cannot show it: the
-       page would render, and no link would ever reach it.
-
-       Drawn AFTER the shipped list has already rendered, so a slow
-       database delays nothing. If the request fails the page keeps the
-       list it drew, which is the right failure for a health site - ten
-       articles that are slightly stale beat an error where the articles
-       were. */
+    
     var myDb = window.supabaseClient;
     if (myDb) {
       myDb.from('articles')
@@ -1103,11 +905,7 @@
         .order('id')
         .then(function (res) {
           if (res.error) { throw res.error; }
-          /* The table answered, so what it said is the list — zero rows
-             included. Same rule loadDirectory() applies to the three
-             directories, and stated there at length: only an unanswered
-             request leaves the shipped array standing, because that is
-             the only case where the page does not know. */
+          
           myArticles = (res.data || []).map(function (r) {
             return {
               id: r.id,
@@ -1127,17 +925,13 @@
           renderMyArticles();
         })
         .catch(function (err) {
-          // Deliberately quiet on the page. The reader already has a
-          // working list; this is for whoever is looking at a console.
+
           console.error('[MedCare] Could not refresh articles from Supabase:', err);
         });
     }
   }
 
-  /* ---------- Editor's picks (index.html) ----------
-     A hand-picked three drawn from the same article data as the articles
-     page, one per category, so the home page cannot advertise a piece
-     that does not exist. Edit the hrefs below to change the selection. */
+  
   var featuredGrid = byId('featuredGrid');
   if (featuredGrid) {
     var featuredHrefs = ['healthyfood.html', 'heartandex.html', 'hygiene.html'];
@@ -1147,12 +941,10 @@
     featuredGrid.innerHTML = featured.map(myArticleCard).join('');
   }
 
-  /* ---------- Find Hospitals page ---------- */
+  
   var hList = byId('hospList');
   if (hList) {
-    // Rows at any status, once the table has answered with no published
-    // ones. null until then, and null for a signed-out reader — see
-    // probeTotal().
+
     var hTotal = null;
 
     var hState = {
@@ -1167,15 +959,11 @@
     var hWord = byId('hospWord');
     var hEmpty = byId('hospEmpty');
 
-    /* The sidebar is built FROM the data — the townships in the select and
-       the number beside each type are both counted off the list. So both
-       are functions rather than a run of statements: when the table
-       answers and the list changes underneath them, they are built again
-       rather than left describing the list that shipped. */
+    
     var buildTownships = function () {
       hTownship.innerHTML = '<option value="all">All townships</option>' +
         townValues.map(function (t) { return '<option value="' + esc(t) + '">' + esc(t) + '</option>'; }).join('');
-      // Only honor ?town= if it matches a real township.
+
       if (townValues.indexOf(hState.township) === -1) { hState.township = 'all'; }
       hTownship.value = hState.township;
     };
@@ -1196,10 +984,7 @@
         label.innerHTML = '<input type="checkbox"><span>' + esc(tm.label) + '</span><span class="cnt">' + count + '</span>';
         var input = label.querySelector('input');
         input.setAttribute('data-type', tm.id);
-        // Read back from the state, not hard-coded checked: a rebuild
-        // happens after the reader may already have unticked something,
-        // and silently re-ticking it would change what they are looking
-        // at without them touching anything.
+
         input.checked = !!hState.types[tm.id];
         input.addEventListener('change', function () { hState.types[tm.id] = input.checked; renderHospitals(); });
         hTypes.appendChild(label);
@@ -1207,15 +992,7 @@
     };
     buildTypes();
 
-    /* PLACE_TYPES is the guard that keeps the two kinds of filter apart.
-       Without it this would be `t[h.type]`, and a row whose type column
-       ever read 'emergency' would be matched by the ER tickbox instead of
-       by a type of its own.
-
-       The OR is deliberate and is how this page has always behaved:
-       unticking Specialist still leaves a specialist hospital with an ER
-       on screen, because somebody filtering for an emergency room is
-       asking a question about the room, not about the building. */
+    
     var PLACE_TYPES = { general: true, specialist: true, clinic: true };
     var matchesType = function (h) {
       var t = hState.types;
@@ -1281,11 +1058,7 @@
 
     renderHospitals();
 
-    /* Now the real list. `phone` is nullable in the table and most rows
-       have no number; the shipped array wrote 'N/A' for those, and the
-       coalesce keeps the two paths saying the same thing. Either way it
-       is callAction() that decides whether a card gets a live tel: link
-       or the words "No phone number listed". */
+    
     loadDirectory('hospitals', function (r) {
       return {
         id: r.id,
@@ -1298,32 +1071,29 @@
         er: !!r.er
       };
     }, function (rows, hasMigrated, total) {
-      if (!hasMigrated) { return; }   // shipped list stands; see loadDirectory()
+      if (!hasMigrated) { return; }
       hospitals = rows;
       hTotal = total;
       townValues = townshipsOf(hospitals);
       buildTownships();
       buildTypes();
       renderHospitals();
-      // The home page's town dropdown is drawn from the same list. It is
-      // not on this page, so this is a no-op here; it matters on index.
+
       renderTownMenu();
     });
   }
 
-  /* ---------- Find a Pharmacy page ---------- */
+  
   var pList = byId('pharmList');
   if (pList) {
-    // Rows at any status, once the table has answered with no published
-    // ones. null until then, and null for a signed-out reader — see
-    // probeTotal().
+
     var pTotal = null;
 
     var pState = {
       query: param('q'),
       township: param('town') || 'all',
       types: { chain: true, independent: true, hospital: true },
-      // Services are opt-in filters: unchecked means "don't care".
+
       services: { open24: param('open24') === '1', delivery: false }
     };
     var pSearch = byId('pharmSearch');
@@ -1334,9 +1104,7 @@
     var pWord = byId('pharmWord');
     var pEmpty = byId('pharmEmpty');
 
-    /* Same three counted-off-the-data controls as the hospitals sidebar,
-       and functions for the same reason: the table's answer replaces the
-       list they describe. See the note there. */
+    
     var buildPharmTownships = function () {
       var pharmTowns = townshipsOf(pharmacies);
       pTownship.innerHTML = '<option value="all">All townships</option>' +
@@ -1391,9 +1159,7 @@
         var searchOK = !q || hay.indexOf(q) !== -1;
         return townOK && typeOK && svcOK && searchOK;
       });
-      // The card names the row exactly, even though the filter groups the
-      // last two: "Hospital pharmacy" and "Clinic pharmacy" are different
-      // places to walk to.
+
       var pharmTypeLabel = {
         chain: 'Chain pharmacy',
         independent: 'Independent',
@@ -1453,7 +1219,7 @@
 
     renderPharmacies();
 
-    // And the real list. Same nullable `phone` as hospitals.
+
     loadDirectory('pharmacies', function (r) {
       return {
         id: r.id,
@@ -1467,7 +1233,7 @@
         delivery: !!r.delivery
       };
     }, function (rows, hasMigrated, total) {
-      if (!hasMigrated) { return; }   // shipped list stands; see loadDirectory()
+      if (!hasMigrated) { return; }
       pharmacies = rows;
       pTotal = total;
       buildPharmTownships();
@@ -1477,7 +1243,7 @@
     });
   }
 
-  /* ---------- Home: search shortcuts (navigate to the real pages) ---------- */
+  
   var heroBtn = byId('heroSearchBtn');
   var heroInput = byId('heroSearch');
   if (heroBtn && heroInput) {
@@ -1504,16 +1270,8 @@
     });
   }
 
-  /* ---------- Home: town dropdown ---------- */
-  /* Built from the real townships so each entry links to the hospitals
-     page pre-filtered for that town — which means it is the hospitals
-     list again, in menu form, and it goes stale the moment that list
-     stops being the shipped array.
-
-     A function declaration, not a var: the hospitals loader calls this
-     after the table answers, and that call is written above this line.
-     Hoisting is what makes that legal, and it is worth one sentence of
-     explanation rather than moving working code around it. */
+  
+  
   function renderTownMenu() {
     var townMenu = document.querySelector('.mc-town-menu');
     if (!townMenu) { return; }
@@ -1526,21 +1284,18 @@
   }
   renderTownMenu();
 
-  /* The menu lives on the home page, where the hospitals list is never
-     loaded, so it would otherwise show only the townships that shipped.
-     One query, and only where the menu actually is. */
+  
   if (document.querySelector('.mc-town-menu')) {
     loadDirectory('hospitals', function (r) { return { township: r.township }; },
       function (rows, hasMigrated) {
-        if (!hasMigrated) { return; }   // shipped list stands; see loadDirectory()
+        if (!hasMigrated) { return; }
         townValues = townshipsOf(rows);
         renderTownMenu();
       });
   }
 
-  /* ---------- Native dropdown / collapse / accordion (replaces the Bootstrap JS bundle) ---------- */
-  // Dropdowns: toggle the Bootstrap `.show` class ourselves; close on outside
-  // click or Escape. Bootstrap's CSS still styles/positions the open menu.
+  
+
   function closeAllDropdowns(except) {
     document.querySelectorAll('.dropdown-menu.show').forEach(function (menu) {
       if (menu === except) { return; }
@@ -1568,15 +1323,14 @@
     if (e.key === 'Escape') { closeAllDropdowns(null); }
   });
 
-  // Collapse (navbar toggler) + accordion. `data-bs-parent` gives the accordion
-  // its one-open-at-a-time behavior.
+
   document.querySelectorAll('[data-bs-toggle="collapse"]').forEach(function (toggle) {
     toggle.addEventListener('click', function (e) {
       e.preventDefault();
       var target = document.querySelector(toggle.getAttribute('data-bs-target') || '');
       if (!target) { return; }
       var willShow = !target.classList.contains('show');
-      // In Bootstrap markup data-bs-parent sits on the target collapse, not the toggle.
+
       var parentSel = target.getAttribute('data-bs-parent') || toggle.getAttribute('data-bs-parent');
       if (parentSel && willShow) {
         var parent = document.querySelector(parentSel);
@@ -1595,18 +1349,9 @@
     });
   });
 
-  /* ==================================================================
-     Language toggle — English / Burmese
-     ------------------------------------------------------------------
-     The dictionary is keyed by the exact English text that appears on
-     the page, so pages need no extra markup: we walk the DOM, look each
-     piece of text up, and swap it. The original English is remembered
-     per node so switching back is lossless. A MutationObserver re-runs
-     the swap over anything the render functions draw later (disease
-     cards, hospital results, and so on).
-     ================================================================== */
+  
   var MY = {
-    /* --- navigation & shared chrome --- */
+    
     'Home': 'ပင်မစာမျက်နှာ',
     'Common diseases': 'အဖြစ်များသောရောဂါများ',
     'Find Hospitals': 'ဆေးရုံရှာရန်',
@@ -1624,7 +1369,7 @@
     'All townships': 'မြို့နယ်အားလုံး',
     'Sources': 'အကိုးအကား',
 
-    /* --- footer --- */
+    
     'About': 'အကြောင်း',
     'Our editorial team': 'အယ်ဒီတာအဖွဲ့',
     'Review process': 'စိစစ်မှုလုပ်ငန်းစဉ်',
@@ -1643,10 +1388,7 @@
       'အချက်အလက်သာဖြစ်ပြီး ဆရာဝန်၏ အကြံဉာဏ်၊ ရောဂါရှာဖွေမှု သို့မဟုတ် ကုသမှုကို အစားထိုးနိုင်ခြင်း မရှိပါ။',
     '© 2026 MedCare. All rights reserved.': '© ၂၀၂၆ MedCare။ မူပိုင်ခွင့်အားလုံး ရယူထားပါသည်။',
 
-    /* --- contact us ---
-       Only the text nodes that stand alone. A sentence with a link in
-       the middle of it arrives here in three pieces, and a dictionary
-       of half-sentences is how a paragraph ends up half-translated. */
+    
     'Contact Us': 'ဆက်သွယ်ရန်',
     'Two ways to reach the MedCare team: send an email, or call. There is no contact form on this page, and nothing about you is collected here.':
       'MedCare အဖွဲ့ကို ဆက်သွယ်ရန် နည်းလမ်းနှစ်ခု — အီးမေးလ်ပို့ခြင်း သို့မဟုတ် ဖုန်းခေါ်ဆိုခြင်း။ ဤစာမျက်နှာတွင် ဖြည့်ရန်ဖောင် မရှိပါ၊ သင့်အကြောင်း မည်သည့်အချက်အလက်မျှ စုဆောင်းခြင်း မရှိပါ။',
@@ -1668,7 +1410,7 @@
     'Something wrong on a page': 'စာမျက်နှာတစ်ခုတွင် မှားယွင်းမှု တွေ့ပါက',
     'Privacy': 'ကိုယ်ရေးအချက်အလက်',
 
-    /* --- home --- */
+    
     'Find a hospital': 'ဆေးရုံရှာရန်',
     'Towns': 'မြို့နယ်များ',
     'Filter by town': 'မြို့နယ်အလိုက် စစ်ထုတ်ရန်',
@@ -1702,7 +1444,7 @@
     'Featured Articles': 'အထူးဆောင်းပါးများ',
     'All articles': 'ဆောင်းပါးအားလုံး',
 
-    /* --- article cards / listing --- */
+    
     'Search articles by title or topic…': 'ခေါင်းစဉ် သို့မဟုတ် အကြောင်းအရာဖြင့် ဆောင်းပါးရှာရန်…',
     'articles': 'ဆောင်းပါးများ',
     'article': 'ဆောင်းပါး',
@@ -1726,7 +1468,7 @@
     'World Health Organization (WHO)': 'ကမ္ဘာ့ကျန်းမာရေးအဖွဲ့ (WHO)',
     'Ministry of Health, Myanmar': 'ကျန်းမာရေးဝန်ကြီးဌာန၊ မြန်မာနိုင်ငံ',
 
-    /* --- common diseases --- */
+    
     'Learn about conditions that are frequently seen in Myanmar communities — their signs, causes, and when to seek care.':
       'မြန်မာ့လူ့အဖွဲ့အစည်းတွင် မကြာခဏတွေ့ရသော ရောဂါများ၏ လက္ခဏာ၊ အကြောင်းရင်းနှင့် ဆေးကုသမှု ခံယူသင့်သည့်အချိန်ကို လေ့လာပါ။',
     'Filter diseases by name…': 'ရောဂါအမည်ဖြင့် စစ်ထုတ်ရန်…',
@@ -1778,7 +1520,7 @@
     'A pregnancy complication with high blood pressure — regular antenatal check-ups are essential.':
       'ကိုယ်ဝန်ဆောင်စဉ် သွေးတိုးခြင်းကြောင့် ဖြစ်ပေါ်သော နောက်ဆက်တွဲပြဿနာဖြစ်ပြီး ပုံမှန် ကိုယ်ဝန်ဆောင်စစ်ဆေးမှု မရှိမဖြစ် လိုအပ်သည်။',
 
-    /* --- hospitals --- */
+    
     'Find hospitals': 'ဆေးရုံရှာရန်',
     'Search hospitals and clinics across Yangon townships. Filter by type or find one with a 24-hour emergency room near you.':
       'ရန်ကုန်မြို့နယ်များရှိ ဆေးရုံနှင့် ဆေးခန်းများကို ရှာဖွေပါ။ အမျိုးအစားအလိုက် စစ်ထုတ်ပါ သို့မဟုတ် ၂၄ နာရီ အရေးပေါ်ဌာနရှိသည့် ဆေးရုံကို ရှာပါ။',
@@ -1806,7 +1548,7 @@
     'Try a different township, remove a hospital-type filter, or clear your search to see all hospitals in Yangon.':
       'အခြားမြို့နယ်ကို ရွေးပါ၊ ဆေးရုံအမျိုးအစား စစ်ထုတ်မှုကို ဖယ်ပါ သို့မဟုတ် ရန်ကုန်ရှိ ဆေးရုံအားလုံး ကြည့်ရန် ရှာဖွေမှုကို ရှင်းပါ။',
 
-    /* --- townships (select options and card rows) --- */
+    
     'Bahan': 'ဗဟန်း', 'Bahan Township': 'ဗဟန်းမြို့နယ်',
     'Dagon': 'ဒဂုံ', 'Dagon Township': 'ဒဂုံမြို့နယ်',
     'Hlaing': 'လှိုင်', 'Hlaing Township': 'လှိုင်မြို့နယ်',
@@ -1829,7 +1571,7 @@
     'Thingangyun': 'သင်္ဃန်းကျွန်း', 'Thingangyun Township': 'သင်္ဃန်းကျွန်းမြို့နယ်',
     'Yankin': 'ရန်ကင်း', 'Yankin Township': 'ရန်ကင်းမြို့နယ်',
 
-    /* --- pharmacy --- */
+    
     'Find a Pharmacy': 'ဆေးဆိုင်ရှာရန်',
     'Pharmacies and drug stores across Yangon townships. Filter for one that is open 24 hours or delivers to your home.':
       'ရန်ကုန်မြို့နယ်များရှိ ဆေးဆိုင်များ။ ၂၄ နာရီဖွင့်သော သို့မဟုတ် အိမ်အရောက်ပို့ဆောင်ပေးသော ဆိုင်များကို စစ်ထုတ်ရှာနိုင်ပါသည်။',
@@ -1860,7 +1602,7 @@
     'Finish the full course your doctor prescribed, even once you feel better.':
       'သက်သာလာသည့်တိုင် ဆရာဝန်ညွှန်ကြားထားသော ဆေးကို အပြည့်အဝ သောက်ပါ။',
 
-    /* --- emergency contacts --- */
+    
     'In a life-threatening emergency, call immediately.':
       'အသက်အန္တရာယ်ရှိသော အရေးပေါ်အခြေအနေတွင် ချက်ချင်း ဖုန်းခေါ်ပါ။',
     'Emergency contacts': 'အရေးပေါ်ဆက်သွယ်ရန်',
@@ -1901,7 +1643,7 @@
     'Give your name and phone number, and stay on the line until told to hang up.':
       'သင့်အမည်နှင့် ဖုန်းနံပါတ်ကို ပေးပါ။ ဖုန်းချရန် မပြောမချင်း လိုင်းပေါ်တွင် စောင့်ပါ။',
 
-    /* --- hypertension detail --- */
+    
     'Chronic condition': 'နာတာရှည်ရောဂါ',
     'Symptoms': 'ရောဂါလက္ခဏာများ',
     "Do's": 'လုပ်သင့်သည်များ',
@@ -1966,13 +1708,13 @@
     'Weakness or numbness on one side of the body, or trouble speaking':
       'ကိုယ်တစ်ခြမ်း အားနည်းခြင်း သို့မဟုတ် ထုံကျဉ်ခြင်း၊ စကားပြောရ ခက်ခဲခြင်း',
 
-    /* --- shared across every disease detail page --- */
+    
     'Risk Groups': 'ဘယ်သူတွေမှာ အဖြစ်များလဲ',
     'Respiratory condition': 'အသက်ရှူလမ်းကြောင်းဆိုင်ရာ ရောဂါ',
     'Infectious disease': 'ကူးစက်ရောဂါ',
     'Maternal health': 'မိခင်ကျန်းမာရေး',
 
-    /* --- diabetes detail --- */
+    
     'Diabetes is a long-term condition in which the level of sugar (glucose) in the blood stays too high, because the body either does not make enough insulin or cannot use it properly.':
       'ဆီးချိုရောဂါဆိုသည်မှာ ခန္ဓာကိုယ်မှ အင်ဆူလင် လုံလောက်စွာ မထုတ်နိုင်ခြင်း သို့မဟုတ် ကောင်းစွာ အသုံးမပြုနိုင်ခြင်းကြောင့် သွေးတွင်း သကြားဓာတ် ပုံမှန်ထက် မြင့်နေသော နာတာရှည်ရောဂါ ဖြစ်သည်။',
     'Insulin is the hormone that moves sugar out of the blood and into the cells that need it for energy. When that process breaks down, sugar builds up in the bloodstream and, over years, can quietly damage the eyes, kidneys, nerves, and blood vessels. Diabetes cannot usually be cured, but it responds very well to daily care — balanced meals, regular movement, and medication when it is prescribed.':
@@ -2033,7 +1775,7 @@
     'Diabetes prevention and management in primary health care across the region.':
       'ဒေသတွင်း အခြေခံကျန်းမာရေး စောင့်ရှောက်မှုတွင် ဆီးချို ကာကွယ်ရေးနှင့် ထိန်းညှိမှု။',
 
-    /* --- asthma detail --- */
+    
     'Asthma is a long-term condition in which the airways become inflamed and narrow, making it harder to move air in and out of the lungs.':
       'ပန်းနာရင်ကြပ်ဆိုသည်မှာ အသက်ရှူလမ်းကြောင်းများ ရောင်ရမ်းကျဉ်းမြောင်းလာပြီး အဆုတ်အတွင်းသို့ လေဝင်လေထွက် ခက်ခဲစေသော နာတာရှည်ရောဂါ ဖြစ်သည်။',
     'The narrowing usually comes and goes. Something in the environment — dust, smoke, pollen, cold air, or a chest infection — irritates the airways, the muscles around them tighten, and breathing suddenly becomes difficult. Between these flare-ups many people feel completely well. With the right inhalers and by learning your own triggers, asthma can be controlled well enough to work, study, and exercise normally.':
@@ -2095,7 +1837,7 @@
     'Management of chronic respiratory conditions in primary care settings.':
       'အခြေခံကျန်းမာရေး စောင့်ရှောက်မှုတွင် နာတာရှည် အသက်ရှူလမ်းကြောင်းရောဂါ ထိန်းညှိမှု။',
 
-    /* --- dengue fever detail --- */
+    
     'Dengue is a viral illness spread by the bite of infected Aedes mosquitoes, which breed in clean, still water around the home and bite mostly in the daytime.':
       'သွေးလွန်တုပ်ကွေးသည် Aedes ခြင်ကျား ကိုက်ခြင်းမှတစ်ဆင့် ကူးစက်သော ဗိုင်းရပ်စ်ရောဂါ ဖြစ်သည်။ ထိုခြင်များသည် အိမ်ပတ်လည်ရှိ သန့်ရှင်းပြီး မငြိမ်မလှုပ်သော ရေတွင် ပေါက်ပွားပြီး နေ့ခင်းဘက်တွင် အများဆုံး ကိုက်တတ်သည်။',
     'Most people recover within a week with rest and plenty of fluids. A small number, however, become seriously ill at the point when the fever starts to fall — usually the third to seventh day — as fluid leaks from the blood vessels. That is why the days after the fever breaks need the closest watching, not the days of high fever.':
@@ -2155,7 +1897,7 @@
     'Regional guidance on dengue prevention, vector control, and case management.':
       'သွေးလွန်တုပ်ကွေး ကာကွယ်ရေး၊ ခြင်ထိန်းချုပ်ရေးနှင့် လူနာ ကုသမှုဆိုင်ရာ ဒေသတွင်း လမ်းညွှန်ချက်များ။',
 
-    /* --- tuberculosis detail --- */
+    
     'Tuberculosis is an infection caused by the bacterium Mycobacterium tuberculosis, which usually settles in the lungs and spreads through the air when someone with active TB coughs or sneezes.':
       'တီဘီရောဂါသည် Mycobacterium tuberculosis ဘက်တီးရီးယားကြောင့် ဖြစ်ပွားပြီး အများအားဖြင့် အဆုတ်တွင် စွဲကပ်ကာ တီဘီရောဂါ ရှိသူ ချောင်းဆိုး နှာချေသည့်အခါ လေထဲမှတစ်ဆင့် ကူးစက်သည်။',
     'TB develops slowly, so people often carry it for weeks or months before seeking help. It is fully curable — but only with a complete course of antibiotics, usually six months or longer. Stopping early is the single biggest reason TB returns, and returns in a form that is far harder to treat.':
@@ -2214,7 +1956,7 @@
     'Regional TB control strategy and drug-resistant TB management.':
       'ဒေသတွင်း တီဘီ ထိန်းချုပ်ရေး မဟာဗျူဟာနှင့် ဆေးယဉ်ပါး တီဘီ ကုသမှု။',
 
-    /* --- malaria detail --- */
+    
     'Malaria is caused by a parasite passed to people through the bite of an infected female Anopheles mosquito, which feeds mainly between dusk and dawn.':
       'ငှက်ဖျားရောဂါသည် ရောဂါပိုးရှိသော အနောဖလင်း ခြင်မ ကိုက်ခြင်းမှတစ်ဆင့် ကူးစက်သော ကပ်ပါးပိုးကြောင့် ဖြစ်သည်။ ထိုခြင်များသည် နေဝင်ချိန်မှ အရုဏ်တက်ချိန်အထိ အဓိက ကိုက်တတ်သည်။',
     'The parasite multiplies in the liver and then in the red blood cells, which is what produces the familiar pattern of shivering chills followed by fever and drenching sweats. Malaria is both preventable and curable, but it can turn severe within a day or two, so a fever after travel to a forested or border area should always be tested rather than waited out.':
@@ -2272,7 +2014,7 @@
     'Regional malaria elimination strategy and artemisinin resistance monitoring.':
       'ဒေသတွင်း ငှက်ဖျား ပပျောက်ရေး မဟာဗျူဟာနှင့် ဆေးယဉ်ပါးမှု စောင့်ကြည့်ရေး။',
 
-    /* --- hepatitis B detail --- */
+    
     'Hepatitis B is a viral infection of the liver, spread through infected blood and body fluids — most often from mother to baby at birth, through unsterile needles, or through unprotected sex.':
       'အသည်းရောင် အသားဝါ ဘီသည် သွေးနှင့် ခန္ဓာကိုယ်အရည်များမှတစ်ဆင့် ကူးစက်သော အသည်း ဗိုင်းရပ်စ် ပိုးဝင်ခြင်း ဖြစ်သည် — အများအားဖြင့် မွေးဖွားစဉ် မိခင်မှ ကလေးသို့၊ မသန့်ရှင်းသော ဆေးထိုးအပ်မှတစ်ဆင့် သို့မဟုတ် ကာကွယ်မှုမဲ့ လိင်ဆက်ဆံမှုမှတစ်ဆင့် ကူးစက်သည်။',
     'Many people carry the virus for years without feeling unwell, while it quietly scars the liver. Left unchecked it can lead to cirrhosis or liver cancer, which is why testing matters even when you feel healthy. A safe and effective vaccine prevents it, and long-term medication can keep chronic infection under control.':
@@ -2284,7 +2026,7 @@
     'Urine that is unusually dark': 'ဆီးအရောင် ပုံမှန်ထက် ရင့်ခြင်း',
     'Pain or fullness in the upper right side of the abdomen':
       'ဗိုက်ညာဘက် အပေါ်ပိုင်းတွင် နာကျင်ခြင်း သို့မဟုတ် ဖင့်နေခြင်း',
-    /* 'Nausea, vomiting, and loss of appetite' is shared with the dengue block above. */
+    
     'Tiredness that does not lift with rest':
       'အနားယူသော်လည်း မပျောက်သော ပင်ပန်းနွမ်းနယ်ခြင်း',
     'Babies born to mothers who carry the virus.':
@@ -2331,7 +2073,7 @@
     'Regional action plan on viral hepatitis and mother-to-child transmission.':
       'ဗိုင်းရပ်စ် အသည်းရောင်ရောဂါနှင့် မိခင်မှ ကလေးသို့ ကူးစက်မှုဆိုင်ရာ ဒေသတွင်း လုပ်ငန်းစီမံချက်။',
 
-    /* --- coronary heart disease detail --- */
+    
     'Coronary heart disease develops when fatty deposits, called plaque, build up inside the arteries that supply the heart muscle, narrowing them and reducing blood flow.':
       'နှလုံးသွေးကြောကျဉ်းရောဂါသည် နှလုံးကြွက်သားသို့ သွေးပို့ပေးသည့် သွေးလွှတ်ကြောများအတွင်း အဆီဂျီးများ စုပုံလာပြီး သွေးကြောများ ကျဉ်းမြောင်းကာ သွေးစီးဆင်းမှု လျော့နည်းလာသောအခါ ဖြစ်ပွားသည်။',
     'For a long time this causes nothing at all. Then, as the narrowing worsens, the heart begins to run short of oxygen during effort — climbing stairs, carrying loads, walking uphill — and that shortage is felt as chest pain. If a plaque tears and a clot blocks the artery completely, the result is a heart attack. Much of the risk can be lowered by treating blood pressure, sugar, and cholesterol, and by stopping smoking.':
@@ -2390,7 +2132,7 @@
     'National guidelines on non-communicable disease and cardiovascular risk management.':
       'မကူးစက်တတ်သောရောဂါနှင့် နှလုံးသွေးကြော အန္တရာယ် ထိန်းညှိမှုဆိုင်ရာ အမျိုးသားအဆင့် လမ်းညွှန်ချက်များ။',
 
-    /* --- stroke detail --- */
+    
     'A stroke happens when the blood supply to part of the brain is suddenly cut off — either by a clot blocking an artery, or by a vessel bursting and bleeding into the brain.':
       'လေဖြတ်ခြင်းသည် ဦးနှောက်တစ်စိတ်တစ်ပိုင်းသို့ သွေးစီးဆင်းမှု ရုတ်တရက် ပြတ်တောက်သွားသောအခါ ဖြစ်ပွားသည် — သွေးခဲက သွေးကြောကို ပိတ်ဆို့ခြင်း သို့မဟုတ် သွေးကြောပေါက်ပြီး ဦးနှောက်အတွင်း သွေးယိုခြင်းကြောင့် ဖြစ်သည်။',
     'Brain cells begin to die within minutes of losing their blood supply, so a stroke is always an emergency. Treatment that can dissolve a clot or stop a bleed works best in the first few hours, which is why recognising the signs and calling for help immediately matters more than anything else. Most strokes can be prevented by controlling blood pressure and stopping smoking.':
@@ -2456,7 +2198,7 @@
     'HEARTS technical package and regional stroke prevention guidance.':
       'HEARTS နည်းပညာအစီအစဉ်နှင့် ဒေသတွင်း လေဖြတ်ခြင်း ကာကွယ်ရေး လမ်းညွှန်ချက်များ။',
 
-    /* --- anemia detail --- */
+    
     'Anemia means the blood does not have enough healthy red blood cells, or enough haemoglobin inside them, to carry oxygen around the body.':
       'သွေးအားနည်းရောဂါဆိုသည်မှာ ခန္ဓာကိုယ်တစ်ဝှမ်း အောက်ဆီဂျင် သယ်ဆောင်ရန် လိုအပ်သော ကျန်းမာသည့် သွေးနီဥများ သို့မဟုတ် ၎င်းတို့အတွင်းရှိ ဟေမိုဂလိုဘင် မလုံလောက်ခြင်း ဖြစ်သည်။',
     'Because every organ depends on that oxygen, the first sign is usually simple tiredness — often put down to overwork or lack of sleep. The most common cause here is a shortage of iron, from a diet low in iron-rich food, from heavy monthly periods, or from the extra demands of pregnancy. Once the cause is found, anemia usually improves well with diet, supplements, or treatment of the underlying problem.':
@@ -2518,7 +2260,7 @@
     'Regional guidance on anaemia reduction in women and children.':
       'အမျိုးသမီးများနှင့် ကလေးများတွင် သွေးအားနည်းမှု လျှော့ချရေးဆိုင်ရာ ဒေသတွင်း လမ်းညွှန်ချက်များ။',
 
-    /* --- typhoid fever detail --- */
+    
     'Typhoid fever is an infection caused by the bacterium Salmonella Typhi, which spreads through food and drinking water contaminated by human waste.':
       'တိုက်ဖွိုက်ရောဂါသည် Salmonella Typhi ဘက်တီးရီးယားကြောင့် ဖြစ်ပွားပြီး လူ့မစင်ဖြင့် ညစ်ညမ်းသော အစားအစာနှင့် သောက်ရေမှတစ်ဆင့် ကူးစက်သည်။',
     'Unlike most fevers, typhoid builds up step by step: a low fever in the first days that climbs higher each evening, along with headache, stomach pain, and deep weakness. It responds well to antibiotics, but if it is left untreated the infection can damage the wall of the intestine, so a fever lasting more than three days deserves a proper test rather than guesswork.':
@@ -2580,7 +2322,7 @@
     'Regional guidance on enteric fever, safe water, and antimicrobial resistance.':
       'အူလမ်းကြောင်း အဖျားရောဂါ၊ ဘေးကင်းသောရေနှင့် ဆေးယဉ်ပါးမှုဆိုင်ရာ ဒေသတွင်း လမ်းညွှန်ချက်များ။',
 
-    /* --- pre-eclampsia detail --- */
+    
     'Pre-eclampsia is a complication of pregnancy in which blood pressure rises after about 20 weeks, usually together with protein in the urine.':
       'ကိုယ်ဝန်ဆောင် သွေးတိုးရောဂါဆိုသည်မှာ ကိုယ်ဝန် ရက်သတ္တပတ် ၂၀ ခန့် နောက်ပိုင်းတွင် သွေးဖိအား မြင့်တက်လာပြီး အများအားဖြင့် ဆီးတွင် ပရိုတင်း ပါလာသည့် ကိုယ်ဝန်ဆောင် နောက်ဆက်တွဲ ပြဿနာ ဖြစ်သည်။',
     "It affects the mother's blood vessels and can reduce the blood supply reaching the baby. Many women feel entirely well while it develops, which is exactly why antenatal visits check blood pressure and urine every time. Caught early it can be watched and managed safely; left unrecognised it can progress to eclampsia, in which the mother has seizures. The only complete cure is the birth of the baby, and the timing of that is a decision for the medical team.":
@@ -2640,10 +2382,7 @@
     'Regional guidance on maternal mortality reduction and emergency obstetric care.':
       'မိခင် သေဆုံးမှု လျှော့ချရေးနှင့် အရေးပေါ် သားဖွား စောင့်ရှောက်မှုဆိုင်ရာ ဒေသတွင်း လမ်းညွှန်ချက်များ။',
 
-    /* --- legal pages: headings and controls --------------------------
-       The body text of these three pages is English only and says so
-       through .mc-lang-note. Headings, the map gate, and the settings
-       controls are translated, since those are interface, not prose. */
+    
     'Terms of Use': 'အသုံးပြုမှု စည်းကမ်းချက်များ',
     'Privacy Policy': 'ကိုယ်ရေးအချက်အလက် မူဝါဒ',
     'Cookie Settings': 'ကွတ်ကီး ဆက်တင်များ',
@@ -2678,7 +2417,7 @@
     'Last updated: August 2026.': 'နောက်ဆုံး ပြင်ဆင်သည့်ရက် − ၂၀၂၆ ဩဂုတ်။',
     'Contact': 'ဆက်သွယ်ရန်',
 
-    /* --- terms of use: body --- */
+    
     'MedCare is a free health information website. By using it, you agree to the terms set out below.':
       'MedCare သည် အခမဲ့ ကျန်းမာရေး အချက်အလက် ဝဘ်ဆိုက် ဖြစ်သည်။ ၎င်းကို အသုံးပြုခြင်းဖြင့် အောက်ဖော်ပြပါ စည်းကမ်းချက်များကို သဘောတူသည်ဟု မှတ်ယူပါမည်။',
     'Everything on this site is general information for the public. It is not a diagnosis, a prescription, or personal medical advice, and it cannot take the place of a consultation with a qualified health worker who can examine you.':
@@ -2732,7 +2471,7 @@
     'Questions about these terms, corrections to a page, or a request to remove material can be sent to the team.':
       'ဤစည်းကမ်းချက်များနှင့် ပတ်သက်သည့် မေးခွန်းများ၊ စာမျက်နှာ ပြင်ဆင်ချက်များ သို့မဟုတ် အကြောင်းအရာ ဖယ်ရှားပေးရန် တောင်းဆိုချက်များကို အဖွဲ့ထံ ပေးပို့နိုင်ပါသည်။',
 
-    /* --- privacy policy: body --- */
+    
     'Looking up a health condition is private. You can read every page on MedCare without an account, without giving a name, and without telling us anything about yourself.':
       'ကျန်းမာရေး အခြေအနေတစ်ခုကို ရှာဖွေခြင်းသည် ကိုယ်ရေးကိုယ်တာ ကိစ္စဖြစ်သည်။ MedCare ရှိ စာမျက်နှာတိုင်းကို အကောင့်မလိုဘဲ၊ အမည်မပေးဘဲ၊ သင့်အကြောင်း မည်သည့်အရာမျှ မပြောဘဲ ဖတ်ရှုနိုင်ပါသည်။',
     'We have no accounts, no sign-up, no contact forms, and no analytics. We do not ask for your name, and we have no database of visitors. Everything you type into a search box stays inside your own browser. We set no cookies of our own.':
@@ -2781,7 +2520,7 @@
     'Your browser keeps its own history of the pages you visit, and MedCare cannot clear it. On a shared or family phone, use a private browsing window if you would rather your visit left no trace. If you have an account, sign out as well — otherwise the next person to open the site is still signed in as you, and can see the pages you saved.':
       'သင့်ဘရောက်ဆာသည် သင်ဝင်ကြည့်ခဲ့သည့် စာမျက်နှာများ၏ မှတ်တမ်းကို ကိုယ်ပိုင် သိမ်းထားပြီး MedCare က ၎င်းကို ရှင်းလင်း၍ မရပါ။ အတူတကွ သုံးသည့် သို့မဟုတ် မိသားစု ဖုန်းတွင် သင့်လာရောက်မှု ခြေရာမကျန်စေလိုပါက private browsing ဝင်းဒိုးကို အသုံးပြုပါ။ အကောင့်ရှိပါက ထွက်ခဲ့ပါ — မဟုတ်ပါက ဤဝဘ်ဆိုက်ကို နောက်ထပ်ဖွင့်သူသည် သင့်အနေဖြင့် ဝင်ရောက်ထားဆဲဖြစ်ပြီး သင်သိမ်းထားသည့် စာမျက်နှာများကို မြင်နိုင်ပါသည်။',
 
-    /* --- cookie settings: body --- */
+    
     'There is no consent banner on this site because there is nothing to consent to. We use no advertising, no analytics, and no tracking. What MedCare does keep is listed below — a language preference, and, only if you sign in, the session that keeps you signed in. Each card reads your device as the page loads, so it shows what is actually there, and each one can be cleared from here.':
       'သဘောတူရန် မည်သည်မျှ မရှိသောကြောင့် ဤဝဘ်ဆိုက်တွင် သဘောတူညီချက် ဘန်နာ မရှိပါ။ ကြော်ငြာ၊ ခွဲခြမ်းစိတ်ဖြာမှုနှင့် ခြေရာခံမှု မသုံးပါ။ MedCare သိမ်းဆည်းထားသည်များကို အောက်တွင် ဖော်ပြထားသည် — ဘာသာစကား ရွေးချယ်မှုနှင့်၊ သင် ဝင်ရောက်ထားမှသာ၊ ဝင်ရောက်မှုကို ဆက်လက် ထိန်းသိမ်းပေးသည့် session ဖြစ်သည်။ ကတ်တစ်ခုစီသည် စာမျက်နှာ ပွင့်ချိန်တွင် သင့်စက်ပစ္စည်းကို ဖတ်သဖြင့် အမှန်တကယ် ရှိသည်များကို ပြသပြီး တစ်ခုချင်းစီကို ဤနေရာမှ ရှင်းလင်းနိုင်ပါသည်။',
     "Remembers whether you chose English or Burmese, so the site opens the same way next time. It is kept in your browser's local storage under the name mc-lang, and is never sent to us. It is written only when you actually press a language button — until then there is nothing stored, and the site simply opens in English.":
@@ -2831,10 +2570,7 @@
 
 
 
-    /* --- staff pages: admin dashboard and editor desk -------------
-       Interface, not prose. Role VALUES (admin/editor/user) are left in
-       English on purpose: a pill has to match what profiles.role holds,
-       and so does anything inside <code>. */
+    
     'Checking your permissions…': 'သင့်ခွင့်ပြုချက်များကို စစ်ဆေးနေသည်…',
     'One moment.': 'ခဏစောင့်ပါ။',
     'Signed in': 'ဝင်ရောက်ထားသည်',
@@ -2920,10 +2656,7 @@
     'Secure Log Out': 'လုံခြုံစွာ ထွက်ရန်',
     'Soon': 'မကြာမီ',
 
-    /* --- sign in and create account ------------------------------
-       Role VALUES stay in English here too: the note says an account
-       starts as `user`, and that is the literal value in profiles.role.
-       The example email and name in the placeholders are left alone. */
+    
     'Sign in to MedCare': 'MedCare သို့ ဝင်ရန်',
     'An account is only needed for editorial tools. Reading health information never requires one.': 'အကောင့်သည် အယ်ဒီတာ ကိရိယာများအတွက်သာ လိုအပ်သည်။ ကျန်းမာရေး အချက်အလက် ဖတ်ရှုရန် အကောင့် မလိုပါ။',
     'You are signed in': 'သင် ဝင်ရောက်ထားပြီ ဖြစ်သည်',
@@ -2950,8 +2683,7 @@
     'Enter both your email address and password.': 'အီးမေးလ် လိပ်စာနှင့် စကားဝှက် နှစ်ခုစလုံး ထည့်ပါ။',
     'Enter your full name, as you would write it on a form.': 'ပုံစံစာရွက်တွင် ရေးသကဲ့သို့ သင့်အမည်အပြည့်အစုံကို ထည့်ပါ။',
     'Passwords need to be at least 8 characters long.': 'စကားဝှက်သည် အနည်းဆုံး စာလုံး ၈ လုံး ရှိရမည်။',
-    /* The rest of the rule, one message per broken condition, as auth.js
-       reports them. */
+    
     'Passwords need at least one upper-case letter.': 'စကားဝှက်တွင် အင်္ဂလိပ် စာလုံးကြီး အနည်းဆုံး တစ်လုံး ပါရမည်။',
     'Passwords need at least one lower-case letter.': 'စကားဝှက်တွင် အင်္ဂလိပ် စာလုံးသေး အနည်းဆုံး တစ်လုံး ပါရမည်။',
     'Passwords need at least one number.': 'စကားဝှက်တွင် ဂဏန်း အနည်းဆုံး တစ်လုံး ပါရမည်။',
@@ -2967,9 +2699,7 @@
     'Password should be at least 6 characters.': 'စကားဝှက်သည် အနည်းဆုံး စာလုံး ၆ လုံး ရှိရမည်။',
     'Unable to validate email address: invalid format': 'အီးမေးလ် လိပ်စာ ပုံစံ မမှန်ပါ။',
 
-    /* --- a forgotten password, and the way back in ----------------
-       Two pages' worth: the recovery mode of the sign-in form, and
-       reset-password.html at the far end of the emailed link. */
+    
     'Forgot your password?': 'စကားဝှက် မေ့နေပါသလား။',
     'Back to sign in': 'ဝင်ရောက်ရန် စာမျက်နှာသို့ ပြန်သွားရန်',
     'Send a recovery link': 'ပြန်လည်ရယူရန် လင့်ခ် ပို့ရန်',
@@ -3007,9 +2737,7 @@
     'The recovery link has expired while this page was open. Ask for a new one.': 'ဤစာမျက်နှာ ဖွင့်ထားစဉ်အတွင်း ပြန်လည်ရယူရန် လင့်ခ် သက်တမ်းကုန်သွားပြီ။ အသစ်တစ်ခု တောင်းပါ။',
     'The password could not be changed. Please try again.': 'စကားဝှက်ကို ပြောင်း၍ မရပါ။ ထပ်စမ်းကြည့်ပါ။',
 
-    /* --- changing your own display name ---------------------------
-       The menu is now every signed-in visitor's account control, so the
-       role words below are the ones it shows as a subtitle. */
+    
     'This is the name the site shows in place of your email address.': 'ဤအမည်ကို သင့်အီးမေးလ် လိပ်စာအစား ဝဘ်ဆိုက်တွင် ပြသမည် ဖြစ်သည်။',
     'Cancel': 'မလုပ်တော့ပါ',
     'Close': 'ပိတ်ရန်',
@@ -3017,9 +2745,7 @@
     'Reader': 'ဖတ်ရှုသူ',
     'You have been signed out. Sign in again and try once more.': 'သင် ထွက်သွားပြီ ဖြစ်သည်။ ပြန်ဝင်ပြီး ထပ်စမ်းကြည့်ပါ။',
 
-    /* --- display names ------------------------------------------
-       No rules to explain here: any script, spaces, punctuation, and
-       two people may share one. The Burmese says so too. */
+    
     'Display name': 'ပြသမည့်အမည်',
     'Change your display name': 'ပြသမည့်အမည် ပြောင်းရန်',
     'Anything you like, in any language. Spaces and punctuation are fine.': 'သင်နှစ်သက်ရာ မည်သည့်ဘာသာစကားဖြင့်မဆို ရေးနိုင်သည်။ ကွက်လပ်နှင့် ပုဒ်ဖြတ်များလည်း ရပါသည်။',
@@ -3028,9 +2754,7 @@
     'Display name changes are not switched on for this site yet.': 'ဤဝဘ်ဆိုက်တွင် ပြသမည့်အမည် ပြောင်းခြင်းကို မဖွင့်ရသေးပါ။',
     'The account could not be created. Please try again.': 'အကောင့် ဖန်တီး၍ မရပါ။ ထပ်စမ်းကြည့်ပါ။',
 
-    /* --- admin area: shell, navigation and the guard ------------
-       Every visible string in admin/. Page-specific ones are added as
-       each page is built. Role VALUES stay English, as everywhere else. */
+    
     'Overview': 'အနှစ်ချုပ်',
     'People': 'အသုံးပြုသူများ',
     'Users and roles': 'အသုံးပြုသူများနှင့် ရာထူးများ',
@@ -3057,18 +2781,14 @@
     'This site is not connected to its database. See the console for details.': 'ဤဝဘ်ဆိုက်သည် ဒေတာဘေ့စ်နှင့် မချိတ်ဆက်ထားပါ။ အသေးစိတ်ကို console တွင် ကြည့်ပါ။',
     'Could not check your permissions': 'သင့်ခွင့်ပြုချက်များကို စစ်ဆေး၍ မရပါ',
     'The database did not answer. Check your connection and reload the page.': 'ဒေတာဘေ့စ်မှ အဖြေ မရပါ။ ချိတ်ဆက်မှုကို စစ်ဆေးပြီး စာမျက်နှာကို ပြန်ဖွင့်ပါ။',
-    /* ---- Site chrome that had no entry, so it stayed English ----
-       Found by switching every page to Burmese and reading back every text
-       node that still had no Myanmar characters in it. Names, the brand, the
-       source domains and the hospital and pharmacy records stay English on
-       purpose and are not listed here. */
+    
 
-    // Navbar and footer, on every page
+
     'About MedCare': 'MedCare အကြောင်း',
     'BMI Calculator': 'BMI တွက်စက်',
     'BMI calculator': 'BMI တွက်စက်',
 
-    // The save and report bars on the disease and wellness pages
+
     'Save this disease': 'ဤရောဂါကို သိမ်းဆည်းရန်',
     'Save this article': 'ဤဆောင်းပါးကို သိမ်းဆည်းရန်',
     'to read again later from your account.': 'သင့်အကောင့်မှတစ်ဆင့် နောက်မှ ပြန်ဖတ်ရန်။',
@@ -3076,31 +2796,27 @@
     'Tell our editorial team and they will check it.': 'ကျွန်ုပ်တို့၏ တည်းဖြတ်အဖွဲ့ကို အကြောင်းကြားပါ၊ သူတို့က စစ်ဆေးပေးပါမည်။',
     'Report Error': 'အမှား သတင်းပို့ရန်',
 
-    /* saved.html writes one of these beside the count. Burmese does not
-       inflect for number, so both map to the same counter word. */
+    
     'item': 'ခု',
     'items': 'ခု',
 
-    /* The home page slider. These are aria-labels, so they are read aloud
-       rather than seen; the dot labels are built as 'Go to slide ' + n, so
-       there is one key per slide and a third slide would need a third key. */
+    
     'Previous slide': 'ယခင် ဆလိုက်',
     'Next slide': 'နောက် ဆလိုက်',
     'Slide selector': 'ဆလိုက် ရွေးချယ်ရန်',
     'Go to slide 1': 'ဆလိုက် ၁ သို့ သွားရန်',
     'Go to slide 2': 'ဆလိုက် ၂ သို့ သွားရန်',
 
-    // contact.html
+
     'Monday to Friday, 9am to 5pm': 'တနင်္လာမှ သောကြာ၊ နံနက် ၉ နာရီမှ ညနေ ၅ နာရီ',
-    /* This sentence is broken across two links, so it arrives as five text
-       nodes. Each is translated to stand where the English one stood. */
+    
     'We do not give medical advice by email or on the phone, and we cannot read test results, book appointments, or say which medicine to take. For that you need a doctor — the': 'ကျွန်ုပ်တို့သည် အီးမေးလ် သို့မဟုတ် ဖုန်းဖြင့် ဆေးဘက်ဆိုင်ရာ အကြံဉာဏ် မပေးပါ။ ဓာတ်ခွဲ ရလဒ်များကို ဖတ်ပေးခြင်း၊ ချိန်းဆိုမှု ပြုလုပ်ပေးခြင်း သို့မဟုတ် မည်သည့်ဆေး သောက်ရမည်ကို ပြောပေးခြင်းတို့လည်း မလုပ်နိုင်ပါ။ ထိုအတွက် ဆရာဝန်တစ်ဦး လိုအပ်ပါသည် —',
     'hospital list': 'ဆေးရုံစာရင်း',
     'pharmacy list': 'ဆေးဆိုင်စာရင်း',
     'and the': 'နှင့်',
     'are there to help you find one.': 'တို့သည် ဆရာဝန်တစ်ဦး ရှာဖွေရာတွင် ကူညီပေးရန် ရှိပါသည်။',
 
-    // about.html
+
     'What we publish, how we check it, and who stands behind it.': 'ကျွန်ုပ်တို့ ဖော်ပြသည့်အရာ၊ မည်သို့ စစ်ဆေးသည်နှင့် မည်သူ တာဝန်ယူသည်။',
     'MedCare is a free health information site for Myanmar. It explains common conditions in plain language, points you to hospitals and pharmacies near you, and keeps the numbers you need in an emergency one tap away.': 'MedCare သည် မြန်မာနိုင်ငံအတွက် အခမဲ့ ကျန်းမာရေး အချက်အလက် ဝဘ်ဆိုက် ဖြစ်သည်။ အဖြစ်များသော ရောဂါများကို ရိုးရှင်းသော ဘာသာစကားဖြင့် ရှင်းပြပြီး၊ သင့်အနီးရှိ ဆေးရုံနှင့် ဆေးဆိုင်များကို ညွှန်ပြကာ၊ အရေးပေါ်တွင် လိုအပ်သည့် ဖုန်းနံပါတ်များကို တစ်ချက်နှိပ်ရုံဖြင့် ရရှိစေပါသည်။',
     "We take the health guidance published by the World Health Organization and Myanmar's Ministry of Health and rewrite it so it can be read and acted on without medical training — in English and in Burmese, on a phone, for free. We sell nothing, and we run no advertising.": 'ကမ္ဘာ့ကျန်းမာရေးအဖွဲ့နှင့် မြန်မာနိုင်ငံ ကျန်းမာရေးဝန်ကြီးဌာနတို့ ထုတ်ပြန်သည့် ကျန်းမာရေး လမ်းညွှန်ချက်များကို ယူ၍ ဆေးပညာ မသင်ကြားထားဘဲ ဖတ်ရှုနားလည်ပြီး လက်တွေ့ အသုံးချနိုင်အောင် ပြန်လည် ရေးသားထားပါသည် — အင်္ဂလိပ်နှင့် မြန်မာ ဘာသာဖြင့်၊ ဖုန်းပေါ်တွင်၊ အခမဲ့။ ကျွန်ုပ်တို့ မည်သည့်အရာမျှ မရောင်းချပါ၊ ကြော်ငြာလည်း မထည့်ပါ။',
@@ -3116,10 +2832,10 @@
     'Fact sheets and regional guidance for South-East Asia, used as the base for our disease pages.': 'အရှေ့တောင်အာရှအတွက် အချက်အလက် စာရွက်များနှင့် ဒေသဆိုင်ရာ လမ်းညွှန်ချက်များ — ကျွန်ုပ်တို့၏ ရောဂါ စာမျက်နှာများ၏ အခြေခံအဖြစ် အသုံးပြုထားသည်။',
     'National health programmes, outbreak guidance, and public hospital information.': 'အမျိုးသား ကျန်းမာရေး အစီအစဉ်များ၊ ရောဂါ ဖြစ်ပွားမှုဆိုင်ရာ လမ်းညွှန်ချက်များနှင့် အစိုးရ ဆေးရုံ အချက်အလက်များ။',
 
-    // privacy.html
+
     'Reading is anonymous: no sign-in, and no record tying a page to you. An account is optional and only needed to save pages or report a mistake — if you create one, we hold your name, your email address, and the pages you chose to save, and you can delete all of it yourself. We run no advertising and no analytics, everything you type into a search box stays inside your own browser, and we set no cookies of our own.': 'ဖတ်ရှုခြင်းသည် အမည်မသိ ဖြစ်သည် — ဝင်ရောက်ရန် မလိုဘဲ စာမျက်နှာတစ်ခုကို သင်နှင့် ချိတ်ဆက်သည့် မှတ်တမ်းလည်း မရှိပါ။ အကောင့်သည် မဖြစ်မနေ မလိုအပ်ဘဲ စာမျက်နှာများ သိမ်းဆည်းရန် သို့မဟုတ် အမှားတစ်ခု သတင်းပို့ရန်အတွက်သာ လိုအပ်သည် — အကောင့်ဖွင့်ပါက သင့်အမည်၊ သင့်အီးမေးလ်နှင့် သင် သိမ်းဆည်းရန် ရွေးချယ်ခဲ့သည့် စာမျက်နှာများကို ကျွန်ုပ်တို့ သိမ်းထားပြီး ၎င်းအားလုံးကို သင်ကိုယ်တိုင် ဖျက်နိုင်ပါသည်။ ကြော်ငြာနှင့် ခွဲခြမ်းစိတ်ဖြာမှု မသုံးပါ၊ ရှာဖွေမှု အကွက်တွင် သင်ရိုက်ထည့်သမျှသည် သင့်ဘရောက်ဆာ အတွင်း၌သာ ရှိနေပြီး ကျွန်ုပ်တို့၏ ကိုယ်ပိုင် cookie လည်း မထားပါ။',
 
-    // cookies.html
+
     'Your signed-in session': 'သင် ဝင်ရောက်ထားသည့် session',
     "Only if you have an account and are signed in. This is the token that keeps you signed in between visits and proves to our database that a request is yours. It is held in your browser's local storage, and signing out deletes it. Alongside it the site keeps two notes that last only as long as the browser tab: whether your account is a reader, editor, or administrator, and a cached copy of the site notice.": 'အကောင့်ရှိပြီး ဝင်ရောက်ထားမှသာ ဖြစ်သည်။ ၎င်းသည် လာရောက်မှုများအကြား သင့်ဝင်ရောက်မှုကို ဆက်လက် ထိန်းသိမ်းပေးပြီး တောင်းဆိုမှုတစ်ခုသည် သင့်ထံမှ ဖြစ်ကြောင်း ကျွန်ုပ်တို့၏ ဒေတာဘေ့စ်ကို သက်သေပြသည့် token ဖြစ်သည်။ သင့်ဘရောက်ဆာ၏ local storage တွင် သိမ်းထားပြီး ထွက်လိုက်သည်နှင့် ဖျက်ပစ်ပါသည်။ ၎င်းနှင့်အတူ ဘရောက်ဆာ တဘ် ဖွင့်ထားသည့် အချိန်အထိသာ တည်ရှိသော မှတ်စု နှစ်ခုကို သိမ်းထားသည် — သင့်အကောင့်သည် စာဖတ်သူ၊ တည်းဖြတ်သူ သို့မဟုတ် စီမံခန့်ခွဲသူ ဟုတ်မဟုတ်နှင့် ဝဘ်ဆိုက် အသိပေးချက်၏ သိမ်းထားသော မိတ္တူ ဖြစ်သည်။',
   };
@@ -3128,17 +2844,13 @@
   var LANG_KEY = 'mc-lang';
   var currentLang = 'en';
   var busy = false;
-  var origText = new WeakMap();      // Text node -> its original English
+  var origText = new WeakMap();
   var I18N_ATTRS = ['placeholder', 'aria-label', 'title'];
 
   function lookup(text) {
     var dict = LANGS[currentLang];
     if (!dict) { return null; }
-    // Prose in the HTML is wrapped across source lines, so a text node
-    // arrives carrying newlines and indentation. Collapse runs of
-    // whitespace before looking up: without this, a sentence written over
-    // three lines can never match its single-line key, which is why the
-    // long notes on the staff pages went untranslated.
+
     var key = text.trim().replace(/\s+/g, ' ');
     return Object.prototype.hasOwnProperty.call(dict, key) ? dict[key] : null;
   }
@@ -3148,7 +2860,7 @@
     if (orig === undefined) { orig = node.data; origText.set(node, orig); }
     if (!orig.trim()) { return; }
     var hit = lookup(orig);
-    // Replace only the trimmed word so surrounding spaces/newlines survive.
+
     var next = hit === null ? orig : orig.replace(orig.trim(), hit);
     if (node.data !== next) { node.data = next; }
   }
@@ -3156,21 +2868,12 @@
   function swapAttrs(el) {
     I18N_ATTRS.forEach(function (attr) {
       if (!el.hasAttribute(attr)) { return; }
-      var store = 'data-i18n-' + attr;       // the English we started from
-      var wrote = 'data-i18n-set-' + attr;   // what we last put there
+      var store = 'data-i18n-' + attr;
+      var wrote = 'data-i18n-set-' + attr;
       var orig  = el.getAttribute(store);
       var now   = el.getAttribute(attr);
 
-      /* A script may have written a new value since the last pass — the
-         login form swaps its password placeholder when you switch between
-         signing in and signing up. The test is whether the value still
-         matches what WE last wrote: if it does not, a script wrote it, and
-         it becomes the new English original.
-
-         Comparing against the translation instead would misfire the moment
-         the language goes back to English, because by then the attribute
-         holds Burmese and there is no dictionary left to recognise it
-         with — the Burmese would be remembered as the original and stick. */
+      
       if (orig === null || now !== el.getAttribute(wrote)) {
         orig = now;
         el.setAttribute(store, orig);
@@ -3188,24 +2891,15 @@
     if (node.nodeType !== 1) { return; }
     var tag = node.tagName;
     if (tag === 'SCRIPT' || tag === 'STYLE') { return; }
-    // The switcher itself always shows both languages verbatim.
+
     if (node.classList && node.classList.contains('mc-langbar')) { return; }
-    /* Long-form content written in the editor. This walk is a phrase
-       dictionary for the SITE's own wording - buttons, headings, the
-       chrome - and running it over an article is how a sentence in the
-       middle of a medical page silently becomes a different sentence
-       because it happened to match a key. Article text carries its own
-       translation in body_my; it does not need this one. */
+    
     if (node.classList && node.classList.contains('mc-noi18n')) { return; }
     swapAttrs(node);
     for (var child = node.firstChild; child; child = child.nextSibling) { walk(child); }
   }
 
-  /* `persist` is opt-in on purpose. Restoring a stored choice at load, or
-     re-running the walk after the DOM changed, must not write the key —
-     otherwise every visitor grows an mc-lang they never asked for, and
-     "Forget this setting" on cookies.html could never stick. Only the
-     language buttons below pass true. */
+  
   function applyLang(lang, persist) {
     currentLang = LANGS[lang] === undefined ? 'en' : lang;
     busy = true;
@@ -3219,11 +2913,11 @@
       });
     }
     if (persist) {
-      try { localStorage.setItem(LANG_KEY, currentLang); } catch (e) { /* file:// or private mode */ }
+      try { localStorage.setItem(LANG_KEY, currentLang); } catch (e) {  }
     }
   }
 
-  // Build the bar here so every page gets it without duplicating markup.
+
   var langbar = document.createElement('div');
   langbar.className = 'mc-langbar';
   langbar.innerHTML =
@@ -3240,16 +2934,14 @@
     if (btn) { applyLang(btn.getAttribute('data-lang'), true); }
   });
 
-  // Re-translate anything drawn after load (filtered cards, search results…).
+
   if (window.MutationObserver) {
     new MutationObserver(function (records) {
       if (busy || currentLang === 'en') { return; }
       busy = true;
       records.forEach(function (r) {
         if (r.type === 'characterData') { swapText(r.target); }
-        // Placeholders and labels that a script rewrites after load would
-        // otherwise stay in English: attribute changes are not childList
-        // changes, so nothing used to notice them.
+
         if (r.type === 'attributes') { swapAttrs(r.target); }
         Array.prototype.forEach.call(r.addedNodes, walk);
       });
@@ -3264,53 +2956,26 @@
   }
 
   var saved = 'en';
-  try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) { /* ignore */ }
+  try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) {  }
   applyLang(saved);
 
-  /* ==================================================================
-     The dictionary above, but editable
-     ------------------------------------------------------------------
-     MY is the shipped translation. It works, and it means a wrong
-     Burmese sentence needs a developer, a commit and a deploy to fix —
-     which is why some of them have been wrong for a while.
+  
 
-     public.translations is the same dictionary in the database, keyed by
-     the same thing: the English source string. editor/translations.html
-     writes to it. Everything below layers that table over the literal.
-
-     The order matters and it is the file that loses. A key present in
-     both takes the database's value, because that is the one somebody
-     went and corrected. A key present only in the file keeps working, so
-     an empty table changes nothing, and so does an unreachable one — the
-     failure mode of this whole feature is "the translation is as good as
-     it was yesterday", which is the only acceptable one for text a
-     reader is relying on.
-
-     Nothing here touches English. `en` has no dictionary by design.
-     ================================================================== */
-
-  /* What the editor screen lists. Handing over the live object rather
-     than a copy is deliberate: merge() writes into the same one applyLang
-     reads, so a saved string takes effect on the next switch without a
-     reload. The screen only reads it. */
+  
   window.MedCareI18n = {
     LANG_KEY: LANG_KEY,
 
-    // Every key the site can translate, in the order they are written.
+
     keys: function () { return Object.keys(MY); },
 
-    // What the shipped file says, before any database override.
+
     fromFile: function (key) {
       return Object.prototype.hasOwnProperty.call(MY, key) ? MY[key] : null;
     },
 
     current: function () { return currentLang; },
 
-    /* rows: [{ en, my }]. A row with an empty `my` is a key somebody has
-       started and not finished; it must NOT overwrite the file's value
-       with a blank, or filling in half a form would take Burmese off the
-       page. Ignored here, and flagged as unfinished on the editor
-       screen. */
+    
     merge: function (rows) {
       var changed = 0;
       (rows || []).forEach(function (row) {
@@ -3321,19 +2986,13 @@
         MY[row.en] = value;
         changed++;
       });
-      // Re-run only if the page is actually showing Burmese and
-      // something moved. In English this is a no-op the reader would
-      // still pay a full DOM walk for.
+
       if (changed && currentLang !== 'en') { applyLang(currentLang); }
       return changed;
     }
   };
 
-  /* Fetched once per page load, after first paint, and never awaited by
-     anything. If it is slow the page is already correct; if it fails the
-     page stays correct. `translations` is world-readable, so this runs
-     for signed-out visitors too — the whole point is that a fix reaches
-     readers, not just staff. */
+  
   (function loadTranslationOverrides() {
     var db = window.supabaseClient;
     if (!db) { return; }
@@ -3341,49 +3000,18 @@
     db.from('translations').select('en, my')
       .then(function (res) {
         if (res.error) {
-          /* The commonest cause by far is supabase_editor.sql not having
-             been run yet, which is a perfectly fine state for this site
-             to be in. Logged, not surfaced: a reader is not owed a
-             message about a table they have never heard of. */
+          
           console.info('[MedCare] Translation overrides unavailable; using the built-in dictionary.',
                        res.error.message);
           return;
         }
         window.MedCareI18n.merge(res.data);
       })
-      .catch(function () { /* offline; the built-in dictionary stands */ });
+      .catch(function () {  });
   })();
 
 
-  /* ==================================================================
-     Site state — the maintenance curtain and the site-wide notice
-     ------------------------------------------------------------------
-     Reads site_settings, keys 'maintenance' and 'notice', written by
-     admin/maintenance.html. Both rows are world-readable on purpose: a
-     visitor who is not signed in is exactly the visitor who needs to be
-     told the site is closed.
-
-     WHAT THIS IS. A curtain. It stops the PAGES being shown; it does not
-     stop the data being read, because the policies that decide that have
-     not changed and should not. Anybody who wants what is behind it can
-     still ask the API. That is the right trade — maintenance mode exists
-     so a reader does not act on a page that is half-rewritten, not to
-     keep a secret — but it means nothing that must not be seen may ever
-     be protected by this.
-
-     IT FAILS OPEN. No database, no table, no network, a malformed row:
-     every one of those leaves the site exactly as it was. A health site
-     that hides itself because a fetch timed out has done more harm than
-     the stale page it was trying to prevent, and "closed" is a state
-     this code will only ever enter on a direct answer from the database
-     saying so.
-
-     WHERE IT NEVER RUNS. /admin/ and /editor/, which have guards of
-     their own, and login.html. Curtaining the admin area would mean
-     turning maintenance mode on locks you out of turning it off;
-     curtaining the login page would mean the staff who are exempt from
-     the curtain cannot sign in to become exempt.
-     ================================================================== */
+  
   (function siteState() {
     var path = window.location.pathname;
     if (/\/(admin|editor)\//.test(path)) { return; }
@@ -3395,15 +3023,11 @@
     var ALWAYS_OPEN    = ['login.html'];
     var CACHE_KEY      = 'mc-site-state';
 
-    var state     = null;    // what the database last said, or null for "open"
-    var role      = null;    // once auth.js has answered
+    var state     = null;
+    var role      = null;
     var roleKnown = false;
 
-    /* Cached for one session so a second page load covers first and
-       checks after, rather than flashing the site at somebody who has
-       already been told it is closed. sessionStorage, not localStorage:
-       a stale "closed" that outlives the browser tab would be a worse
-       bug than the flash it prevents. */
+    
     function readCache() {
       try {
         var raw = window.sessionStorage.getItem(CACHE_KEY);
@@ -3412,7 +3036,7 @@
     }
     function writeCache(value) {
       try { window.sessionStorage.setItem(CACHE_KEY, JSON.stringify(value)); }
-      catch (e) { /* private mode, or full: the fetch still decides */ }
+      catch (e) {  }
     }
 
     function bar(id, className, iconClass, text, link) {
@@ -3425,9 +3049,7 @@
       el.className = className;
       el.setAttribute('role', 'status');
       el.innerHTML = '<i class="bi ' + iconClass + '" aria-hidden="true"></i><span></span>';
-      // textContent, never innerHTML: this string was typed into a form
-      // by an admin, and an admin typing into a form is not a reason to
-      // trust a string with the rest of the page.
+
       el.querySelector('span').textContent = text;
       if (link) {
         var a = document.createElement('a');
@@ -3444,7 +3066,7 @@
       if (el) { el.remove(); }
     }
 
-    /* ---------- The notice ---------- */
+    
     function renderNotice(n) {
       var text = n && n.enabled ? String(n.text || '').trim() : '';
       if (!text) { drop('mcSiteNotice'); return; }
@@ -3454,7 +3076,7 @@
           text);
     }
 
-    /* ---------- The curtain ---------- */
+    
     function renderCurtain(m) {
       var closed = !!(m && m.enabled);
 
@@ -3470,11 +3092,7 @@
                     'MedCare is being updated. Please check back shortly.';
       var emergencyOk = m.allow_emergency !== false;
 
-      /* Staff see the site, and a bar saying nobody else can. Until
-         auth.js answers, roleKnown is false and everybody is treated as
-         a reader — the curtain goes up first and comes down a moment
-         later for the people it does not apply to. That order is
-         deliberate: the reader is the one it exists for. */
+      
       var staff = roleKnown && (role === 'editor' || role === 'admin');
 
       var exempt = ALWAYS_OPEN.indexOf(file) !== -1 ||
@@ -3529,10 +3147,7 @@
       el.querySelector('[data-message]').textContent = message;
       el.querySelector('[data-emergency]').hidden = !emergencyOk;
 
-      // The page underneath is left intact and merely covered, so that
-      // taking the curtain away — which is what happens the moment a
-      // staff session is confirmed — puts the site back with nothing to
-      // re-render. Its scrollbar is the only thing that has to go.
+
       document.body.style.overflow = 'hidden';
     }
 
@@ -3541,7 +3156,7 @@
       renderCurtain(state && state.maintenance);
     }
 
-    // Cover first, check after.
+
     state = readCache();
     if (state) { render(); }
 
@@ -3550,10 +3165,7 @@
       db.from('site_settings').select('key,value').in('key', ['maintenance', 'notice'])
         .then(function (res) {
           if (res.error) {
-            /* Commonest cause by far is supabase_admin_scope.sql not
-               having been run, which is a perfectly fine state for this
-               site to be in. Logged, not surfaced: a reader is not owed
-               a message about a table they have never heard of. */
+            
             console.info('[MedCare] Site settings unavailable; the site stays open.',
                          res.error.message);
             state = null;
@@ -3568,8 +3180,7 @@
           render();
         })
         .catch(function () {
-          // Offline. Fail open, and drop the cache so the next page load
-          // does not put a curtain up on the strength of an old answer.
+
           state = null;
           writeCache(null);
           render();
@@ -3597,23 +3208,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const adjustMapStickyOffset = () => {
     if (!filters || !map) return;
     
-    // Get the exact, real-time height of the filters box
+
     const filtersHeight = filters.offsetHeight;
     
-    // Add extra padding (e.g., 20px) so the map doesn't touch the filters directly
+
     const spacing = 20; 
     
-    // Set the CSS variable on the map element
+
     map.style.setProperty("--filters-height", `${filtersHeight + spacing}px`);
   };
 
-  // Run immediately on page load
+
   adjustMapStickyOffset();
 
-  // Re-calculate if the window changes size (mobile to desktop layout switches)
+
   window.addEventListener("resize", adjustMapStickyOffset);
 
-  // OPTIONAL: If your #hospTypes choices load via AJAX later, 
-  // call adjustMapStickyOffset() right after that data populates.
+
 });
 

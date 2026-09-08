@@ -1,8 +1,3 @@
-/* ============================================================
-   MedCare — manage diseases (editor/admin tool)
-   Loaded only by manage-diseases.html, after auth.js.
-   ============================================================ */
-
 (function () {
   'use strict';
 
@@ -35,35 +30,6 @@
 
   var rows = [];
 
-  /* ================================================================
-     THE GUARD — CONVENIENCE ONLY, NOT SECURITY
-     ----------------------------------------------------------------
-     What the redirect below actually does: it stops a signed-in reader
-     who wanders onto this URL from seeing a form that would only fail.
-     That is a courtesy, nothing more.
-
-     What it does NOT do: protect the data. Every line in this file runs
-     on the visitor's own machine. Anyone can open DevTools, set a
-     breakpoint, edit the source, or simply never load this page and
-     POST to the REST API with curl. There is no client-side check
-     anywhere that survives that.
-
-     The real enforcement is the RLS policies on public.diseases:
-
-         Staff can insert diseases  -> with check (my_role() in ('editor','admin'))
-         Staff can update diseases  -> using + with check, same test
-         Staff can delete diseases  -> using (my_role() in ('editor','admin'))
-
-     Those run inside Postgres, after the JWT has been verified, on
-     every single request. A user who deletes the redirect below still
-     gets 42501 from the database — verified against the live project:
-     a signed-in plain user was refused insert/update/delete, while an
-     editor was allowed.
-
-     Rule of thumb: JavaScript decides what to SHOW. The database
-     decides what is ALLOWED. If you ever find yourself relying on this
-     redirect to keep data safe, the policy is what needs fixing.
-     ================================================================ */
   function guard() {
     if (!auth || !db) {
       checking.innerHTML = '<div class="container"><div class="mc-empty-simple" style="display:block">' +
@@ -74,26 +40,23 @@
 
     auth.ready.then(function () {
       if (!auth.isSignedIn()) {
-        // Not logged in at all -> send to the login page.
+
         window.location.replace('login.html');
         return;
       }
       if (!auth.isStaff()) {
-        // Signed in, but role is 'user'. Send them back to the site.
-        // The database would refuse their writes regardless.
+
         window.location.replace('index.html');
         return;
       }
       checking.style.display = 'none';
       app.style.display = 'block';
       load();
-      // The queue lives in reports-queue.js, shared with reports.html.
-      // Started only now, once the role guard has passed.
+
       if (window.MedCareReportsQueue) { window.MedCareReportsQueue.start(); }
     });
   }
 
-  /* ---------- helpers ---------- */
   function esc(s) {
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -109,12 +72,10 @@
     }
   }
 
-  // Turns a Supabase error into something a human can act on.
   function explain(err) {
     if (!err) { return 'Something went wrong.'; }
     if (err.code === '42501') {
-      // This is RLS refusing the write — the case the comment above
-      // describes. Seeing it means the policies are doing their job.
+
       return 'The database refused this change: your account does not have permission (RLS).';
     }
     if (err.code === '23505') {
@@ -126,7 +87,6 @@
     return err.message || 'Something went wrong.';
   }
 
-  /* ---------- load + render ---------- */
   function load() {
     listEl.innerHTML = '<div class="mc-admin-loading">Loading…</div>';
     db.from('diseases').select('*').order('id')
@@ -170,8 +130,6 @@
     }).join('');
   }
 
-  // Suggestions come from what is already in the table, so the tool does
-  // not hard-code a taxonomy that drifts from the data.
   function fillDatalists() {
     function unique(key, split) {
       var seen = {};
@@ -190,7 +148,6 @@
     fill('iconList', unique('icon', false));
   }
 
-  /* ---------- form ---------- */
   function setEditMode(row) {
     if (row) {
       f.id.value   = row.id;
@@ -282,8 +239,7 @@
 
     req.then(function (res) {
       if (res.error) { throw res.error; }
-      // An empty array with no error means RLS filtered the row out:
-      // the request was allowed to run but matched nothing.
+
       if (editingId && (!res.data || !res.data.length)) {
         message('Nothing was updated. The database did not permit this change.');
         return;

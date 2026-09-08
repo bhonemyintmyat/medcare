@@ -1,52 +1,7 @@
-/* ============================================================
-   MedCare — the admin area's shared vocabulary
-   Loaded on every admin page that touches data, after admin-guard.js
-   and before the page's own script.
-
-   Three things live here:
-
-     1. ROLES — what the three roles ARE: their name on screen, the one
-        sentence that explains them, and the capability matrix that
-        permissions.html draws. Written down once, because a role's
-        meaning drifting between two screens is how somebody ends up
-        granting more than they meant to.
-
-     2. Reading and writing `profiles` — one query, one save path, one
-        error translator. Every admin screen's failure message comes
-        from the same function.
-
-     3. The dialogs — plain confirm, and confirm-by-name for the changes
-        that cannot be undone from this browser.
-
-   What is NOT here: any check that decides whether a write is allowed.
-   Everything below decides what to DRAW. RLS and the guard_profile_role
-   trigger decide what happens.
-
-   OVERLAP, KNOWINGLY: esc/when/message/describeError/confirmDialog also
-   exist in editor/js/editor-api.js. They are the same idea written for
-   two areas that share a stylesheet and a shell but not a data model.
-   If a third area ever appears, extract them — two is not yet enough to
-   justify a file that both areas have to load.
-   ============================================================ */
-
 (function () {
   'use strict';
 
   var db = window.supabaseClient;
-
-  /* ================================================================
-     1. THE ROLES
-     ================================================================
-     `can` is the capability matrix on permissions.html. Every entry
-     names the policy or grant that actually enforces it, so a row can
-     be checked against the database rather than believed.
-
-     This table is DOCUMENTATION. It is generated from nothing; it is
-     typed out from the SQL files and it goes stale the moment somebody
-     edits a policy without editing this. permissions.html says so on
-     the page, in those words, because a permissions matrix that is
-     quietly wrong is worse than no matrix at all.
-     ================================================================ */
 
   var ROLES = {
     user: {
@@ -74,8 +29,6 @@
 
   var ROLE_ORDER = ['user', 'editor', 'admin'];
 
-  /* Rows of the matrix. `by` is where the rule lives, so a doubt about
-     any single cell is one grep away from being settled. */
   var CAPABILITIES = [
     { group: 'The public site' },
     { what: 'Read published diseases, articles, hospitals and pharmacies',
@@ -153,11 +106,6 @@
       nobody: true }
   ];
 
-
-  /* ================================================================
-     2. HELPERS
-     ================================================================ */
-
   function esc(s) {
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -178,13 +126,6 @@
     return when(iso) + ', ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
   }
 
-  /* What to call this account on screen, in the same order the rest of
-     the site uses: the name they picked, then the name they gave at
-     signup, then their handle, then their email, then the bare id.
-
-     Never returns an empty string. Every caller uses it as the thing a
-     confirmation dialog asks you to type, and a dialog asking you to
-     type nothing would confirm everything. */
   function accountLabel(p) {
     if (!p) { return 'Unknown account'; }
     return p.display_name || p.full_name || p.email ||
@@ -204,13 +145,6 @@
            '</span>';
   }
 
-  /* Postgres is precise and means nothing to the person who just
-     pressed Save. This turns the handful we can actually provoke into
-     sentences that say what to do. The two role guards come back as
-     42501 with the trigger's own word as the message, so they are
-     matched before the general permission case — "you cannot change
-     your own role" is a different problem from "you are not an admin",
-     and telling somebody the wrong one sends them to the wrong fix. */
   function describeError(error, what) {
     if (!error) { return ''; }
     var code = error.code || '';
@@ -249,8 +183,7 @@
       return 'That function is not deployed yet. Run supabase_account_deletion.sql in the ' +
              'Supabase SQL editor.';
     }
-    // PostgREST refusing the token itself, worded for whoever wrote the
-    // token rather than for the admin reading the message strip.
+
     if (code === 'PGRST301') {
       return 'Your session is no longer valid, so nothing was changed. ' +
              'Reload the page and sign in again.';
@@ -276,10 +209,6 @@
     return msg || 'The database refused that, without saying why.';
   }
 
-  /* One message strip per screen. Errors stay until something replaces
-     them; confirmations clear themselves, because a green bar that
-     outlives what it describes starts lying about the state of the
-     page. Same behaviour as the editor area, on purpose. */
   function message(el, kind, text) {
     if (!el) { return; }
     if (!text) { el.hidden = true; el.textContent = ''; return; }
@@ -295,28 +224,9 @@
     }
   }
 
-
-  /* ================================================================
-     3. TALKING TO profiles
-     ================================================================ */
-
-  /* No `username`. supabase_display_name.sql renamed that column to
-     display_name and dropped everything around it, so asking for it here
-     is asking PostgREST for a column the schema is supposed to be rid of.
-     It costs more than a dead name: a 42703 sends loadAccounts down the
-     fallback below, and the whole table renders by id with no name, no
-     email and a banner about a migration that has in fact been run. */
   var FULL_COLUMNS = 'id,email,display_name,full_name,role,locale,created_at';
   var BARE_COLUMNS = 'id,role,created_at';
 
-  /* "Admins can read all profiles" is what makes this return more than
-     one row. The same query run by an editor returns exactly their own
-     profile — Postgres filters the rest out before the response is
-     built, so there is nothing to leak and no check needed here.
-
-     The fallback exists because the columns arrived across four
-     migrations. If one has not been run, the page lists accounts by id
-     rather than refusing to load, and says which file is missing. */
   function loadAccounts() {
     return db.from('profiles').select(FULL_COLUMNS).order('created_at', { ascending: true })
       .then(function (res) {
@@ -333,11 +243,6 @@
       });
   }
 
-  /* Ask for the row back. An RLS refusal is not always an error: an
-     update that matches no row returns 200 with an empty array, and
-     that silence is exactly what a non-admin gets here. Treating it as
-     success is how a page comes to report a change that never
-     happened. */
   function writeProfile(id, patch, returning) {
     return db.from('profiles').update(patch).eq('id', id).select(returning || 'id')
       .then(function (res) {
@@ -358,31 +263,14 @@
     return writeProfile(id, { display_name: null }, 'id,display_name');
   }
 
-  /* Deleting somebody else's account.
-
-     Not writeProfile(). Not a DELETE at all from this browser: DELETE on
-     profiles is revoked from `authenticated`, and profiles is the wrong
-     table anyway — the row that matters is in auth.users, which this key
-     cannot see, let alone touch. What goes over the wire is a request to
-     a named function that holds the privilege itself and checks the
-     caller before using it. supabase_account_deletion.sql §2 is the
-     whole of the rule set; nothing here re-states it.
-
-     One deliberate difference from every other write in this file: no
-     empty-result check. An RLS refusal is silence, which is why
-     writeProfile has to look for it — a function refusal is an
-     exception, and it arrives with the reason written on it. */
   function deleteAccount(id) {
     return db.rpc('delete_account', { target_id: id })
       .then(function (res) {
         if (res.error) { throw res.error; }
-        return res.data;      // the name the site used to call them
+        return res.data;
       });
   }
 
-  /* Names for a set of ids, for the "last changed by" lines. One request
-     rather than a join: the client cannot join to profiles under RLS,
-     and a per-row query would be one request per line. */
   function loadNames(ids) {
     var wanted = [];
     (ids || []).forEach(function (id) {
@@ -399,30 +287,10 @@
       .catch(function () { return {}; });
   }
 
-
-  /* ================================================================
-     3b. TALKING TO site_settings
-     ================================================================
-     Key/value rows, one per setting. Every reader must treat a missing
-     key as "off": the table is created and seeded by
-     supabase_admin_scope.sql, and a site whose admin has not run it yet
-     is a perfectly ordinary state that must not break either this
-     screen or the public pages.
-
-     DEFAULTS is that rule written down once. It is also what a Save
-     merges into, so a key that reaches the database missing half its
-     fields — an older seed, a hand-edit in the dashboard — comes back
-     complete rather than as a form full of undefined.
-     ================================================================ */
-
   var DEFAULTS = {
     maintenance: { enabled: false, message: '', allow_emergency: true },
     notice:      { enabled: false, tone: 'info', text: '' },
-    /* The Contact us page: up to four email addresses and four numbers.
-       Edited from admin/contact.html and editor/contact.html both. Both
-       are lists rather than the single `email` and `phone` strings the
-       key was seeded with; admin-contact.js carries either older shape
-       forward into them, so nothing typed under an old one is lost. */
+
     'footer.contact': { emails: [], phones: [] }
   };
 
@@ -438,8 +306,6 @@
     return out;
   }
 
-  /* Resolves { key: { value, updated_at, updated_by } } for every key
-     asked for, present in the table or not. */
   function loadSettings(keys) {
     return db.from('site_settings')
       .select('key,value,updated_at,updated_by')
@@ -462,10 +328,6 @@
       });
   }
 
-  /* Update, then insert if the key was never seeded. Two round trips in
-     the uncommon case, one in the normal one — and no upsert, because an
-     upsert here would happily create a key nobody meant to add if the
-     name were ever mistyped in this file. */
   function saveSetting(key, value) {
     return db.from('site_settings').update({ value: value }).eq('key', key)
       .select('key,value,updated_at,updated_by')
@@ -486,22 +348,6 @@
       });
   }
 
-
-  /* ----------------------------------------------------------------
-     The footer pages
-
-     public.pages, one row per page, seeded by supabase_footer_pages.sql.
-     A different table from site_settings on purpose: these bodies are
-     rendered as HTML, and site_settings says of itself that nothing in
-     it ever is. The migration's header has the long version.
-
-     No insert half here, unlike saveSetting above. A page row is created
-     by the migration and never by a screen: `slug` and `href` are not in
-     the column grant, so a client could not write a usable row anyway,
-     and a screen that could invent pages is a screen that can invent a
-     page no file renders.
-     ---------------------------------------------------------------- */
-
   function loadPages() {
     return db.from('pages')
       .select('slug,title,body,body_my,href,updated_at,updated_by')
@@ -519,11 +365,7 @@
       .select('slug,title,body,body_my,href,updated_at,updated_by')
       .then(function (res) {
         if (res.error) { throw res.error; }
-        /* Nothing came back: either RLS refused the write, or the row is
-           missing because the migration has not been run. Both end here,
-           and the screen says so — an editor who reached this by opening
-           the admin URL directly should be told it was refused, not left
-           looking at a Save that appeared to work. */
+
         if (!res.data || !res.data.length) {
           throw { code: '42501',
                   message: 'The database changed nothing. Either this account may not edit pages, or supabase_footer_pages.sql has not been run.' };
@@ -531,16 +373,6 @@
         return res.data[0];
       });
   }
-
-
-  /* ================================================================
-     4. THE DIALOGS
-     ================================================================
-     Reuses .mc-modal from styles.css. Both resolve rather than reject,
-     and both restore focus to whatever opened them — an admin working
-     down a list with the keyboard should not be dropped at the top of
-     the page after every action.
-     ================================================================ */
 
   function openDialog(html, onReady) {
     var opener = document.activeElement;
@@ -570,9 +402,6 @@
     return function () { document.removeEventListener('keydown', onKey); };
   }
 
-  /* The ordinary one. Names what it is about to do, in words that can be
-     answered: "Clear Su Aung's display name?" is a question; "Are you
-     sure?" is not, and is why people learn to click through these. */
   function confirmDialog(opts) {
     var d = openDialog(
       '<div class="mc-modal-backdrop" data-close></div>' +
@@ -601,18 +430,6 @@
     });
   }
 
-  /* The one for changes this browser cannot undo.
-
-     Typing the account's name is not security — the same admin could
-     type it without reading it. It is there to make the WRONG ROW
-     expensive: the mistake this screen actually produces is promoting
-     the person above or below the one you meant, in a list of names
-     that look alike, and that mistake cannot survive having to type the
-     name out. The keystrokes are the point; the string comparison is
-     just what makes them mandatory.
-
-     Comparison is trimmed and case-insensitive. Anything stricter
-     punishes the correct answer for its capitals. */
   function confirmByName(opts) {
     var expect = String(opts.expect || '').trim();
 
@@ -679,7 +496,6 @@
       });
     });
   }
-
 
   window.MedCareAdmin = {
     ROLES: ROLES,

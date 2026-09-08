@@ -1,32 +1,3 @@
-/* ============================================================
-   MedCare — roles and permissions
-   Loaded by admin/permissions.html, after admin-guard.js,
-   admin-shell.js and admin-api.js.
-
-   The one screen on this site that changes what somebody is allowed to
-   do. Three parts: the grant form, the list of who currently holds
-   each role, and the capability matrix from admin-api.js.
-
-   Everything here is a drawing decision. What actually decides is
-   "Admins can change roles" and the guard_profile_role trigger, and the
-   two guards this file spends the most code on — self-demotion and the
-   last admin — are worth reading in that light:
-
-     SELF-DEMOTION is enforced in the database. The trigger raises
-     role_self_change_forbidden whatever the browser sends. The disabled
-     radios here are a courtesy, so nobody discovers the rule by having
-     a save fail.
-
-     THE LAST ADMIN is NOT enforced anywhere but here. Postgres is
-     perfectly willing to let the only admin be demoted by another
-     admin — there is no constraint that counts them. If that happens,
-     the site has no admin at all and no in-app way to appoint one; the
-     fix is the Supabase SQL editor. So this check is real load-bearing
-     logic rather than a nicety, and it is the one place in the admin
-     area where the browser is the only thing standing between the site
-     and a state it cannot leave.
-   ============================================================ */
-
 (function () {
   'use strict';
 
@@ -49,12 +20,8 @@
   var accounts = [];
   var myId     = null;
   var chosenId = null;
-  var pending  = null;      // the role the radios are currently showing
+  var pending  = null;
   var saving   = false;
-
-  /* ---------------------------------------------------------------
-     LOADING
-     --------------------------------------------------------------- */
 
   function load() {
     return api.loadAccounts()
@@ -84,10 +51,6 @@
   function adminCount() {
     return accounts.filter(function (p) { return p.role === 'admin'; }).length;
   }
-
-  /* ---------------------------------------------------------------
-     PICKING AN ACCOUNT
-     --------------------------------------------------------------- */
 
   function matching() {
     var q = searchEl.value.trim().toLowerCase();
@@ -119,10 +82,7 @@
       shown.map(function (p) {
         var name = api.accountLabel(p);
         var sub  = (p.email && p.email !== name) ? p.email : p.id;
-        /* An explicit label rather than one computed from the nested
-           spans: the pill inside says "EDITOR", the name may be an
-           email, and "Su Aung you EDITOR" is not what a screen reader
-           should say for a button whose job is "choose this account". */
+
         return '<button type="button" class="mc-ad-result' +
                  (p.id === chosenId ? ' is-chosen' : '') + '" ' +
                  'aria-pressed="' + (p.id === chosenId) + '" ' +
@@ -144,10 +104,6 @@
         : '');
   }
 
-  /* ---------------------------------------------------------------
-     THE FORM
-     --------------------------------------------------------------- */
-
   function choose(id) {
     chosenId = id;
     var p = accountById(id);
@@ -156,10 +112,6 @@
     renderForm();
   }
 
-  /* What changes for this person, said in terms of what they will be
-     able to do to the site rather than in terms of a role name. The
-     name is the thing being chosen; the consequence is the thing being
-     decided. */
   function consequence(from, to) {
     if (to === 'admin') {
       return 'They will be able to grant roles — including making somebody else ' +
@@ -171,7 +123,7 @@
              'site, including the emergency numbers. Nothing stands between what ' +
              'they publish and a reader acting on it.';
     }
-    // to === 'user'
+
     if (from === 'admin') {
       return 'They lose the admin area on their next page load. If they are the ' +
              'person who knows how this site is run, make sure somebody else does.';
@@ -264,10 +216,6 @@
       '</div>';
   }
 
-  /* ---------------------------------------------------------------
-     SAVING
-     --------------------------------------------------------------- */
-
   function save() {
     if (saving) { return; }
     var p = accountById(chosenId);
@@ -277,9 +225,6 @@
     var target  = pending;
     if (!target || target === current) { return; }
 
-    // Re-checked at the moment of saving, not only when the radios were
-    // drawn: the list may have been reloaded since, and the last-admin
-    // count is the one number where a stale answer is unrecoverable.
     if (p.id === myId) { return; }
     if (current === 'admin' && target !== 'admin' && adminCount() <= 1) {
       api.message(msgEl, 'error',
@@ -306,7 +251,7 @@
 
       return api.setRole(p.id, target)
         .then(function (row) {
-          // Trust the row that came back rather than what was asked for.
+
           p.role = row.role;
           pending = row.role;
           saving = false;
@@ -320,17 +265,13 @@
         .catch(function (err) {
           saving = false;
           console.error('[MedCare] Could not change the role:', err);
-          pending = current;          // the radios go back to the truth
+          pending = current;
           renderForm();
           api.message(msgEl, 'error',
             api.describeError(err, 'changing ' + name + '’s role'));
         });
     });
   }
-
-  /* ---------------------------------------------------------------
-     WHO HOLDS EACH ROLE
-     --------------------------------------------------------------- */
 
   function holderList(role) {
     var rows = accounts.filter(function (p) { return p.role === role; });
@@ -381,15 +322,6 @@
       '</p>';
   }
 
-  /* ---------------------------------------------------------------
-     THE MATRIX
-     ---------------------------------------------------------------
-     Drawn from MedCareAdmin.CAPABILITIES. A row marked `nobody` is the
-     interesting kind: it is a capability the site deliberately gives to
-     no one, and leaving it off the table would make it look like an
-     oversight rather than a decision.
-     --------------------------------------------------------------- */
-
   function cell(allowed) {
     return allowed
       ? '<td class="mc-ad-yes"><i class="bi bi-check-lg"></i>' +
@@ -413,10 +345,6 @@
       '</tr>';
     }).join('');
   }
-
-  /* ---------------------------------------------------------------
-     WIRING
-     --------------------------------------------------------------- */
 
   searchEl.addEventListener('input', renderResults);
 
@@ -447,8 +375,7 @@
   holdersEl.addEventListener('click', function (e) {
     var btn = e.target.closest('.mc-ad-holder');
     if (!btn) { return; }
-    // Clearing the search first, so the chosen row is visible in the
-    // list rather than filtered out of it by a leftover query.
+
     searchEl.value = '';
     choose(btn.getAttribute('data-id'));
     searchEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -459,10 +386,6 @@
   guard.ready.then(function (state) {
     myId = state.user.id;
 
-    /* users.html links here with the account already chosen. The id is
-       validated against the loaded list rather than trusted: a stale or
-       hand-edited link should land on an empty form, not on somebody
-       else's row. */
     var m = /[?&]user=([^&]+)/.exec(window.location.search);
     var wanted = m ? decodeURIComponent(m[1]) : null;
 

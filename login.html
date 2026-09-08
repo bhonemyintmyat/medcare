@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<!-- ===================== Navbar ===================== -->
+
 <nav class="navbar navbar-expand-xl mc-nav">
   <div class="container">
     <a class="navbar-brand" href="index.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
@@ -34,7 +34,7 @@
   </div>
 </nav>
 
-<!-- ===================== Sign in ===================== -->
+
 <main>
   <section class="mc-page-head">
     <div class="container">
@@ -53,7 +53,7 @@
       <div class="row justify-content-center">
         <div class="col-lg-5 col-md-7">
 
-          <!-- Signed-in panel: replaces the form once you have an account session -->
+          
           <div class="mc-auth-card" id="authSignedIn" style="display:none">
             <div class="mc-auth-ico"><i class="bi bi-check-circle"></i></div>
             <h2>You are signed in</h2>
@@ -67,7 +67,7 @@
             </div>
           </div>
 
-          <!-- Sign in / create account -->
+          
           <div class="mc-auth-card" id="authFormCard">
             <div class="mc-auth-tabs" role="tablist">
               <button type="button" class="mc-auth-tab is-active" id="tabSignIn" data-mode="signin" role="tab" aria-selected="true">Sign in</button>
@@ -75,8 +75,7 @@
             </div>
 
             <form id="authForm" novalidate>
-              <!-- The three signup-only fields. Hidden for sign-in, where they
-                   would only be noise, and shown by setMode() in login.js. -->
+              
               <div class="mc-signup-only" id="fieldFullName" hidden>
                 <label class="mc-auth-label" for="authFullName">Full name</label>
                 <div class="mc-auth-field">
@@ -104,8 +103,7 @@
                 <input type="email" id="authEmail" name="email" autocomplete="email" placeholder="you@example.com" required>
               </div>
 
-              <!-- Hidden as a unit when the form turns into "email me a recovery
-                   link", where a password is exactly what is missing. -->
+              
               <div id="fieldPassword">
                 <label class="mc-auth-label" for="authPassword">Password</label>
                 <div class="mc-auth-field">
@@ -155,7 +153,7 @@
   </section>
 </main>
 
-<!-- ===================== Footer ===================== -->
+
 <footer class="mc-footer">
   <div class="container">
     <div class="row g-4">

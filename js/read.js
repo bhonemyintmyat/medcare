@@ -1,44 +1,3 @@
-/* ============================================================
-   MedCare — the reader page (read.html)
-
-   Renders a disease or an article that was written in the editor, from
-   the row itself rather than from a file in the repository.
-
-   WHY THIS EXISTS ALONGSIDE THE HAND-WRITTEN PAGES
-
-   Every disease and article on this site began as its own HTML file, and
-   those files are still here and still the better page: they carry
-   figures, callouts, card grids and a doctor's note, laid out by hand for
-   that subject. Nothing about this page replaces them.
-
-   What it replaces is the RULE that a new article requires a new file and
-   a deployment. A row now has two ways to be a page:
-
-     href   points at a hand-written file in the repository
-     body   long-form HTML written in the editor
-
-   The listings prefer `body` when there is one and fall back to `href`,
-   so the ten existing articles keep opening the pages they always did and
-   an editor can publish an eleventh without touching the repository.
-
-   IT CLEANS WHAT IT SHOWS
-
-   The editor sanitises on save. This sanitises again on render, through
-   the same allowlist, and that is deliberate rather than superstitious.
-   Sanitising on save protects the database from the form. Sanitising on
-   render protects the READER from the database — from a row written by a
-   stolen editor token, a hand-run UPDATE, or a backup restored from
-   before the allowlist existed. The two are not the same guarantee and
-   neither one implies the other.
-
-   WHAT IT DOES NOT DO
-
-   No draft preview. The public RLS policy serves `published` and nothing
-   else, so an unpublished row is simply not found here — the same answer
-   a stranger gets. Previewing your own draft is an editor-area feature
-   and it should be built there, where the session is known.
-   ============================================================ */
-
 (function () {
   'use strict';
 
@@ -46,15 +5,11 @@
 
   var params = new URLSearchParams(window.location.search);
 
-  /* ---------- What each kind of row is called ----------
-     The two tables do not share column names — a disease has a `name`
-     and a `tag`, an article has a `title` and a `cat` — so the shape is
-     declared once here instead of being asked about at every use. */
   var KINDS = {
     disease: {
       table: 'diseases',
       title: 'name',
-      titleMy: 'name_my',     // null until somebody writes one; bi() falls back
+      titleMy: 'name_my',
       label: 'cat',
       tag: 'tag',
       icon: 'bi-virus',
@@ -96,13 +51,10 @@
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  // Both languages in the markup; CSS reveals the one html[lang] picks.
   function bi(en, my) {
     return '<span class="mc-en">' + esc(en) + '</span>' +
            '<span class="mc-my">' + esc(my || en) + '</span>';
   }
-
-  /* ---------- The states that are not an article ---------- */
 
   function showState(icon, headingEn, headingMy, bodyEn, bodyMy, linkHref, linkEn, linkMy) {
     articleEl.hidden = true;
@@ -139,20 +91,10 @@
       kind.backHref, kind.backEn, kind.backMy);
   }
 
-  /* ---------- Rendering ---------- */
-
-  /* A row with no body but a file to point at. Sending the reader on is
-     kinder than telling them the page is empty, and it is what makes
-     read.html a safe default target for a listing.
-
-     Only ever to a path inside this site. `href` is editor-supplied, and
-     an editor-supplied redirect that accepts absolute URLs is an open
-     redirect - the sort of thing that ends up in a phishing mail with
-     this site's domain at the front of it. */
   function siteRelative(href) {
     if (!href) { return null; }
     var v = String(href).trim();
-    if (/^[a-z][a-z0-9+.-]*:/i.test(v)) { return null; }   // any scheme
+    if (/^[a-z][a-z0-9+.-]*:/i.test(v)) { return null; }
     if (v.charAt(0) === '/' || v.indexOf('//') === 0) { return null; }
     if (v.indexOf('..') !== -1) { return null; }
     return /^[a-z0-9._\-\/]+\.html?$/i.test(v) ? v : null;
@@ -164,7 +106,6 @@
 
     document.title = titleEn + ' — MedCare';
 
-    // Breadcrumb
     el('readCrumb').innerHTML =
       '<a href="index.html"><i class="bi bi-house"></i> ' + bi('Home', 'ပင်မစာမျက်နှာ') + '</a>' +
       '<i class="bi bi-chevron-right" style="font-size:.7rem"></i>' +
@@ -172,7 +113,6 @@
       '<i class="bi bi-chevron-right" style="font-size:.7rem"></i>' +
       '<span>' + bi(titleEn, titleMy) + '</span>';
 
-    // Head
     var iconEl = el('readIcon');
     iconEl.className = 'bi ' + (row.icon || kind.icon);
 
@@ -184,7 +124,6 @@
     el('readTitle').innerHTML = bi(titleEn, titleMy);
     headEl.hidden = false;
 
-    // Cover
     var cover = row.cover_image;
     if (cover && sanitize.safeUrl(cover)) {
       el('readCover').setAttribute('src', cover);
@@ -192,19 +131,14 @@
       el('readFigure').hidden = false;
     }
 
-    // Byline, articles only
     if (row.byline) {
       el('readBylineName').innerHTML = bi(row.byline, row.byline_my || row.byline);
       el('readByline').hidden = false;
     }
 
-    /* The body, cleaned again on the way in. See the header. */
     var bodyEn = sanitize.clean(row.body || '');
     var bodyMy = sanitize.clean(row.body_my || '');
 
-    /* Only one language was written. Showing an empty page to the other
-       one is worse than showing the language that exists, so the written
-       one stands in for both and the notice says which it is. */
     var onlyOne = (bodyEn && !bodyMy) || (!bodyEn && bodyMy);
     el('readBodyEn').innerHTML = bodyEn || bodyMy;
     el('readBodyMy').innerHTML = bodyMy || bodyEn;
@@ -220,7 +154,6 @@
       articleEl.insertBefore(note, el('readBodyEn'));
     }
 
-    // Source and the review date
     var src = row.source_url && sanitize.safeUrl(row.source_url);
     if (src) {
       el('readSource').setAttribute('href', src);
@@ -244,25 +177,6 @@
     stateEl.hidden = true;
     articleEl.hidden = false;
 
-    /* Nothing to re-run for the language. Everything written above ships
-       both languages behind .mc-en / .mc-my, and which one shows is
-       decided by CSS from html[lang] - already set before this row
-       arrived. The prose itself is inside .mc-noi18n, which the site's
-       phrase pass skips on purpose. */
-
-    /* ---------- Tell the rest of the page what it is looking at ----------
-       report.js needs the same three facts this function already has —
-       which table, which id, what it is called — and it must not offer a
-       "Report error" button on a page that turned out to be missing or
-       failed to load. Announcing here, at the end of a successful render,
-       is exactly that condition: nothing is published unless something
-       was drawn.
-
-       Both a property and an event, because the two listeners arrive at
-       different times. A script loaded after this one has already missed
-       the event and reads the property; one loaded before it is waiting
-       on the event. Setting the property first means a handler firing
-       synchronously off the event can read it either way. */
     window.MedCarePage = {
       kind: kindName,
       table: kind.table,
@@ -275,14 +189,11 @@
     }));
   }
 
-  /* ---------- Getting the row ---------- */
-
   function load() {
     var db = window.supabaseClient;
 
     if (!sanitize) {
-      // Without the allowlist there is no safe way to put this HTML on
-      // screen, so it does not go on screen.
+
       failed();
       return;
     }
@@ -292,11 +203,9 @@
 
     db.from(kind.table).select('*').eq('id', id).maybeSingle()
       .then(function (res) {
-        // supabase-js resolves with { data, error } rather than throwing.
+
         if (res.error) { throw res.error; }
 
-        // Null means either no such row or one the public policy does not
-        // serve, and a reader is owed the same answer for both.
         if (!res.data) { notFound(); return; }
 
         var row = res.data;

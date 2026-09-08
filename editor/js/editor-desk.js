@@ -1,14 +1,4 @@
-/* ============================================================
-   MedCare — the editor desk (editor/index.html)
 
-   A desk answers one question: what is waiting for me. So this screen
-   is counts that are also links, and a list of what you touched last.
-
-   What it is not is a dashboard. There are no charts here for the same
-   reason there are none in the admin area: the site does not record what
-   anybody read, so there is nothing to chart, and inventing something to
-   fill the space would mean starting to collect it.
-   ============================================================ */
 
 (function () {
   'use strict';
@@ -25,11 +15,7 @@
 
   var TYPES = ed.TYPES;
 
-  /* A count query per table per status is nine round trips for five
-     numbers. One `select('id, status')` per table is three, and the
-     tables are small enough that the rows cost less than the requests.
-     If a table ever outgrows that, this is where the count() queries go
-     back in. */
+  
   function tally() {
     var wanted = Object.keys(TYPES);
 
@@ -58,10 +44,7 @@
       .catch(function () { return null; });
   }
 
-  /* How many keys still have no Burmese. The key list comes from
-     script.js, and the overrides from the table, so this number is the
-     same arithmetic the translations screen does — see the note there
-     about a blank override not counting as a translation. */
+  
   function missingTranslations() {
     var i18n = window.MedCareI18n;
     if (!i18n) { return Promise.resolve(null); }
@@ -85,13 +68,7 @@
       .catch(function () { return null; });
   }
 
-  /* Emergency numbers are not in tally() — that walks TYPES, which is
-     the three things with a content list, and the emergency table has
-     its own screen. But a number sitting unpublished is the highest-cost
-     invisible thing on this site: somebody typed an ambulance line and
-     readers cannot see it. So it is counted separately, and only shows
-     up when it is not zero — a tile that reads 0 every day is furniture
-     people stop seeing, which is the opposite of what this one is for. */
+  
   function emergencyWaiting() {
     return db.from('emergency_contacts').select('id', { count: 'exact', head: true })
       .neq('status', 'published')
@@ -100,9 +77,7 @@
   }
 
   function stat(href, num, label, attention) {
-    // A number we could not read is printed as a dash. A zero that is
-    // really "the query failed" is the one wrong number on this screen
-    // that would actually change what somebody does next.
+
     var shown = (num === null || num === undefined) ? '—' : num;
     return '<a class="mc-ed-stat' + (attention && num ? ' mc-ed-stat--attention' : '') + '" href="' + href + '">' +
              '<div class="mc-ed-stat-num">' + ed.esc(shown) + '</div>' +
@@ -113,10 +88,7 @@
   function drawStats(data, reports, missing, emergency) {
     var c = data.counts;
 
-    /* The pending count is the same number to both roles and a different
-       sentence. To an editor it is work they have handed over; to an
-       admin it is the queue only they can clear, and it is the one thing
-       on this desk that is waiting specifically on them. */
+    
     var pendingLabel = guard.isAdmin() ? 'Waiting for you to publish' : 'Awaiting review';
 
     statsEl.innerHTML =
@@ -136,12 +108,7 @@
     }
   }
 
-  /* The list is "what you touched last", not "what changed last": the
-     desk is for picking work back up. `updated_by` is the right column
-     for that — it is who touched it, which after an edit is you, and
-     unlike created_by it survives somebody else's page becoming yours to
-     fix. Falls back to everybody's recent changes when you have not
-     edited anything yet, so a new editor's desk is not empty. */
+  
   function recent(userId) {
     var wanted = Object.keys(TYPES);
 

@@ -13,16 +13,14 @@
   var msg           = el('bmiMsg');
   var result        = el('bmiResult');
 
-  var selectedGender = 'male';   // collected like the original; not used in the formula
+  var selectedGender = 'male';
 
-  /* Both languages ship in the markup and CSS reveals the one html[lang]
-     selects — the same bi() the article cards use, kept local so this
-     file has no dependency on script.js beyond the language bar. */
+  
   function bi(en, my) {
     return '<span class="mc-en">' + en + '</span><span class="mc-my">' + my + '</span>';
   }
 
-  /* ---------- Gender toggle ---------- */
+  
   var genderButtons = document.querySelectorAll('.mc-bmi-gender .mc-chip');
   Array.prototype.forEach.call(genderButtons, function (button) {
     button.addEventListener('click', function () {
@@ -36,8 +34,7 @@
     });
   });
 
-  /* ---------- Height unit switches which inputs show ----------
-     Feet-and-inches is two boxes; centimetres and metres are one. */
+  
   function syncHeightInputs() {
     var ft = heightUnit.value === 'ft';
     ftInContainer.style.display = ft ? 'flex' : 'none';
@@ -46,9 +43,7 @@
   heightUnit.addEventListener('change', syncHeightInputs);
   syncHeightInputs();
 
-  /* ---------- Messages ----------
-     The original used alert(); the rest of this site answers a bad field
-     with an inline line under the form, so this does too. */
+  
   function showError(en, my) {
     if (!msg) { return; }
     msg.innerHTML = bi(en, my);
@@ -61,7 +56,7 @@
     msg.innerHTML = '';
   }
 
-  /* ---------- Height and weight in metric ---------- */
+  
   function heightInMetres() {
     if (heightUnit.value === 'ft') {
       var feet   = parseFloat(el('feetInput').value) || 0;
@@ -71,7 +66,7 @@
     }
     var v = parseFloat(el('heightSingle').value);
     if (isNaN(v) || v <= 0) { return null; }
-    return heightUnit.value === 'cm' ? v / 100 : v;   // 'cm' or 'm'
+    return heightUnit.value === 'cm' ? v / 100 : v;
   }
 
   function weightInKg() {
@@ -80,10 +75,7 @@
     return el('weightUnit').value === 'lbs' ? v * 0.453592 : v;
   }
 
-  /* ---------- Naming the band ----------
-     Standard adult cut-offs, tidied so the boundaries meet with no gap
-     the original left between 24.9/25 and 29.9/30. `pos` is where the
-     reading sits on the 15–40 scale, as a percentage, for the marker. */
+  
   function classify(bmi) {
     if (bmi < 18.5) {
       return { css: 'mc-bmi--under',  en: 'Underweight',  my: 'ဝိတ်နည်းပါသည်' };
@@ -102,27 +94,7 @@
     return Math.max(0, Math.min(100, pct));
   }
 
-  /* Whole years as typed, or null. The field is optional and does not
-     enter the formula — it only lets the result note whether the adult
-     BMI bands apply to this reader.
-
-     Anything unusable is null rather than an error, which is what the
-     date field it replaced did with an impossible date. The reading is
-     already on screen by then and is correct without it; refusing to
-     show a BMI because the age box has a typo in it would withhold the
-     answer over the one field that does not affect it.
-
-     Bounded 1 to 120. The ceiling is there for the reason the date
-     version rejected a future date: a number outside it is a slip, and
-     printing "Age: 900" next to a medical reading would make the whole
-     box look unreliable.
-
-     The floor is 1 rather than 0 because 0 was never an answer somebody
-     typed on purpose — it is what an empty-ish or mistyped box produces,
-     and it printed "Age: 0" alongside the note about young readers, on a
-     calculator whose bands are for adults and which nobody weighs a
-     newborn on. An infant's growth is read off a paediatric chart, not
-     off this. */
+  
   function ageFrom(value) {
     if (value === null || value === undefined) { return null; }
     var raw = String(value).trim();
@@ -132,7 +104,7 @@
     return years >= 1 && years <= 120 ? years : null;
   }
 
-  /* ---------- Submit ---------- */
+  
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     clearError();
@@ -168,8 +140,7 @@
       ageEl.style.display = 'none';
     }
 
-    // The accent colour lives on the result box; swap the band class and
-    // keep the base classes.
+
     result.className = 'mc-callout mc-callout--info mc-bmi-result ' + band.css;
     result.style.display = 'block';
     result.setAttribute('aria-hidden', 'false');

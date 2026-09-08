@@ -1,19 +1,4 @@
-/* ============================================================
-   MedCare — the content list (editor/content.html)
 
-   One list, four kinds of thing. Which kind is in the URL rather than
-   in a variable, so a tab is a real link: the back button works, a
-   bookmark works, and "send me the pending articles" is a URL somebody
-   can paste.
-
-     content.html?type=article&status=pending
-
-   The row actions are the workflow. They are here as well as on the
-   form because the common shape of this job is going down a list
-   publishing things that are already finished, and making somebody open
-   and close six pages to do it is how the pending queue stops getting
-   cleared.
-   ============================================================ */
 
 (function () {
   'use strict';
@@ -44,15 +29,9 @@
     query: ''
   };
 
-  /* ---------- The chrome this page has to fix ----------
-     admin-shell.js marks the current nav item by comparing file names,
-     and this area has three links to the same file with different query
-     strings. Left alone, "Diseases and articles", "Hospitals" and
-     "Pharmacies" would all light up. It runs before this file, so correcting it here is
-     one pass rather than a special case inside the shared shell. */
+  
   (function markNav() {
-    /* Diseases and articles share one nav item; hospitals and pharmacies
-       each have their own. Anything else falls back to the first. */
+    
     var NAV_TYPE = { hospital: 'hospital', pharmacy: 'pharmacy' };
     var here = 'content.html?type=' + (NAV_TYPE[type] || 'disease');
     document.querySelectorAll('.mc-admin-nav a').forEach(function (a) {
@@ -64,23 +43,13 @@
     });
   })();
 
-  /* Carry the status filter across when you switch kind. Somebody
-     clearing the pending queue wants the next tab's pending queue, not
-     its whole table — that is the difference between this page being a
-     review queue and being four separate lists.
-
-     Re-run whenever the filter changes, or the hrefs go stale and the
-     first tab click undoes the filter the person just set. Each tab's
-     own type is read from data-type rather than parsed back out of the
-     href it is about to be given. */
+  
   function retargetTabs() {
     tabsEl.querySelectorAll('a').forEach(function (a) {
       var tabType = a.getAttribute('data-type');
       if (tabType === type) { a.setAttribute('aria-current', 'page'); }
       else { a.removeAttribute('aria-current'); }
-      /* The town carries only to the other tab that has townships.
-         "&town=Insein" on the diseases tab would be a filter that
-         cannot apply, sitting in a URL somebody may go on to paste. */
+      
       var keepTown = state.town && ed.TYPES[tabType].townField;
       a.setAttribute('href', 'content.html?type=' + tabType +
         (state.status ? '&status=' + state.status : '') +
@@ -97,26 +66,7 @@
     chip.classList.toggle('is-active', (chip.getAttribute('data-status') || '') === state.status);
   });
 
-  /* ---------- Where it is ----------
-     A hospital list and a pharmacy list are a directory, and the
-     question asked of a directory is "what have we got in Insein". The
-     search box can already answer it — it matches every column, the
-     township among them — but only if the person spells the township
-     the way the row spells it, and it cannot tell them what the choices
-     are. A list of the choices can.
-
-     Two groups, because two different questions are being asked. "In
-     this list" is what the rows actually say, whatever they say,
-     including a spelling that is not in TOWNSHIPS: a row typed as
-     "Mayangon" has to stay reachable, and seeing it sit outside the
-     Yangon group is how somebody notices it wants fixing. The rest of
-     the region follows, so a township with nothing in it yet is still
-     something you can filter to and find empty, rather than something
-     this page quietly denies exists.
-
-     Rebuilt on every load rather than filled in once, for the same
-     reason the public page builds its filter from the data: the used
-     half of it is a description of the rows, and the rows change. */
+  
   function buildTowns() {
     if (!townEl || !cfg.townField) { return; }
 
@@ -140,10 +90,7 @@
       (used.length ? '<optgroup label="In this list">' + options(used) + '</optgroup>' : '') +
       (rest.length ? '<optgroup label="Elsewhere in Yangon">' + options(rest) + '</optgroup>' : '');
 
-    /* A ?town= naming somewhere with no option is dropped, not honoured.
-       Honouring it would leave the select reading "All townships" over a
-       list filtered down to nothing — a screen disagreeing with its own
-       controls, which is worse than losing a filter. */
+    
     if (state.town && used.indexOf(state.town) === -1 && rest.indexOf(state.town) === -1) {
       state.town = '';
       syncUrl();
@@ -154,7 +101,7 @@
     townEl.hidden = false;
   }
 
-  /* ---------- Reading ---------- */
+  
 
   function load() {
     return ed.listRows(type, {}).then(function (res) {
@@ -177,23 +124,13 @@
     });
   }
 
-  /* The other tabs' totals. Cheap head-only counts, because all this
-     needs is the number in the pill.
-
-     They follow the status filter rather than always showing the table
-     total, and that is what makes this page usable as a review queue: an
-     admin who filters to pending sees at a glance that the work is three
-     articles and no pharmacies, instead of clicking every tab to find out.
-     Recounted whenever the filter changes, for the same reason. */
+  
   function countTabs() {
     Object.keys(ed.TYPES).forEach(function (t) {
       var pill = tabsEl.querySelector('[data-count="' + t + '"]');
       if (!pill) { return; }
 
-      /* The current tab is already loaded in full; no need to ask again.
-         Counted by status only, NOT through visible() — the search box
-         must not change these numbers, or the tabs that cannot be
-         searched from here would silently disagree with this one. */
+      
       if (t === type) {
         pill.textContent = state.status
           ? state.rows.filter(function (r) { return r.status === state.status; }).length
@@ -210,18 +147,12 @@
     });
   }
 
-  /* ---------- Filtering ----------
-     Searching the whole row rather than named columns: an editor looking
-     for "dengue" does not know or care whether it is in the name, the
-     category or the link, and a search that misses because they guessed
-     the wrong column teaches them not to use it. */
+  
   function visible() {
     var q = state.query.trim().toLowerCase();
     return state.rows.filter(function (row) {
       if (state.status && row.status !== state.status) { return false; }
-      // Exact, not a substring: "Dagon" and "North Dagon" are different
-      // townships, and a filter that returned both would be wrong in the
-      // direction that hides the mistake.
+
       if (state.town && row[cfg.townField] !== state.town) { return false; }
       if (!q) { return true; }
       return Object.keys(row).some(function (k) {
@@ -232,22 +163,17 @@
     });
   }
 
-  /* ---------- Drawing ---------- */
+  
 
   function actionsFor(row) {
     var moves = ed.movesFrom(row.status, guard.isAdmin());
 
-    /* A published row opens read-only for an editor, so the button says
-       View. Promising Edit and delivering a locked form is the kind of
-       small lie that makes people distrust the rest of the screen. */
+    
     var open  = ed.canEditNow(row.status, guard.isAdmin()) ? 'Edit' : 'View';
     var html = '<a class="mc-auth-btn mc-auth-btn--ghost" href="entry.html?type=' + type +
                '&id=' + row.id + '">' + open + '</a>';
 
-    /* Only the first move gets a button in the list. The rest are on the
-       form, where there is room to explain them. A row of four buttons
-       per line turns the list into a wall and makes the wrong one easy
-       to hit. */
+    
     var move = moves[0];
     if (move) {
       html += '<button type="button" class="mc-auth-btn' +
@@ -267,7 +193,7 @@
     if (row.href) { meta.push('<code>' + ed.esc(row.href) + '</code>'); }
     meta.push(ed.touched(row, state.names));
 
-    // Only on the rows where a Publish button is conspicuously absent.
+
     if (row.status === 'pending' && !guard.isAdmin()) {
       meta.push('<span class="mc-ed-waiting"><i class="bi bi-hourglass-split"></i> ' +
                 'With an admin</span>');
@@ -303,8 +229,7 @@
     }
 
     if (!rows.length) {
-      // An empty filter result is a different thing from an empty table,
-      // and the way out of it is different too.
+
       hostEl.innerHTML =
         '<div class="mc-state mc-state--empty">' +
           '<span class="mc-state-ico"><i class="bi bi-funnel"></i></span>' +
@@ -323,7 +248,7 @@
       : rows.length + ' of ' + state.rows.length + ' shown';
   }
 
-  /* ---------- Acting ---------- */
+  
 
   function move(id, to, button) {
     var row = state.rows.filter(function (r) { return String(r.id) === String(id); })[0];
@@ -331,7 +256,7 @@
 
     var spec = ed.movesFrom(row.status, guard.isAdmin())
                  .filter(function (m) { return m.to === to; })[0];
-    if (!spec) { return; }     // not a move this person has, so not one to attempt
+    if (!spec) { return; }
     var title = row[cfg.titleField] || 'this entry';
 
     var ask = spec && spec.confirm
@@ -349,8 +274,7 @@
 
       ed.setStatus(type, id, to).then(function (res) {
         if (res.error) { throw res.error; }
-        // Update in place rather than reloading: the list can be long and
-        // the person is working down it.
+
         row.status = res.data.status;
         row.updated_at = res.data.updated_at;
         row.updated_by = res.data.updated_by;
@@ -377,7 +301,7 @@
         c.classList.toggle('is-active', !c.getAttribute('data-status'));
       });
       syncUrl();
-      retargetTabs();   // or the tabs keep offering the filter just cleared
+      retargetTabs();
       draw();
     }
   });
@@ -391,14 +315,11 @@
     });
     syncUrl();
     draw();
-    countTabs();      // the pills follow the filter — see countTabs()
+    countTabs();
     retargetTabs();
   });
 
-  /* The filter goes in the URL so it survives a reload and can be sent to
-     somebody. replaceState, not pushState: a filter is not a place, and
-     six chip clicks should not be six presses of the back button to
-     leave the page. */
+  
   function syncUrl() {
     var url = 'content.html?type=' + type +
               (state.status ? '&status=' + state.status : '') +
@@ -406,10 +327,7 @@
     window.history.replaceState(null, '', url);
   }
 
-  /* No countTabs(): the pills follow the status filter and nothing else.
-     A hospital tab counting only Insein while the pharmacy pill beside
-     it counts everything would be two numbers that cannot be compared,
-     which is the same reason the search box does not touch them. */
+  
   if (townEl) {
     townEl.addEventListener('change', function () {
       state.town = townEl.value;

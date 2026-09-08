@@ -1,28 +1,3 @@
--- ============================================================
--- MedCare — articles, carried across from script.js
--- Run in: Supabase dashboard -> SQL Editor -> New query -> Run
--- Run AFTER supabase_admin_schema.sql. Safe to re-run.
---
--- GENERATED, NOT TYPED. Read out of the myArticles array and evaluated,
--- so both languages arrive exactly as written. Burmese especially:
--- retyping it invites a stacked consonant to come apart, and nothing
--- about the result would look wrong in a diff.
---
--- Both languages sit in the row because article prose is not translated
--- through the dictionary in script.js the way interface text is — the
--- page picks .mc-en or .mc-my. So title_my and excerpt_my are content,
--- not translations of a key.
---
--- SOURCE URLs ARE ALL NULL, and that is the thing to notice. The
--- project rule is that medical content carries a WHO or Ministry of
--- Health URL; not one of these 10 articles has one, because the array
--- never had a field for it. The constraint permits null so the
--- migration does not fail, but each of these needs a source added
--- before it is re-published through the editorial workflow.
---
--- They land as PUBLISHED because they are already live on the site.
--- ============================================================
-
 insert into public.articles
   (title, title_my, excerpt, excerpt_my, cat, href, thumb, byline, byline_my, status)
 select v.title, v.title_my, v.excerpt, v.excerpt_my, v.cat, v.href, v.thumb,
@@ -128,29 +103,19 @@ from (values
    'MedCare editorial team',
    'MedCare တည်းဖြတ်အဖွဲ့')
 ) as v(title, title_my, excerpt, excerpt_my, cat, href, thumb, byline, byline_my)
--- href is unique on the table, so it is also what identifies a row that
--- has already been carried across.
+
 where not exists (
   select 1 from public.articles a where a.href = v.href
 );
 
-
--- ---------- CHECKS ----------
-
--- Expect 10 rows, all published, all with Burmese.
 select count(*) as total,
        count(*) filter (where status = 'published') as published,
        count(*) filter (where title_my is not null and excerpt_my is not null) as bilingual,
        count(*) filter (where source_url is not null) as with_source
 from public.articles;
 
--- Categories in use. These must match the chips myArticleCats builds,
--- or an article becomes unreachable through the filter bar:
---   prevention, nutrition, wellness
 select cat, count(*) from public.articles group by cat order by cat;
 
--- The articles still missing a source URL — the whole list, for now.
 select id, title from public.articles where source_url is null order by id;
 
--- Read a couple back to compare against articles.html by eye.
 select title, title_my, cat, href from public.articles order by id limit 3;

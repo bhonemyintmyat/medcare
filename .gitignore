@@ -1,0 +1,76 @@
+# ============================================================
+# MedCare — what never belongs in this repository
+# ------------------------------------------------------------
+# The site has no build step and no package.json, so most of what
+# a .gitignore usually guards against does not exist here. What is
+# left is the part that matters: secrets, and the machine-specific
+# files that differ for every person who clones this.
+#
+# Note what is NOT ignored, deliberately:
+#   js/supabase.js       holds the project URL and the anon public
+#                        key, and is committed on purpose. That key
+#                        identifies the project; it grants nothing.
+#                        RLS is what protects the data.
+#   .vscode/launch.json  the shared Chrome debug config the README
+#                        points at. Only the personal files beside
+#                        it are ignored.
+# ============================================================
+
+# ---------- Secrets ----------
+# Nothing here reads a .env today. The entry exists so that the day
+# someone adds one — for the Supabase CLI, for a deploy script, for
+# anything — the service_role key inside it cannot be committed by
+# reflex. That key bypasses every RLS policy on every table.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+
+# ---------- Supabase CLI ----------
+# Written by `supabase link` and `supabase start`. Local state and
+# access tokens, not project source.
+supabase/.temp/
+supabase/.branches/
+supabase/config.toml
+
+# ---------- Node ----------
+# The one test needs `linkedom`, but the README has you install it
+# into a scratch directory outside the repository. If you install it
+# in here by mistake, this stops 40MB of it landing in a commit.
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-error.log
+
+# ---------- Editor and tooling, per machine ----------
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/*.local.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code: shared project settings can be committed, personal
+# ones and local session state cannot.
+.claude/settings.local.json
+.claude/local/
+.mcp.json
+
+# ---------- OS clutter ----------
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ---------- Scratch ----------
+*.log
+*.bak
+*.orig
+*.rej
+tmp/
+scratch/

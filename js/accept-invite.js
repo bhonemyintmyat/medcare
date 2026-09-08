@@ -174,8 +174,9 @@
     clearMessage();
 
     var password = passEl.value;
-    if (password.length < 6) {
-      message('Passwords need to be at least 6 characters long.');
+    var problem = auth.passwordProblem(password);
+    if (problem) {
+      message(problem);
       passEl.focus();
       return;
     }

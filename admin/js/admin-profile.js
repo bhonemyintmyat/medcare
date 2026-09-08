@@ -68,7 +68,8 @@
   var pwSave    = el('pfPwSave');
   var pwMsg     = el('pfPwMsg');
 
-  var MIN_PASSWORD = 6;      // the same floor login.html sets on signup
+  // The rule itself lives in auth.js, so every screen that sets a
+  // password asks the same question and reports the same wording.
 
   /* ---------- Who you are ---------- */
 
@@ -159,7 +160,8 @@
   function pwProblem(current, next, confirm) {
     if (!current)                  { return 'Type your current password first.'; }
     if (!next)                     { return 'Type the new password.'; }
-    if (next.length < MIN_PASSWORD){ return 'The new password has to be at least ' + MIN_PASSWORD + ' characters.'; }
+    var problem = auth.passwordProblem(next);
+    if (problem)                   { return problem; }
     if (next !== confirm)          { return 'The two new passwords are different.'; }
     if (next === current)          { return 'That is the password you already have.'; }
     return null;

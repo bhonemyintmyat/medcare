@@ -139,8 +139,52 @@
     });
   }
 
+  /* ---------- Password policy ----------
+     Four screens set a password: signup on login.html, the recovery form,
+     the invitation form, and an admin changing their own. Each used to
+     carry its own "at least 6" test, which is how three of them said one
+     thing and the fourth said another. The rule lives here once and they
+     all ask.
+
+     It shapes what people type; it does not enforce anything. Supabase
+     applies whatever its own Auth settings demand, and a request made
+     outside these pages never reaches this function — so the character
+     classes below are a client-side courtesy until the same rule is set
+     on the project. The length is safe either way while the project
+     minimum stays at or below this one.
+
+     "Symbol" is anything that is not an ASCII letter or digit, which
+     keeps the door open for punctuation we did not think to list. */
+  var PASSWORD_MIN = 8;
+  var PASSWORD_HINT = 'At least 8 characters, with an upper-case letter, a lower-case letter, a number, and a symbol.';
+
+  /* The first rule the password breaks, in English, or null when it
+     breaks none. One message at a time: a list of everything wrong with
+     what you have typed so far is a worse thing to read than the next
+     thing to fix. */
+  function passwordProblem(password) {
+    var pw = String(password == null ? '' : password);
+    if (pw.length < PASSWORD_MIN) {
+      return 'Passwords need to be at least 8 characters long.';
+    }
+    if (!/[A-Z]/.test(pw)) { return 'Passwords need at least one upper-case letter.'; }
+    if (!/[a-z]/.test(pw)) { return 'Passwords need at least one lower-case letter.'; }
+    if (!/[0-9]/.test(pw)) { return 'Passwords need at least one number.'; }
+    if (!/[^A-Za-z0-9]/.test(pw)) {
+      return 'Passwords need at least one symbol, such as ! ? # or @.';
+    }
+    return null;
+  }
+
   /* ---------- Public API ---------- */
   var api = {
+    // What a new password has to be. passwordProblem() is the check;
+    // PASSWORD_HINT is the same rule as a sentence, for placeholders and
+    // form hints, so the screens cannot describe a rule they do not apply.
+    PASSWORD_MIN: PASSWORD_MIN,
+    PASSWORD_HINT: PASSWORD_HINT,
+    passwordProblem: passwordProblem,
+
     // Resolves once the first session check has finished. Await this
     // before trusting getUser()/getRole() on page load.
     ready: null,

@@ -12,34 +12,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/styles.css">
 <link rel="stylesheet" href="css/admin.css">
-<!-- Same order as every public page, then the admin pair. The guard has
-     to run before the page's own script, and both need the client that
-     supabase.js creates. -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
 <script src="../js/supabase.js" defer></script>
 <script src="../js/auth.js" defer></script>
 <script src="../js/script.js" defer></script>
 <script src="js/admin-guard.js" defer></script>
 <script src="js/admin-shell.js" defer></script>
-<!-- The overview's one live panel: the staff and their emails. It reads
-     `profiles`, so it needs the shared admin vocabulary the other data
-     screens use. -->
+
 <script src="js/admin-api.js" defer></script>
 <script src="js/admin-dashboard.js" defer></script>
 </head>
 <body>
 
-<!-- Nothing inside .mc-admin-shell is displayed until admin-guard.js
-     confirms an admin: admin.css hides it by default. -->
 <div class="mc-admin-shell" id="adminShell">
 
   <div class="mc-admin-backdrop" data-shell-close></div>
 
-  <!-- ===================== Sidebar =====================
-       The admin runs the site; the editor desk runs the medicine.
-       Nothing in this nav edits a disease, an article, a hospital or an
-       emergency number — see "Health content is not administered here"
-       in the content column for why the line is drawn there. -->
   <aside class="mc-admin-side">
     <a class="mc-admin-brand" href="index.html">
       <span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>
@@ -125,7 +114,6 @@
     </div>
   </aside>
 
-  <!-- ===================== Main ===================== -->
   <div class="mc-admin-main">
 
     <header class="mc-admin-top">
@@ -158,10 +146,6 @@
         </div>
       </div>
 
-      <!-- The one panel on this page that reads from the database:
-           editors and admins, and the address each one is reachable at.
-           admin-dashboard.js fills the list; it starts as a skeleton
-           rather than empty so a slow query does not read as "no staff". -->
       <div class="mc-admin-card mc-staff-card">
         <div class="mc-staff-head">
           <h2><i class="bi bi-people-fill"></i> Staff and their emails</h2>

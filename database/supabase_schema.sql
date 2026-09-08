@@ -1,11 +1,6 @@
--- ============================================================
--- MedCare — `diseases` table
--- Run this whole file in: Supabase dashboard -> SQL Editor -> New query -> Run
--- Safe to re-run: it drops and recreates the table.
--- ============================================================
 
 
--- ---------- 1. TABLE ----------
+
 
 drop table if exists public.diseases;
 
@@ -25,9 +20,7 @@ comment on column public.diseases."desc" is 'Short plain-language summary shown 
 comment on column public.diseases.cat  is 'Space-separated filter categories, e.g. "infectious respiratory"';
 
 
--- ---------- 2. ROW LEVEL SECURITY ----------
--- Without this, your anon key gets back an EMPTY array — not an error.
--- RLS on + a read policy = public can read, nobody can write.
+
 
 alter table public.diseases enable row level security;
 
@@ -37,13 +30,10 @@ create policy "Public can read diseases"
   to anon, authenticated
   using (true);
 
--- Deliberately NO insert/update/delete policy: with RLS enabled and no
--- write policy, writes from the browser are refused. Edit rows in the
--- dashboard (which uses the service_role key server-side) instead.
 
 
--- ---------- 3. YOUR 12 DISEASES ----------
--- Insert order = display order, preserved via the `id` column.
+
+
 
 insert into public.diseases (name, icon, tag, cat, href, "desc") values
   ('Hypertension',           'bi-heart-pulse',      'Chronic',     'chronic',                'diseases/hypertension.html', 'High blood pressure often has no symptoms but raises the risk of stroke and heart disease over time.'),
@@ -60,7 +50,6 @@ insert into public.diseases (name, icon, tag, cat, href, "desc") values
   ('Pre-eclampsia',          'bi-person-heart',     'Maternal',    'maternal',               'diseases/eclampsia.html',    'A pregnancy complication with high blood pressure — regular antenatal check-ups are essential.');
 
 
--- ---------- 4. CHECK IT WORKED ----------
--- Should return 12 rows in the same order as your old array.
+
 
 select id, name, tag, cat, href, "desc" from public.diseases order by id;

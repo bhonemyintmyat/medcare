@@ -1,52 +1,4 @@
-/* ============================================================
-   MedCare — emergency numbers (editor/emergency.html)
 
-   The highest-consequence screen in this area. Correcting a number,
-   adding a service, and deciding which services are on the public page.
-
-   WHY ADDING IS HERE, WHEN IT ONCE WAS NOT
-
-   supabase_editor.sql section 3 gave editors UPDATE and left INSERT with
-   admins, on the reasoning that adding a service changes what the
-   emergency page IS and is never as urgent as fixing a wrong number.
-   Then the admin area was scoped down and stopped having an emergency
-   screen at all — at which point "INSERT is admin-only" stopped being a
-   safeguard and became a table nobody on the site could add a row to.
-   supabase_admin_scope.sql moves INSERT here and says so.
-
-   What replaces the role gate is the workflow already on the table. A
-   new service is born 'draft', the public policy serves 'published' and
-   nothing else, so a half-typed number is invisible until somebody
-   deliberately publishes it.
-
-   AND THE SECOND PAIR OF HANDS
-
-   For a while that WAS one pair of hands: the editor who typed a number
-   could publish it. supabase_publish_approval.sql closed that. Every
-   transition into 'published' now needs an admin, on this table as on
-   the other three, so a new emergency number is written by one person
-   and put in front of readers by another.
-
-   Which is why the two buttons on a card are not symmetrical, and must
-   not be made so. Publishing is an admin's. Taking a number OFF the
-   page is any editor's, immediately — the editor who has just learned
-   that an ambulance line is dead should not be looking for an admin
-   before they can act on it. Approval protects readers from things
-   appearing; nothing should stand between them and a wrong number
-   disappearing.
-
-   THE ONE THING IT STILL WILL NOT DO
-
-   Delete. There is no editor DELETE policy on this table or any other,
-   so removing a row for good is refused by Postgres rather than by the
-   absence of a button. Unpublishing takes a service off the page and
-   keeps the row.
-
-   The number is typed twice, on a new row as much as a corrected one.
-   That is a UI convention and it stops nothing determined; what makes
-   the column safe to open is that nothing here can be destroyed and
-   every change is stamped with who made it.
-   ============================================================ */
 
 (function () {
   'use strict';
@@ -64,12 +16,7 @@
   var rows  = [];
   var names = {};
 
-  /* The columns edited on an existing row. `status` is not among them —
-     it moves through the publish controls, which confirm separately —
-     and neither is `icon`, which is a Bootstrap Icons name matching a
-     design decision on the emergency page rather than anything somebody
-     comes to this screen to fix. A new row gets a default icon it can
-     keep for ever without looking wrong. */
+  
   var EDITABLE = ['name', 'sub', 'phone', 'sort_order'];
 
   var NEW_ICON = 'bi-telephone-fill';
@@ -77,13 +24,7 @@
   function cardHtml(row) {
     var live = row.status === 'published';
 
-    /* A live number is not an editor's to correct in place — the trigger
-       refuses it, so the fields say so rather than accepting typing that
-       cannot be saved. The way out is the "Take off the page" button
-       that is already on this card. See section 4 of
-       supabase_publish_approval.sql: this is the place where that rule
-       costs the most, and where a carve-out would go if it is ever
-       decided that a wrong number should be correctable in place. */
+    
     var lock = !ed.canEditNow(row.status, guard.isAdmin());
     var dis  = lock ? ' disabled' : '';
 
@@ -171,11 +112,7 @@
                          'border-top:1px solid var(--mc-border);padding-top:.9rem">' +
                ed.touched(row, names) +
                '<div style="margin-left:auto;display:flex;gap:.5rem;flex-wrap:wrap">' +
-                 /* Taking a number OFF the page is any editor's to do, at
-                    once. Putting one ON it is an admin's. Same asymmetry
-                    as every other kind of content, and it matters more
-                    here: an editor who has just learned that an ambulance
-                    line is dead must not have to find an admin first. */
+                 
                  (live
                    ? '<button type="button" class="mc-auth-btn mc-auth-btn--danger" data-publish="archived">' +
                        'Take off the page</button>'
@@ -212,19 +149,9 @@
 
   function cardOf(id) { return hostEl.querySelector('[data-em="' + id + '"]'); }
 
-  /* Wired separately from the rest of the card because a locked card
-     has this button and nothing else: no Save, no Undo, no editable
-     fields. Taking a number off the page is the one action that is
-     always available to whoever is looking at it. */
+  
   function wirePublish(card, row) {
-    /* Publishing and unpublishing. Both confirm, and the confirmation
-       names the service and the number rather than asking "are you
-       sure" — the whole risk on this screen is somebody acting on a row
-       they think is a different row.
-
-       There is no button at all when an editor is looking at an
-       unpublished row: publishing is an admin's, and the card says so in
-       words where the button would have been. */
+    
     var publishBtn = card.querySelector('[data-publish]');
 
     if (publishBtn) {
@@ -278,10 +205,7 @@
     var telLink    = card.querySelector('[data-tel]');
     var phoneIn    = card.querySelector('[data-f="phone"]');
 
-    /* A live number an editor may not correct in place. cardHtml() has
-       already disabled the fields and left out Save and Undo, so there
-       is nothing here to wire except the button that takes it off the
-       page — which is how they make it editable. */
+    
     if (!saveBtn) {
       wirePublish(card, row);
       return;
@@ -321,9 +245,7 @@
         if (!needsConfirm) { confirmIn.value = ''; confirmErr.hidden = true; }
       }
 
-      // What a reader's phone would actually dial, updated as it is
-      // typed. A transposed digit is much easier to see here than in a
-      // text box, because this is the shape it will be read in.
+
       if (telLink) {
         var v = phoneIn.value.trim();
         telLink.textContent = v || '—';
@@ -375,9 +297,7 @@
         db.from('emergency_contacts').update(next).eq('id', row.id).select().single()
           .then(function (res) {
             if (res.error) { throw res.error; }
-            // Re-seat the card on what the database now holds, so the
-            // "changed?" comparison is against reality rather than
-            // against what we sent.
+
             var i = rows.indexOf(row);
             rows[i] = res.data;
             return ed.loadNames([res.data.updated_by]).then(function (more) {
@@ -397,18 +317,7 @@
     refresh();
   }
 
-  /* ================================================================
-     Adding a service
-     ----------------------------------------------------------------
-     Its own form above the list rather than a blank card inside it, so
-     a number somebody is still typing never sits among the live ones and
-     cannot be mistaken for one.
-
-     It saves as a draft and says so. Publishing it is a second,
-     separate decision made on the card it becomes — which is the same
-     two-step every other kind of content on this site goes through, and
-     the reason it is safe for one person to do both.
-     ================================================================ */
+  
 
   function openAddForm() {
     addBtn.disabled = true;
@@ -473,10 +382,7 @@
         '</div>' +
       '</div>';
 
-    /* Listeners go on the card, not on #emNew. #emNew outlives every
-       form drawn into it, so a listener left there would stack up one
-       per open and each stale copy would keep a closure over inputs that
-       are no longer in the document. */
+    
     var card      = newEl.firstElementChild;
     var nameIn    = newEl.querySelector('[data-n="name"]');
     var phoneIn   = newEl.querySelector('[data-n="phone"]');
@@ -510,8 +416,7 @@
         sort_order: Number(newEl.querySelector('[data-n="sort_order"]').value || 0),
         icon:       NEW_ICON,
         status:     'draft',
-        // The insert policy checks this against the verified token, so
-        // it is required rather than decorative — omitting it is a 403.
+
         created_by: guard.getUser().id
       };
       saveBtn.disabled = true;

@@ -12,9 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/styles.css">
 <link rel="stylesheet" href="css/admin.css">
-<!-- Same order as every public page, then the admin set. The guard has
-     to run before the page's own script, and everything needs the
-     client that supabase.js creates. -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
 <script src="../js/supabase.js" defer></script>
 <script src="../js/auth.js" defer></script>
@@ -26,13 +24,10 @@
 </head>
 <body>
 
-<!-- Nothing inside .mc-admin-shell is displayed until admin-guard.js
-     confirms an admin: admin.css hides it by default. -->
 <div class="mc-admin-shell" id="adminShell">
 
   <div class="mc-admin-backdrop" data-shell-close></div>
 
-  <!-- ===================== Sidebar ===================== -->
   <aside class="mc-admin-side">
     <a class="mc-admin-brand" href="index.html">
       <span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>
@@ -118,7 +113,6 @@
     </div>
   </aside>
 
-  <!-- ===================== Main ===================== -->
   <div class="mc-admin-main">
 
     <header class="mc-admin-top">
@@ -157,16 +151,8 @@
           whichever of you saves last is what readers see.
         </p>
 
-        <!-- The form below is the same form as editor/contact.html, driven
-             by the same script, because it is the same row with the same
-             rules. Only the notes underneath are written for who is
-             reading. Change one form, change the other. -->
         <form id="ctForm" novalidate>
 
-          <!-- ---------- The addresses ----------
-               Drawn by admin-contact.js from the saved row, because the
-               count varies. Empty rows are ignored on save, so an address
-               is removed by clearing it or by pressing Remove. -->
           <label class="mc-auth-label" for="ctEmails">Email addresses</label>
           <div id="ctEmails" class="mc-ad-phones"></div>
 
@@ -189,10 +175,6 @@
             with no address at all.
           </p>
 
-          <!-- ---------- The numbers ----------
-               Drawn by admin-contact.js from the saved row, because the
-               count varies. Empty rows are ignored on save, so a number is
-               removed by clearing it or by pressing Remove. -->
           <label class="mc-auth-label" for="ctPhones">Phone numbers</label>
           <div id="ctPhones" class="mc-ad-phones"></div>
 
@@ -213,9 +195,6 @@
             </span>
           </div>
 
-          <!-- The preview uses the REAL public classes from styles.css, in a
-               framed box. A preview drawn from its own copy of the styling is
-               a preview of the copy. -->
           <div class="mc-ad-preview" id="ctPreview" hidden>
             <p class="mc-ad-preview-label">What a reader will see</p>
             <div class="mc-contact-list" id="ctPreviewList"></div>

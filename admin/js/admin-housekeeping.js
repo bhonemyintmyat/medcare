@@ -1,50 +1,3 @@
-/* ============================================================
-   MedCare — housekeeping
-   Loaded by admin/housekeeping.html, after admin-guard.js,
-   admin-shell.js, admin-api.js and the editor's api (for the one rule
-   this screen shares with the entry form).
-
-   Four checks, and the dashboard card names all four:
-
-     content with no owner      who last touched a row, when nobody did
-     dead links                 an href that no longer fetches
-     unapproved source URLs     a citation that is neither WHO nor MoH
-     accounts with no profile   an auth.users row with no profiles row
-
-   FOUND HERE; FIXED WHERE IT LIVES
-
-   Nothing on this screen changes anything. Every finding carries a link
-   to the screen that owns the row — the entry form for content, the
-   accounts screen for people — because a housekeeping page that can also
-   edit is a second, less careful copy of five other screens, and the
-   rules it would have to re-implement are the ones worth having in
-   exactly one place.
-
-   The consequence is that a fix is a person's decision, which is the
-   right shape for all four of these. A missing owner may be correct. A
-   404 may be a page that was renamed on purpose. An unapproved source
-   may be a citation that predates the rule and still needs reading
-   before it is torn out.
-
-   THE CHECKS RUN INDEPENDENTLY
-
-   Each card resolves on its own and says so on its own. One check
-   failing — a table that does not exist yet, a function not yet
-   migrated, a network that drops halfway through the link sweep — must
-   not take the other three down with it, because the three that
-   succeeded are still worth reading. Promise.allSettled would do it in
-   one line; this uses per-check catch so the failure lands on the card
-   it belongs to, with the reason on it.
-
-   WHY THE LINK CHECK IS SLOW ON PURPOSE
-
-   Every href is fetched from this browser, a few at a time. It is the
-   only way to answer the question honestly — the database records what
-   the href says, not whether anything is there — and a burst of forty
-   parallel requests against the site is a thing a housekeeping screen
-   should not do to the site it is keeping house for.
-   ============================================================ */
-
 (function () {
   'use strict';
 
@@ -55,10 +8,6 @@
 
   var msgEl = document.getElementById('hkMsg');
 
-  /* The four content tables that carry created_by/updated_by/source_url,
-     added together by supabase_publish_approval.sql. `title` is whichever
-     column holds the human name; `href` and `source` say which of the two
-     later checks the table can take part in. */
   var TABLES = [
     { name: 'diseases',           kind: 'disease',   title: 'name',  href: true,  source: true },
     { name: 'articles',           kind: 'article',   title: 'title', href: true,  source: true },
@@ -69,11 +18,6 @@
   function editHref(kind, id) {
     return '../editor/entry.html?type=' + encodeURIComponent(kind) + '&id=' + encodeURIComponent(id);
   }
-
-  /* ---------- Drawing a card ----------
-     Every card goes through here, so "checking", "nothing to do", "here
-     are eleven things" and "this check could not run" look the same on
-     all four and are impossible to confuse with one another. */
 
   function render(hostId, countId, state, items, note) {
     var host  = document.getElementById(hostId);
@@ -124,21 +68,6 @@
     host.innerHTML = html;
   }
 
-  /* ---------- 1. Content with no owner ---------- */
-
-  /* updated_by is null when nobody has saved the row through the editor.
-     That covers two different situations and the note below says so,
-     because they need different reactions:
-
-       never edited     the twenty rows seeded by the migrations. Normal,
-                        and it clears itself the first time somebody saves.
-       owner deleted    created_by/updated_by are `on delete set null`, so
-                        deleting an account empties them and the row loses
-                        its history rather than following the account out.
-
-     Telling them apart from here is not possible — both are null — so the
-     screen reports the fact and leaves the reading to a person. */
-
   function checkOwners() {
     render('hkOwners', 'hkOwnersCount', 'busy');
 
@@ -171,20 +100,13 @@
     });
   }
 
-  /* ---------- 2. Dead links ---------- */
-
-  /* A few at a time, and HEAD first. Some static hosts answer HEAD with
-     405 while serving the same path perfectly well on GET, so a non-OK
-     HEAD is retried rather than believed — reporting a working page as
-     dead is the failure that would make this screen not worth opening. */
-
   function fetchStatus(url) {
     return fetch(url, { method: 'HEAD', cache: 'no-store' })
       .then(function (r) {
         if (r.ok) { return r.status; }
         return fetch(url, { method: 'GET', cache: 'no-store' }).then(function (g) { return g.status; });
       })
-      ['catch'](function () { return 0; });   // 0: the request never completed
+      ['catch'](function () { return 0; });
   }
 
   function inBatches(list, size, work) {
@@ -243,17 +165,6 @@
     });
   }
 
-  /* ---------- 3. Source URLs ---------- */
-
-  /* The same rule the entry form applies, borrowed rather than copied:
-     editor-api.js owns the pattern and says beside it that it and the SQL
-     constraint are a pair. A third copy here is how the three of them
-     would come to disagree.
-
-     A row can only be here if it predates is_approved_source() — the
-     check constraint refuses anything else on the way in. That makes an
-     empty card the normal reading and a non-empty one genuinely old. */
-
   function checkSources() {
     render('hkSources', 'hkSourcesCount', 'busy');
 
@@ -292,8 +203,6 @@
     });
   }
 
-  /* ---------- 4. Accounts with no profile ---------- */
-
   function checkAccounts() {
     render('hkAccounts', 'hkAccountsCount', 'busy');
 
@@ -321,8 +230,6 @@
     });
   }
 
-  /* ---------- Run them ---------- */
-
   function runAll() {
     var btn = document.getElementById('hkRun');
     if (btn) { btn.disabled = true; }
@@ -335,7 +242,7 @@
       .then(function () {
         if (stampEl) { stampEl.textContent = 'Last checked ' + ad.whenExact(new Date().toISOString()); }
       })
-      ['catch'](function () { /* every check already reported on its own card */ })
+      ['catch'](function () {  })
       .then(function () { if (btn) { btn.disabled = false; } });
   }
 

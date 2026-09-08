@@ -1,13 +1,4 @@
-/* ============================================================
-   MedCare — editor desk
-   Loaded only by editor-dashboard.html, after auth.js and
-   reports-queue.js.
 
-   The desk is a hub, not a new tool: the report queue it shows is the
-   very same reports-queue.js that reports.html and manage-diseases.html
-   use, started here once the role guard has passed. Everything this
-   file adds on top is read-only — counts and a recent-conditions list.
-   ============================================================ */
 
 (function () {
   'use strict';
@@ -25,26 +16,7 @@
   var recentEl  = document.getElementById('recentList');
   var recentNum = document.getElementById('recentCount');
 
-  /* ================================================================
-     THE GUARD — CONVENIENCE ONLY, NOT SECURITY
-     ----------------------------------------------------------------
-     Same rule as manage-diseases.js and reports.js: this redirect only
-     spares a reader a page of controls that would fail for them. It
-     runs on the visitor's machine, so it protects nothing.
-
-     What is actually enforced, in Postgres, on every request:
-
-       reports   "Staff can read all reports"     -> my_role() in ('editor','admin')
-                 "Staff can update report status" -> same, plus grant update(status)
-       diseases  "Anyone can read diseases"       -> the counts below are public anyway
-
-     Delete this guard and a plain user reaches the desk — and sees a
-     queue holding only their own reports, because RLS filtered the
-     rest out before the browser ever saw them.
-
-     JavaScript decides what to SHOW. The database decides what is
-     ALLOWED.
-     ================================================================ */
+  
   function guard() {
     if (!auth || !db) {
       checking.innerHTML = '<div class="container"><div class="mc-empty-simple" style="display:block">' +
@@ -59,7 +31,7 @@
         return;
       }
       if (!auth.isStaff()) {
-        // Signed in, but role is 'user'.
+
         window.location.replace('index.html');
         return;
       }
@@ -70,18 +42,17 @@
       var user = auth.getUser();
       var role = auth.getRole() || 'editor';
       whoEl.textContent = user.email + ' · ' + role;
-      // The tile is hidden markup for an editor; admin.html re-checks the
-      // role for itself, so revealing it is a convenience, not a hole.
+
       if (role === 'admin' && adminCard) { adminCard.style.display = 'flex'; }
 
-      // Only now does anything fetch.
+
       if (window.MedCareReportsQueue) { window.MedCareReportsQueue.start(); }
       loadStats();
       loadRecent();
     });
   }
 
-  /* ---------- helpers ---------- */
+  
   function esc(s) {
     return String(s == null ? '' : s)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -102,7 +73,7 @@
     el.classList.remove('is-loading');
   }
 
-  // "3 d ago" reads better than a timestamp in a list you scan.
+
   function when(iso) {
     if (!iso) { return ''; }
     var then = new Date(iso), mins = Math.round((Date.now() - then.getTime()) / 60000);
@@ -113,9 +84,7 @@
     return then.toLocaleDateString();
   }
 
-  /* ---------- counts ----------
-     head:true asks Postgres for the count without shipping the rows —
-     three small queries instead of three table downloads. */
+  
   function count(table, column, value) {
     var q = db.from(table).select('id', { count: 'exact', head: true });
     if (column) { q = q.eq(column, value); }
@@ -142,7 +111,7 @@
       .catch(function () { setStat('statDiseases', '—'); });
   }
 
-  /* ---------- recently added conditions ---------- */
+  
   function loadRecent() {
     recentEl.innerHTML = '<div class="mc-admin-loading">Loading conditions…</div>';
 
@@ -162,7 +131,7 @@
           return;
         }
 
-        // The newest row doubles as the "newest condition" tile.
+
         setStat('statLatest', when(rows[0].created_at));
         var nameEl = document.getElementById('statLatestName');
         if (nameEl) { nameEl.textContent = rows[0].name; }

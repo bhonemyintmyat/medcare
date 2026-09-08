@@ -1,30 +1,6 @@
-/* ============================================================
-   Exercises sanitize-html.js's clean() against the payloads it exists
-   to stop, plus the markup an editor legitimately produces. It runs the
-   REAL file rather than a copy of its logic, so a change to the
-   sanitiser that breaks it shows up here.
-
-   This is the only test in the repository, and it is here because the
-   sanitiser is the one piece of this project where being subtly wrong is
-   invisible until it matters. Everything else fails loudly.
-
-   The site itself has no build step and no package.json - deliberately -
-   so this does not run on `npm test`. It needs a DOM, and Node has none:
-
-     cd <a scratch directory>
-     npm install linkedom
-     node <path to this file>
-
-   Nothing in the site depends on linkedom; it exists for the length of
-   the test run and can be thrown away afterwards.
-   ============================================================ */
-
 const path = require('path');
 const fs = require('fs');
-/* Resolved from the CURRENT DIRECTORY rather than from this file, so
-   the scratch directory you installed linkedom into is where it is
-   looked for - this file lives in a repository that has no node_modules
-   and is not going to grow one. */
+
 let parseHTML;
 try {
   parseHTML = require('module')
@@ -43,13 +19,10 @@ try {
 
 const page = parseHTML('<!doctype html><html><body></body></html>');
 
-// The module reaches for these as globals, exactly as a browser supplies them.
 global.window = page.window;
 global.document = page.document;
 global.DOMParser = page.window.DOMParser;
 
-/* Resolved from this file's own location, so the test can be run from
-   anywhere and copied to a scratch directory to pick up linkedom. */
 const target = process.env.MEDCARE_SANITIZER ||
   path.join(__dirname, '..', 'js', 'sanitize-html.js');
 const src = fs.readFileSync(target, 'utf8');

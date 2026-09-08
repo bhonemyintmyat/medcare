@@ -1,33 +1,6 @@
-/* ============================================================
-   MedCare — admin area
-   Loaded AFTER ../styles.css, which owns the design tokens and most of
-   the pieces used here. This file adds only what the admin area needs
-   on top:
-
-     1. the guard's visibility states
-     2. the shell — sidebar, topbar, content column
-     3. empty, loading and error states
-
-   Deliberately reused from styles.css rather than restated: .mc-admin-card,
-   .mc-admin-msg, .mc-admin-note, .mc-admin-hint, .mc-admin-pill,
-   .mc-people (the accounts table), .mc-role-select, .mc-chip,
-   .mc-auth-btn, .mc-auth-field, .mc-auth-label, .mc-modal. If something
-   is missing here, look there before writing a new class.
-   ============================================================ */
-
-
-/* ===================== 1. The guard ===================== */
-/* admin-guard.js puts .mc-guard-pending on <html> the moment it runs,
-   and swaps it for .mc-guard-ok only once an admin is confirmed.
-
-   The shell is hidden by DEFAULT — not merely while pending — so a
-   guard that never runs at all (a script that 404s, a typo in the
-   src) leaves a blank page rather than a page full of controls. The
-   failure direction matters more than the failure message. */
 .mc-admin-shell { display: none; }
 html.mc-guard-ok .mc-admin-shell { display: grid; }
 
-/* Something to look at while the role is being read. */
 html.mc-guard-pending body::before {
   content: "";
   position: fixed;
@@ -52,7 +25,6 @@ html.mc-guard-pending body::after {
   html.mc-guard-pending body::after { animation-duration: 2.4s; }
 }
 
-/* Shown in place of the page when the check itself could not run. */
 .mc-guard-stall {
   max-width: 32rem;
   margin: 4rem auto;
@@ -64,15 +36,12 @@ html.mc-guard-pending body::after {
 .mc-guard-stall h1 { font-size: 1.4rem; margin: 0 0 .6rem; }
 .mc-guard-stall p { color: var(--mc-muted); line-height: 1.6; margin: 0 0 .5rem; }
 
-
-/* ===================== 2. The shell ===================== */
 .mc-admin-shell {
   grid-template-columns: 248px minmax(0, 1fr);
   min-height: 100vh;
   background: var(--mc-bg);
 }
 
-/* ---- Sidebar ---- */
 .mc-admin-side {
   grid-row: 1 / -1;
   background: #fff;
@@ -123,15 +92,8 @@ html.mc-guard-pending body::after {
 }
 .mc-admin-nav a[aria-current="page"] svg { color: var(--mc-primary-600); }
 
-/* The two ways out of the admin area: back to the site, and out of the
-   site altogether. */
 .mc-admin-side-foot { margin-top: auto; padding: .85rem .75rem 1.1rem; }
 
-/* Quiet until it is pointed at. It sits under "Back to MedCare", which
-   is the one people actually want, and it is the only irreversible
-   control in the sidebar — so it is styled as text rather than as a
-   button, and only turns red on approach. A permanently red button in
-   a footer somebody's cursor passes over all day stops being read. */
 .mc-admin-side-danger {
   display: flex; align-items: center; justify-content: center; gap: .45rem;
   width: 100%; margin-top: .5rem; padding: .55rem .9rem;
@@ -146,7 +108,6 @@ html.mc-guard-pending body::after {
 .mc-admin-side-danger:focus-visible { outline: 2px solid var(--mc-danger); outline-offset: 2px; }
 .mc-admin-side-danger svg { flex-shrink: 0; }
 
-/* ---- Topbar ---- */
 .mc-admin-top {
   display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
   background: #fff;
@@ -173,20 +134,10 @@ html.mc-guard-pending body::after {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
-/* ---- The account menu in the topbar ----
-   The desk's topbar ends in the same account menu the public navbar
-   carries: auth.js builds it into [data-mc-account], and .mc-menu* in
-   styles.css does the drawing. Only two things are different here.
-
-   The slot is a plain wrapper rather than .mc-account, whose margin is
-   for sitting at the end of a navbar; here .mc-admin-top-right already
-   spaces it. And the trigger sits in a white topbar, so it needs a
-   ground of its own to read as a button rather than as text. */
 .mc-admin-top-right > [data-mc-account] { display: flex; align-items: center; gap: .7rem; }
 .mc-admin-top-right .mc-menu-trigger { background: var(--mc-bg); }
 .mc-admin-top-right .mc-menu-trigger:hover { background: #fff; }
 
-/* The sidebar toggle, which only exists on narrow screens. */
 .mc-admin-burger {
   display: none;
   width: 38px; height: 38px; border-radius: 10px;
@@ -195,27 +146,11 @@ html.mc-guard-pending body::after {
 }
 .mc-admin-burger:focus-visible { outline: 2px solid var(--mc-primary); outline-offset: 2px; }
 
-/* ---- The drawer backdrop ----
-   It only ever appears below 992px, where the sidebar becomes an
-   off-canvas panel, and the rules that make it an overlay live in the
-   media query at the foot of this file. It still has to be hidden HERE,
-   outside the query, because on a wide screen it is otherwise a plain
-   static div — and a plain div that is a child of .mc-admin-shell is a
-   grid item. It takes the first column, pushes the sidebar into the
-   second and the content column onto a new row, where minmax(0, 1fr)
-   sizes it to 248px. Empty and invisible, it was still costing the whole
-   layout its width. */
 .mc-admin-backdrop { display: none; }
 
-/* ---- Content column ---- */
 .mc-admin-main { min-width: 0; display: flex; flex-direction: column; }
 .mc-admin-content { padding: 1.6rem; display: flex; flex-direction: column; gap: 1.25rem; }
 .mc-admin-content > .mc-admin-card { margin: 0; }
-
-
-/* ===================== 3. States ===================== */
-/* The brief asks for these three instead of dashboards nobody reads.
-   Each says what happened and what to do about it. */
 
 .mc-state {
   text-align: center;
@@ -240,8 +175,6 @@ html.mc-guard-pending body::after {
 .mc-state--error .mc-state-ico { background: var(--mc-danger-50); color: var(--mc-danger-700); }
 .mc-state--empty .mc-state-ico { background: var(--mc-primary-50); color: var(--mc-primary-600); }
 
-/* Loading: rows rather than a spinner, so the layout does not jump when
-   the real ones arrive. */
 .mc-skeleton { display: flex; flex-direction: column; gap: .55rem; padding: .4rem 0; }
 .mc-skeleton span {
   display: block; height: 44px; border-radius: 10px;
@@ -254,12 +187,6 @@ html.mc-guard-pending body::after {
   .mc-skeleton span { animation: none; }
 }
 
-
-/* ===================== Staff panel (overview) =====================
-   The one live panel on the overview: editors and admins, and the email
-   each is reachable at. .mc-admin-msg--error/--ok live in styles.css;
-   the "column not migrated yet" state is a warning, so its colour is
-   added here beside where the panel that raises it lives. */
 .mc-admin-msg--warn {
   background: var(--mc-amber-50); border: 1px solid #fde68a; color: #78350f;
 }
@@ -275,8 +202,6 @@ html.mc-guard-pending body::after {
 
 .mc-staff-list { list-style: none; margin: .9rem 0 0; padding: 0; }
 
-/* A row per person. The email is the reason the panel exists, so it sits
-   directly under the name at full weight rather than as a faint aside. */
 .mc-staff-row {
   display: flex; align-items: center; gap: .9rem;
   padding: .7rem 0; border-top: 1px solid var(--mc-border);
@@ -293,7 +218,7 @@ html.mc-guard-pending body::after {
 
 .mc-staff-who { min-width: 0; flex: 1; }
 .mc-staff-name { display: flex; align-items: center; gap: .4rem; font-weight: 600; color: var(--mc-text); }
-/* The name truncates; the "you" badge beside it does not get clipped. */
+
 .mc-staff-name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mc-staff-name .mc-people-you { flex-shrink: 0; margin-left: 0; }
 .mc-staff-mail {
@@ -305,7 +230,6 @@ html.mc-guard-pending body::after {
 .mc-staff-mail--none { color: var(--mc-muted); font-style: italic; }
 .mc-staff-mail--none:hover { text-decoration: none; }
 
-/* The role pill sits at the end of the row, not inline with the name. */
 .mc-staff-row .mc-admin-pill { flex-shrink: 0; }
 
 .mc-staff-empty {
@@ -313,10 +237,7 @@ html.mc-guard-pending body::after {
 }
 
 @media (max-width: 480px) {
-  /* The pill drops onto its own line under the name and email, so a long
-     address keeps the full width of the card instead of being squeezed
-     by the pill beside it. A grid does this cleanly: avatar and who on
-     the first row, pill aligned under the who column on the second. */
+
   .mc-staff-row {
     display: grid; grid-template-columns: 40px 1fr;
     grid-template-areas: "avatar who" ". pill";
@@ -327,39 +248,22 @@ html.mc-guard-pending body::after {
   .mc-staff-row .mc-admin-pill { grid-area: pill; justify-self: start; }
 }
 
-
-/* ===================== 4. Small shared pieces ===================== */
-/* Who last touched a row, and when. Used by the users table and by the
-   settings screens, where "who turned this on" is the first question
-   anybody asks. */
 .mc-touched {
   font-size: .78rem; color: var(--mc-muted);
   display: inline-flex; align-items: center; gap: .35rem; flex-wrap: wrap;
 }
-/* As .mc-ad-warn[hidden] above: the display here beats [hidden], and
-   entry.html hides this line until there is something to say. */
+
 .mc-touched[hidden] { display: none; }
 .mc-touched b { font-weight: 600; color: var(--mc-text); }
 
-/* A field whose value has to be typed twice before it is believed.
-   maintenance.html uses it for the words that close the public site. */
 .mc-confirm-field { border-left: 3px solid var(--mc-danger); padding-left: .85rem; }
 .mc-confirm-field .mc-auth-label { color: var(--mc-danger-700); }
 
-/* Status of a piece of content, in the workflow sense. The admin area
-   does not edit content, but housekeeping lists it — a row with no
-   owner reads differently when it is published than when it is a draft.
-
-   The report statuses that used to sit here (open, resolved, dismissed)
-   are gone with the reports inbox: the editor desk styles those through
-   .mc-report-status in styles.css. */
 .mc-status { text-transform: capitalize; }
 .mc-status--draft     { background: var(--mc-bg);        border-color: var(--mc-border); color: var(--mc-muted); }
 .mc-status--pending   { background: var(--mc-amber-50);  border-color: #fde68a;          color: var(--mc-amber); }
 .mc-status--published { background: var(--mc-green-50);  border-color: #bbf7d0;          color: #15803d; }
 
-
-/* ===================== 5. Narrow screens ===================== */
 @media (max-width: 991.98px) {
   .mc-admin-shell { grid-template-columns: minmax(0, 1fr); }
 
@@ -383,11 +287,6 @@ html.mc-guard-pending body::after {
   .mc-admin-top { padding: .8rem 1rem; }
   .mc-admin-content { padding: 1rem; }
 
-  /* styles.css unfolds the account menu below this width, because on a
-     public page it is inside a collapsed navbar and the panel is just
-     another block in that stack. In a topbar it is not: the trigger
-     stays a button at the end of the row and the panel stays a
-     dropdown hanging off it, narrow screen or not. */
   .mc-admin-top-right .mc-menu { width: auto; flex-direction: row; align-items: center; }
   .mc-admin-top-right .mc-menu-trigger { width: auto; }
   .mc-admin-top-right .mc-menu-panel {
@@ -398,39 +297,21 @@ html.mc-guard-pending body::after {
   .mc-admin-top-right .mc-menu-panel::before { display: block; }
 }
 
-/* The name beside the avatar is the first thing worth dropping when the
-   topbar runs out of room: the avatar and the panel both still say it. */
 @media (max-width: 480px) {
   .mc-admin-top-right .mc-menu-name { display: none; }
 }
 
-/* ===================== 5. Users and permissions =====================
-   The two People screens. Everything above is shell and state; this is
-   the furniture those two pages put inside it. The account table itself
-   is NOT here — .mc-people* lives in styles.css, where the old admin
-   dashboard left it, and both are better for there being one of it. */
-
-/* ---------- Row buttons ----------
-   Small enough to sit inside a table row without setting its height.
-   Named for where they are rather than what they do, because the same
-   pair serves Details and Role. */
 .mc-ad-rowbtn { font-size: .85rem; padding: .42rem .95rem; white-space: nowrap; }
 
-/* The delete button in a row. A ghost button that is red rather than a
-   filled red one: it sits at the end of every line of a list people
-   scroll, and the loudest control on the screen should not be the one
-   with nothing behind it. It is still the only red thing in the row. */
 .mc-ad-rowbtn--danger { color: var(--mc-danger); border-color: #fecaca; }
 .mc-ad-rowbtn--danger:hover {
   background: var(--mc-danger-50); color: var(--mc-danger-700); border-color: var(--mc-danger);
 }
 .mc-ad-rowbtn--danger:focus-visible { outline-color: var(--mc-danger); }
-/* Your own row. Shown and explained rather than removed — a gap where
-   everyone else has a button reads as a bug, and the reason is short. */
+
 .mc-ad-rowbtn--danger:disabled { color: var(--mc-muted); border-color: var(--mc-border); background: #fff; }
 .mc-ad-rowbtn--danger:disabled:hover { background: #fff; color: var(--mc-muted); border-color: var(--mc-border); }
 
-/* ---------- "What this page will not do" ---------- */
 .mc-ad-limits { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
 .mc-ad-limits li { display: flex; gap: .9rem; align-items: flex-start; }
 .mc-ad-limits .bi {
@@ -444,7 +325,6 @@ html.mc-guard-pending body::after {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85em;
 }
 
-/* ---------- The account detail panel ---------- */
 .mc-ad-panel { max-width: 560px; text-align: left; }
 .mc-ad-panel h2, .mc-ad-panel .mc-modal-sub { text-align: left; }
 .mc-ad-panel .mc-modal-actions { justify-content: flex-end; }
@@ -468,9 +348,6 @@ html.mc-guard-pending body::after {
   .mc-ad-def-row { grid-template-columns: minmax(0, 1fr); gap: .15rem; }
 }
 
-/* ---------- Granting a role ----------
-   Two columns on a wide screen: who, then what. They stack in that same
-   order on a narrow one, which is the order the decision is made in. */
 .mc-ad-grant {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
   gap: 1.5rem; align-items: start;
@@ -508,12 +385,6 @@ html.mc-guard-pending body::after {
   display: flex; flex-wrap: wrap; gap: .5rem; overflow-wrap: anywhere;
 }
 
-/* ---------- A choice between named options ----------
-   Radios rather than a dropdown, on every screen that offers one of
-   these. A dropdown shows one option and hides the consequences of the
-   others; the whole point of these screens is that the person sees what
-   they are choosing between. Used by the role picker and by the
-   open/closed switch on maintenance.html. */
 .mc-ad-choices { border: none; margin: 0 0 1rem; padding: 0; display: grid; gap: .5rem; }
 .mc-ad-choices legend { float: left; width: 100%; margin-bottom: .5rem; }
 
@@ -537,9 +408,6 @@ html.mc-guard-pending body::after {
   display: block; font-size: .82rem; line-height: 1.5; color: var(--mc-muted); margin-top: .3rem;
 }
 
-/* ---------- Warnings ----------
-   Amber says "know what you are doing"; red says "this is refused".
-   Two different messages, so two different colours. */
 .mc-ad-warn {
   display: flex; gap: .7rem; align-items: flex-start;
   font-size: .85rem; line-height: 1.55;
@@ -547,9 +415,7 @@ html.mc-guard-pending body::after {
   border-radius: 12px; padding: .75rem .9rem; margin: 0 0 1rem;
 }
 .mc-ad-warn .bi { flex-shrink: 0; margin-top: .1rem; }
-/* `display: flex` above beats the browser's own [hidden] rule, so a
-   warning that a script has hidden stays on screen. Same fix, and the
-   same reason, as .mc-people-save[hidden] in styles.css. */
+
 .mc-ad-warn[hidden] { display: none; }
 .mc-ad-warn--stop {
   background: var(--mc-danger-50); border-color: #fecaca; color: var(--mc-danger-700);
@@ -557,7 +423,6 @@ html.mc-guard-pending body::after {
 
 .mc-ad-actions { display: flex; gap: .6rem; justify-content: flex-end; flex-wrap: wrap; }
 
-/* ---------- Who holds each role ---------- */
 .mc-ad-holders {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem;
 }
@@ -578,7 +443,6 @@ html.mc-guard-pending body::after {
 .mc-ad-holder-none { font-size: .87rem; color: var(--mc-muted); margin: 0; }
 .mc-ad-readers { margin: 1.2rem 0 0; }
 
-/* ---------- The capability matrix ---------- */
 .mc-ad-matrix-wrap { overflow-x: auto; }
 .mc-ad-matrix { width: 100%; border-collapse: collapse; min-width: 560px; }
 .mc-ad-matrix thead th {
@@ -604,24 +468,10 @@ html.mc-guard-pending body::after {
   letter-spacing: .04em; text-transform: uppercase; color: var(--mc-muted);
   background: var(--mc-bg); padding: .5rem .6rem; border-bottom: 1px solid var(--mc-border);
 }
-/* A capability nobody has. Printed, not omitted: a blank row reads as an
-   oversight, and these three are decisions. */
+
 .mc-ad-nobody th, .mc-ad-nobody td { background: var(--mc-bg); }
 .mc-ad-nobody .mc-ad-what { color: var(--mc-muted); }
 
-
-/* ===================== 6. Maintenance =====================
-   The open/closed switch reuses .mc-ad-choice above. What is new here
-   is the status card, the two form pieces styles.css has no version of
-   (a checkbox with an explanation, a bare select), and the previews.
-
-   The previews deliberately use the REAL public classes — .mc-curtain-*
-   and .mc-site-notice, both in styles.css — inside a framed box. A
-   preview drawn from its own copy of the styles is a preview of the
-   copy, and the first time the two drift the screen starts lying about
-   what a reader will see. */
-
-/* ---------- Is the site up ---------- */
 .mc-ad-status {
   display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
   border-left-width: 4px; border-left-style: solid;
@@ -642,7 +492,6 @@ html.mc-guard-pending body::after {
 .mc-ad-pill--open   { background: var(--mc-green-50);  border-color: #bbf7d0; color: #15803d; }
 .mc-ad-pill--closed { background: var(--mc-danger-50); border-color: #fecaca; color: var(--mc-danger-700); }
 
-/* ---------- Form pieces ---------- */
 .mc-ad-count { font-size: .8rem; color: var(--mc-muted); line-height: 1.5; margin: -.85rem 0 1.2rem; }
 
 .mc-ad-check {
@@ -665,7 +514,6 @@ html.mc-guard-pending body::after {
 }
 .mc-ad-select:focus { outline: 2px solid var(--mc-primary); outline-offset: -1px; border-color: var(--mc-primary); }
 
-/* ---------- Previews ---------- */
 .mc-ad-preview {
   border: 1px dashed var(--mc-border); border-radius: 14px;
   padding: .9rem; margin: 0 0 1.2rem; background: var(--mc-bg);
@@ -674,8 +522,7 @@ html.mc-guard-pending body::after {
   font-size: .72rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
   color: var(--mc-muted); margin: 0 0 .7rem;
 }
-/* The curtain at a size that fits in a card. Its children are the real
-   public classes; only the frame is admin-only. */
+
 .mc-curtain-demo {
   background: #fff; border: 1px solid var(--mc-border); border-radius: 12px;
   padding: 1.6rem 1.2rem; text-align: center;
@@ -688,25 +535,13 @@ html.mc-guard-pending body::after {
 .mc-curtain-demo .mc-curtain-ico { width: 44px; height: 44px; font-size: 1.25rem; margin-bottom: .8rem; }
 .mc-ad-preview .mc-site-notice { border-radius: 10px; }
 
-
 @media (prefers-reduced-motion: reduce) {
   .mc-admin-side { transition: none; }
   .mc-ad-result, .mc-ad-choice { transition: none; }
 }
 
-
-/* ===================== 7. Contact details =====================
-   admin/contact.html. One email field and a short list of phone rows,
-   plus a preview that uses the REAL public classes — .mc-contact-* in
-   styles.css — for the same reason the maintenance preview does: a
-   preview drawn from its own copy of the styling is a preview of the
-   copy. */
-
 .mc-ad-phones { display: grid; gap: .9rem; margin: 0 0 .9rem; }
 
-/* A row is a card rather than a bare line: three fields and a Remove
-   button that belong to the same number need a visible edge, or the
-   second row's label reads as the first row's footnote. */
 .mc-ad-phone {
   background: var(--mc-bg); border: 1px solid var(--mc-border);
   border-radius: 12px; padding: .9rem 1rem .95rem;
@@ -720,9 +555,6 @@ html.mc-guard-pending body::after {
 .mc-ad-phone-add { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; margin: 0 0 1rem; }
 .mc-ad-phone-add .mc-ad-count { margin: 0; }
 
-/* The preview's cards are spans, not links — there is nothing to open
-   from inside a form — so the hover state the public page has would be
-   a lie about what this box does. */
 .mc-ad-preview .mc-contact-list { margin: 0; }
 .mc-ad-preview .mc-contact-card:hover { transform: none; border-color: var(--mc-border); box-shadow: var(--mc-shadow); }
 
@@ -731,43 +563,21 @@ html.mc-guard-pending body::after {
   .mc-ad-phone-foot { flex-direction: column; align-items: stretch; }
 }
 
-/* ============================================================
-   Housekeeping
-   ============================================================ */
-
-/* A count that found something. The neutral pill reads as "checked and
-   fine", which is what three of the four cards normally are, so a
-   non-zero result has to look different or it disappears among them. */
 .mc-admin-count.is-flagged {
   background: #fff7ed;
   color: #c2410c;
   border-color: #fed7aa;
 }
 
-/* The findings sit in a card that also carries a paragraph of
-   explanation, so the queue underneath needs the gap the other screens
-   get from their own headers. */
 .mc-hk-card .mc-admin-queue { margin-top: .9rem; }
 .mc-hk-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
 .mc-hk-stamp { color: var(--mc-muted); font-size: .86rem; }
 
-/* A Burmese word inside an otherwise English admin screen. The language
-   bar sets the same two properties on .mc-lang-btn for the same reason:
-   without the font the glyphs fall back to something that renders the
-   stacked marks wrongly, and without the taller line-height they are
-   clipped by the button's own box. */
 .mc-lang-native {
   font-family: 'Noto Sans Myanmar', 'Inter', system-ui, sans-serif;
   line-height: 1.7;
 }
 
-/* The footer-pages list makes each row a <button>, so it is reachable by
-   keyboard and announces itself as a control rather than as text you
-   have to guess is clickable. .mc-admin-row was written for a <div>,
-   though, so a button arrives carrying defaults that rule never had to
-   clear: centred text, its own font and colour, a border, a grey
-   background and a shrink-to-fit box. Cleared here rather than by
-   dropping back to a div. */
 button.mc-admin-row {
   width: 100%;
   text-align: left;

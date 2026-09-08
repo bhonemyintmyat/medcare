@@ -1,31 +1,3 @@
-/* ============================================================
-   MedCare — maintenance mode and the site-wide notice
-   Loaded by admin/maintenance.html, after admin-guard.js,
-   admin-shell.js and admin-api.js.
-
-   Two settings, two forms, one table: site_settings, keys 'maintenance'
-   and 'notice'. What reads them is the last block of script.js, on
-   every public page.
-
-   ------------------------------------------------------------
-   THE ASYMMETRY, WHICH IS DELIBERATE
-
-   Closing the site asks you to type a phrase. Reopening it is one
-   click, from a button on the status card, with no confirmation at all.
-
-   That is not an inconsistency. The two actions have opposite failure
-   costs: closing by accident takes the health information away from
-   everybody who needs it, and every second of hesitation before it is
-   time well spent. Reopening by accident restores a working site. When
-   somebody is standing at this screen at 2am trying to put the site
-   back, the last thing that should be in their way is a form.
-
-   The same reasoning is why unticking "keep the emergency numbers
-   reachable" asks for a different, harder phrase than closing does: it
-   is the one setting on this screen that can leave somebody holding a
-   phone with nothing to dial.
-   ============================================================ */
-
 (function () {
   'use strict';
 
@@ -38,7 +10,6 @@
   var msgEl    = document.getElementById('mtMsg');
   var statusEl = document.getElementById('mtStatus');
 
-  // Maintenance form
   var mtForm      = document.getElementById('mtForm');
   var mtOpen      = document.getElementById('mtOpen');
   var mtClosed    = document.getElementById('mtClosed');
@@ -52,7 +23,6 @@
   var mtReset     = document.getElementById('mtReset');
   var mtSave      = document.getElementById('mtSave');
 
-  // Notice form
   var ntForm    = document.getElementById('ntForm');
   var ntEnabled = document.getElementById('ntEnabled');
   var ntTone    = document.getElementById('ntTone');
@@ -66,18 +36,9 @@
 
   var DEFAULT_MESSAGE = 'MedCare is being updated. Please check back shortly.';
 
-  /* `saved` is what the database last told us. The forms are the working
-     copy. Everything that decides whether Save is enabled, and what the
-     confirmation should ask, is a comparison between the two — so a
-     failed write leaves the page describing the database rather than
-     describing what somebody typed. */
   var saved = null;
   var names = {};
   var busy  = false;
-
-  /* ---------------------------------------------------------------
-     READING
-     --------------------------------------------------------------- */
 
   function load() {
     return api.loadSettings(['maintenance', 'notice'])
@@ -121,13 +82,6 @@
              esc(api.whenExact(row.updated_at)) +
            '</span>';
   }
-
-  /* ---------------------------------------------------------------
-     THE STATUS CARD
-     ---------------------------------------------------------------
-     The answer to "is the site up?", above everything else, in the two
-     colours the rest of the admin area uses for the same question.
-     --------------------------------------------------------------- */
 
   function renderStatus() {
     var m = saved.maintenance.value;
@@ -176,10 +130,6 @@
       '</div>';
   }
 
-  /* ---------------------------------------------------------------
-     THE FORMS
-     --------------------------------------------------------------- */
-
   function fillForms() {
     var m = saved.maintenance.value;
     mtOpen.checked   = !m.enabled;
@@ -216,15 +166,11 @@
     return Object.keys(a).every(function (k) { return a[k] === b[k]; });
   }
 
-  /* Redraws everything that depends on the maintenance form: the counter,
-     the emergency warning, the preview, and whether Save is live. */
   function syncMaintenance() {
     var next = readMaintenance();
 
     mtCount.textContent = mtMessage.value.length;
 
-    // The warning is about the state being SAVED, not about the tickbox
-    // in isolation: an unticked box on an open site changes nothing yet.
     mtEmWarn.hidden = !(next.enabled && !next.allow_emergency);
 
     mtPreview.hidden = !next.enabled;
@@ -262,10 +208,6 @@
     ntSave.textContent = dirty ? 'Save' : 'Saved';
   }
 
-  /* ---------------------------------------------------------------
-     WRITING
-     --------------------------------------------------------------- */
-
   function write(key, value, okText) {
     busy = true;
     syncMaintenance();
@@ -291,8 +233,7 @@
       .catch(function (err) {
         busy = false;
         console.error('[MedCare] Could not save ' + key + ':', err);
-        // The forms keep what was typed, so nothing has to be retyped;
-        // `saved` is untouched, so Save stays live for another attempt.
+
         syncMaintenance();
         syncNotice();
         api.message(msgEl, 'error', api.describeError(err, 'that setting'));
@@ -321,9 +262,6 @@
         ? 'The site is closed. Readers now see your message.'
         : 'Saved. The site stays closed.';
 
-    /* Hiding the emergency numbers is asked about first and hardest,
-       even when it happens in the same save as the closure: it is the
-       part of the change that a reader could be harmed by. */
     if (hidingNums) {
       api.confirmByName({
         title: 'Hide the emergency numbers?',
@@ -372,10 +310,6 @@
       next.enabled ? 'The notice is showing on every page.' : 'The notice is off.');
   }
 
-  /* ---------------------------------------------------------------
-     WIRING
-     --------------------------------------------------------------- */
-
   mtForm.addEventListener('input',  syncMaintenance);
   mtForm.addEventListener('change', syncMaintenance);
   mtForm.addEventListener('submit', function (e) {
@@ -398,10 +332,6 @@
     api.message(msgEl, 'ok', '');
   });
 
-  /* Reopening from the status card. No confirmation, and it does not
-     touch the message or the emergency setting — it flips one field, so
-     that closing the site again later says the same thing it said
-     before without anybody having to retype it. */
   statusEl.addEventListener('click', function (e) {
     if (!e.target.closest('[data-reopen]')) { return; }
     var next = {
@@ -412,10 +342,6 @@
     write('maintenance', next, 'The site is open again.');
   });
 
-  /* Leaving with something typed and unsaved. The browser's own dialog
-     rather than a nicer one of ours: ours cannot stop a navigation, and
-     a prettier warning that does not actually prevent the loss is worse
-     than the ugly one that does. */
   window.addEventListener('beforeunload', function (e) {
     if (!saved || busy) { return; }
     if (same(readMaintenance(), saved.maintenance.value) &&

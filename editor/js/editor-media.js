@@ -1,30 +1,4 @@
-/* ============================================================
-   MedCare — images (editor/media.html)
 
-   A bucket, not a table: `content-images` in Supabase Storage, public to
-   read and writable by staff. The content rows keep a URL, which is why
-   the article form's thumbnail field takes text and this screen's job
-   ends at handing over a path.
-
-   WHY THERE IS NO DELETE
-
-   The same reason there is no delete anywhere else in this area, plus
-   one that is specific to files. Nothing records which pages use which
-   image, so removing one cannot be checked first — it would silently
-   break every page pointing at it, and the breakage shows up as a
-   missing picture on the public site rather than as an error anybody
-   sees here. Replace overwrites in place instead, so the pages using it
-   pick up the new file and nothing has to be re-linked. There is no
-   delete policy on the bucket either, so this is a rule and not a
-   preference.
-
-   REPLACE IS AN UPSERT
-
-   Same path, new bytes. The public URL does not change. Browsers and
-   any CDN in front of the bucket will hold the old bytes for a while,
-   which is worth knowing before somebody reports that the replacement
-   "did not work" — the note under the button says so.
-   ============================================================ */
 
 (function () {
   'use strict';
@@ -34,10 +8,7 @@
   var db    = window.supabaseClient;
   if (!guard || !ed) { return; }
 
-  /* The bucket name, the size limit, the accepted types, the renaming
-     rule and the upload itself all live in editor-api.js now, because
-     the entry form's cover-image dropzone puts files in the same bucket.
-     Kept as local aliases so the rest of this file reads as it did. */
+  
   var BUCKET    = ed.IMAGE_BUCKET;
   var MAX_BYTES = ed.MAX_IMAGE_BYTES;
   var TYPES     = ed.IMAGE_TYPES;
@@ -53,7 +24,7 @@
 
   var files = [];
   var query = '';
-  var replacing = null;    // the path a Replace click is waiting on
+  var replacing = null;
 
   function publicUrl(name) {
     return db.storage.from(BUCKET).getPublicUrl(name).data.publicUrl;
@@ -67,17 +38,11 @@
       : (bytes / 1024 / 1024).toFixed(1) + ' MB';
   }
 
-  /* Both of these moved to editor-api.js when the entry form grew a
-     dropzone of its own - see the note above. The comments explaining
-     WHY names are rewritten and why the timestamp is there went with
-     them. */
+  
   var safeName     = ed.safeImageName;
   var rejectReason = ed.rejectImage;
 
-  /* Storage's JS client does not report upload progress, so the bar is
-     an indeterminate one dressed as a determinate one: it moves while
-     the request is open and completes when it resolves. Honest enough —
-     it says "something is happening", which is all it is being asked. */
+  
   function showBar(on) {
     barEl.hidden = !on;
     var fill = barEl.querySelector('span');
@@ -91,7 +56,7 @@
     window.setTimeout(function () { showBar(false); }, 350);
   }
 
-  /* ---------- Uploading ---------- */
+  
 
   function upload(file) {
     var bad = rejectReason(file);
@@ -144,14 +109,13 @@
     });
   }
 
-  /* ---------- Listing ---------- */
+  
 
   function list() {
     return db.storage.from(BUCKET).list('', { limit: 300, sortBy: { column: 'created_at', order: 'desc' } })
       .then(function (res) {
         if (res.error) { throw res.error; }
-        // Storage returns a placeholder row for the folder itself; the
-        // real files are the ones with an id.
+
         files = (res.data || []).filter(function (f) { return f.id; });
         draw();
       })
@@ -214,13 +178,13 @@
     }).join('') + '</div>';
   }
 
-  /* ---------- Wiring ---------- */
+  
 
   pickBtn.addEventListener('click', function () { fileInput.click(); });
 
   fileInput.addEventListener('change', function () {
     if (fileInput.files[0]) { upload(fileInput.files[0]); }
-    fileInput.value = '';     // so the same file can be chosen twice
+    fileInput.value = '';
   });
 
   ['dragenter', 'dragover'].forEach(function (evt) {
@@ -240,9 +204,7 @@
     if (file) { upload(file); }
   });
 
-  /* A file dropped anywhere but the zone is almost always meant for the
-     zone. Without this the browser navigates away from the page to
-     display the image, which on an editing screen looks like a crash. */
+  
   ['dragover', 'drop'].forEach(function (evt) {
     window.addEventListener(evt, function (e) {
       if (!dropEl.contains(e.target)) { e.preventDefault(); }
@@ -263,8 +225,7 @@
           ed.message(msgEl, 'error', 'Could not copy. The address is ' + url);
         });
       } else {
-        // file:// and older browsers have no clipboard API. Showing the
-        // address is worse than copying it and better than nothing.
+
         ed.message(msgEl, 'ok', url);
       }
       return;

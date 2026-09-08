@@ -1,44 +1,3 @@
--- ============================================================
--- MedCare — hospitals, carried across from script.js
--- Run in: Supabase dashboard -> SQL Editor -> New query -> Run
--- Run AFTER supabase_admin_schema.sql. Safe to re-run.
---
--- GENERATED, NOT TYPED. Every row below was read out of the hospitals
--- array in script.js and evaluated by JavaScript, so the names,
--- addresses and phone numbers are byte-for-byte what the site already
--- serves — including the typographic apostrophes in names like
--- Yangon Children's Hospital. Retyping 58 rows by hand is how a
--- township ends up misspelled or a digit ends up dropped.
---
--- They land as PUBLISHED because they are already live on the site.
--- created_by stays null, which is what marks a row as pre-dating the
--- editors: the stamp trigger fills it on every write from now on.
---
--- READ THIS BEFORE ANYONE DIALS ANYTHING HERE.
---
--- Only 11 of these 58 rows carry a phone number that came from a real
--- source, and even those are copied, NOT verified.
---
--- The other 47 all carry the SAME placeholder, 01-000000. It is not a
--- number, it is a stand-in put there so the cards on hospitals.html do
--- not read "N/A" — one value repeated 47 times precisely so that nobody
--- mistakes it for that hospital's line. Replace them per row as real
--- numbers are confirmed; until then the 01-000000 rows should be read
--- as "unknown", not as "this is the number".
---
--- The eleven real ones are the rows that do not say 01-000000.
---
--- Seven rows were dropped as duplicates: the same hospital listed
--- twice, once with a number and once without, or once per township for
--- a building that sits on a township border. Where one copy had a real
--- number that is the copy that survived. Removed were both "Yangon
--- General Hospital - YGH" rows (already present as "Yangon General
--- Hospital"), Victoria Hospital/Mayangone, North Okkalapa General and
--- Teaching Hospital, the second "Yangon Children's Hospital" for
--- Sanchaung, Pinlon Hospital/Thingangyun and Yankin Children's
--- Hospital.
--- ============================================================
-
 insert into public.hospitals (name, type, township, address, phone, hours, er, status)
 select v.name, v.type, v.township, v.address, v.phone, v.hours, v.er, 'published'
 from (values
@@ -101,28 +60,19 @@ from (values
   ('Specialist Hospital - Yankin / Yankin Chest Hospital', 'specialist', 'Yankin', 'Yankin Road, 1st Ward, Yankin Township, Yangon', '01-000000', 'Regular Hours', false),
   ('Melia Clinic & Specialist Clinics', 'clinic', 'Yankin', 'Kanbe Road / Near Kaba Aye Pagoda Road, Yankin Township, Yangon', '01-000000', 'Regular Hours', false)
 ) as v(name, type, township, address, phone, hours, er)
--- Re-runnable: a hospital already carried across is left alone rather
--- than duplicated. Name plus township is the pair that identifies one,
--- since a chain can have branches in two townships.
+
 where not exists (
   select 1 from public.hospitals h
   where h.name = v.name and h.township = v.township
 );
 
-
--- ---------- CHECKS ----------
-
--- Expect 65 rows, all published.
 select count(*) as total,
        count(*) filter (where status = 'published') as published,
        count(*) filter (where er) as with_emergency_room
 from public.hospitals;
 
--- The types in use, which must all satisfy hospitals_type_check.
 select type, count(*) from public.hospitals group by type order by type;
 
--- Anything missing a phone number is worth knowing about.
 select name, township from public.hospitals where phone is null order by name;
 
--- Read back a few, to compare against hospitals.html by eye.
 select name, township, phone, hours, er from public.hospitals order by id limit 5;

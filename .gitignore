@@ -1,0 +1,48 @@
+# Secrets. Nothing reads a .env today; this is here so a service_role
+# key can never be committed by reflex.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets.json
+
+# Supabase CLI local state
+supabase/.temp/
+supabase/.branches/
+supabase/config.toml
+
+# Node. The site has no build step; linkedom is installed elsewhere.
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-error.log
+
+# Editor and tooling, per machine.
+# .vscode/launch.json is shared on purpose, so is not ignored.
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/*.local.json
+.idea/
+*.swp
+*.swo
+*~
+.claude/settings.local.json
+.claude/local/
+.mcp.json
+
+# OS clutter
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Scratch
+*.log
+*.bak
+*.orig
+*.rej
+tmp/
+scratch/

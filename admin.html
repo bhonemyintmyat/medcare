@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<!-- ===================== Navbar ===================== -->
+
 <nav class="navbar navbar-expand-xl mc-nav">
   <div class="container">
     <a class="navbar-brand" href="index.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
@@ -35,8 +35,7 @@
 </nav>
 
 <main>
-  <!-- Shown while the role is still being checked, so protected content
-       never flashes on screen before the redirect happens. -->
+  
   <section class="mc-detail-body" id="adminChecking">
     <div class="container">
       <div class="mc-empty-simple" style="display:block">
@@ -47,7 +46,7 @@
     </div>
   </section>
 
-  <!-- Revealed only for admin. Editors are sent to the editor desk. -->
+  
   <div id="adminApp" style="display:none">
 
     <section class="mc-page-head">
@@ -85,7 +84,7 @@
 
         <div class="mc-admin-msg" id="adminMsg" role="status" aria-live="polite" style="display:none"></div>
 
-        <!-- ---------- Site at a glance ---------- -->
+        
         <div class="mc-stat-grid">
           <div class="mc-stat">
             <span class="mc-stat-ico"><i class="bi bi-people"></i></span>
@@ -121,7 +120,7 @@
           </div>
         </div>
 
-        <!-- ---------- Tools ---------- -->
+        
         <div class="mc-dash-links">
           <a class="mc-dash-card" href="editor-dashboard.html">
             <span class="mc-dash-card-ico"><i class="bi bi-columns-gap"></i></span>
@@ -146,11 +145,8 @@
           </a>
         </div>
 
-        <!-- ---------- People, roles and accounts ---------- -->
-        <!-- id: the account menu's "Manage Staff" links straight here. This
-             is the Accounts card from admin/users.html, driven by this
-             page's own admin.js rather than the admin/ subsystem — same
-             list, same role editing, and the same per-row Delete. -->
+        
+        
         <div class="mc-admin-card" id="people">
           <div class="mc-admin-listhead">
             <h2>Accounts <span class="mc-admin-count" id="peopleCount">0</span></h2>
@@ -198,7 +194,7 @@
   </div>
 </main>
 
-<!-- ===================== Footer ===================== -->
+
 <footer class="mc-footer">
   <div class="container">
     <div class="row g-4">

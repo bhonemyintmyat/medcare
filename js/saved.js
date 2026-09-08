@@ -1,27 +1,3 @@
-/* ============================================================
-   MedCare — the reader's "Saved" page (saved.html)
-
-   Load after supabase.js, auth.js and bookmarks.js:
-
-     <script src="js/supabase.js" defer></script>
-     <script src="js/auth.js" defer></script>
-     <script src="js/bookmarks.js" defer></script>
-     <script src="js/script.js" defer></script>
-     <script src="js/saved.js" defer></script>
-
-   Everything a person has saved, newest first, each with a way back to it
-   and a way to un-save it. The un-save button is the very same
-   <button data-bm> bookmarks.js draws everywhere else, so it is already
-   wired — this file only has to remove the card once its row is gone.
-
-   PRIVACY. This reads `bookmarks`, whose select policy returns only the
-   signed-in reader's own rows; the embedded content comes back through
-   the public "published" policies on each table. Staff have no policy
-   here and see nothing. A signed-out visitor is shown a sign-in prompt,
-   not an empty list — there is nothing to list, and the database would
-   refuse the read anyway.
-   ============================================================ */
-
 (function () {
   'use strict';
 
@@ -44,12 +20,6 @@
 
   function show(el, on) { if (el) { el.style.display = on ? '' : 'none'; } }
 
-  /* How each kind of saved thing is drawn: its icon, the word on its
-     badge, and where "Open" goes. Diseases and articles have a page of
-     their own — read.html when the row carries a body, the hand-written
-     file otherwise, the same rule pageHref() uses on the listings.
-     Hospitals and pharmacies have no detail page, so "Open" drops the
-     reader onto the directory with the name already in the search box. */
   var KINDS = {
     disease: {
       rel: 'diseases', icon: 'bi-virus', badge: 'Disease',
@@ -93,9 +63,6 @@
            '<span class="mc-my">' + esc(pair.my) + '</span>';
   }
 
-  /* One bookmark row -> one card, or '' if the item behind it can no
-     longer be read (archived, or hidden by a policy). The embedded
-     resource is named after its table, so exactly one of these is set. */
   function cardHtml(row) {
     var kind = null, item = null;
     for (var k in KINDS) {
@@ -182,10 +149,6 @@
     show(authEl, true);
   }
 
-  /* Un-saving happens through the same button as everywhere else;
-     bookmarks.js does the delete and announces it. When the item on a
-     card is no longer saved, the card has served its purpose and goes —
-     and if it was the last one, the empty state takes over. */
   document.addEventListener('medcare:bookmarks-changed', function () {
     if (!window.MedCareBookmarks) { return; }
     var cards = listEl.querySelectorAll('.mc-saved-card');

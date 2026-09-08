@@ -1,30 +1,4 @@
-/* ============================================================
-   MedCare — reader reports queue (shared)
-   ------------------------------------------------------------
-   One implementation used by two pages:
-     reports.html            the standalone inbox
-     manage-diseases.html    the same queue beside the editor tools
 
-   Both pages provide the same container ids; this file supplies the
-   behaviour. Each page calls MedCareReportsQueue.start() only after
-   its own role guard has passed, so nothing loads for a visitor who
-   is about to be redirected.
-
-   Everything here leans on two policies from supabase_reports_rls.sql:
-
-     "Staff can read all reports"      an editor sees everyone's
-                                       reports; a reader sees only
-                                       their own. Same table, same
-                                       query, different result set.
-
-     "Staff can update report status"  lets staff move a report
-                                       through the workflow.
-
-   And on one thing that is NOT a policy: UPDATE is granted on the
-   `status` column alone, so this file physically cannot rewrite a
-   reader's `reason` even if the code tried. RLS decides which rows;
-   the column grant decides which columns.
-   ============================================================ */
 
 (function () {
   'use strict';
@@ -56,7 +30,7 @@
   function explain(err) {
     if (!err) { return 'Something went wrong.'; }
     if (err.code === '42501') {
-      // RLS or a column grant refused it — the policies doing their job.
+
       return 'The database refused this change: your account does not have permission (RLS).';
     }
     return err.message || 'Something went wrong.';
@@ -70,10 +44,7 @@
            ' ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
   }
 
-  /* reports.item_id is deliberately not a foreign key — the table it
-     points at depends on item_type — so PostgREST cannot embed the
-     disease for us. The join happens here instead, against the list
-     loaded by loadDiseases(). */
+  
   function itemLabel(r) {
     if (r.item_type === 'disease') {
       var hit = diseases.filter(function (d) { return d.id === r.item_id; })[0];
@@ -85,7 +56,7 @@
   function loadDiseases() {
     return db.from('diseases').select('id,name').order('id')
       .then(function (res) { if (!res.error) { diseases = res.data || []; } })
-      .catch(function () { /* names degrade to "disease #id" */ });
+      .catch(function () {  });
   }
 
   function loadReports() {
@@ -106,14 +77,14 @@
     });
   }
 
-  // Always counts outstanding reports, whatever filter is showing.
+
   function refreshCount() {
     if (!countEl) { return; }
     db.from('reports').select('id', { count: 'exact', head: true }).eq('status', 'new')
       .then(function (res) {
         if (!res.error) { countEl.textContent = res.count == null ? '0' : res.count; }
       })
-      .catch(function () { /* the badge is cosmetic */ });
+      .catch(function () {  });
   }
 
   function render() {
@@ -130,7 +101,7 @@
           '<span class="mc-report-item"><i class="bi bi-file-medical"></i> ' + itemLabel(r) + '</span>' +
           '<span class="mc-admin-pill mc-report-status mc-report-status--' + esc(r.status) + '">' + esc(r.status) + '</span>' +
         '</div>' +
-        // Reader-supplied text: escaped, never inserted as markup.
+
         '<div class="mc-report-reason">' + esc(r.reason) + '</div>' +
         '<div class="mc-report-foot">' +
           '<span class="mc-report-meta">' +
@@ -146,32 +117,7 @@
     }).join('');
   }
 
-  /* ---------- Marking a report reviewed ----------
-     The whole call is:
-
-         db.from('reports')
-           .update({ status: 'reviewed' })   // SET status = 'reviewed'
-           .eq('id', id)                     // WHERE id = <id>
-           .select()                         // return the changed rows
-
-     Three things are worth understanding about it:
-
-     1. `.eq()` is the WHERE clause. Without it the update would apply
-        to every row the policy allows — for staff, that is all of them.
-
-     2. Only `status` is in the payload. That is not merely tidiness:
-        `authenticated` holds UPDATE on the `status` column and nothing
-        else, so adding `reason` here would fail the whole statement
-        with "permission denied for table reports" before RLS is even
-        consulted.
-
-     3. `.select()` makes PostgREST return the rows it changed, which
-        is the only way to tell success from a silent refusal. A user
-        without the staff role gets HTTP 200 and an EMPTY array: the
-        grant let the statement run, then RLS filtered every row out,
-        so nothing was updated and nothing errored. That is why the
-        empty-array branch below is treated as a refusal rather than
-        as success. */
+  
   function onListClick(e) {
     var btn = e.target.closest('[data-report-act]');
     if (!btn) { return; }
@@ -213,7 +159,7 @@
   }
 
   window.MedCareReportsQueue = {
-    // Call only after the page's role guard has passed.
+
     start: function () {
       if (started || !db) { return; }
       listEl    = document.getElementById('reportList');
@@ -233,8 +179,7 @@
         });
       }
 
-      // Names first so the first paint can show them, but do not block
-      // the queue if that lookup fails.
+
       loadDiseases().then(loadReports, loadReports);
     },
     reload: function () { if (started) { loadReports(); } }

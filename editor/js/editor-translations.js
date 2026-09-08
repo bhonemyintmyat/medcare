@@ -1,31 +1,3 @@
-/* ============================================================
-   MedCare — translations (editor/translations.html)
-
-   The Burmese dictionary lives in two places and this screen edits the
-   second one.
-
-     script.js       the shipped dictionary, an object literal keyed by
-                     the English source string. It is what the site falls
-                     back to and it is where the KEYS come from — there
-                     is no list of translatable strings anywhere else.
-     translations    the same keys in the database, editable by staff and
-                     layered over the file at page load.
-
-   So this screen reads its rows from script.js and its values from the
-   table, and writes only to the table. The key column is never written
-   after the first insert: the key is the English sentence the DOM walker
-   matches on, and editing it would orphan the translation while looking
-   like a correction.
-
-   WHY NOT UPSERT
-
-   The obvious `.upsert({ en, my })` sends `en` in the UPDATE half as
-   well, and the column grants deliberately allow UPDATE on `my` and
-   `context` only. It would be refused on every existing row. Which row
-   already exists is known here anyway, from the load — so this inserts
-   or updates, explicitly, and the grant stays as narrow as it should be.
-   ============================================================ */
-
 (function () {
   'use strict';
 
@@ -45,7 +17,7 @@
 
   var state = {
     keys: [],
-    rows: {},         // en -> the database row, when there is one
+    rows: {},
     filter: params.get('filter') || '',
     query: ''
   };
@@ -54,11 +26,6 @@
     chip.classList.toggle('is-active', (chip.getAttribute('data-filter') || '') === state.filter);
   });
 
-  /* What Burmese this key currently resolves to, and where it came from.
-     A row whose `my` is blank does NOT count as translated — it is a key
-     somebody opened and did not finish, and the file's value is what
-     readers are still seeing. Counting it as done is how a half-finished
-     translation disappears from the "needs Burmese" list. */
   function resolve(key) {
     var row = state.rows[key];
     var fromDb = row && row.my != null ? String(row.my).trim() : '';
@@ -109,7 +76,6 @@
            '</div>';
   }
 
-  // Only needs to be stable within one render, to tie a label to its box.
   function hash(s) {
     var h = 0;
     for (var i = 0; i < s.length; i++) { h = ((h << 5) - h + s.charCodeAt(i)) | 0; }
@@ -157,8 +123,6 @@
       return;
     }
 
-    // The list is long. Render it in one write rather than appending in a
-    // loop, and let the browser do the rest.
     hostEl.innerHTML = shown.map(itemHtml).join('');
 
     var todo = state.keys.filter(function (k) { return resolve(k).source === 'todo'; }).length;
@@ -166,12 +130,6 @@
       (todo ? ' · ' + todo + ' still without Burmese' : ' · all translated');
   }
 
-  /* ---------- Saving ----------
-     One string at a time. A Save All would be a single failure that
-     leaves an unknown subset written, and the failure this screen is
-     most likely to hit — a session that expired while somebody typed
-     twenty translations — is exactly the one where knowing which of them
-     landed matters. */
   function save(key, value, card) {
     var saveBtn = card.querySelector('[data-save]');
     var savedEl = card.querySelector('[data-saved]');
@@ -188,15 +146,11 @@
       if (res.error) { throw res.error; }
       state.rows[key] = res.data;
 
-      // Push it into the live dictionary so the language switcher shows
-      // the new wording without a reload.
       if (i18n) { i18n.merge([res.data]); }
 
       savedEl.hidden = false;
       window.setTimeout(function () { savedEl.hidden = true; }, 2200);
 
-      // Redraw only this card, so a long list does not jump back to the
-      // top every time one string is saved.
       var fresh = document.createElement('div');
       fresh.innerHTML = itemHtml(key);
       card.replaceWith(fresh.firstChild);
@@ -267,9 +221,7 @@
     db.from('translations').select('*')
       .then(function (res) {
         if (res.error) {
-          /* Almost always supabase_editor.sql not run yet. The screen is
-             still useful read-only — it shows every key and what the file
-             says — so it draws, and says why nothing will save. */
+
           ed.message(msgEl, 'error',
             'The translations table could not be read, so nothing here can be saved yet. ' +
             'It is created by section 5 of supabase_editor.sql. (' + res.error.message + ')');

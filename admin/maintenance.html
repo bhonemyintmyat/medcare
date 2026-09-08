@@ -12,9 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../css/styles.css">
 <link rel="stylesheet" href="css/admin.css">
-<!-- Same order as every public page, then the admin set. The guard has
-     to run before the page's own script, and everything needs the
-     client that supabase.js creates. -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
 <script src="../js/supabase.js" defer></script>
 <script src="../js/auth.js" defer></script>
@@ -26,13 +24,10 @@
 </head>
 <body>
 
-<!-- Nothing inside .mc-admin-shell is displayed until admin-guard.js
-     confirms an admin: admin.css hides it by default. -->
 <div class="mc-admin-shell" id="adminShell">
 
   <div class="mc-admin-backdrop" data-shell-close></div>
 
-  <!-- ===================== Sidebar ===================== -->
   <aside class="mc-admin-side">
     <a class="mc-admin-brand" href="index.html">
       <span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>
@@ -118,7 +113,6 @@
     </div>
   </aside>
 
-  <!-- ===================== Main ===================== -->
   <div class="mc-admin-main">
 
     <header class="mc-admin-top">
@@ -143,15 +137,10 @@
 
       <p class="mc-admin-msg" id="mtMsg" hidden></p>
 
-      <!-- ---------- Where things stand ----------
-           First thing on the page, because "is the site up?" is the
-           question somebody has come here to answer, and it should not
-           need reading a form to find out. -->
       <div id="mtStatus">
         <div class="mc-skeleton" aria-hidden="true"><span></span></div>
       </div>
 
-      <!-- ---------- Maintenance mode ---------- -->
       <div class="mc-admin-card">
         <h2>The public site</h2>
         <p class="mc-admin-hint">
@@ -244,7 +233,6 @@
         </form>
       </div>
 
-      <!-- ---------- The banner ---------- -->
       <div class="mc-admin-card">
         <h2>Site-wide notice</h2>
         <p class="mc-admin-hint">
@@ -297,7 +285,6 @@
         </form>
       </div>
 
-      <!-- ---------- The honest limits ---------- -->
       <div class="mc-admin-card">
         <h2>What closing the site does, and does not do</h2>
         <ul class="mc-ad-limits">

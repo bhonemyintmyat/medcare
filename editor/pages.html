@@ -13,20 +13,7 @@
 <link rel="stylesheet" href="../css/styles.css">
 <link rel="stylesheet" href="../admin/css/admin.css">
 <link rel="stylesheet" href="css/editor.css">
-<!-- Same order as every public page, then the editor set. The guard has
-     to run before the page's own script, and everything needs the
-     client that supabase.js creates. admin-shell.js is the chrome both
-     staff areas share; editor-guard.js publishes itself under the name
-     it looks for.
 
-     THE LAST TWO ARE THE ADMIN AREA'S FILES, ON PURPOSE. This screen and
-     admin/contact.html edit the same row with the same rules, so they
-     run the same script rather than a copy of it that would disagree by
-     the third change. admin-contact.js asks for its guard under the one
-     name both areas answer to, and admin-api.js's loadNames() degrades
-     to no name when the reader is an editor with no policy on profiles.
-     editor-api.js is not loaded here because this screen does not touch
-     content. -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
 <script src="../js/supabase.js" defer></script>
 <script src="../js/auth.js" defer></script>
@@ -34,12 +21,7 @@
 <script src="js/editor-guard.js" defer></script>
 <script src="../admin/js/admin-shell.js" defer></script>
 <script src="../admin/js/admin-api.js" defer></script>
-<!-- The prose pipeline, borrowed whole from the entry form: the same
-     allowlist, the same Quill wrapper, and the same reader that pulls a
-     hand-written page back into the editor.
-     editor-api.js comes first because editor-richtext.js returns early
-     and publishes nothing when window.MedCareEditor is absent — the
-     editor area always has it, an admin screen has to ask. -->
+
 <script src="../js/sanitize-html.js" defer></script>
 <script src="js/editor-api.js" defer></script>
 <script src="js/editor-richtext.js" defer></script>
@@ -48,13 +30,10 @@
 </head>
 <body>
 
-<!-- Nothing inside .mc-admin-shell is displayed until editor-guard.js
-     confirms an editor or an admin: admin.css hides it by default. -->
 <div class="mc-admin-shell" id="adminShell">
 
   <div class="mc-admin-backdrop" data-shell-close></div>
 
-  <!-- ===================== Sidebar ===================== -->
   <aside class="mc-admin-side">
     <a class="mc-admin-brand" href="index.html">
       <span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>
@@ -158,7 +137,6 @@
     </div>
   </aside>
 
-  <!-- ===================== Main ===================== -->
   <div class="mc-admin-main">
 
     <header class="mc-admin-top">
@@ -171,21 +149,11 @@
         <p class="mc-admin-top-sub">What the site says on its own pages. Reading is yours; changing them is an admin’s.</p>
       </div>
       <div class="mc-admin-top-right">
-        <!-- The account menu, built by auth.js into this slot: your name
-             and role, the pages your role can reach, a way to rename
-             yourself, and the way out. It replaces the name pill and the
-             Sign out button that used to sit here — one control, and the
-             same one the public pages carry. -->
+
         <div data-mc-account></div>
       </div>
     </header>
 
-    <!-- The form below is the same form as admin/contact.html, driven by
-         the same script, because it is the same row with the same rules
-         and there is no version of this screen that should differ by
-         area. Only the notes underneath are written for who is reading:
-         an editor's neighbours are the emergency numbers, an admin's are
-         the site settings. Change one form, change the other. -->
     <main class="mc-admin-content">
 
       <p class="mc-admin-msg" id="pagesMsg" hidden></p>
@@ -233,23 +201,13 @@
         </p>
 
         <label class="mc-auth-label" for="pageBodyEn" style="margin-top:1.1rem">English</label>
-        <!-- The same wrapper the entry form uses. Quill inserts its
-             toolbar as a SIBLING of the element it mounts into, so the
-             border, the rounded corners and the height limits have to
-             live on a parent that holds both — on the host alone the
-             toolbar falls outside the box and the writing area grows
-             without limit. -->
+
         <div class="mc-ed-rt">
           <div id="pageBodyEn" class="mc-ed-rt-host"></div>
         </div>
 
         <label class="mc-auth-label" for="pageBodyMy" style="margin-top:1.1rem">Burmese</label>
-        <!-- The same wrapper the entry form uses. Quill inserts its
-             toolbar as a SIBLING of the element it mounts into, so the
-             border, the rounded corners and the height limits have to
-             live on a parent that holds both — on the host alone the
-             toolbar falls outside the box and the writing area grows
-             without limit. -->
+
         <div class="mc-ed-rt">
           <div id="pageBodyMy" class="mc-ed-rt-host"></div>
         </div>

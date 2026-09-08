@@ -1,39 +1,3 @@
-/* ============================================================
-   MedCare — the report queue (editor/reports.html)
-
-   A report is a reader saying "this page is wrong". Triage is therefore
-   an editor's job and not an admin's: the person who can fix the page is
-   the person who should read the complaint about it.
-
-   WHAT CLOSING A REPORT REQUIRES, AND WHY
-
-   A note. Both Resolve and Reject ask for one and neither will submit
-   without it. The queue is small and the temptation to clear it with a
-   row of Resolve clicks is real; a mandatory sentence is what makes
-   somebody decide rather than tidy. It is also the only record of what
-   was done — the next person to be told this page is wrong reads it, and
-   "resolved" on its own tells them nothing they can use.
-
-   WHAT THE DATABASE RECORDS AND THE BROWSER CANNOT
-
-   resolved_by and resolved_at are set by a trigger from the verified
-   token, and are not in the column grant. So who closed a report and
-   when is not something this page could get wrong or be made to lie
-   about. It sends the status and the note; the rest is Postgres.
-
-   WHAT IS NOT HERE
-
-   No delete. There is no delete policy on `reports` for anybody, and a
-   reader telling us we published something dangerous does not get to be
-   made to disappear from a UI. Rejecting one is a decision with a name
-   and a reason attached, which is the honest version of the same button.
-
-   No reporter's name or email. `profiles` is not readable by an editor,
-   so the queue shows what was said and not who said it. That is the
-   brief's line about user accounts, and this is what it looks like from
-   the inside: it turns out you can triage perfectly well without it.
-   ============================================================ */
-
 (function () {
   'use strict';
 
@@ -48,14 +12,6 @@
   var searchEl  = document.getElementById('repSearch');
   var filtersEl = document.getElementById('repFilters');
 
-  /* The reports table stores target_type as free text so a new kind of
-     reportable thing needs no migration. This is the map from that text
-     to something this area can open. Anything not in it still shows in
-     the queue — it just has no link. */
-  /* The four values report.js offers and reports_category_check allows,
-     turned back into words. A value not in this map is shown as-is
-     rather than hidden: if the constraint is ever widened and this map
-     is not, an editor should see the raw value, not a blank pill. */
   var CATEGORIES = {
     inaccuracy:  'Medical inaccuracy',
     typo:        'Typo',
@@ -82,7 +38,7 @@
 
   var state = {
     rows: [],
-    titles: {},        // "disease:12" -> "Dengue fever"
+    titles: {},
     names: {},
     status: 'open',
     query: ''
@@ -92,10 +48,6 @@
     chip.classList.toggle('is-active', (chip.getAttribute('data-status') || '') === state.status);
   });
 
-  /* ---------- What is being reported ----------
-     One query per content table for the ids actually referenced, rather
-     than one per report. A queue of forty reports about the same disease
-     page is one row fetched, not forty. */
   function loadTitles(rows) {
     var wanted = {};
     rows.forEach(function (r) {
@@ -137,10 +89,7 @@
     }
 
     if (!hit) {
-      /* The row it points at is gone, or was never there. Worth saying
-         rather than hiding: a report about a page that no longer exists
-         is one you can usually close, and knowing that is the whole
-         decision. */
+
       return '<span class="mc-ed-report-target">' +
                '<i class="bi bi-slash-circle"></i> ' +
                ed.esc(ed.TYPES[type].label) + ' #' + ed.esc(row.target_id) +
@@ -150,8 +99,7 @@
 
     return '<span class="mc-ed-report-target">' +
              '<i class="bi ' + ed.TYPES[type].icon + '"></i> ' +
-             // &report= is what makes the edit page show the complaint
-             // and offer to close it in the same click.
+
              '<a href="entry.html?type=' + type + '&id=' + row.target_id +
                  '&report=' + row.id + '">' +
                ed.esc(hit.title) + '</a> ' +
@@ -166,9 +114,7 @@
 
              '<div class="mc-report-row-head">' +
                '<span class="mc-report-item">' + targetHtml(row) + '</span>' +
-               // What kind of problem, before how far along it is: the
-               // first decides who should pick the report up, the second
-               // only says whether anyone has yet.
+
                '<span class="mc-report-pills">' +
                  categoryPill(row.category) +
                  ed.statusPill(row.status === 'dismissed' ? 'dismissed' : row.status) +
@@ -230,8 +176,7 @@
       if (!q) { return true; }
       return String(row.reason || '').toLowerCase().indexOf(q) !== -1 ||
              String(row.detail || '').toLowerCase().indexOf(q) !== -1 ||
-             // Typing "typo" or "broken" should find them, and the label
-             // is what the editor can see to type.
+
              String(CATEGORIES[row.category] || row.category || '').toLowerCase().indexOf(q) !== -1 ||
              String(row.resolution_note || '').toLowerCase().indexOf(q) !== -1;
     });
@@ -261,8 +206,6 @@
     countEl.textContent = rows.length + ' shown · ' +
       (open ? open + ' still open' : 'none open');
   }
-
-  /* ---------- Closing one ---------- */
 
   function card(id) { return hostEl.querySelector('[data-report="' + id + '"]'); }
 
@@ -310,10 +253,7 @@
     }
 
     if (e.target.closest('[data-reopen]')) {
-      /* Reopening clears resolved_by and resolved_at — the trigger does
-         it, not this code. The note is deliberately left in place: it is
-         the history of what was tried, and the reason somebody is
-         reopening it is usually that the note was not enough. */
+
       close(row, 'open', row.resolution_note, wrap);
     }
   });
@@ -342,8 +282,6 @@
       });
   }
 
-  /* ---------- Filters ---------- */
-
   filtersEl.addEventListener('click', function (e) {
     var chip = e.target.closest('.mc-chip');
     if (!chip) { return; }
@@ -359,8 +297,6 @@
     window.clearTimeout(typing);
     typing = window.setTimeout(function () { state.query = searchEl.value; draw(); }, 120);
   });
-
-  /* ---------- Start ---------- */
 
   guard.ready.then(function () {
     db.from('reports').select('*').order('created_at', { ascending: false }).limit(400)

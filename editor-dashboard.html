@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<!-- ===================== Navbar ===================== -->
+
 <nav class="navbar navbar-expand-xl mc-nav">
   <div class="container">
     <a class="navbar-brand" href="index.html"><span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>MedCare</a>
@@ -35,8 +35,7 @@
 </nav>
 
 <main>
-  <!-- Shown while the role is still being checked, so protected content
-       never flashes on screen before the redirect happens. -->
+  
   <section class="mc-detail-body" id="adminChecking">
     <div class="container">
       <div class="mc-empty-simple" style="display:block">
@@ -47,7 +46,7 @@
     </div>
   </section>
 
-  <!-- Revealed only for editor/admin. -->
+  
   <div id="adminApp" style="display:none">
 
     <section class="mc-page-head">
@@ -84,7 +83,7 @@
 
         <div class="mc-admin-msg" id="deskMsg" role="status" aria-live="polite" style="display:none"></div>
 
-        <!-- ---------- At a glance ---------- -->
+        
         <div class="mc-stat-grid">
           <div class="mc-stat mc-stat--warn">
             <span class="mc-stat-ico"><i class="bi bi-inbox"></i></span>
@@ -120,7 +119,7 @@
           </div>
         </div>
 
-        <!-- ---------- Tools ---------- -->
+        
         <div class="mc-dash-links">
           <a class="mc-dash-card" href="manage-diseases.html">
             <span class="mc-dash-card-ico"><i class="bi bi-pencil-square"></i></span>
@@ -143,7 +142,7 @@
               <p>See the public Common diseases page exactly as a visitor does.</p>
             </div>
           </a>
-          <!-- Admin-only tile, revealed by editor-dashboard.js. -->
+          
           <a class="mc-dash-card" href="admin.html" id="deskAdminCard" style="display:none">
             <span class="mc-dash-card-ico"><i class="bi bi-shield-lock"></i></span>
             <div>
@@ -154,7 +153,7 @@
         </div>
 
         <div class="row g-4">
-          <!-- ---------- Reports queue (markup shared with reports.html) ---------- -->
+          
           <div class="col-lg-7">
             <div class="mc-admin-card">
               <div class="mc-admin-listhead">
@@ -173,7 +172,7 @@
             </div>
           </div>
 
-          <!-- ---------- Recently added conditions ---------- -->
+          
           <div class="col-lg-5">
             <div class="mc-admin-card">
               <div class="mc-admin-listhead">
@@ -190,7 +189,7 @@
   </div>
 </main>
 
-<!-- ===================== Footer ===================== -->
+
 <footer class="mc-footer">
   <div class="container">
     <div class="row g-4">

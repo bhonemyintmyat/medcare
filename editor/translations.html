@@ -13,11 +13,7 @@
 <link rel="stylesheet" href="../css/styles.css">
 <link rel="stylesheet" href="../admin/css/admin.css">
 <link rel="stylesheet" href="css/editor.css">
-<!-- Same order as every public page, then the editor set. The guard has
-     to run before the page's own script, and everything needs the
-     client that supabase.js creates. admin-shell.js is the chrome both
-     staff areas share; editor-guard.js publishes itself under the name
-     it looks for. -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3" defer></script>
 <script src="../js/supabase.js" defer></script>
 <script src="../js/auth.js" defer></script>
@@ -29,13 +25,10 @@
 </head>
 <body>
 
-<!-- Nothing inside .mc-admin-shell is displayed until editor-guard.js
-     confirms an editor or an admin: admin.css hides it by default. -->
 <div class="mc-admin-shell" id="adminShell">
 
   <div class="mc-admin-backdrop" data-shell-close></div>
 
-  <!-- ===================== Sidebar ===================== -->
   <aside class="mc-admin-side">
     <a class="mc-admin-brand" href="index.html">
       <span class="mc-logo"><i class="bi bi-heart-pulse-fill"></i></span>
@@ -140,7 +133,6 @@
     </div>
   </aside>
 
-  <!-- ===================== Main ===================== -->
   <div class="mc-admin-main">
 
     <header class="mc-admin-top">
@@ -153,11 +145,7 @@
         <p class="mc-admin-top-sub">Every string the site can translate, and the Burmese for it.</p>
       </div>
       <div class="mc-admin-top-right">
-        <!-- The account menu, built by auth.js into this slot: your name
-             and role, the pages your role can reach, a way to rename
-             yourself, and the way out. It replaces the name pill and the
-             Sign out button that used to sit here — one control, and the
-             same one the public pages carry. -->
+
         <div data-mc-account></div>
       </div>
     </header>

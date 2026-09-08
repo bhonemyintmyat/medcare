@@ -16,14 +16,11 @@
   a:hover{color:var(--mc-primary);text-decoration:underline}
   ::selection{background:rgba(13,148,136,.2)}
 
-  /* Language bar (injected on every page by script.js) */
+  
   .mc-langbar{background:var(--mc-text);color:#fff;font-size:.85rem}
   .mc-langbar .container{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;padding-top:.4rem;padding-bottom:.4rem}
   .mc-langbar-label{display:inline-flex;align-items:center;gap:.4rem;opacity:.85;margin-right:auto;line-height:2.2;min-width:0}
-  /* No overflow:hidden here. Myanmar glyphs stack marks above and below the
-     Latin band, so the line box has to be tall enough to hold them and the
-     pill has to round its corners on the buttons themselves — clipping the
-     group is what used to cut the top and bottom off "မြန်မာ". */
+  
   .mc-lang{display:inline-flex;flex-shrink:0;border:1px solid rgba(255,255,255,.28);border-radius:999px}
   .mc-lang-btn{background:transparent;border:none;color:#fff;font:inherit;font-weight:600;padding:.1rem .95rem;cursor:pointer;line-height:2.25;white-space:nowrap;font-family:'Noto Sans Myanmar','Inter',system-ui,sans-serif}
   .mc-lang-btn:first-child{border-radius:999px 0 0 999px}
@@ -32,7 +29,7 @@
   .mc-lang-btn[aria-pressed="true"]{background:var(--mc-primary);color:#fff}
   .mc-lang-btn:focus-visible{outline:2px solid #fff;outline-offset:-3px}
 
-  /* Burmese typography — Latin faces have no Myanmar glyphs, so swap the stack */
+  
   html[lang="my"] body,
   html[lang="my"] h1,html[lang="my"] h2,html[lang="my"] h3,html[lang="my"] h4,html[lang="my"] h5,h6,
   html[lang="my"] .navbar-brand,html[lang="my"] .btn,html[lang="my"] .mc-card-title,
@@ -41,12 +38,12 @@
   html[lang="my"] body{line-height:1.85}
   html[lang="my"] h1,html[lang="my"] h2,html[lang="my"] h3{letter-spacing:0;line-height:1.5}
   html[lang="my"] .mc-ecard-number{letter-spacing:0}
-  /* Shown only in Burmese, where the article body is still English */
+  
   .mc-lang-note{display:flex;align-items:center;gap:.5rem;background:var(--mc-primary-50);color:var(--mc-primary-600);border:1px solid #ccfbf1;border-radius:12px;padding:.7rem 1rem;font-size:.9rem;margin:0 0 1.5rem}
   html[lang="en"] .mc-lang-note{display:none}
 
 
-  /* members */
+  
 
   .mc-team{padding: 2.5rem 0 1rem;}
 
@@ -57,14 +54,14 @@
 
 
 
-  /* slider */
+  
 
       .slider {
             width: 100%;
-            max-width: 900px; /* Limits maximum desktop size */
+            max-width: 900px; 
             position: relative;
             margin: 25px auto;
-            overflow: hidden; /* Clears floating elements */
+            overflow: hidden; 
         }
         
         
@@ -78,10 +75,10 @@
             margin: 0;
             padding: 0;
             position: relative;
-            height: 400px; /* Dictates slider height */
+            height: 400px; 
         }
 
-        /* Individual Slides stacked on top of each other */
+        
         .slider li {
             position: absolute;
             top: 0;
@@ -92,18 +89,18 @@
             justify-content: center;
             align-items: center;
             background: #f0f0f0;
-            opacity: 0; /* CRITICAL FIX: Hide slides by default */
-            transition: opacity 0.8s ease-in-out; /* Smooth fade effect */
+            opacity: 0; 
+            transition: opacity 0.8s ease-in-out; 
             z-index: 1;
         }
 
-        /* Bring the active slide to the front and fade it in */
+        
         .slider li.active {
             opacity: 1;
             z-index: 2;
         }
 
-        /* Fill the slider consistently regardless of source dimensions */
+        
         .slider img {
             width: 100%;
             height: 100%;
@@ -111,7 +108,7 @@
             display: block;
         }
 
-        /* Prev / next arrows */
+        
         .slider-arrow {
             position: absolute;
             top: 50%;
@@ -138,7 +135,7 @@
         .slider-arrow--prev { left: 14px; }
         .slider-arrow--next { right: 14px; }
 
-        /* Indicator dots */
+        
         .slider-dots {
             position: absolute;
             left: 50%;
@@ -169,30 +166,30 @@
             .slider-arrow { width: 38px; height: 38px; opacity: 1; }
         }
 
-  /* Dropdown */
+  
 
-/* Elevate the entire subheader above the hero section */
+
 .mc-subheader {
   position: relative;
   z-index: 1050; 
 }
 
-/* Ensure the hero section sits below */
+
 .mc-hero {
   position: relative;
   z-index: 1;
 }
 
-/* Optional: Guarantee the dropdown menu specifically stays on top */
+
 .mc-town-menu {
   z-index: 1060;
 }
 
-/* Hospital Maps*/
+
 
 .hospital-map {
   position: sticky;
-  /* Uses the dynamically calculated variable, defaults to 300px if JS fails */
+  
   top: var(--filters-height, 300px); 
   z-index: 9;
   margin-top: 20px; 
@@ -201,31 +198,25 @@
 
 
 
-  /* Navbar */
+  
   .mc-nav{background:#fff;border-bottom:1px solid var(--mc-border);position:sticky;top:0;z-index:1030}
   .mc-nav .navbar-brand{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.35rem;color:var(--mc-text);display:flex;align-items:center;gap:.55rem}
   .mc-nav .navbar-brand .mc-logo{width:34px;height:34px;border-radius:10px;background:var(--mc-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 4px 12px -4px rgba(13,148,136,.55)}
   .mc-nav .nav-link{color:var(--mc-text);font-weight:500;padding:.5rem .9rem !important;border-radius:8px;font-size:.95rem;cursor:pointer}
   .mc-nav .nav-link:hover{color:var(--mc-primary-600);background:var(--mc-primary-50)}
   .mc-nav .nav-link.active{color:var(--mc-primary-600)}
-  /* The expanded row carries brand + five links + Emergency + Desk + the
-     account menu. Without these it overflows the container and the whole
-     page gains a horizontal scrollbar, with the account menu hanging off
-     the right edge. min-width:0 lets the flex children shrink; the name
-     ellipsises instead of growing the row. */
+  
   .mc-nav .navbar-collapse{min-width:0}
   .mc-nav .navbar-nav{min-width:0}
   .mc-account{min-width:0}
   .mc-menu{min-width:0;max-width:100%}
   .mc-menu-trigger{min-width:0;max-width:100%}
-  /* Between the xl breakpoint and the xxl container the row still wants
-     ~27px more than the 1140px container gives it, so the account name
-     ellipsises. Tightening the link padding buys most of that back. */
+  
   @media (min-width:1200px) and (max-width:1399.98px){
     .mc-nav .nav-link{padding:.5rem .62rem !important}
   }
 
-  /* Buttons */
+  
   .btn-mc-primary{background:var(--mc-primary);border-color:var(--mc-primary);color:#fff;font-weight:600;border-radius:10px;padding:.6rem 1.25rem}
   .btn-mc-primary:hover{background:var(--mc-primary-600);border-color:var(--mc-primary-600);color:#fff}
   .btn-mc-outline{background:#fff;border:1px solid var(--mc-border);color:var(--mc-text);font-weight:500;border-radius:10px;padding:.6rem 1.25rem}
@@ -234,7 +225,7 @@
   .btn-emergency:hover{background:var(--mc-danger-600);color:#fff;transform:translateY(-1px);box-shadow:0 6px 18px -4px rgba(220,38,38,.6)}
   .btn-emergency:focus-visible{outline:2px solid var(--mc-danger);outline-offset:2px}
 
-  /* Sub-header hospital search bar (below navbar) */
+  
   .mc-subheader{background:#fff;border-bottom:1px solid var(--mc-border);padding:1rem 0;position:static;top:73px;z-index:1020}
   .mc-subheader-inner{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap}
   .mc-subheader-label{display:inline-flex;align-items:center;gap:.55rem;color:var(--mc-text);font-family:'Poppins',sans-serif;font-weight:600;font-size:.95rem;flex-shrink:0}
@@ -242,10 +233,10 @@
   .mc-hospital-search{display:flex;align-items:stretch;background:#fff;border:1px solid var(--mc-border);border-radius:12px;overflow:visible;box-shadow:0 1px 2px rgba(15,23,42,.04)}
   .mc-hospital-search:focus-within{border-color:var(--mc-primary);box-shadow:0 0 0 3px rgba(13,148,136,.15)}
   .mc-hospital-search--wide{flex:1;height:48px;min-width:280px}
-  /* Let the dropdown wrappers stretch so the Towns button fills the bar height */
+  
   .mc-hospital-search .dropdown,
   .mc-hospital-search .select{display:flex;align-items:stretch}
-  /* Position the menu without Popper (Bootstrap JS is not loaded) */
+  
   .mc-hospital-search .dropdown-menu{position:absolute;top:100%;left:0}
   .mc-town-btn{display:inline-flex;align-items:center;gap:.4rem;background:var(--mc-primary-50);color:var(--mc-primary-600);border:none;border-right:1px solid var(--mc-border);padding:0 1rem;font-weight:600;font-size:.92rem;white-space:nowrap;height:100%;border-radius:12px 0 0 12px}
   .mc-town-btn:hover{background:#ccfbf1;color:var(--mc-primary-600)}
@@ -264,15 +255,14 @@
   .mc-subheader-go:focus-visible{outline:2px solid var(--mc-primary);outline-offset:-2px}
   @media (max-width:767.98px){
     .mc-subheader{position:static;top:auto}
-    /* min-width:0 on both, or the 280px bar and its 220px input add up to
-       more than a 360px screen has and the go button lands off the page. */
+    
     .mc-hospital-search--wide{width:100%;flex:1 1 100%;min-width:0}
     .mc-hospital-input{min-width:0}
     .mc-town-btn{padding:0 .7rem}
     .mc-subheader-inner{gap:.85rem}
   }
 
-  /* Hero */
+  
   .mc-hero{padding:5rem 0 4rem;background:linear-gradient(180deg,#fff 0%,var(--mc-bg) 100%);border-bottom:1px solid var(--mc-border)}
   .mc-hero--center .mc-hero-inner{max-width:44rem}
   .mc-hero h1{font-size:clamp(2.25rem,4.4vw,3.5rem);line-height:1.08;margin-bottom:1.25rem}
@@ -288,14 +278,14 @@
   .mc-search-btn{background:var(--mc-primary);color:#fff;border:none;font-weight:600;padding:.7rem 1.5rem;border-radius:12px;font-size:.95rem;flex-shrink:0;transition:background .15s}
   .mc-search-btn:hover{background:var(--mc-primary-600)}
 
-  /* Section */
+  
   .mc-section{padding:4.5rem 0}
   .mc-section-header{margin-bottom:2.75rem}
   .mc-section-kicker{color:var(--mc-primary-600);font-weight:600;font-size:.9rem;letter-spacing:.02em;text-transform:uppercase;margin-bottom:.5rem}
   .mc-section-header h2{font-size:clamp(1.75rem,2.6vw,2.25rem);margin-bottom:.65rem}
   .mc-section-header p{color:var(--mc-muted);font-size:1.05rem;max-width:36rem;margin:0}
 
-  /* Large feature cards */
+  
   .mc-feature{display:flex;align-items:center;gap:1.25rem;background:#fff;border:1px solid var(--mc-border);border-radius:20px;padding:1.6rem 1.75rem;box-shadow:var(--mc-shadow);text-decoration:none;color:var(--mc-text);transition:transform .2s,box-shadow .2s,border-color .2s;height:100%}
   .mc-feature:hover{transform:translateY(-3px);box-shadow:var(--mc-shadow-lg);border-color:var(--mc-primary);color:var(--mc-text);text-decoration:none}
   .mc-feature-icon{width:60px;height:60px;border-radius:16px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.65rem;flex-shrink:0}
@@ -308,20 +298,19 @@
   .mc-feature--danger:hover .mc-feature-arr{color:var(--mc-danger)}
   .mc-feature-icon--danger{background:#fef2f2;color:var(--mc-danger)}
 
-  /* Emergency banner */
+  
   .mc-emergency-banner{background:#fff;border:1px solid #fecaca;border-left:4px solid var(--mc-danger);border-radius:14px;padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.1rem;box-shadow:var(--mc-shadow)}
   .mc-emergency-banner .ico{width:44px;height:44px;border-radius:12px;background:#fef2f2;color:var(--mc-danger);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
   .mc-emergency-banner .msg strong{color:var(--mc-danger);display:block;font-weight:700;font-size:1rem}
   .mc-emergency-banner .msg span{color:var(--mc-muted);font-size:.9rem}
-  /* The call-to-action does not wrap, so on a narrow phone the row has to.
-     Icon and message keep the first line; the button takes its own. */
+  
   @media (max-width:575.98px){
     .mc-emergency-banner{flex-wrap:wrap;padding:1.1rem 1.15rem;gap:.85rem}
     .mc-emergency-banner .msg{flex:1 1 0;min-width:0}
     .mc-emergency-banner .btn-emergency{width:100%;justify-content:center}
   }
 
-  /* Article */
+  
   .mc-article{background:#fff;border:1px solid var(--mc-border);border-radius:18px;overflow:hidden;box-shadow:var(--mc-shadow);height:100%;transition:transform .2s,box-shadow .2s}
   .mc-article:hover{transform:translateY(-3px);box-shadow:var(--mc-shadow-lg)}
   .mc-article-thumb{aspect-ratio:16/10;background:linear-gradient(135deg,#0d9488 0%,#14b8a6 100%);position:relative;display:flex;align-items:flex-end;padding:1.1rem}
@@ -335,7 +324,7 @@
   .mc-article-meta{display:flex;align-items:center;gap:.85rem;color:var(--mc-muted);font-size:.82rem}
   .mc-article-meta .sep{width:3px;height:3px;border-radius:50%;background:var(--mc-muted)}
 
-  /* Article reader (article.html) */
+  
   .mc-article-lede{font-size:1.08rem;line-height:1.7;color:var(--mc-text);font-weight:500;max-width:44rem;margin:0 0 1.1rem}
   .mc-article-byline{display:flex;align-items:center;gap:.85rem;color:var(--mc-muted);font-size:.9rem;flex-wrap:wrap;padding-bottom:1.5rem;border-bottom:1px solid var(--mc-border);margin-bottom:1.75rem}
   .mc-article-byline .sep{width:3px;height:3px;border-radius:50%;background:var(--mc-muted)}
@@ -344,12 +333,7 @@
   .mc-article-prose .mc-list{margin:0 0 1.35rem}
   .mc-article-h2{font-size:1.3rem;font-weight:600;color:var(--mc-text);margin:2rem 0 .85rem}
 
-  /* Long-form content written in the editor and rendered by read.html.
-     The hand-written pages tag their headings .mc-article-h2 by hand; a
-     WYSIWYG emits a bare <h2>, so the same look is attached to the
-     elements themselves inside .mc-article-prose. A rendered article and
-     a hand-written one should be indistinguishable to a reader - if they
-     drift apart, the site looks like two sites. */
+  
   .mc-article-prose h2{font-family:'Poppins',sans-serif;font-size:1.3rem;font-weight:600;color:var(--mc-text);margin:2rem 0 .85rem}
   .mc-article-prose h3{font-family:'Poppins',sans-serif;font-size:1.12rem;font-weight:600;color:var(--mc-text);margin:1.6rem 0 .7rem}
   .mc-article-prose h4{font-family:'Poppins',sans-serif;font-size:1rem;font-weight:600;color:var(--mc-text);margin:1.35rem 0 .6rem}
@@ -366,16 +350,11 @@
   .mc-article-prose pre code{background:none;border:0;padding:0}
   .mc-article-prose hr{border:0;border-top:1px solid var(--mc-border);margin:2rem 0}
 
-  /* Said when a page exists in one language only. It is shown to the
-     reader whose language is MISSING, in their own language, and the
-     other half of the pair is deliberately empty so it never appears
-     twice. */
+  
   .mc-read-onelang{display:flex;gap:.5rem;align-items:flex-start;font-size:.87rem;color:#78350f;background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:.75rem 1rem;margin:0 0 1.5rem}
   .mc-read-onelang:empty{display:none}
 
-  /* Grey bars while the row is on its way, rather than a spinner: they
-     occupy the shape the article is about to take, so the page does not
-     jump when it arrives. */
+  
   .mc-read-skeleton{display:flex;flex-direction:column;gap:.9rem;margin:2rem 0}
   .mc-read-skeleton span{display:block;height:1rem;border-radius:6px;background:linear-gradient(90deg,var(--mc-bg) 25%,#eef2f7 37%,var(--mc-bg) 63%);background-size:400% 100%;animation:mc-read-shimmer 1.4s ease infinite}
   .mc-read-skeleton span:nth-child(1){height:2rem;width:70%}
@@ -384,7 +363,7 @@
   @keyframes mc-read-shimmer{0%{background-position:100% 50%}100%{background-position:0 50%}}
   @media (prefers-reduced-motion:reduce){.mc-read-skeleton span{animation:none}}
 
-  /* Page header / breadcrumb (shared) */
+  
   .mc-page-head{background:linear-gradient(180deg,#fff 0%,var(--mc-bg) 100%);border-bottom:1px solid var(--mc-border);padding:3rem 0 2.5rem}
   .mc-breadcrumb{font-size:.85rem;color:var(--mc-muted);margin-bottom:.9rem;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
   .mc-breadcrumb a{color:var(--mc-muted)}
@@ -392,7 +371,7 @@
   .mc-page-head h1{font-size:clamp(1.9rem,3.2vw,2.5rem);margin-bottom:.75rem}
   .mc-page-head .intro{color:var(--mc-muted);font-size:1.05rem;max-width:42rem;line-height:1.6;margin:0}
 
-  /* Diseases toolbar + cards */
+  
   .mc-toolbar{padding:2rem 0 .5rem}
   .mc-filter-bar{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap}
   .mc-filter-search{position:relative;flex:1;min-width:280px;max-width:520px}
@@ -418,7 +397,7 @@
   .mc-empty-simple{text-align:center;padding:3rem 1rem;color:var(--mc-muted)}
   .mc-empty-simple .bi{font-size:2.5rem;color:var(--mc-border);margin-bottom:.75rem;display:block}
 
-  /* Hospitals */
+  
   .mc-layout{padding:2rem 0 4.5rem}
 .mc-filters {
   background: #fff;
@@ -464,8 +443,7 @@
   .mc-hosp-actions{margin-top:1.2rem;display:flex;gap:.65rem;flex-wrap:wrap}
   .mc-call{display:inline-flex;align-items:center;gap:.5rem;background:var(--mc-primary);color:#fff;font-weight:600;font-size:.9rem;padding:.6rem 1.1rem;border-radius:10px;text-decoration:none;transition:background .15s}
   .mc-call:hover{background:var(--mc-primary-600);color:#fff;text-decoration:none}
-  /* A card with no number to dial. Same shape as the button beside it so
-     the row still lines up, but plainly not something you can press. */
+  
   .mc-call.is-none{background:var(--mc-bg);color:var(--mc-muted);border:1px solid var(--mc-border);font-weight:500;cursor:default}
   .mc-directions{display:inline-flex;align-items:center;gap:.5rem;background:#fff;border:1px solid var(--mc-border);color:var(--mc-text);font-weight:500;font-size:.9rem;padding:.6rem 1.1rem;border-radius:10px;text-decoration:none;transition:all .15s}
   .mc-directions:hover{border-color:var(--mc-primary);color:var(--mc-primary-600);background:var(--mc-primary-50);text-decoration:none}
@@ -479,7 +457,7 @@
   .mc-empty .btn-reset{background:var(--mc-primary);color:#fff;border:none;font-weight:600;padding:.65rem 1.4rem;border-radius:10px;font-size:.92rem;cursor:pointer}
   .mc-empty .btn-reset:hover{background:var(--mc-primary-600)}
 
-  /* Emergency page */
+  
   .mc-alert-band{background:var(--mc-danger);color:#fff;padding:1.35rem 0}
   .mc-alert-band .inner{display:flex;align-items:center;gap:1rem;justify-content:center;text-align:center;flex-wrap:wrap}
   .mc-alert-band .bi{font-size:1.6rem;flex-shrink:0}
@@ -514,7 +492,7 @@
   .mc-tips ol li{margin-bottom:.4rem}
   .mc-tips ol li:last-child{margin-bottom:0}
 
-  /* Disease detail */
+  
   .mc-detail-head{background:linear-gradient(180deg,#fff 0%,var(--mc-bg) 100%);border-bottom:1px solid var(--mc-border);padding:3rem 0 2.75rem}
   .mc-detail-head .head-row{display:flex;align-items:flex-start;gap:1.25rem}
   .mc-detail-icon{width:64px;height:64px;border-radius:18px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.85rem;flex-shrink:0}
@@ -556,7 +534,7 @@
   .mc-source .src-desc{color:var(--mc-muted);font-size:.88rem}
   .mc-source .src-link{color:var(--mc-primary-600);font-size:.85rem;font-weight:500;margin-top:.15rem;display:inline-flex;align-items:center;gap:.3rem}
 
-  /* Footer */
+  
   .mc-footer{background:#fff;border-top:1px solid var(--mc-border);padding:3.5rem 0 1.75rem;margin-top:2rem}
   .mc-footer h5{font-family:'Poppins',sans-serif;font-size:.9rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--mc-text);margin-bottom:1rem}
   .mc-footer ul{list-style:none;padding:0;margin:0}
@@ -574,29 +552,26 @@
     .mc-filters{position:static;top:auto;margin-bottom:1.5rem}
   }
 
-  /* ============ Bilingual article content ============
-     Every health article ships both languages in the markup and the switcher
-     (which sets html[lang]) reveals one. Pages declare lang="en" so the English
-     copy paints first — no flash of both before script.js runs. */
+  
   html[lang="my"] .mc-en{display:none !important}
   html[lang="en"] .mc-my{display:none !important}
-  /* Latin faces carry no Myanmar glyphs, so the Burmese copy brings its own stack */
+  
   .mc-my{font-family:'Noto Sans Myanmar','Inter',system-ui,sans-serif;line-height:1.85}
   h1.mc-my,h2.mc-my,h3.mc-my,h4.mc-my,h5.mc-my,
   .mc-my h1,.mc-my h2,.mc-my h3,.mc-my h4,.mc-my h5{letter-spacing:0;line-height:1.5}
 
-  /* Article hero image */
+  
   .mc-figure{position:relative;border-radius:18px;overflow:hidden;margin:0 0 2rem;box-shadow:var(--mc-shadow);border:1px solid var(--mc-border)}
   .mc-figure img{display:block;width:100%;height:clamp(200px,32vw,360px);object-fit:cover}
   .mc-figure figcaption{position:absolute;left:0;right:0;bottom:0;padding:1.5rem 1.6rem .95rem;color:#fff;font-size:.95rem;line-height:1.6;background:linear-gradient(transparent,rgba(15,23,42,.82))}
 
-  /* Author / doctor note */
+  
   .mc-doctor{display:flex;gap:1.1rem;background:var(--mc-primary-50);border:1px solid #ccfbf1;border-left:4px solid var(--mc-primary);border-radius:16px;padding:1.4rem 1.6rem;margin:0 0 2.25rem}
   .mc-doctor .ico{width:44px;height:44px;border-radius:12px;background:#fff;color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0}
   .mc-doctor h3{font-size:1.05rem;font-weight:600;color:var(--mc-primary-600);margin:0 0 .4rem}
   .mc-doctor p{color:#334155;font-size:.96rem;line-height:1.7;margin:0}
 
-  /* Content card grid — the article equivalent of .mc-disease */
+  
   .mc-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.25rem;margin:0 0 2.25rem}
   .mc-card{background:#fff;border:1px solid var(--mc-border);border-radius:18px;overflow:hidden;box-shadow:var(--mc-shadow);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s,border-color .2s}
   .mc-card:hover{transform:translateY(-3px);box-shadow:var(--mc-shadow-lg);border-color:var(--mc-primary)}
@@ -605,17 +580,17 @@
   .mc-card-body h3{font-size:1.05rem;font-weight:600;margin:0 0 .5rem;line-height:1.4}
   .mc-card-body p{color:var(--mc-muted);font-size:.92rem;line-height:1.65;margin:0}
 
-  /* Teal variant of .mc-callout, for the doctor's closing advice */
+  
   .mc-callout--info{background:var(--mc-primary-50);border-color:#ccfbf1;border-left-color:var(--mc-primary)}
   .mc-callout--info .ico{background:#fff;color:var(--mc-primary-600)}
   .mc-callout--info h3{color:var(--mc-primary-600)}
   .mc-callout--info p,.mc-callout--info ul{color:#334155}
 
-  /* Pull quote and inline emphasis */
+  
   .mc-quote{border-left:4px solid var(--mc-primary);background:#fff;border-radius:0 14px 14px 0;padding:1.25rem 1.5rem;margin:0 0 2rem;color:#334155;font-size:1.02rem;line-height:1.75;box-shadow:var(--mc-shadow)}
   .mc-highlight{color:var(--mc-primary-600);font-weight:600}
 
-  /* Privacy controls (cookies.html) and the click-to-load map gate */
+  
   .mc-setting{background:#fff;border:1px solid var(--mc-border);border-radius:16px;padding:1.4rem 1.5rem;margin:0 0 1.1rem;box-shadow:var(--mc-shadow)}
   .mc-setting-head{display:flex;gap:1.1rem;align-items:flex-start}
   .mc-setting-ico{width:44px;height:44px;border-radius:12px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
@@ -640,7 +615,7 @@
     .mc-doctor{flex-direction:column;gap:.85rem}
     .mc-setting-foot{align-items:flex-start;flex-direction:column}
   }
-  /* ===================== Auth (login.html + navbar account) ===================== */
+  
   .mc-auth-card{background:#fff;border:1px solid var(--mc-border);border-radius:18px;box-shadow:var(--mc-shadow);padding:1.9rem 1.85rem 2rem;text-align:center}
   .mc-auth-tabs{display:flex;gap:.35rem;background:var(--mc-bg);border:1px solid var(--mc-border);border-radius:12px;padding:.3rem;margin:0 0 1.6rem}
   .mc-auth-tab{flex:1;border:none;background:transparent;color:var(--mc-muted);font-family:inherit;font-size:.95rem;font-weight:600;padding:.55rem .6rem;border-radius:9px;cursor:pointer;transition:background .15s,color .15s}
@@ -651,9 +626,7 @@
   .mc-auth-field{position:relative;display:flex;align-items:center;background:#fff;border:1px solid var(--mc-border);border-radius:12px;margin:0 0 1.15rem;transition:border-color .15s,box-shadow .15s}
   .mc-auth-field:focus-within{border-color:var(--mc-primary);box-shadow:0 0 0 3px var(--mc-primary-50)}
   .mc-auth-field>.bi{position:absolute;left:.9rem;color:var(--mc-muted);font-size:1rem;pointer-events:none}
-  /* min-width:0, or the input keeps its default 20-character intrinsic
-     width and shoves whatever sits beside it (the BMI unit select) off the
-     side of a phone screen. */
+  
   .mc-auth-field input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-family:inherit;font-size:.97rem;color:var(--mc-text);padding:.7rem .9rem .7rem 2.5rem;border-radius:12px}
   .mc-auth-field input::placeholder{color:var(--mc-muted)}
   .mc-auth-reveal{border:none;background:transparent;color:var(--mc-muted);font-size:1rem;padding:.4rem .8rem;cursor:pointer;border-radius:8px}
@@ -670,9 +643,7 @@
   .mc-auth-btn--full{width:100%;padding:.75rem 1.3rem}
   .mc-auth-btn--ghost{background:#fff;color:var(--mc-text);border-color:var(--mc-border)}
   .mc-auth-btn--ghost:hover{background:var(--mc-bg);color:var(--mc-text);border-color:var(--mc-muted)}
-  /* For the one action on this site that cannot be undone from any
-     screen it appears on. Red is not decoration here: it is the only
-     visual difference between "Save" and "there is no Save after this". */
+  
   .mc-auth-btn--danger{background:var(--mc-danger);border-color:var(--mc-danger)}
   .mc-auth-btn--danger:hover{background:var(--mc-danger-600);border-color:var(--mc-danger-600);color:#fff}
   .mc-auth-btn--danger:focus-visible{outline-color:var(--mc-danger)}
@@ -685,9 +656,7 @@
   .mc-auth-note .bi{color:var(--mc-primary-600);font-size:1.1rem;flex-shrink:0;margin-top:.1rem}
   .mc-auth-note code{background:#fff;border:1px solid #ccfbf1;border-radius:6px;padding:.05rem .35rem;font-size:.85em;color:var(--mc-primary-600)}
 
-  /* Password recovery: the "Forgot your password?" link on the sign-in
-     tab, the way back out of recovery mode, and the two card icons
-     reset-password.html swaps in for a spent or broken link. */
+  
   .mc-auth-forgot{display:flex;justify-content:flex-end;margin:-.75rem 0 1.15rem}
   .mc-auth-back{display:flex;justify-content:center;margin:1.05rem 0 0}
   .mc-auth-link{border:none;background:none;padding:0;font-family:inherit;font-size:.87rem;font-weight:600;color:var(--mc-primary-600);cursor:pointer;text-decoration:none}
@@ -696,7 +665,7 @@
   .mc-auth-ico--recover{background:var(--mc-primary-50);color:var(--mc-primary-600)}
   .mc-auth-ico--warn{background:var(--mc-danger-50);color:var(--mc-danger-700)}
 
-  /* Navbar account control */
+  
   .mc-account{display:flex;align-items:center;gap:.7rem;margin-left:.9rem}
   .mc-account-who{display:inline-flex;align-items:center;gap:.45rem;font-size:.88rem;color:var(--mc-muted);max-width:230px}
   .mc-account-who>.bi{font-size:1.05rem;color:var(--mc-primary-600);flex-shrink:0}
@@ -713,17 +682,13 @@
     .mc-account-who{max-width:100%}
   }
 
-  /* ===================== Manage diseases (editor tool) ===================== */
+  
   .mc-admin-card{background:#fff;border:1px solid var(--mc-border);border-radius:18px;box-shadow:var(--mc-shadow);padding:1.6rem 1.65rem 1.75rem}
   .mc-admin-card h2{font-family:'Poppins',sans-serif;font-size:1.2rem;font-weight:700;color:var(--mc-text);margin:0 0 1.3rem}
-  /* flex-start, not center: the h2 carries a 1.3rem bottom margin (the
-     gap down to the hint), and centering against that tall margin-box
-     dropped the action buttons low enough to collide with the hint
-     pulled up beneath. Aligning to the top sits them level with the
-     heading instead. */
+  
   .mc-admin-listhead{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
   .mc-admin-listhead h2{margin:0 0 1.3rem}
-  /* One or more buttons at the top-right of a card head. */
+  
   .mc-admin-listhead-actions{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-top: -15px;}
   .mc-admin-listhead + .mc-admin-hint{margin-top:0}
   .mc-admin-count{display:inline-block;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:700;background:var(--mc-primary-50);color:var(--mc-primary-600);border:1px solid #ccfbf1;border-radius:999px;padding:.1rem .55rem;margin-left:.35rem;vertical-align:middle}
@@ -755,7 +720,7 @@
   .mc-admin-icon-btn:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
   .mc-admin-icon-btn:disabled{opacity:.5;cursor:default}
 
-  /* ===================== Report inaccuracy (disease pages) ===================== */
+  
   .mc-report{display:flex;align-items:center;justify-content:space-between;gap:1.1rem;flex-wrap:wrap;background:var(--mc-bg);border:1px solid var(--mc-border);border-radius:16px;padding:1.15rem 1.35rem;margin:2rem 0 0}
   .mc-report-text{font-size:.93rem;line-height:1.6;color:var(--mc-muted)}
   .mc-report-text strong{color:var(--mc-text)}
@@ -763,20 +728,15 @@
   .mc-report-btn:hover{background:var(--mc-danger-50);border-color:var(--mc-danger);color:var(--mc-danger-700)}
   .mc-report-btn:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
 
-  /* "Edit this page" — staff only, injected by edit-link.js beside the
-     report button. Teal rather than the report button's neutral-to-red:
-     the two sit side by side and they are opposite actions. Reporting is
-     asking somebody else to look; editing is doing it yourself. */
+  
   .mc-edit-link{display:inline-flex;align-items:center;gap:.45rem;background:var(--mc-primary);border:1px solid var(--mc-primary);color:#fff;font-family:inherit;font-weight:600;font-size:.9rem;border-radius:10px;padding:.55rem 1.1rem;text-decoration:none;white-space:nowrap;transition:background .15s,border-color .15s}
   .mc-edit-link:hover{background:var(--mc-primary-600);border-color:var(--mc-primary-600);color:#fff}
   .mc-edit-link:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
-  /* The wrapper is space-between, so a third child would strand the two
-     buttons at opposite ends. Letting the text take the slack groups
-     them together on the right, which is where a pair of actions goes. */
+  
   .mc-report.has-edit{gap:.7rem}
   .mc-report.has-edit .mc-report-text{flex:1 1 14rem}
 
-  /* Lightweight modal (Bootstrap's JS bundle is not loaded on this site) */
+  
   .mc-modal{position:fixed;inset:0;z-index:1080;display:none;align-items:center;justify-content:center;padding:1.25rem}
   .mc-modal.is-open{display:flex}
   .mc-modal-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(2px)}
@@ -792,9 +752,7 @@
   .mc-modal-ico--ok{background:var(--mc-green-50);color:var(--mc-green)}
   .mc-modal-ico--muted{background:var(--mc-bg);color:var(--mc-muted)}
   .mc-modal-ico--danger{background:var(--mc-danger-50);color:var(--mc-danger)}
-  /* What a deletion takes and what it leaves, itemised. Left-aligned in
-     a centred panel on purpose — this is the part that has to be read
-     rather than glanced at, and centred prose is glanced at. */
+  
   .mc-modal-list{list-style:none;text-align:left;margin:0 0 1.3rem;padding:0;font-size:.9rem;line-height:1.55;color:var(--mc-muted)}
   .mc-modal-list li{display:flex;gap:.6rem;align-items:flex-start;padding:.4rem 0;border-top:1px solid var(--mc-border)}
   .mc-modal-list li:first-child{border-top:none}
@@ -807,17 +765,12 @@
   .mc-modal-msg--error{background:var(--mc-danger-50);border:1px solid #fecaca;color:var(--mc-danger-700)}
   .mc-modal-msg--ok{background:var(--mc-green-50);border:1px solid #bbf7d0;color:#15803d}
   .mc-modal-actions{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
-  /* A field that shows rather than asks. Same box as an editable one so
-     the form reads as one thing, minus the affordances that would invite
-     typing: no focus ring on the wrapper, muted text, default cursor. */
+  
   .mc-auth-field--static{background:var(--mc-bg)}
   .mc-auth-field--static:focus-within{border-color:var(--mc-border);box-shadow:none}
   .mc-auth-field--static input{color:var(--mc-muted);font-weight:500;cursor:default;text-overflow:ellipsis}
 
-  /* Category radios. The native input is kept in the accessibility tree
-     and kept focusable — it is only made invisible — so arrow keys, the
-     radio-group role and label clicks all still work. .mc-radio-mark is
-     the dot that gets drawn instead. */
+  
   .mc-radio-group{border:none;padding:0;margin:0 0 1.15rem;text-align:left}
   .mc-radio-group legend{float:none;width:auto;padding:0;font-size:.88rem}
   .mc-radio{display:flex;align-items:flex-start;gap:.7rem;background:#fff;border:1px solid var(--mc-border);border-radius:12px;padding:.7rem .9rem;margin-bottom:.5rem;cursor:pointer;transition:border-color .15s,background .15s}
@@ -829,41 +782,36 @@
   .mc-radio input:checked~.mc-radio-mark{border-color:var(--mc-primary)}
   .mc-radio input:checked~.mc-radio-mark::after{transform:scale(1)}
   .mc-radio:has(input:checked){border-color:var(--mc-primary);background:var(--mc-primary-50)}
-  /* :has() is widely supported now but not everywhere; without it the
-     selected row simply keeps the plain card background and the dot is
-     still filled, which is legible on its own. */
+  
   .mc-radio input:focus-visible~.mc-radio-mark{outline:2px solid var(--mc-primary);outline-offset:2px}
   .mc-radio-text{display:flex;flex-direction:column;gap:.12rem;min-width:0}
   .mc-radio-label{font-size:.94rem;font-weight:600;color:var(--mc-text);line-height:1.35}
   .mc-radio-hint{font-size:.8rem;color:var(--mc-muted);line-height:1.45}
 
-  /* ===================== BMI calculator (bmi.html) ===================== */
-  /* The form reuses the auth-card, label, field, chip and radio pieces
-     above; only the unit selects, the result figure and the scale are
-     particular to this page. */
+  
+  
   .mc-bmi-card{max-width:600px;margin:0 auto;text-align:left}
   .mc-bmi-row{display:flex;gap:1rem}
   .mc-bmi-row>*{flex:1;min-width:0}
 
-  /* Gender: two equal buttons in the chip style, one always active. */
+  
   .mc-bmi-toggle{display:flex;gap:.6rem}
   .mc-bmi-toggle .mc-chip{flex:1;text-align:center;padding:.6rem .5rem}
 
-  /* A standalone select, styled to match .mc-auth-field inputs. */
+  
   .mc-bmi-select{width:100%;border:1px solid var(--mc-border);border-radius:12px;background:#fff;font-family:inherit;font-size:.97rem;color:var(--mc-text);padding:.7rem .9rem;cursor:pointer;outline:none;transition:border-color .15s,box-shadow .15s}
   .mc-bmi-select:focus{border-color:var(--mc-primary);box-shadow:0 0 0 3px var(--mc-primary-50)}
 
-  /* Two number inputs (feet/inches) sharing a row. */
+  
   .mc-bmi-inputs{display:flex;gap:.6rem}
   .mc-bmi-inputs>*{flex:1}
 
-  /* A unit select tucked to the right of an input, reading as one control
-     — the weight field's kg/lbs. */
+  
   .mc-bmi-field .mc-auth-field{margin-bottom:0}
   .mc-bmi-field .mc-auth-field .mc-bmi-select{width:auto;flex-shrink:0;border:none;border-left:1px solid var(--mc-border);border-radius:0 12px 12px 0;background:transparent;padding:.7rem .8rem}
   .mc-bmi-field .mc-auth-field .mc-bmi-select:focus{box-shadow:none}
 
-  /* Result: the callout look, its accent recoloured per category. */
+  
   .mc-bmi-result{margin-top:1.6rem;display:none;text-align:center}
   .mc-bmi-figure{display:flex;align-items:baseline;gap:.5rem;justify-content:center}
   .mc-bmi-number{font-family:'Poppins',sans-serif;font-size:2.7rem;font-weight:700;line-height:1;color:var(--mc-text)}
@@ -874,16 +822,13 @@
   .mc-bmi--normal .mc-bmi-cat{background:var(--mc-green-50);color:var(--mc-green)}
   .mc-bmi--over .mc-bmi-cat{background:var(--mc-amber-50);color:var(--mc-amber)}
   .mc-bmi--obese .mc-bmi-cat{background:var(--mc-danger-50);color:var(--mc-danger-700)}
-  /* The result box is a callout; recolour its left accent to the band so
-     the whole card, not just the badge, carries the reading's colour. */
+  
   .mc-bmi-result.mc-bmi--under{border-left-color:#f59e0b}
   .mc-bmi-result.mc-bmi--normal{border-left-color:var(--mc-green)}
   .mc-bmi-result.mc-bmi--over{border-left-color:#f59e0b}
   .mc-bmi-result.mc-bmi--obese{border-left-color:var(--mc-danger)}
 
-  /* The scale: four bands sized to the BMI ranges 15–40, with a marker
-     at the reading. The band flex values ARE those ranges (3.5/6.5/5/10),
-     so the marker's left % lines up with the colour under it. */
+  
   .mc-bmi-scale{margin:1.3rem 0 .2rem;position:relative}
   .mc-bmi-bands{display:flex;height:10px;border-radius:999px;overflow:hidden}
   .mc-bmi-bands span{display:block}
@@ -896,9 +841,8 @@
   .mc-bmi-tick{position:absolute;transform:translateX(-50%);font-size:.72rem;color:var(--mc-muted);white-space:nowrap}
   .mc-bmi-note{font-size:.85rem;color:var(--mc-muted);line-height:1.55;margin:1.2rem 0 0;text-align:left}
 
-  /* ===================== Toast ===================== */
-  /* Above .mc-modal (1080), because the report modal closes itself as the
-     toast arrives and the two overlap for a frame. */
+  
+  
   .mc-toast-wrap{position:fixed;z-index:1090;right:1.25rem;bottom:1.25rem;display:flex;flex-direction:column;gap:.6rem;pointer-events:none;max-width:min(380px,calc(100vw - 2.5rem))}
   .mc-toast{display:flex;align-items:flex-start;gap:.7rem;background:#fff;border:1px solid var(--mc-border);border-left:4px solid var(--mc-primary);border-radius:14px;box-shadow:var(--mc-shadow-lg);padding:.85rem 1rem;pointer-events:auto;opacity:0;transform:translateY(12px);transition:opacity .26s ease-out,transform .26s cubic-bezier(.16,1,.3,1)}
   .mc-toast.is-in{opacity:1;transform:none}
@@ -910,14 +854,11 @@
   .mc-toast--error{border-left-color:var(--mc-danger)}
   .mc-toast--error .mc-toast-ico{color:var(--mc-danger)}
 
-  /* ===================== Bookmarks ("Save this") ===================== */
-  /* The wrapper that lets an overlay button sit over a card that is itself
-     a single link. It has to carry the card's full height so the row of
-     cards stays equal-height the way it was before the wrapper existed. */
+  
+  
   .mc-bm-host{position:relative;height:100%}
 
-  /* The button itself, in three shapes. Shared: a bookmark icon that fills
-     in when saved and turns teal, on a control that never navigates. */
+  
   .mc-bm{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font-family:inherit;border:1px solid var(--mc-border);background:#fff;color:var(--mc-muted);cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .1s}
   .mc-bm:hover{color:var(--mc-primary-600);border-color:var(--mc-primary)}
   .mc-bm:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
@@ -925,26 +866,22 @@
   .mc-bm.is-saved{color:var(--mc-primary-600);border-color:var(--mc-primary);background:var(--mc-primary-50)}
   .mc-bm i{font-size:1rem;line-height:1}
 
-  /* Overlay: a round icon button in the top-right of a disease or article
-     card, above the link so a tap saves instead of opening the page. */
+  
   .mc-bm--overlay{position:absolute;top:.7rem;right:.7rem;z-index:2;width:38px;height:38px;border-radius:999px;box-shadow:var(--mc-shadow)}
   .mc-article .mc-bm--overlay,.mc-bm-host>.mc-article+.mc-bm--overlay{top:.7rem;right:.7rem}
-  /* On an article card the thumbnail is at the top, so the button sits on
-     the image — give it a solid ground so the icon stays legible. */
+  
   .mc-bm-host>.mc-article+.mc-bm--overlay{background:rgba(255,255,255,.92);backdrop-filter:blur(2px)}
 
-  /* Inline: sits in the actions row of a hospital or pharmacy card beside
-     Call and Directions, matching their height. */
+  
   .mc-bm--inline{height:auto;padding:.6rem .95rem;border-radius:10px;font-weight:600;font-size:.9rem;color:var(--mc-text)}
 
-  /* Detail: the labelled button in the "Save this article" bar on a
-     content page. The <span class="mc-bm-text"> carries the word. */
+  
   .mc-bm-bar{display:flex;align-items:center;justify-content:space-between;gap:1.1rem;flex-wrap:wrap;background:var(--mc-primary-50);border:1px solid #ccfbf1;border-radius:16px;padding:1.15rem 1.35rem;margin:2rem 0 0}
   .mc-bm-bar-text{font-size:.93rem;line-height:1.6;color:#334155}
   .mc-bm-bar-text strong{color:var(--mc-primary-600)}
   .mc-bm--detail{padding:.55rem 1.15rem;border-radius:10px;font-weight:600;font-size:.9rem;color:var(--mc-text);white-space:nowrap}
 
-  /* ---- The Saved page list (saved.html) ---- */
+  
   .mc-saved-list{display:flex;flex-direction:column;gap:.9rem}
   .mc-saved-card{display:flex;align-items:center;gap:1rem;background:#fff;border:1px solid var(--mc-border);border-radius:16px;box-shadow:var(--mc-shadow);padding:1.1rem 1.25rem}
   .mc-saved-ico{flex-shrink:0;width:46px;height:46px;border-radius:12px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem}
@@ -966,23 +903,18 @@
     .mc-report{flex-direction:column;align-items:flex-start}
     .mc-report.has-edit .mc-report-text{flex:1 1 auto}
     .mc-modal-panel{padding:1.6rem 1.25rem 1.4rem}
-    /* Bottom sheet rather than a corner card: at this width a corner
-       card is most of the row anyway, and centring it avoids a toast
-       that looks accidentally offset. */
+    
     .mc-toast-wrap{left:.75rem;right:.75rem;bottom:.75rem;max-width:none}
   }
 
-  /* Reduced motion: the toast still appears and still leaves, it just
-     does not slide. Removing the transition entirely (rather than
-     shortening it) is why report.js does not rely on transitionend
-     alone to clean up. */
+  
   @media (prefers-reduced-motion:reduce){
     .mc-toast{transition:none;transform:none}
     .mc-radio-mark::after{transition:none}
     .mc-modal-panel{animation:none}
   }
 
-  /* ===================== Reader reports queue (editor tool) ===================== */
+  
   .mc-admin-queue{margin-top:1.5rem}
   .mc-admin-queue-tools{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin-bottom:1.3rem}
   .mc-admin-filters{display:flex;gap:.35rem;flex-wrap:wrap}
@@ -994,10 +926,7 @@
   .mc-report-status--new{background:var(--mc-amber-50);border-color:#fde68a;color:var(--mc-amber)}
   .mc-report-status--reviewed{background:var(--mc-green-50);border-color:#bbf7d0;color:#15803d}
   .mc-report-pills{display:inline-flex;align-items:center;gap:.35rem;flex-wrap:wrap}
-  /* Category first, coloured by how much it matters. A medical
-     inaccuracy and a typo are both worth fixing, but only one of them is
-     worth interrupting a clinician for, and the queue should say so
-     before anyone reads the prose. */
+  
   .mc-report-cat--inaccuracy{background:var(--mc-danger-50);border-color:#fecaca;color:var(--mc-danger-700)}
   .mc-report-cat--broken_link{background:var(--mc-amber-50);border-color:#fde68a;color:var(--mc-amber)}
   .mc-report-cat--typo,.mc-report-cat--other{background:var(--mc-bg);border-color:var(--mc-border);color:var(--mc-muted)}
@@ -1006,16 +935,15 @@
   .mc-report-meta{font-size:.8rem;color:var(--mc-muted);display:inline-flex;align-items:center;gap:.35rem;flex-wrap:wrap}
   .mc-report-foot .mc-auth-btn{font-size:.85rem;padding:.45rem 1rem}
 
-  /* ===================== Staff dashboards (admin.html, editor-dashboard.html) ===================== */
-  /* The chips in the reports queue are toggled with .is-active by
-     reports-queue.js; .active is kept for the filter bars elsewhere. */
+  
+  
   .mc-chip.is-active{background:var(--mc-primary);border-color:var(--mc-primary);color:#fff}
 
   .mc-dash-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap}
   .mc-dash-who{display:inline-flex;align-items:center;gap:.5rem;font-size:.9rem;color:var(--mc-muted);background:#fff;border:1px solid var(--mc-border);border-radius:999px;padding:.4rem .9rem}
   .mc-dash-who .bi{color:var(--mc-primary-600)}
 
-  /* Stat tiles */
+  
   .mc-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin:0 0 1.5rem}
   .mc-stat{background:#fff;border:1px solid var(--mc-border);border-radius:16px;box-shadow:var(--mc-shadow);padding:1.15rem 1.25rem;display:flex;align-items:flex-start;gap:.9rem}
   .mc-stat:hover{border-color:var(--mc-primary);transform:translateY(-2px);box-shadow:var(--mc-shadow-lg);text-decoration:none;color:inherit}
@@ -1029,7 +957,7 @@
   .mc-stat-label{font-size:.87rem;font-weight:600;color:var(--mc-text);margin-top:.15rem}
   .mc-stat-sub{font-size:.78rem;color:var(--mc-muted);line-height:1.45;margin-top:.15rem}
 
-  /* Tool tiles */
+  
   .mc-dash-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:0 0 1.5rem}
   .mc-dash-card{display:flex;gap:.9rem;align-items:flex-start;background:#fff;border:1px solid var(--mc-border);border-radius:16px;box-shadow:var(--mc-shadow);padding:1.25rem 1.3rem;text-decoration:none;color:inherit;transition:border-color .15s,transform .15s,box-shadow .15s}
   .mc-dash-card:hover{border-color:var(--mc-primary);transform:translateY(-2px);box-shadow:var(--mc-shadow-lg);text-decoration:none;color:inherit}
@@ -1039,7 +967,7 @@
   .mc-dash-card h3 .bi{font-size:.8rem;color:var(--mc-muted)}
   .mc-dash-card p{font-size:.87rem;line-height:1.55;color:var(--mc-muted);margin:0}
 
-  /* People and roles table (admin only) */
+  
   .mc-people-tools{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin-bottom:1.1rem}
   .mc-people-search{flex:1;min-width:200px;border:1px solid var(--mc-border);border-radius:10px;background:#fff;font:inherit;font-size:.92rem;color:var(--mc-text);padding:.55rem .9rem}
   .mc-people-search:focus{outline:2px solid var(--mc-primary);outline-offset:-1px;border-color:var(--mc-primary)}
@@ -1048,12 +976,10 @@
   .mc-people th{text-align:left;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--mc-muted);border-bottom:1px solid var(--mc-border);padding:0 .6rem .6rem}
   .mc-people td{border-bottom:1px solid var(--mc-border);padding:.75rem .6rem;vertical-align:middle}
   .mc-people tr:last-child td{border-bottom:none}
-  /* The actions column is the only right-aligned one: its header and its
-     cell both sit at the right edge so they line up over each other. */
+  
   .mc-people th.mc-people-actions-col,.mc-people td.mc-people-actions-col{text-align:right}
   .mc-people-email{font-weight:600;color:var(--mc-text);overflow-wrap:anywhere}
-  /* The dedicated email column: a mailto link, dropping to a muted dash
-     when there is no address (or the column has not been migrated in). */
+  
   .mc-people-mailcell{color:var(--mc-primary-600);text-decoration:none;overflow-wrap:anywhere}
   .mc-people-mailcell:hover{text-decoration:underline}
   .mc-people-mailcell--none{color:var(--mc-muted)}
@@ -1061,24 +987,19 @@
   .mc-people-id{font-size:.74rem;color:var(--mc-muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
   .mc-people-you{font-size:.68rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;background:var(--mc-primary-50);border:1px solid #ccfbf1;color:var(--mc-primary-600);border-radius:999px;padding:.1rem .45rem;margin-left:.4rem}
   .mc-people-when{font-size:.82rem;color:var(--mc-muted);white-space:nowrap}
-  /* The per-row Delete: a ghost button that says danger in its colour
-     rather than filling with it, so a table of them does not read as a
-     wall of red. Disabled on the admin's own row. */
+  
   .mc-people-delete{color:var(--mc-danger-700);white-space:nowrap}
   .mc-people-delete:hover:not(:disabled){background:var(--mc-danger-50);border-color:var(--mc-danger-600)}
   .mc-people-delete:disabled{opacity:.55;cursor:default}
   .mc-people-actions{display:flex;gap:.4rem;align-items:center;justify-content:flex-end}
-  /* The role controls, left-aligned so they sit under the "Role" header
-     rather than being pushed to the right the way the actions group is. */
+  
   .mc-people-role{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}
   .mc-role-select{border:1px solid var(--mc-border);border-radius:9px;background:#fff;font:inherit;font-size:.88rem;color:var(--mc-text);padding:.4rem .6rem;cursor:pointer}
   .mc-role-select:focus{outline:2px solid var(--mc-primary);outline-offset:-1px}
   .mc-role-select:disabled{opacity:.55;cursor:default}
   .mc-people-save{font-size:.85rem;padding:.42rem .95rem}
   .mc-people-save[hidden]{display:none}
-  /* The role pill reuses .mc-account-role--* from the navbar. That block
-     sits earlier in this file, so .mc-admin-pill would win on equal
-     specificity and grey it out — these two rules put the colour back. */
+  
   .mc-people-actions .mc-admin-pill.mc-account-role--editor,
   .mc-people-role .mc-admin-pill.mc-account-role--editor{background:var(--mc-primary-50);border-color:#ccfbf1;color:var(--mc-primary-600)}
   .mc-people-actions .mc-admin-pill.mc-account-role--admin,
@@ -1089,7 +1010,7 @@
     .mc-stat-num{font-size:1.4rem}
   }
 
-  /* ===================== Account menu (admin profile dropdown) ===================== */
+  
   .mc-menu{position:relative;display:inline-flex}
   .mc-menu-trigger{display:inline-flex;align-items:center;gap:.55rem;background:#fff;border:1px solid var(--mc-border);border-radius:12px;padding:.25rem .7rem .25rem .25rem;font:inherit;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
   .mc-menu-trigger:hover{background:var(--mc-bg);border-color:var(--mc-muted)}
@@ -1129,68 +1050,48 @@
   .mc-menu-item--danger:disabled{opacity:.6;cursor:default}
 
   @media (max-width:1199.98px){
-    /* Inside the collapsed navbar the panel is just another block, so the
-       wrapper has to stack instead of sitting the panel beside the trigger. */
+    
     .mc-menu{width:100%;flex-direction:column;align-items:stretch}
     .mc-menu-trigger{width:100%;justify-content:flex-start}
     .mc-menu-name{max-width:none}
     .mc-menu-caret{margin-left:auto}
     .mc-menu-panel{position:static;width:100%;margin-top:.5rem;box-shadow:none;border-radius:12px}
     .mc-menu-panel::before{display:none}
-    /* Roomier rows for thumbs. */
+    
     .mc-menu-item{padding:.72rem .7rem}
   }
   @media (prefers-reduced-motion:reduce){
     .mc-menu-panel.is-open{animation:none}
     .mc-menu-caret{transition:none}
   }
-  /* The navbar is sticky, so an in-page jump needs room above the target. */
+  
   #people{scroll-margin-top:88px}
-  /* The rename dialog reuses .mc-modal from the report flow; only the
-     field inside it needs anything of its own. */
+  
   .mc-modal-panel .mc-auth-field input{width:100%;min-width:0}
-  /* The delete-account dialog puts a reveal button beside that input, the
-     way the sign-in screen does. There the input sizes itself; here it is
-     already claiming the full width, so the button has to be told to keep
-     its own and the input to be allowed to give some back. */
+  
   .mc-modal-panel .mc-auth-reveal{flex:none}
   .mc-people-mail{font-size:.8rem;color:var(--mc-muted);margin-top:.1rem;overflow-wrap:anywhere}
 
-  /* ==================================================================
-     Site state — the maintenance curtain and the site-wide notice
-     ------------------------------------------------------------------
-     Written by admin/maintenance.html into site_settings; drawn by the
-     last block of script.js, on every public page. These live here
-     rather than in admin.css because the reader is who sees them, and
-     the admin preview reuses these same classes so that what the screen
-     shows and what the site does cannot drift apart.
-     ================================================================== */
+  
 
-  /* The banner. Above everything, quiet by default: the amber version is
-     for something being wrong, and if both looked urgent neither would. */
+  
   .mc-site-notice{display:flex;align-items:flex-start;gap:.6rem;background:var(--mc-text);color:#fff;font-size:.88rem;line-height:1.5;padding:.6rem 1rem}
   .mc-site-notice .bi{flex-shrink:0;margin-top:.1rem;opacity:.9}
   .mc-site-notice--warning{background:var(--mc-amber-50);color:#78350f;border-bottom:1px solid #fde68a}
   .mc-site-notice--warning .bi{color:var(--mc-amber);opacity:1}
 
-  /* The curtain. position:fixed over the whole viewport rather than a
-     replacement of <body>: the page underneath is left intact, so
-     removing this element — which is what happens when the reader turns
-     out to be staff — puts the site back with nothing to re-render. */
+  
   .mc-curtain{position:fixed;inset:0;z-index:3000;background:var(--mc-bg);display:flex;align-items:center;justify-content:center;padding:1.5rem;overflow-y:auto}
   .mc-curtain-panel{max-width:34rem;text-align:center;font-family:'Inter',system-ui,sans-serif}
   .mc-curtain-ico{width:58px;height:58px;border-radius:17px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:inline-flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 1.1rem}
   .mc-curtain-panel h1{font-family:'Poppins',system-ui,sans-serif;font-size:1.5rem;font-weight:700;margin:0 0 .7rem;color:var(--mc-text)}
   .mc-curtain-panel p{color:var(--mc-muted);font-size:1rem;line-height:1.65;margin:0 auto 1rem;max-width:28rem}
-  /* The one thing on a closed site somebody may urgently need. Styled to
-     be found by a frightened person at a glance, not to be tasteful. */
+  
   .mc-curtain-emergency{display:block;margin-top:1.4rem}
   .mc-curtain-emergency .mc-auth-btn{margin-top:.6rem}
   .mc-curtain-sign{display:block;margin-top:1.6rem;font-size:.82rem;color:var(--mc-muted)}
 
-  /* What staff see instead of the curtain: the site, plus a reminder
-     that nobody else can see it. Sticky rather than fixed so it scrolls
-     with the page it is describing. */
+  
   .mc-curtain-staff{position:sticky;top:0;z-index:1200;display:flex;align-items:center;gap:.6rem;background:var(--mc-danger-700);color:#fff;font-size:.85rem;line-height:1.45;padding:.55rem 1rem}
   .mc-curtain-staff .bi{flex-shrink:0}
   .mc-curtain-staff a{color:#fff;text-decoration:underline}
@@ -1201,13 +1102,7 @@
     .mc-curtain-panel p{font-size:.94rem}
   }
 
-  /* ===================== Contact us (contact.html) =====================
-     One card per way of reaching us. Built on the same bones as .mc-scard
-     on the emergency page — icon, two lines, arrow — in the site's teal
-     rather than its red, because the difference between "call this now"
-     and "write to us about a typo" should be visible before either is
-     read. Redrawn by contact.js from site_settings, so the classes have
-     to survive being rebuilt from script. */
+  
   .mc-contact-list{display:grid;gap:1rem;margin:0 0 1rem}
   .mc-contact-card{display:flex;align-items:center;gap:1.1rem;background:#fff;border:1px solid var(--mc-border);border-radius:16px;padding:1.35rem 1.5rem;min-height:92px;text-decoration:none;color:var(--mc-text);box-shadow:var(--mc-shadow);transition:transform .15s,border-color .15s,box-shadow .15s}
   .mc-contact-card:hover{transform:translateY(-2px);border-color:var(--mc-primary);box-shadow:var(--mc-shadow-lg);color:var(--mc-text);text-decoration:none}
@@ -1215,9 +1110,7 @@
   .mc-contact-ico{width:48px;height:48px;border-radius:13px;background:var(--mc-primary-50);color:var(--mc-primary-600);display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0}
   .mc-contact-card .body{flex:1;min-width:0;display:block}
   .mc-contact-card .label{display:block;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--mc-muted);margin-bottom:.15rem}
-  /* The address and the number are the point of the page, so they are the
-     biggest thing on the card. overflow-wrap because a long Gmail address
-     on a narrow phone must wrap rather than push the arrow off-screen. */
+  
   .mc-contact-card .value{display:block;font-family:'Poppins',sans-serif;font-weight:700;font-size:1.12rem;line-height:1.3;color:var(--mc-primary-600);letter-spacing:-.01em;overflow-wrap:anywhere}
   .mc-contact-card .hint{display:block;color:var(--mc-muted);font-size:.87rem;line-height:1.5;margin-top:.25rem}
   .mc-contact-card .arr{color:var(--mc-muted);font-size:1.2rem;flex-shrink:0}

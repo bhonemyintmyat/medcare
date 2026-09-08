@@ -19,9 +19,15 @@
   /* Language bar (injected on every page by script.js) */
   .mc-langbar{background:var(--mc-text);color:#fff;font-size:.85rem}
   .mc-langbar .container{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;padding-top:.4rem;padding-bottom:.4rem}
-  .mc-langbar-label{display:inline-flex;align-items:center;gap:.4rem;opacity:.85;margin-right:auto}
-  .mc-lang{display:inline-flex;border:1px solid rgba(255,255,255,.28);border-radius:999px;overflow:hidden}
-  .mc-lang-btn{background:transparent;border:none;color:#fff;font:inherit;font-weight:600;padding:.28rem .95rem;cursor:pointer;line-height:1.7;font-family:'Noto Sans Myanmar','Inter',system-ui,sans-serif}
+  .mc-langbar-label{display:inline-flex;align-items:center;gap:.4rem;opacity:.85;margin-right:auto;line-height:2.2;min-width:0}
+  /* No overflow:hidden here. Myanmar glyphs stack marks above and below the
+     Latin band, so the line box has to be tall enough to hold them and the
+     pill has to round its corners on the buttons themselves — clipping the
+     group is what used to cut the top and bottom off "မြန်မာ". */
+  .mc-lang{display:inline-flex;flex-shrink:0;border:1px solid rgba(255,255,255,.28);border-radius:999px}
+  .mc-lang-btn{background:transparent;border:none;color:#fff;font:inherit;font-weight:600;padding:.1rem .95rem;cursor:pointer;line-height:2.25;white-space:nowrap;font-family:'Noto Sans Myanmar','Inter',system-ui,sans-serif}
+  .mc-lang-btn:first-child{border-radius:999px 0 0 999px}
+  .mc-lang-btn:last-child{border-radius:0 999px 999px 0}
   .mc-lang-btn:hover{background:rgba(255,255,255,.14)}
   .mc-lang-btn[aria-pressed="true"]{background:var(--mc-primary);color:#fff}
   .mc-lang-btn:focus-visible{outline:2px solid #fff;outline-offset:-3px}
@@ -202,6 +208,22 @@
   .mc-nav .nav-link{color:var(--mc-text);font-weight:500;padding:.5rem .9rem !important;border-radius:8px;font-size:.95rem;cursor:pointer}
   .mc-nav .nav-link:hover{color:var(--mc-primary-600);background:var(--mc-primary-50)}
   .mc-nav .nav-link.active{color:var(--mc-primary-600)}
+  /* The expanded row carries brand + five links + Emergency + Desk + the
+     account menu. Without these it overflows the container and the whole
+     page gains a horizontal scrollbar, with the account menu hanging off
+     the right edge. min-width:0 lets the flex children shrink; the name
+     ellipsises instead of growing the row. */
+  .mc-nav .navbar-collapse{min-width:0}
+  .mc-nav .navbar-nav{min-width:0}
+  .mc-account{min-width:0}
+  .mc-menu{min-width:0;max-width:100%}
+  .mc-menu-trigger{min-width:0;max-width:100%}
+  /* Between the xl breakpoint and the xxl container the row still wants
+     ~27px more than the 1140px container gives it, so the account name
+     ellipsises. Tightening the link padding buys most of that back. */
+  @media (min-width:1200px) and (max-width:1399.98px){
+    .mc-nav .nav-link{padding:.5rem .62rem !important}
+  }
 
   /* Buttons */
   .btn-mc-primary{background:var(--mc-primary);border-color:var(--mc-primary);color:#fff;font-weight:600;border-radius:10px;padding:.6rem 1.25rem}
@@ -237,12 +259,17 @@
   .mc-hospital-input .bi{position:absolute;left:.85rem;color:var(--mc-muted);font-size:1rem;pointer-events:none}
   .mc-hospital-input input{border:none;outline:none;background:transparent;padding:.55rem .9rem .55rem 2.35rem;font-size:.95rem;color:var(--mc-text);width:100%;height:100%;font-family:inherit}
   .mc-hospital-input input::placeholder{color:var(--mc-muted)}
-  .mc-subheader-go{border:none;background:var(--mc-primary);color:#fff;width:44px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;border-left:1px solid var(--mc-border);transition:background .15s;border-radius:0 12px 12px 0}
+  .mc-subheader-go{border:none;background:var(--mc-primary);color:#fff;flex:0 0 44px;width:44px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;border-left:1px solid var(--mc-border);transition:background .15s;border-radius:0 12px 12px 0}
   .mc-subheader-go:hover{background:var(--mc-primary-600)}
   .mc-subheader-go:focus-visible{outline:2px solid var(--mc-primary);outline-offset:-2px}
   @media (max-width:767.98px){
     .mc-subheader{position:static;top:auto}
-    .mc-hospital-search--wide{width:100%;flex:1 1 100%}
+    /* min-width:0 on both, or the 280px bar and its 220px input add up to
+       more than a 360px screen has and the go button lands off the page. */
+    .mc-hospital-search--wide{width:100%;flex:1 1 100%;min-width:0}
+    .mc-hospital-input{min-width:0}
+    .mc-town-btn{padding:0 .7rem}
+    .mc-subheader-inner{gap:.85rem}
   }
 
   /* Hero */
@@ -286,6 +313,13 @@
   .mc-emergency-banner .ico{width:44px;height:44px;border-radius:12px;background:#fef2f2;color:var(--mc-danger);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
   .mc-emergency-banner .msg strong{color:var(--mc-danger);display:block;font-weight:700;font-size:1rem}
   .mc-emergency-banner .msg span{color:var(--mc-muted);font-size:.9rem}
+  /* The call-to-action does not wrap, so on a narrow phone the row has to.
+     Icon and message keep the first line; the button takes its own. */
+  @media (max-width:575.98px){
+    .mc-emergency-banner{flex-wrap:wrap;padding:1.1rem 1.15rem;gap:.85rem}
+    .mc-emergency-banner .msg{flex:1 1 0;min-width:0}
+    .mc-emergency-banner .btn-emergency{width:100%;justify-content:center}
+  }
 
   /* Article */
   .mc-article{background:#fff;border:1px solid var(--mc-border);border-radius:18px;overflow:hidden;box-shadow:var(--mc-shadow);height:100%;transition:transform .2s,box-shadow .2s}
@@ -617,7 +651,10 @@
   .mc-auth-field{position:relative;display:flex;align-items:center;background:#fff;border:1px solid var(--mc-border);border-radius:12px;margin:0 0 1.15rem;transition:border-color .15s,box-shadow .15s}
   .mc-auth-field:focus-within{border-color:var(--mc-primary);box-shadow:0 0 0 3px var(--mc-primary-50)}
   .mc-auth-field>.bi{position:absolute;left:.9rem;color:var(--mc-muted);font-size:1rem;pointer-events:none}
-  .mc-auth-field input{flex:1;border:none;outline:none;background:transparent;font-family:inherit;font-size:.97rem;color:var(--mc-text);padding:.7rem .9rem .7rem 2.5rem;border-radius:12px}
+  /* min-width:0, or the input keeps its default 20-character intrinsic
+     width and shoves whatever sits beside it (the BMI unit select) off the
+     side of a phone screen. */
+  .mc-auth-field input{flex:1;min-width:0;border:none;outline:none;background:transparent;font-family:inherit;font-size:.97rem;color:var(--mc-text);padding:.7rem .9rem .7rem 2.5rem;border-radius:12px}
   .mc-auth-field input::placeholder{color:var(--mc-muted)}
   .mc-auth-reveal{border:none;background:transparent;color:var(--mc-muted);font-size:1rem;padding:.4rem .8rem;cursor:pointer;border-radius:8px}
   .mc-auth-reveal:hover{color:var(--mc-text)}
@@ -671,7 +708,7 @@
   .mc-account-btn:hover{background:var(--mc-primary-50);border-color:var(--mc-primary);color:var(--mc-primary-600)}
   .mc-account-btn:focus-visible{outline:2px solid var(--mc-primary);outline-offset:2px}
   .mc-account-btn:disabled{opacity:.6;cursor:default}
-  @media (max-width:991.98px){
+  @media (max-width:1199.98px){
     .mc-account{margin:.9rem 0 .35rem;flex-wrap:wrap}
     .mc-account-who{max-width:100%}
   }
@@ -699,7 +736,7 @@
   .mc-admin-hint-inline{font-weight:400;color:var(--mc-muted);font-size:.82rem}
   .mc-admin-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.35rem}
   .mc-admin-icon-preview{position:absolute;right:.9rem;color:var(--mc-primary-600);font-size:1.1rem;pointer-events:none}
-  .mc-auth-field textarea{flex:1;border:none;outline:none;background:transparent;font-family:inherit;font-size:.97rem;color:var(--mc-text);padding:.7rem .9rem;border-radius:12px;resize:vertical;min-height:90px}
+  .mc-auth-field textarea{flex:1;min-width:0;border:none;outline:none;background:transparent;font-family:inherit;font-size:.97rem;color:var(--mc-text);padding:.7rem .9rem;border-radius:12px;resize:vertical;min-height:90px}
   .mc-auth-field textarea::placeholder{color:var(--mc-muted)}
   .mc-admin-loading{color:var(--mc-muted);font-size:.93rem;padding:1.1rem 0;text-align:center}
   .mc-admin-row{display:flex;align-items:flex-start;gap:.9rem;padding:.85rem 0;border-bottom:1px solid var(--mc-border)}
@@ -1061,7 +1098,7 @@
   .mc-menu-trigger[aria-expanded="true"] .mc-menu-name{color:var(--mc-primary-600)}
   .mc-menu-trigger[aria-expanded="true"] .mc-menu-caret{transform:rotate(180deg);color:var(--mc-primary-600)}
   .mc-menu-avatar{width:32px;height:32px;border-radius:999px;flex-shrink:0;background:linear-gradient(160deg,#14b8a6 0%,var(--mc-primary-600) 100%);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.02em}
-  .mc-menu-name{font-size:.88rem;font-weight:600;color:var(--mc-text);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mc-menu-name{font-size:.88rem;font-weight:600;color:var(--mc-text);max-width:150px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .mc-menu-caret{color:var(--mc-muted);flex-shrink:0;transition:transform .15s}
 
   .mc-menu-panel{position:absolute;top:calc(100% + 10px);right:0;z-index:1040;width:304px;background:#fff;border:1px solid var(--mc-border);border-radius:16px;box-shadow:var(--mc-shadow-lg);display:none}
@@ -1091,7 +1128,7 @@
   .mc-menu-item--danger:hover{background:var(--mc-danger-50);color:var(--mc-danger-700)}
   .mc-menu-item--danger:disabled{opacity:.6;cursor:default}
 
-  @media (max-width:991.98px){
+  @media (max-width:1199.98px){
     /* Inside the collapsed navbar the panel is just another block, so the
        wrapper has to stack instead of sitting the panel beside the trigger. */
     .mc-menu{width:100%;flex-direction:column;align-items:stretch}

@@ -112,7 +112,7 @@
      show a BMI because the age box has a typo in it would withhold the
      answer over the one field that does not affect it.
 
-     Bounded 1 to 129. The ceiling is there for the reason the date
+     Bounded 1 to 120. The ceiling is there for the reason the date
      version rejected a future date: a number outside it is a slip, and
      printing "Age: 900" next to a medical reading would make the whole
      box look unreliable.
@@ -129,7 +129,7 @@
     if (!raw) { return null; }
     if (!/^\d{1,3}$/.test(raw)) { return null; }
     var years = parseInt(raw, 10);
-    return years >= 1 && years < 130 ? years : null;
+    return years >= 1 && years <= 120 ? years : null;
   }
 
   /* ---------- Submit ---------- */

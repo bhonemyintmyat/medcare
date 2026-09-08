@@ -106,11 +106,17 @@
     hintEl.textContent = recover
       ? 'Enter the address on your account. We will email a link that lets you pick a new password. It works once, and it expires within the hour.'
       : up
-        ? 'Pick a password of at least 6 characters. Your account starts with the "user" role.'
+        ? 'Pick a password: ' + auth.PASSWORD_HINT + ' Your account starts with the "user" role.'
         : 'Use the email and password you signed up with.';
 
     passEl.setAttribute('autocomplete', up ? 'new-password' : 'current-password');
-    passEl.setAttribute('placeholder', up ? 'At least 6 characters' : 'Your password');
+    passEl.setAttribute('placeholder', up ? 'At least 8 characters' : 'Your password');
+    /* Only when choosing one. Signing in means typing the password the
+       account already has, and an account made before this rule existed
+       has a shorter one — a minlength here would lock its owner out of
+       the form rather than let the server tell them it is wrong. */
+    if (up) { passEl.setAttribute('minlength', String(auth.PASSWORD_MIN)); }
+    else    { passEl.removeAttribute('minlength'); }
     // Not merely hidden. A hidden field that is still `required` is what
     // makes a form refuse to submit with nothing on screen to fix.
     passEl.required = !recover;
@@ -214,8 +220,10 @@
         displayEl.focus();
         return;
       }
-      if (password.length < 6) {
-        message('Passwords need to be at least 6 characters long.');
+      var problem = auth.passwordProblem(password);
+      if (problem) {
+        message(problem);
+        passEl.focus();
         return;
       }
       // Checked in the browser and nowhere else, which is the point: the

@@ -79,19 +79,30 @@ Then open <http://localhost:8080>.
 
 ### Point it at your own Supabase project
 
-The project URL and anon key checked into [`js/supabase.js`](js/supabase.js)
-belong to the live project. To run against your own, edit the two values
-near the top of that file:
+Settings live in `js/config.js`, which is **not** in the repository. Copy
+the example and fill it in:
 
-```js
-var SUPABASE_URL      = 'https://YOUR-PROJECT-REF.supabase.co';
-var SUPABASE_ANON_KEY = 'YOUR-ANON-PUBLIC-KEY';
+```bash
+cp js/config.example.js js/config.js
 ```
 
-Both come from your Supabase dashboard under **Project Settings → API**.
-The anon key is designed to be public; Row Level Security is what protects
-the data. The `service_role` key must never appear in any file the browser
-can load.
+```js
+window.MEDCARE_CONFIG = {
+  SUPABASE_URL: 'https://YOUR-PROJECT-REF.supabase.co',
+  SUPABASE_ANON_KEY: 'YOUR-ANON-PUBLIC-KEY'
+};
+```
+
+Both values come from your Supabase dashboard under
+**Project Settings → API**. Every page loads `js/config.js` immediately
+before `js/supabase.js`; without it the site still renders, but no data
+loads and the console says what to do.
+
+The anon key is designed to be public — it ships to the browser on every
+page load, and Row Level Security is what actually protects the data.
+`config.js` is gitignored so that no key of any kind is committed by
+habit, not because that key is a secret. The `service_role` key is the
+real secret, and it must never appear in any file the browser can load.
 
 ### Create the schema
 

@@ -46,3 +46,8 @@ $RECYCLE.BIN/
 *.rej
 tmp/
 scratch/
+
+# Local Supabase settings — copy js/config.example.js to js/config.js.
+# The anon key it holds is public by design, but keeping it out of the
+# repo means no key of any kind is committed by habit.
+js/config.js

@@ -1,9 +1,20 @@
 (function () {
   'use strict';
 
-  var SUPABASE_URL = 'https://dszujgyrbmtygzyfijtr.supabase.co';
+  var cfg = window.MEDCARE_CONFIG || {};
+  var SUPABASE_URL = cfg.SUPABASE_URL || '';
+  var SUPABASE_ANON_KEY = cfg.SUPABASE_ANON_KEY || '';
 
-  var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzenVqZ3lyYm10eWd6eWZpanRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0NTY5MDEsImV4cCI6MjEwMjAzMjkwMX0.gQsbAVhCbmVtWUD4m6d_gt7wJYDmK5bCyXQz2j9EC8w';
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    console.error(
+      '[MedCare] No configuration found. Copy js/config.example.js to ' +
+      'js/config.js, fill in the project URL and anon key from your ' +
+      'Supabase dashboard (Project Settings -> API), and make sure ' +
+      'config.js is loaded BEFORE supabase.js.'
+    );
+    window.supabaseClient = null;
+    return;
+  }
 
   if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
     console.error(
@@ -15,11 +26,11 @@
     return;
   }
 
-  if (SUPABASE_URL.indexOf('PASTE_') === 0 || SUPABASE_ANON_KEY.indexOf('PASTE_') === 0) {
+  if (SUPABASE_URL.indexOf('YOUR-') !== -1 || SUPABASE_ANON_KEY.indexOf('YOUR-') !== -1) {
     console.warn(
-      '[MedCare] Supabase is not configured yet. Open supabase.js and ' +
-      'replace SUPABASE_URL and SUPABASE_ANON_KEY with the values from ' +
-      'your Supabase dashboard (Project Settings -> API).'
+      '[MedCare] js/config.js still holds the example placeholders. ' +
+      'Replace them with the values from your Supabase dashboard ' +
+      '(Project Settings -> API).'
     );
     window.supabaseClient = null;
     return;

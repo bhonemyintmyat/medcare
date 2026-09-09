@@ -839,7 +839,22 @@
   .mc-bmi-marker{position:absolute;top:-4px;left:0;width:3px;height:18px;background:var(--mc-text);border-radius:2px;transform:translateX(-50%);transition:left .35s ease-out}
   .mc-bmi-ticks{position:relative;height:1.1rem;margin-top:.3rem}
   .mc-bmi-tick{position:absolute;transform:translateX(-50%);font-size:.72rem;color:var(--mc-muted);white-space:nowrap}
-  .mc-bmi-note{font-size:.85rem;color:var(--mc-muted);line-height:1.55;margin:1.2rem 0 0;text-align:left}
+  .mc-bmi-advice{margin:1.4rem 0 0;text-align:left}
+  .mc-bmi-advice-title{display:flex;align-items:center;gap:.45rem;font-size:.95rem;font-weight:600;color:var(--mc-text);margin:0 0 .6rem}
+  .mc-bmi-advice-title .bi{font-size:1rem}
+  .mc-bmi-advice-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.55rem}
+  .mc-bmi-advice-list li{position:relative;padding-left:1.35rem;font-size:.9rem;line-height:1.6;color:var(--mc-text)}
+  .mc-bmi-advice-list li::before{content:"";position:absolute;left:.35rem;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--mc-primary);transform:translateY(-50%)}
+  .mc-bmi-advice-foot{display:flex;align-items:flex-start;gap:.45rem;font-size:.85rem;color:var(--mc-muted);line-height:1.55;margin:1rem 0 0;padding-top:.85rem;border-top:1px solid var(--mc-border)}
+  .mc-bmi-advice-foot .bi{flex-shrink:0;margin-top:.15rem}
+  .mc-bmi--under .mc-bmi-advice-list li::before{background:var(--mc-amber)}
+  .mc-bmi--normal .mc-bmi-advice-list li::before{background:var(--mc-green)}
+  .mc-bmi--over .mc-bmi-advice-list li::before{background:var(--mc-amber)}
+  .mc-bmi--obese .mc-bmi-advice-list li::before{background:var(--mc-danger)}
+  .mc-bmi--under .mc-bmi-advice-title .bi{color:var(--mc-amber)}
+  .mc-bmi--normal .mc-bmi-advice-title .bi{color:var(--mc-green)}
+  .mc-bmi--over .mc-bmi-advice-title .bi{color:var(--mc-amber)}
+  .mc-bmi--obese .mc-bmi-advice-title .bi{color:var(--mc-danger)}
 
   
   
